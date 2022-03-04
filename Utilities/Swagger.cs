@@ -1,6 +1,9 @@
 namespace Utilities_aspnet.Utilities;
 
-public class Swagger
+public static class Swagger
 {
-    
+    // public static void AddSwagger(this IServic)
+    // {
+    //     
+    // }
 }
