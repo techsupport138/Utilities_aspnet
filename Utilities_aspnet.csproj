@@ -6,10 +6,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-        <Folder Include="User\Data" />
-    </ItemGroup>
-
     <!-- Utils -->
     <ItemGroup>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />

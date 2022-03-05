@@ -16,7 +16,7 @@ namespace Utilities_aspnet.Utilities;
 
 public static class IdentityExtensions
 {
-    public static void AddIdentityService(this IServiceCollection services)
+    public static void AddUtilitiesIdentity(this IServiceCollection services)
     {
         services.AddIdentity<UserEntity, IdentityRole>(
                 options => { options.SignIn.RequireConfirmedAccount = false; }
@@ -71,7 +71,7 @@ public static class IdentityExtensions
             options.SlidingExpiration = true;
         });
     }
-    
+
     public static void UseSwagger(this IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseAuthentication();

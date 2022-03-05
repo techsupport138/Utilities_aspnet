@@ -9,7 +9,7 @@ namespace Utilities_aspnet.Utilities;
 
 public static class SwaggerExtensions
 {
-    public static void AddSwagger(this IServiceCollection services)
+    public static void AddUtilitiesSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
@@ -29,7 +29,7 @@ public static class SwaggerExtensions
         });
     }
     
-    public static void UseSwagger(this IApplicationBuilder app, IWebHostEnvironment env)
+    public static void UseUtilitiesSwagger(this IApplicationBuilder app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SampleApi v1"));
