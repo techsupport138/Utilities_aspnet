@@ -3,17 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Utilities_aspnet.Core;
 using Utilities_aspnet.User.Dtos;
 using Utilities_aspnet.User.Entities;
-using Utilities_aspnet.Utilities.Date;
+using Utilities_aspnet.Utilities.Data;
 using Utilities_aspnet.Utilities.Enums;
 using Utilities_aspnet.Utilities.Responses;
 
@@ -27,7 +23,6 @@ namespace Utilities_aspnet.User.Data
         Task<ApiResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto model);
         ApiResponse RequestVerificationCode(RequestVerificationCodeDto dto);
         ApiResponse VerifyMobileForLogin(RequestVerificationCodeDto dto);
-
     }
 
     public class UserRepository : IUserRepository
@@ -37,9 +32,10 @@ namespace Utilities_aspnet.User.Data
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-        private readonly IOTPService _otp;
+        private readonly IOtpService _otp;
 
-        public UserRepository(AppDbContext context, UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager, IConfiguration config, IMapper mapper, IOTPService otp)
+        public UserRepository(AppDbContext context, UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager,
+            IConfiguration config, IMapper mapper, IOtpService otp)
         {
             _context = context;
             _userManager = userManager;
@@ -51,7 +47,7 @@ namespace Utilities_aspnet.User.Data
 
         public async Task<ApiResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null) return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.NotFound, null, "Email not found");
 
@@ -59,7 +55,8 @@ namespace Utilities_aspnet.User.Data
             if (!result) return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "The password is incorrect!");
 
             var roles = await _userManager.GetRolesAsync(user);
-            var claims = new List<Claim> {
+            var claims = new List<Claim>
+            {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user.Id),
@@ -67,61 +64,59 @@ namespace Utilities_aspnet.User.Data
             };
             if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
-                                             expires: DateTime.Now.AddDays(365), signingCredentials: creds);
+            JwtSecurityToken token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
+                expires: DateTime.Now.AddDays(365), signingCredentials: creds);
             user.LastLogin = DateTime.Now;
             await _userManager.UpdateAsync(user);
 
             //return new{doc = GetProfile(user.Id), token = new JwtSecurityTokenHandler().WriteToken(token), message = "" };
-            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success, GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token).ToString()).Result.Result, "Success");
-
+            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success,
+                GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, "Success");
         }
 
         public async Task<ApiResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto model)
         {
-            var user = await _context.User.FirstOrDefaultAsync(x=>x.PhoneNumber == model.Mobile);
+            UserEntity? user = await _context.User.FirstOrDefaultAsync(x => x.PhoneNumber == model.Mobile);
 
             if (user == null) return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.NotFound, null, "Mobile not found");
 
-            if (_otp.Verifi(user.Id, model.VerificationCode) == OTPResult.OK)
+            if (_otp.Verify(user.Id, model.VerificationCode) != OtpResult.Ok)
+                return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "Verification Code Is Not Valid");
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = new List<Claim>
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                var claims = new List<Claim> {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-                if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
+            if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                var token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
-                                                 expires: DateTime.Now.AddDays(365), signingCredentials: creds);
-                user.LastLogin = DateTime.Now;
-                await _userManager.UpdateAsync(user);
+            JwtSecurityToken token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
+                expires: DateTime.Now.AddDays(365), signingCredentials: creds);
+            user.LastLogin = DateTime.Now;
+            await _userManager.UpdateAsync(user);
 
-                return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success, GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token).ToString()).Result.Result, "Success");
-
-            }
-
-            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "Verification Code Is Not Valid");
+            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success,
+                GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, "Success");
         }
 
         public async Task<ApiResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser)
         {
-            var model = _context.Users.FirstOrDefault(x => x.UserName == aspNetUser.UserName ||
-                                                           x.Email == aspNetUser.Email);
+            UserEntity? model = _context.Users.FirstOrDefault(x => x.UserName == aspNetUser.UserName ||
+                                                                   x.Email == aspNetUser.Email);
             if (model != null)
             {
                 return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "This email or username already exists");
             }
 
-            var user = new UserEntity
+            UserEntity user = new UserEntity
             {
                 Email = aspNetUser.Email,
                 UserName = aspNetUser.UserName,
@@ -131,11 +126,13 @@ namespace Utilities_aspnet.User.Data
                 CreateAccount = DateTime.Now
             };
 
-            var result = await _userManager.CreateAsync(user, aspNetUser.Password);
-            if (!result.Succeeded) return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "The information was not entered correctly");
+            IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
+            if (!result.Succeeded)
+                return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "The information was not entered correctly");
 
             var roles = await _userManager.GetRolesAsync(user);
-            var claims = new List<Claim> {
+            var claims = new List<Claim>
+            {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user.Id),
@@ -143,50 +140,49 @@ namespace Utilities_aspnet.User.Data
             };
             if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
-                                             expires: DateTime.Now.AddDays(365), signingCredentials: creds);
+            JwtSecurityToken token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
+                expires: DateTime.Now.AddDays(365), signingCredentials: creds);
 
-            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success, GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token).ToString()).Result.Result, "Success");
-
+            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success,
+                GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, "Success");
         }
 
         public async Task<ApiResponse> RegisterWithMobile(RegisterWithMobileDto aspNetUser)
         {
-            var model = _context.Users.FirstOrDefault(x => x.PhoneNumber == aspNetUser.Mobile);
+            UserEntity? model = _context.Users.FirstOrDefault(x => x.PhoneNumber == aspNetUser.Mobile);
             if (model != null)
             {
-                _otp.SendOTP(model.Id);
+                _otp.SendOtp(model.Id);
                 return new ApiResponse(UtilitiesStatusCodes.Success, "Success");
             }
 
-            var user = new UserEntity
+            UserEntity user = new UserEntity
             {
                 PhoneNumber = aspNetUser.Mobile,
-                UserName = aspNetUser.Mobile.Replace("+",""),
+                UserName = aspNetUser.Mobile.Replace("+", ""),
                 LastLogin = null,
                 EmailConfirmed = false,
                 PhoneNumberConfirmed = false,
                 CreateAccount = DateTime.Now
             };
 
-            var result = await _userManager.CreateAsync(user, "P@ssw0rd!@#$%^&*");
+            IdentityResult? result = await _userManager.CreateAsync(user, "P@ssw0rd!@#$%^&*");
             if (!result.Succeeded) return new ApiResponse(UtilitiesStatusCodes.BadRequest, "The information was not entered correctly");
 
-            _otp.SendOTP(user.Id);
+            _otp.SendOtp(user.Id);
             return new ApiResponse(UtilitiesStatusCodes.Success, "Success");
-
         }
 
-        public async Task<ApiResponse<UserReadDto?>> GetProfile(string userId, string? token)
+        public Task<ApiResponse<UserReadDto?>> GetProfile(string userId, string? token)
         {
-            UserEntity model = _context.Users.Include(u => u.Media).FirstOrDefault(u => u.Id == userId);
+            UserEntity? model = _context.Users.Include(u => u.Media).FirstOrDefault(u => u.Id == userId);
             UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
             userReadDto.Token = token;
 
-            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success, userReadDto, "Success");
+            return Task.FromResult(new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success, userReadDto, "Success"));
         }
 
 

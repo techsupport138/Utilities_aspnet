@@ -11,6 +11,13 @@ namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension
 {
+    public static void SetupUtilities<T>(this IServiceCollection services, string connectionStrings) where T : DbContext
+    {
+        services.AddUtilitiesServices<T>(connectionStrings);
+        services.AddUtilitiesSwagger();
+        services.AddUtilitiesIdentity();
+    }
+    
     public static void AddUtilitiesServices<T>(this IServiceCollection services, string connectionStrings) where T : DbContext
     {
         services.AddScoped<DbContext, T>();
@@ -18,9 +25,6 @@ public static class StartupExtension
         services.AddControllersWithViews();
         services.AddRazorPages();
         services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-        services.AddUtilitiesSwagger();
-        services.AddUtilitiesIdentity();
-
         services.AddMvc(option => option.EnableEndpointRouting = false)
             .AddNewtonsoftJson(options =>
             {

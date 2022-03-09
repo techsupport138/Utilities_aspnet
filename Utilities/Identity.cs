@@ -84,18 +84,18 @@ public static class IdentityExtensions
         try
         {
             host.Services.CreateScope();
-            var scope = host.Services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<T>();
+            IServiceScope? scope = host.Services.CreateScope();
+            T? context = scope.ServiceProvider.GetRequiredService<T>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             context.Database.EnsureCreated();
-            var adminRole = new IdentityRole(role);
+            IdentityRole? adminRole = new IdentityRole(role);
 
             if (!context.Roles.Any()) roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
 
             if (context.Users.Any(i => i.UserName == username)) return;
-            var adminUser = new UserEntity
+            UserEntity? adminUser = new UserEntity
             {
                 UserName = username,
                 Email = email,

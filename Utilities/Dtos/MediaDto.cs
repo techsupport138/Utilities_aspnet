@@ -1,5 +1,4 @@
-﻿
-using Utilities_aspnet.Utilities.Enums;
+﻿using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities.Dtos
 {
@@ -7,8 +6,7 @@ namespace Utilities_aspnet.Utilities.Dtos
     {
         public long Id { get; set; }
         public FileTypes Type { get; set; }
-        public string UseCase { get; set; }
+        public string UseCase { get; set; } = null!;
         public string? Link { get; set; }
-
     }
 }

@@ -5,7 +5,6 @@ using Utilities_aspnet.Utilities.Dtos;
 
 namespace Utilities_aspnet.User.Dtos
 {
-
     public class RegisterWithMobileDto
     {
         [Required]
@@ -16,6 +15,7 @@ namespace Utilities_aspnet.User.Dtos
     {
         [Required]
         public string Mobile { get; set; } = null!;
+
         [Required]
         public string VerificationCode { get; set; } = null!;
     }
@@ -24,7 +24,7 @@ namespace Utilities_aspnet.User.Dtos
     {
         [Required]
         public string UserName { get; set; } = null!;
-        
+
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = null!;
@@ -81,10 +81,8 @@ namespace Utilities_aspnet.User.Dtos
         public AutoMapperUsers()
         {
             CreateMap<UserEntity, UserReadDto>().ForMember(dest =>
-            dest.Link,
-            opt => opt.MapFrom(src => "http://95.216.63.209:5012/api/user/" + src.Id)).ReverseMap();
+                    dest.Link,
+                opt => opt.MapFrom(src => "http://95.216.63.209:5012/api/user/" + src.Id)).ReverseMap();
         }
     }
-
-
 }

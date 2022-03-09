@@ -14,7 +14,7 @@ public static class SwaggerExtensions
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo {Title = "SinaMN75", Version = "v1.0.0"});
-            var securitySchema = new OpenApiSecurityScheme
+            OpenApiSecurityScheme? securitySchema = new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization using the Bearer. Example: \"Authorization: Bearer {token}\"",
                 Name = "Authorization",
@@ -40,7 +40,7 @@ public static class SwaggerExtensions
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
             if (schema.Properties == null) return;
-            foreach (var (_, value) in schema.Properties)
+            foreach ((var _, OpenApiSchema? value) in schema.Properties)
                 if (value.Default != null && value.Example == null)
                     value.Example = value.Default;
         }
