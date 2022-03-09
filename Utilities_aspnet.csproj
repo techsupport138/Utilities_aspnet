@@ -8,6 +8,7 @@
 
     <!-- Utils -->
     <ItemGroup>
+        <PackageReference Include="RestSharp" Version="106.12.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
         <PackageReference Include="AutoMapper" Version="11.0.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
