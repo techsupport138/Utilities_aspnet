@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -42,17 +41,8 @@ public static class StartupExtension
             app.UseUtilitiesSwagger();
         }
 
-        app.UseStaticFiles();
         app.UseHttpsRedirection();
-        app.UseRouting();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapAreaControllerRoute(name: "Areas", areaName: "Areas",
-                "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-            endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            endpoints.MapRazorPages();
-        });
+        app.UseStaticFiles();
+        app.UseAuthorization();
     }
 }

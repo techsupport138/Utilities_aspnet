@@ -11,6 +11,7 @@ public static class SwaggerExtensions
 {
     public static void AddUtilitiesSwagger(this IServiceCollection services)
     {
+        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo {Title = "SinaMN75", Version = "v1.0.0"});
