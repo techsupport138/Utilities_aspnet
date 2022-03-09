@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Utilities_aspnet.Core;
 using Utilities_aspnet.User.Dtos;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Data;
@@ -29,12 +28,12 @@ namespace Utilities_aspnet.User.Data
     {
         private readonly UserManager<UserEntity> _userManager;
         private readonly SignInManager<UserEntity> _signInManager;
-        private readonly AppDbContext _context;
+        private readonly DbContext _context;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IOtpService _otp;
 
-        public UserRepository(AppDbContext context, UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager,
+        public UserRepository(DbContext context, UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager,
             IConfiguration config, IMapper mapper, IOtpService otp)
         {
             _context = context;
@@ -79,7 +78,7 @@ namespace Utilities_aspnet.User.Data
 
         public async Task<ApiResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto model)
         {
-            UserEntity? user = await _context.User.FirstOrDefaultAsync(x => x.PhoneNumber == model.Mobile);
+            UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Mobile);
 
             if (user == null) return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.NotFound, null, "Mobile not found");
 
@@ -109,8 +108,8 @@ namespace Utilities_aspnet.User.Data
 
         public async Task<ApiResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser)
         {
-            UserEntity? model = _context.Users.FirstOrDefault(x => x.UserName == aspNetUser.UserName ||
-                                                                   x.Email == aspNetUser.Email);
+            UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.UserName == aspNetUser.UserName ||
+                                                                               x.Email == aspNetUser.Email);
             if (model != null)
             {
                 return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "This email or username already exists");
@@ -152,7 +151,7 @@ namespace Utilities_aspnet.User.Data
 
         public async Task<ApiResponse> RegisterWithMobile(RegisterWithMobileDto aspNetUser)
         {
-            UserEntity? model = _context.Users.FirstOrDefault(x => x.PhoneNumber == aspNetUser.Mobile);
+            UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == aspNetUser.Mobile);
             if (model != null)
             {
                 _otp.SendOtp(model.Id);
@@ -178,7 +177,7 @@ namespace Utilities_aspnet.User.Data
 
         public Task<ApiResponse<UserReadDto?>> GetProfile(string userId, string? token)
         {
-            UserEntity? model = _context.Users.Include(u => u.Media).FirstOrDefault(u => u.Id == userId);
+            UserEntity? model = _context.Set<UserEntity>().Include(u => u.Media).FirstOrDefault(u => u.Id == userId);
             UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
             userReadDto.Token = token;
 

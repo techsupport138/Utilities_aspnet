@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using RestSharp;
-using Utilities_aspnet.Core;
 
 namespace Utilities_aspnet.Utilities.Data
 {
@@ -12,9 +12,9 @@ namespace Utilities_aspnet.Utilities.Data
     public class SmsSender : ISmsSender
     {
         private readonly IConfiguration _config;
-        private readonly AppDbContext _context;
+        private readonly DbContext _context;
 
-        public SmsSender(IConfiguration config, AppDbContext context)
+        public SmsSender(IConfiguration config, DbContext context)
         {
             _config = config;
             _context = context;
