@@ -44,5 +44,6 @@ public static class StartupExtension
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAuthorization();
+        app.UseRouting();
     }
 }
