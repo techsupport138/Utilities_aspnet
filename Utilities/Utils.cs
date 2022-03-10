@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ public static class StartupExtension
     public static void AddUtilitiesServices<T>(this IServiceCollection services, string connectionStrings) where T : DbContext
     {
         services.AddScoped<DbContext, T>();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddDbContext<T>(options => options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging());
         services.AddControllersWithViews();
         services.AddRazorPages();

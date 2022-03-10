@@ -2,8 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Utilities_aspnet.Utilities.Data;
 
-public interface IGenericCrudRepository<T> where T : class
-{
+public interface IGenericCrudRepository<T> where T : class {
     Task<List<T>> Get();
     Task<T?> Get(int id);
     Task<T> Add(T entity);
@@ -11,29 +10,23 @@ public interface IGenericCrudRepository<T> where T : class
     Task<T?> Delete(int id);
 }
 
-public abstract class EfCoreRepository<TEntity, TContext> : IGenericCrudRepository<TEntity>
-    where TEntity : class
-    where TContext : DbContext
-{
+public abstract class GenericCrudRepository<TEntity, TContext> : IGenericCrudRepository<TEntity>
+    where TEntity : class where TContext : DbContext {
     private readonly TContext _context;
 
-    protected EfCoreRepository(TContext context)
-    {
+    protected GenericCrudRepository(TContext context) {
         _context = context;
     }
 
-    public async Task<TEntity> Add(TEntity entity)
-    {
+    public async Task<TEntity> Add(TEntity entity) {
         await _context.Set<TEntity>().AddAsync(entity);
         await _context.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<TEntity?> Delete(int id)
-    {
+    public async Task<TEntity?> Delete(int id) {
         TEntity? entity = await _context.Set<TEntity>().FindAsync(id);
-        if (entity == null)
-        {
+        if (entity == null) {
             return entity;
         }
 
@@ -47,8 +40,7 @@ public abstract class EfCoreRepository<TEntity, TContext> : IGenericCrudReposito
 
     public async Task<List<TEntity>> Get() => await _context.Set<TEntity>().ToListAsync();
 
-    public async Task<TEntity> Update(TEntity entity)
-    {
+    public async Task<TEntity> Update(TEntity entity) {
         _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return entity;
