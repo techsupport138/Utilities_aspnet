@@ -4,7 +4,7 @@ namespace Utilities_aspnet.Utilities.Data;
 
 public interface IGenericCrudRepository<T> where T : class
 {
-    Task<List<T>> GetAll();
+    Task<List<T>> Get();
     Task<T?> Get(int id);
     Task<T> Add(T entity);
     Task<T> Update(T entity);
@@ -45,7 +45,7 @@ public abstract class EfCoreRepository<TEntity, TContext> : IGenericCrudReposito
 
     public async Task<TEntity?> Get(int id) => await _context.Set<TEntity>().FindAsync(id);
 
-    public async Task<List<TEntity>> GetAll() => await _context.Set<TEntity>().ToListAsync();
+    public async Task<List<TEntity>> Get() => await _context.Set<TEntity>().ToListAsync();
 
     public async Task<TEntity> Update(TEntity entity)
     {
