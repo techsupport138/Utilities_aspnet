@@ -9,36 +9,29 @@ using Newtonsoft.Json;
 
 namespace Utilities_aspnet.Utilities;
 
-public static class StartupExtension
-{
-    public static void SetupUtilities<T>(this IServiceCollection services, string connectionStrings) where T : DbContext
-    {
+public static class StartupExtension {
+    public static void SetupUtilities<T>(this IServiceCollection services, string connectionStrings) where T : DbContext {
         services.AddUtilitiesServices<T>(connectionStrings);
         services.AddUtilitiesSwagger();
         services.AddUtilitiesIdentity();
     }
-    
-    public static void AddUtilitiesServices<T>(this IServiceCollection services, string connectionStrings) where T : DbContext
-    {
+
+    public static void AddUtilitiesServices<T>(this IServiceCollection services, string connectionStrings) where T : DbContext {
         services.AddScoped<DbContext, T>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddDbContext<T>(options => options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging());
         services.AddControllersWithViews();
         services.AddRazorPages();
         services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-        services.AddMvc(option => option.EnableEndpointRouting = false)
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
-            });
+        services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {
+            options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+        });
     }
 
-    public static void UseUtilitiesServices(this IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        if (env.IsDevelopment())
-        {
+    public static void UseUtilitiesServices(this IApplicationBuilder app, IWebHostEnvironment env) {
+        if (env.IsDevelopment()) {
             app.UseDeveloperExceptionPage();
             app.UseUtilitiesSwagger();
         }
