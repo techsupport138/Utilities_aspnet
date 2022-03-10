@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Utilities_aspnet.ServiceProvider.Entities;
 using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities.Entities {
@@ -16,5 +17,8 @@ namespace Utilities_aspnet.Utilities.Entities {
 
         public ContactInfoItemEntity? ContactInfoItem { get; set; }
         public int? ContactInfoItemId { get; set; }
+        
+        public ServiceProviderEntity? ServiceProvider { get; set; }
+        public int? ServiceProviderId { get; set; }
     }
 }
