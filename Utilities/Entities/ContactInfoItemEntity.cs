@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Utilities_aspnet.Utilities.Entities;
 
-public class ContactInfoItemEntity {
+public class ContactInfoItemEntity : BaseEntity {
     [Required]
     [StringLength(50)]
     public string Title { get; set; } = null!;

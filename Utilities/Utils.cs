@@ -44,6 +44,7 @@ public static class StartupExtension {
         app.UseStaticFiles();
         app.UseAuthorization();
         app.UseRouting();
+        app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
     }
 
     private static void AddUtilitiesSwagger(this IServiceCollection services) {

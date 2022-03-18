@@ -2,7 +2,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,22 +13,18 @@ using Utilities_aspnet.User.Entities;
 
 namespace Utilities_aspnet.Utilities;
 
-public static class IdentityExtensions
-{
-    public static void AddUtilitiesIdentity(this IServiceCollection services)
-    {
+public static class IdentityExtensions {
+    public static void AddUtilitiesIdentity(this IServiceCollection services) {
         services.AddIdentity<UserEntity, IdentityRole>(
                 options => { options.SignIn.RequireConfirmedAccount = false; }
             )
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(jwtBearerOptions =>
-            {
+            .AddJwtBearer(jwtBearerOptions => {
                 jwtBearerOptions.RequireHttpsMetadata = false;
                 jwtBearerOptions.SaveToken = true;
-                jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
-                {
+                jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters {
                     RequireSignedTokens = true,
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = true,
@@ -42,8 +37,7 @@ public static class IdentityExtensions
                 };
             });
 
-        services.Configure<IdentityOptions>(options =>
-        {
+        services.Configure<IdentityOptions>(options => {
             options.Password.RequireDigit = false;
             options.Password.RequiredLength = 4;
             options.Password.RequireNonAlphanumeric = false;
@@ -53,15 +47,13 @@ public static class IdentityExtensions
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@";
         });
 
-        services.Configure<CookiePolicyOptions>(options =>
-        {
+        services.Configure<CookiePolicyOptions>(options => {
             options.CheckConsentNeeded = _ => false;
             options.MinimumSameSitePolicy = SameSiteMode.None;
             options.Secure = CookieSecurePolicy.Always;
         });
 
-        services.ConfigureApplicationCookie(options =>
-        {
+        services.ConfigureApplicationCookie(options => {
             options.AccessDeniedPath = new PathString("/error/403");
             options.Cookie.Name = "Cookie.medgram_aspnet";
             options.Cookie.HttpOnly = false;
@@ -72,39 +64,30 @@ public static class IdentityExtensions
         });
     }
 
-    public static void UseSwagger(this IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        app.UseAuthentication();
-        app.UseAuthorization();
-    }
-
     public static void SeedUser<T>(this IHost host, string role, string username, string email, string password)
-        where T : IdentityDbContext
-    {
-        try
-        {
+        where T : IdentityDbContext {
+        try {
             host.Services.CreateScope();
-            IServiceScope? scope = host.Services.CreateScope();
-            T? context = scope.ServiceProvider.GetRequiredService<T>();
+            IServiceScope scope = host.Services.CreateScope();
+            T context = scope.ServiceProvider.GetRequiredService<T>();
             UserManager<UserEntity> userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
-            RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            RoleManager<IdentityRole> roleManager =
+                scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             context.Database.EnsureCreated();
-            IdentityRole? adminRole = new IdentityRole(role);
+            IdentityRole adminRole = new(role);
 
             if (!context.Roles.Any()) roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
 
             if (context.Users.Any(i => i.UserName == username)) return;
-            UserEntity? adminUser = new UserEntity
-            {
+            UserEntity adminUser = new() {
                 UserName = username,
                 Email = email,
             };
             userManager.CreateAsync(adminUser, password).GetAwaiter().GetResult();
             userManager.AddToRoleAsync(adminUser, adminRole.Name).GetAwaiter().GetResult();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Console.WriteLine(e);
         }
     }
