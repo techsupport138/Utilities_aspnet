@@ -48,10 +48,10 @@ namespace Utilities_aspnet.User.Data
         {
             UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
 
-            if (user == null) return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.NotFound, null, "Email not found");
+            if (user == null) return new ApiResponse<UserReadDto?>(null,UtilitiesStatusCodes.NotFound,  "Email not found");
 
             var result = await _userManager.CheckPasswordAsync(user, model.Password);
-            if (!result) return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "The password is incorrect!");
+            if (!result) return new ApiResponse<UserReadDto?>(null,UtilitiesStatusCodes.BadRequest,  "The password is incorrect!");
 
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim>
@@ -72,18 +72,17 @@ namespace Utilities_aspnet.User.Data
             await _userManager.UpdateAsync(user);
 
             //return new{doc = GetProfile(user.Id), token = new JwtSecurityTokenHandler().WriteToken(token), message = "" };
-            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success,
-                GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, "Success");
+            return new ApiResponse<UserReadDto?>(GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,message:"Success");
         }
 
         public async Task<ApiResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto model)
         {
             UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Mobile);
 
-            if (user == null) return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.NotFound, null, "Mobile not found");
+            if (user == null) return new ApiResponse<UserReadDto>(null, UtilitiesStatusCodes.NotFound , "Mobile not found");
 
             if (_otp.Verify(user.Id, model.VerificationCode) != OtpResult.Ok)
-                return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "Verification Code Is Not Valid");
+                return new ApiResponse<UserReadDto>(null, UtilitiesStatusCodes.BadRequest, "Verification Code Is Not Valid");
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim>
             {
@@ -102,8 +101,7 @@ namespace Utilities_aspnet.User.Data
             user.LastLogin = DateTime.Now;
             await _userManager.UpdateAsync(user);
 
-            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success,
-                GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, "Success");
+            return new ApiResponse<UserReadDto?>(GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,"Success");
         }
 
         public async Task<ApiResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser)
@@ -112,7 +110,7 @@ namespace Utilities_aspnet.User.Data
                                                                                x.Email == aspNetUser.Email);
             if (model != null)
             {
-                return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "This email or username already exists");
+                return new ApiResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "This email or username already exists");
             }
 
             UserEntity user = new UserEntity
@@ -127,7 +125,7 @@ namespace Utilities_aspnet.User.Data
 
             IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
             if (!result.Succeeded)
-                return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.BadRequest, null, "The information was not entered correctly");
+                return new ApiResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,  "The information was not entered correctly");
 
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim>
@@ -145,8 +143,7 @@ namespace Utilities_aspnet.User.Data
             JwtSecurityToken token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
                 expires: DateTime.Now.AddDays(365), signingCredentials: creds);
 
-            return new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success,
-                GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, "Success");
+            return new ApiResponse<UserReadDto?>(GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,UtilitiesStatusCodes.Success,  "Success");
         }
 
         public async Task<ApiResponse> RegisterWithMobile(RegisterWithMobileDto aspNetUser)
@@ -158,7 +155,7 @@ namespace Utilities_aspnet.User.Data
                 return new ApiResponse(UtilitiesStatusCodes.Success, "Success");
             }
 
-            UserEntity user = new UserEntity
+            UserEntity user = new()
             {
                 PhoneNumber = aspNetUser.Mobile,
                 UserName = aspNetUser.Mobile.Replace("+", ""),
@@ -181,7 +178,7 @@ namespace Utilities_aspnet.User.Data
             UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
             userReadDto.Token = token;
 
-            return Task.FromResult(new ApiResponse<UserReadDto?>(UtilitiesStatusCodes.Success, userReadDto, "Success"));
+            return Task.FromResult(new ApiResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
         }
 
 
