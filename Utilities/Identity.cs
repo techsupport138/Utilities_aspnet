@@ -86,8 +86,8 @@ public static class IdentityExtensions
             host.Services.CreateScope();
             IServiceScope? scope = host.Services.CreateScope();
             T? context = scope.ServiceProvider.GetRequiredService<T>();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            UserManager<UserEntity> userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
+            RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             context.Database.EnsureCreated();
             IdentityRole? adminRole = new IdentityRole(role);

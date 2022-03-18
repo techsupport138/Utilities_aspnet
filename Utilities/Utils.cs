@@ -34,8 +34,8 @@ public static class StartupExtension {
         });
     }
 
-    public static void UseUtilitiesServices(this IApplicationBuilder app, IWebHostEnvironment env) {
-        if (env.IsDevelopment()) {
+    public static void UseUtilitiesServices(this WebApplication app) {
+        if (app.Environment.IsDevelopment()) {
             app.UseDeveloperExceptionPage();
             app.UseUtilitiesSwagger();
         }

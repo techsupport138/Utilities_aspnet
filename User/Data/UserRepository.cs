@@ -53,8 +53,8 @@ namespace Utilities_aspnet.User.Data
             var result = await _userManager.CheckPasswordAsync(user, model.Password);
             if (!result) return new ApiResponse<UserReadDto?>(null,UtilitiesStatusCodes.BadRequest,  "The password is incorrect!");
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var claims = new List<Claim>
+            IList<string>? roles = await _userManager.GetRolesAsync(user);
+            List<Claim>? claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -83,8 +83,8 @@ namespace Utilities_aspnet.User.Data
 
             if (_otp.Verify(user.Id, model.VerificationCode) != OtpResult.Ok)
                 return new ApiResponse<UserReadDto>(null, UtilitiesStatusCodes.BadRequest, "Verification Code Is Not Valid");
-            var roles = await _userManager.GetRolesAsync(user);
-            var claims = new List<Claim>
+            IList<string>? roles = await _userManager.GetRolesAsync(user);
+            List<Claim>? claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -127,8 +127,8 @@ namespace Utilities_aspnet.User.Data
             if (!result.Succeeded)
                 return new ApiResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,  "The information was not entered correctly");
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var claims = new List<Claim>
+            IList<string>? roles = await _userManager.GetRolesAsync(user);
+            List<Claim>? claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
