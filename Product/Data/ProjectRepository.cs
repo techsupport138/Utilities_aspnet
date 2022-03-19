@@ -11,7 +11,7 @@ public interface IProjectRepository {
     Task<GetProjectDto> Add(AddUpdateProjectDto dto);
     Task<IEnumerable<GetProjectDto>> Get();
     GetProjectDto GetById(long id);
-    GetProjectDto Delete(long id);
+    void Delete(long id);
 }
 
 public class ProjectRepository : IProjectRepository {
@@ -42,10 +42,9 @@ public class ProjectRepository : IProjectRepository {
         return _mapper.Map<GetProjectDto>(i);
     }
 
-    public GetProjectDto Delete(long id) {
+    public async void Delete(long id) {
         GetProjectDto i = GetById(id);
         _dbContext.Set<ProjectEntity>().Remove(_mapper.Map<ProjectEntity>(i));
-        _dbContext.SaveChanges();
-        return i;
+        await _dbContext.SaveChangesAsync();
     }
 }
