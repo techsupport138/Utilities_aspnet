@@ -5,11 +5,12 @@ namespace Utilities_aspnet.Product.Dto;
 
 public class GetProjectDto
 {
+    public long Id { get; set; }
     public string Title { get; set; } = null!;
     public string Subtitle { get; set; } = null!;
     public string Description { get; set; } = null!;
 }
-public class AddProjectDto
+public class AddUpdateProjectDto
 {
     public string Title { get; set; } = null!;
     public string Subtitle { get; set; } = null!;
@@ -27,7 +28,7 @@ public class AutoMapperProject : Profile
 {
     public AutoMapperProject()
     {
-        CreateMap<ProjectEntity, AddProjectDto>().ReverseMap();
+        CreateMap<ProjectEntity, AddUpdateProjectDto>().ReverseMap();
         CreateMap<ProjectEntity, UpdateProjectDto>().ReverseMap();
         CreateMap<ProjectEntity, GetProjectDto>().ReverseMap();
     }
