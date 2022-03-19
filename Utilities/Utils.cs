@@ -1,18 +1,14 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Newtonsoft.Json.Serialization;
 
 namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
-    static StartupExtension() { }
 
     public static void SetupUtilities<T>(this IServiceCollection services, string connectionStrings) where T : DbContext {
         services.AddUtilitiesServices<T>(connectionStrings);
@@ -24,7 +20,7 @@ public static class StartupExtension {
         services.AddScoped<DbContext, T>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddDbContext<T>(options => options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging());
-        services.AddControllersWithViews();
+        services.AddControllersWithViews().AddNewtonsoftJson(i => i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
         services.AddRazorPages();
         services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
         services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {

@@ -10,7 +10,8 @@ public interface IProjectRepository {
     bool SaveChanges();
     Task<GetProjectDto> Add(AddUpdateProjectDto dto);
     Task<IEnumerable<GetProjectDto>> Get();
-    Task<GetProjectDto> GetById(long id);
+    GetProjectDto GetById(long id);
+    GetProjectDto Delete(long id);
 }
 
 public class ProjectRepository : IProjectRepository {
@@ -32,12 +33,19 @@ public class ProjectRepository : IProjectRepository {
     }
 
     public async Task<IEnumerable<GetProjectDto>> Get() {
-        List<ProjectEntity> i = await _dbContext.Set<ProjectEntity>().ToListAsync();
+        List<ProjectEntity> i = await _dbContext.Set<ProjectEntity>().AsNoTracking().ToListAsync();
         return _mapper.Map<IEnumerable<GetProjectDto>>(i);
     }
 
-    public async Task<GetProjectDto> GetById(long id) {
-        ProjectEntity? i = await _dbContext.Set<ProjectEntity>().FindAsync(id);
+    public GetProjectDto GetById(long id) {
+        ProjectEntity? i = _dbContext.Set<ProjectEntity>().AsNoTracking().FirstOrDefault(i => i.Id == id);
         return _mapper.Map<GetProjectDto>(i);
+    }
+
+    public GetProjectDto Delete(long id) {
+        GetProjectDto i = GetById(id);
+        _dbContext.Set<ProjectEntity>().Remove(_mapper.Map<ProjectEntity>(i));
+        _dbContext.SaveChanges();
+        return i;
     }
 }
