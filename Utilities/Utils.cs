@@ -1,26 +1,40 @@
 using System.Net.WebSockets;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.WebSockets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
-    public static void SetupUtilities<T>(this IServiceCollection services, string connectionStrings) where T : DbContext {
-        services.AddUtilitiesServices<T>(connectionStrings);
+    public static void SetupUtilities<T>(this IServiceCollection services, string connectionStrings,
+        DatabaseType databaseType = DatabaseType.SqlServer) where T : DbContext {
+        services.AddUtilitiesServices<T>(connectionStrings, databaseType);
         services.AddUtilitiesSwagger();
         services.AddUtilitiesIdentity();
     }
 
-    private static void AddUtilitiesServices<T>(this IServiceCollection services, string connectionStrings) where T : DbContext {
+    private static void AddUtilitiesServices<T>(this IServiceCollection services, string connectionStrings, DatabaseType databaseType)
+        where T : DbContext {
+        services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
         services.AddScoped<DbContext, T>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        services.AddDbContext<T>(options => options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging());
+        services.AddDbContext<T>(options => {
+            switch (databaseType) {
+                case DatabaseType.SqlServer:
+                    options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging();
+                    break;
+                case DatabaseType.MySql:
+                    options.UseMySQL(connectionStrings).EnableSensitiveDataLogging();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
+            }
+        });
         services.AddControllersWithViews()
             .AddNewtonsoftJson(i => i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
         services.AddRazorPages();
@@ -33,6 +47,7 @@ public static class StartupExtension {
     }
 
     public static void UseUtilitiesServices(this WebApplication app) {
+        app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
         if (app.Environment.IsDevelopment()) {
             app.UseDeveloperExceptionPage();
             app.UseUtilitiesSwagger();
