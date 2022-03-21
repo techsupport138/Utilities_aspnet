@@ -17,19 +17,12 @@ public class AddUpdateProjectDto
     public string Description { get; set; } = null!;
 }
 
-public class UpdateProjectDto
-{
-    public string Title { get; set; } = null!;
-    public string Subtitle { get; set; } = null!;
-    public string Description { get; set; } = null!;
-}
-
 public class AutoMapperProject : Profile
 {
     public AutoMapperProject()
     {
         CreateMap<ProjectEntity, AddUpdateProjectDto>().ReverseMap();
-        CreateMap<ProjectEntity, UpdateProjectDto>().ReverseMap();
         CreateMap<ProjectEntity, GetProjectDto>().ReverseMap();
+        CreateMap<AddUpdateProjectDto, GetProjectDto>().ReverseMap();
     }
 }
