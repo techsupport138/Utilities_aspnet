@@ -11,19 +11,19 @@ using Utilities_aspnet.Utilities.Enums;
 namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
-    public static void SetupUtilities<T>(this IServiceCollection services, string connectionStrings,
+    public static void SetupUtilities<T>(this WebApplicationBuilder builder, string connectionStrings,
         DatabaseType databaseType = DatabaseType.SqlServer) where T : DbContext {
-        services.AddUtilitiesServices<T>(connectionStrings, databaseType);
-        services.AddUtilitiesSwagger();
-        services.AddUtilitiesIdentity();
+        builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
+        builder.AddUtilitiesSwagger();
+        builder.AddUtilitiesIdentity();
     }
 
-    private static void AddUtilitiesServices<T>(this IServiceCollection services, string connectionStrings, DatabaseType databaseType)
+    private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
         where T : DbContext {
-        services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-        services.AddScoped<DbContext, T>();
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        services.AddDbContext<T>(options => {
+        builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+        builder.Services.AddScoped<DbContext, T>();
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddDbContext<T>(options => {
             switch (databaseType) {
                 case DatabaseType.SqlServer:
                     options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging();
@@ -31,15 +31,19 @@ public static class StartupExtension {
                 case DatabaseType.MySql:
                     options.UseMySql(connectionStrings, new MySqlServerVersion(new Version(8, 0, 28))).EnableSensitiveDataLogging();
                     break;
+                case DatabaseType.MongoDb:
+                    builder.Services.Configure<MongoDatabaseSettings>(
+                        builder.Configuration.GetSection("BookStoreDatabase"));
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
             }
         });
-        services.AddControllersWithViews()
+        builder.Services.AddControllersWithViews()
             .AddNewtonsoftJson(i => i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
-        services.AddRazorPages();
-        services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-        services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {
+        builder.Services.AddRazorPages();
+        builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+        builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {
             options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
@@ -69,9 +73,9 @@ public static class StartupExtension {
         });
     }
 
-    private static void AddUtilitiesSwagger(this IServiceCollection services) {
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+    private static void AddUtilitiesSwagger(this WebApplicationBuilder builder) {
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
     }
 
     private static void UseUtilitiesSwagger(this IApplicationBuilder app) {

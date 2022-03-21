@@ -1,3 +1,8 @@
 {
-  "MySQL": "Data Source=<server>;Initial Catalog=<db name>;User Id=<user name>;password=<password>"
+  "LocalHostMySql": "Server=127.0.0.1;Database=DatabaseName;Uid=User;Pwd=Password;",
+  "MongoDbLocalHost": {
+    "ConnectionString": "mongodb://localhost:27017",
+    "DatabaseName": "DatabaseName",
+    "CollectionName": "CollectionName"
+  }
 }

@@ -14,46 +14,41 @@ using Utilities_aspnet.User.Entities;
 namespace Utilities_aspnet.Utilities;
 
 public static class IdentityExtensions {
-    public static void AddUtilitiesIdentity(this IServiceCollection services) {
-        services.AddIdentity<UserEntity, IdentityRole>(
-                options => { options.SignIn.RequireConfirmedAccount = false; }
-            )
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(jwtBearerOptions => {
-                jwtBearerOptions.RequireHttpsMetadata = false;
-                jwtBearerOptions.SaveToken = true;
-                jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters {
-                    RequireSignedTokens = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    RequireExpirationTime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidAudience = "https://SinaMN75.com",
-                    ValidIssuer = "https://SinaMN75.com",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("https://SinaMN75.com"))
-                };
-            });
+    public static void AddUtilitiesIdentity(this WebApplicationBuilder builder) {
+        builder.Services.AddIdentity<UserEntity, IdentityRole>(options => { options.SignIn.RequireConfirmedAccount = false; })
+            .AddRoles<IdentityRole>().AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions => {
+            jwtBearerOptions.RequireHttpsMetadata = false;
+            jwtBearerOptions.SaveToken = true;
+            jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters {
+                RequireSignedTokens = true,
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                RequireExpirationTime = true,
+                ClockSkew = TimeSpan.Zero,
+                ValidAudience = "https://SinaMN75.com",
+                ValidIssuer = "https://SinaMN75.com",
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("https://SinaMN75.com"))
+            };
+        });
 
-        services.Configure<IdentityOptions>(options => {
+        builder.Services.Configure<IdentityOptions>(options => {
             options.Password.RequireDigit = false;
             options.Password.RequiredLength = 4;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
             options.Password.RequireLowercase = false;
-            options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@";
+            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@";
         });
 
-        services.Configure<CookiePolicyOptions>(options => {
+        builder.Services.Configure<CookiePolicyOptions>(options => {
             options.CheckConsentNeeded = _ => false;
             options.MinimumSameSitePolicy = SameSiteMode.None;
             options.Secure = CookieSecurePolicy.Always;
         });
 
-        services.ConfigureApplicationCookie(options => {
+        builder.Services.ConfigureApplicationCookie(options => {
             options.AccessDeniedPath = new PathString("/error/403");
             options.Cookie.Name = "Cookie.medgram_aspnet";
             options.Cookie.HttpOnly = false;
@@ -71,8 +66,7 @@ public static class IdentityExtensions {
             IServiceScope scope = host.Services.CreateScope();
             T context = scope.ServiceProvider.GetRequiredService<T>();
             UserManager<UserEntity> userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
-            RoleManager<IdentityRole> roleManager =
-                scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
             context.Database.EnsureCreated();
             IdentityRole adminRole = new(role);
