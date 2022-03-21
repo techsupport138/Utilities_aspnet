@@ -29,7 +29,7 @@ public static class StartupExtension {
                     options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging();
                     break;
                 case DatabaseType.MySql:
-                    options.UseMySQL(connectionStrings).EnableSensitiveDataLogging();
+                    options.UseMySql(connectionStrings, new MySqlServerVersion(new Version(8, 0, 28))).EnableSensitiveDataLogging();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
@@ -67,7 +67,6 @@ public static class StartupExtension {
             else
                 await next();
         });
-        app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
     }
 
     private static void AddUtilitiesSwagger(this IServiceCollection services) {
