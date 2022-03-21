@@ -5,7 +5,7 @@ namespace Utilities_aspnet.Product.Dto;
 
 public class GetProjectDto
 {
-    public long Id { get; set; }
+    public string Id { get; set; }
     public string Title { get; set; } = null!;
     public string Subtitle { get; set; } = null!;
     public string Description { get; set; } = null!;

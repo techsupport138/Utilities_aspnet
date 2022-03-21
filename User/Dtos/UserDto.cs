@@ -68,7 +68,7 @@ namespace Utilities_aspnet.User.Dtos
         public string? Email { get; set; }
 
         public string? Bio { get; set; }
-        public long Point { get; set; }
+        public string Point { get; set; }
 
         public DateTime? BirthDate { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -21,10 +21,10 @@ public class ContactInformationEntity : BaseEntity {
 
     [Required]
     [ForeignKey("ContactInfoItem")]
-    public long ContactInfoItemId { get; set; }
+    public string ContactInfoItemId { get; set; }
 
     public virtual ServiceProviderEntity? ServiceProvider { get; set; }
 
     [ForeignKey("ServiceProvider")]
-    public long? ServiceProviderId { get; set; }
+    public string? ServiceProviderId { get; set; }
 }

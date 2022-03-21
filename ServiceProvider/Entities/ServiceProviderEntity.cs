@@ -12,7 +12,7 @@ public class ServiceProviderEntity : BaseEntity {
     public int Point { get; set; } = 0;
 
     public double? Latitude { get; set; }
-    public double? Longitude { get; set; }
+    public double? stringitude { get; set; }
     public string? Services { get; set; }
     public string? Address { get; set; }
 
