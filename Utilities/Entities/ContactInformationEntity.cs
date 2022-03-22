@@ -21,7 +21,7 @@ public class ContactInformationEntity : BaseEntity {
 
     [Required]
     [ForeignKey("ContactInfoItem")]
-    public string ContactInfoItemId { get; set; }
+    public string ContactInfoItemId { get; set; } = null!;
 
     public virtual ServiceProviderEntity? ServiceProvider { get; set; }
 

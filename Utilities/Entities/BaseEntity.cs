@@ -8,10 +8,10 @@ public class BaseEntity {
     [Key]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string Id { get; } = Guid.NewGuid().ToString();
 
     [Required]
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; } = DateTime.Now;
 
     [Required]
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
