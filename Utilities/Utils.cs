@@ -61,16 +61,6 @@ public static class StartupExtension {
         app.UseStaticFiles();
         app.UseAuthorization();
         app.UseRouting();
-        app.UseWebSockets();
-        app.Use(async (context, next) => {
-            if (context.WebSockets.IsWebSocketRequest) {
-                WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                Console.WriteLine(webSocket.State);
-                Console.WriteLine("DONE");
-            }
-            else
-                await next();
-        });
     }
 
     private static void AddUtilitiesSwagger(this WebApplicationBuilder builder) {
