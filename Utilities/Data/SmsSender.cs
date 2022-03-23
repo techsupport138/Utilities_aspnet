@@ -1,22 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using RestSharp;
+﻿using RestSharp;
 
 namespace Utilities_aspnet.Utilities.Data {
     public interface ISmsSender {
-        void SendVerificationCode(string? num, string password);
+        void SendSms(string mobileNumber, string message);
     }
 
     public class SmsSender : ISmsSender {
-        private readonly IConfiguration _config;
-        private readonly DbContext _context;
-
-        public SmsSender(IConfiguration config, DbContext context) {
-            _config = config;
-            _context = context;
-        }
-
-        public void SendVerificationCode(string? num, string verificationCode) {
+        public void SendSms(string mobileNumber, string message) {
             #region FarazSMS
 
             RestClient client = new("http://188.0.240.110/api/select");
@@ -27,11 +17,11 @@ namespace Utilities_aspnet.Utilities.Data {
 
             request.AddParameter("undefined",
                 "{\"op\" : \"pattern\"" + ",\"user\" : \"09130269500\"" + ",\"pass\":  \"C1System\"" + ",\"fromNum\" : " +
-                "03000505".TrimStart(new Char[] {'0'}) + "" + ",\"toNum\": " + num.TrimStart(new Char[] {'0'}) + "" +
-                ",\"patternCode\": \"whrqg2ad1r\"" + ",\"inputData\" : [{\"verification-code\":" + verificationCode + "}]}",
+                "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " + mobileNumber.TrimStart(new[] {'0'}) + "" +
+                ",\"patternCode\": \"whrqg2ad1r\"" + ",\"inputData\" : [{\"verification-code\":" + message + "}]}",
                 ParameterType.RequestBody);
 
-            IRestResponse response = client.Execute(request);
+            client.Execute(request);
 
             #endregion
         }

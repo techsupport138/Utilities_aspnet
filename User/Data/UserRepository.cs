@@ -5,9 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Utilities_aspnet.User.Dtos;
 using Utilities_aspnet.User.Entities;
+using Utilities_aspnet.Utilities;
 using Utilities_aspnet.Utilities.Data;
 using Utilities_aspnet.Utilities.Enums;
 using Utilities_aspnet.Utilities.Responses;
@@ -15,10 +17,12 @@ using Utilities_aspnet.Utilities.Responses;
 namespace Utilities_aspnet.User.Data;
 
 public interface IUserRepository {
-    Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser);
-    Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model);
-    Task<GenericResponse<string>> RegisterWithMobile(RegisterWithMobileDto aspNetUser);
-    Task<GenericResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto model);
+    Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto dto);
+    Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
+    Task<GenericResponse<string>> RegisterWithMobile(RegisterWithMobileDto dto);
+    Task<GenericResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto dto);
+    GenericResponse<string> GetVerificationCode(RegisterWithMobileDto dto);
+    GenericResponse<string> VerifyVerificationCode(LoginWithMobileDto dto);
 }
 
 public class UserRepository : IUserRepository {
@@ -35,6 +39,23 @@ public class UserRepository : IUserRepository {
         _otp = otp;
         _mapper = mapper;
     }
+
+    public GenericResponse<string> GetVerificationCode(RegisterWithMobileDto dto) {
+        string now = DateTime.Now.ToShortDateString();
+        int nowHour = DateTime.Now.Hour;
+        string mobileNumber = dto.Mobile;
+        string source = now + nowHour + mobileNumber;
+        return new GenericResponse<string>(Crypto.ToSha256(source));
+    }
+
+    public GenericResponse<string> VerifyVerificationCode(LoginWithMobileDto dto) {
+        string now = DateTime.Now.ToShortDateString();
+        int nowHour = DateTime.Now.Hour;
+        string mobileNumber = dto.Mobile;
+        string source = now + nowHour + mobileNumber;
+        return new GenericResponse<string>(Crypto.ToSha256(source));
+    }
+
 
     public async Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model) {
         UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
