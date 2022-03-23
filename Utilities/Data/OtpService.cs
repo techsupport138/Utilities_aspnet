@@ -35,7 +35,7 @@ namespace Utilities_aspnet.Utilities.Data {
             }
 
             string newOtp = Random().ToString();
-            _context.Set<OtpEntity>().Add(new OtpEntity() {UserId = userId, OtpCode = newOtp, CreatedAt = DateTime.Now});
+            _context.Set<OtpEntity>().Add(new OtpEntity() {UserId = userId, OtpCode = newOtp});
             UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userId);
             _sms.SendVerificationCode(user?.PhoneNumber, newOtp);
             _context.SaveChanges();
