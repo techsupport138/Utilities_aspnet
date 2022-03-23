@@ -12,7 +12,6 @@ public class Crypto {
         foreach (byte t in bytes) {
             sb.Append(t.ToString("x2"));
         }
-
         return sb.ToString();
     }
 }

@@ -21,8 +21,6 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<string>> RegisterWithMobile(RegisterWithMobileDto dto);
     Task<GenericResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto dto);
-    GenericResponse<string> GetVerificationCode(RegisterWithMobileDto dto);
-    GenericResponse<string> VerifyVerificationCode(LoginWithMobileDto dto);
 }
 
 public class UserRepository : IUserRepository {
@@ -39,24 +37,7 @@ public class UserRepository : IUserRepository {
         _otp = otp;
         _mapper = mapper;
     }
-
-    public GenericResponse<string> GetVerificationCode(RegisterWithMobileDto dto) {
-        string now = DateTime.Now.ToShortDateString();
-        int nowHour = DateTime.Now.Hour;
-        string mobileNumber = dto.Mobile;
-        string source = now + nowHour + mobileNumber;
-        return new GenericResponse<string>(Crypto.ToSha256(source));
-    }
-
-    public GenericResponse<string> VerifyVerificationCode(LoginWithMobileDto dto) {
-        string now = DateTime.Now.ToShortDateString();
-        int nowHour = DateTime.Now.Hour;
-        string mobileNumber = dto.Mobile;
-        string source = now + nowHour + mobileNumber;
-        return new GenericResponse<string>(Crypto.ToSha256(source));
-    }
-
-
+    
     public async Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model) {
         UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
 
