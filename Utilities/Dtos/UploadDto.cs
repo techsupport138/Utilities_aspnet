@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Models.Dto
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Utilities_aspnet.Models.Dto
 {
     public class UploadDto
     {

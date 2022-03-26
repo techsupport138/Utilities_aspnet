@@ -1,4 +1,7 @@
-﻿namespace Utilities_aspnet.Data {
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+
+namespace Utilities_aspnet.Data {
     public interface IMediaRepository {
         bool SaveMedia(IFormFile image, string name);
         bool SaveMedia(IFormFile image, string name, string folder);
