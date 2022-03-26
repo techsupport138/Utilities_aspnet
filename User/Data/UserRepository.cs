@@ -24,6 +24,7 @@ public interface IUserRepository {
     Task<GenericResponse<string>> RegisterWithMobile(RegisterWithMobileDto dto);
     Task<GenericResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto dto);
     Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token);
+    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName);
 }
 
 public class UserRepository : IUserRepository {
