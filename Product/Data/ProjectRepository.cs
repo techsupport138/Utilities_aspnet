@@ -12,9 +12,9 @@ namespace Utilities_aspnet.Product.Data;
 public interface IProjectRepository {
     Task<GetProjectDto> Add(AddUpdateProjectDto dto);
     Task<IEnumerable<GetProjectDto>> Get();
-    Task<GetProjectDto> GetById(string id);
-    Task<GetProjectDto> Update(string id, AddUpdateProjectDto dto);
-    void Delete(string id);
+    Task<GetProjectDto> GetById(Guid id);
+    Task<GetProjectDto> Update(Guid id, AddUpdateProjectDto dto);
+    void Delete(Guid id);
 }
 
 public class ProjectRepository : IProjectRepository {
@@ -38,16 +38,16 @@ public class ProjectRepository : IProjectRepository {
         return _mapper.Map<IEnumerable<GetProjectDto>>(i);
     }
 
-    public async Task<GetProjectDto> GetById(string id) {
+    public async Task<GetProjectDto> GetById(Guid id) {
         ProjectEntity? i = await _dbContext.Set<ProjectEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         return _mapper.Map<GetProjectDto>(i);
     }
 
-    public Task<GetProjectDto> Update(string id, AddUpdateProjectDto dto) {
+    public Task<GetProjectDto> Update(Guid id, AddUpdateProjectDto dto) {
         throw new NotImplementedException();
     }
 
-    public async void Delete(string id) {
+    public async void Delete(Guid id) {
         GetProjectDto i = await GetById(id);
         _dbContext.Set<ProjectEntity>().Remove(_mapper.Map<ProjectEntity>(i));
         await _dbContext.SaveChangesAsync();
@@ -75,17 +75,17 @@ public class ProjectRepositoryMongoDb : IProjectRepository {
         return _mapper.Map<IEnumerable<GetProjectDto>>(i);
     }
 
-    public async Task<GetProjectDto> GetById(string id) {
+    public async Task<GetProjectDto> GetById(Guid id) {
         ProjectEntity i = await _collection.Find(x => x.Id == id).FirstOrDefaultAsync();
         return _mapper.Map<GetProjectDto>(i);
     }
 
-    public async Task<GetProjectDto> Update(string id, AddUpdateProjectDto dto) {
+    public async Task<GetProjectDto> Update(Guid id, AddUpdateProjectDto dto) {
         await _collection.ReplaceOneAsync(x => x.Id == id, _mapper.Map<ProjectEntity>(dto));
         return _mapper.Map<GetProjectDto>(dto);
     }
 
-    public async void Delete(string id) {
+    public async void Delete(Guid id) {
         await _collection.DeleteOneAsync(x => x.Id == id);
     }
 }

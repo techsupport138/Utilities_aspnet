@@ -13,7 +13,7 @@ public class OtpEntity : BaseEntity
     public UserEntity User { get; set; } = null!;
 
     [Required]
-    [StringLength(100)]
+    [StringLength(450)]
     [ForeignKey(nameof(User))]
     public string UserId { get; set; } = null!;
 }

@@ -1,11 +1,14 @@
-using System.Net.WebSockets;
+﻿using System.Net.WebSockets;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Utilities_aspnet.Statistic.Data;
 using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities;
@@ -16,6 +19,7 @@ public static class StartupExtension {
         builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
         builder.AddUtilitiesSwagger();
         builder.AddUtilitiesIdentity();
+        
     }
 
     private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
@@ -47,6 +51,21 @@ public static class StartupExtension {
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
         });
+
+        builder.Logging.AddEntityFramework<T>();
+
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromSeconds(604800);
+        });
+
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+
+        builder.Services.AddMemoryCache();
+        ///todo: همه ریپوزیتوری ها اینجا رجیستر بشند
+        builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
+        
     }
 
     public static void UseUtilitiesServices(this WebApplication app) {
@@ -60,6 +79,12 @@ public static class StartupExtension {
         app.UseStaticFiles();
         app.UseAuthorization();
         app.UseRouting();
+        app.UseEndpoints(endpoints=>
+        {
+            endpoints.MapDefaultControllerRoute();
+            endpoints.MapRazorPages();
+        });
+        
     }
 
     private static void AddUtilitiesSwagger(this WebApplicationBuilder builder) {

@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Utilities_aspnet.ServiceProvider.Entities;
-using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities.Entities;
@@ -17,20 +16,15 @@ public class ContactInformationEntity : BaseEntity {
     [StringLength(500)]
     public string? Link { get; set; }
 
-    [StringLength(450)]
-    public string? UserId { get; set; }
-    [ForeignKey(nameof(UserId))]
-    public UserEntity? User { get; set; }
-
     [Required]
     public virtual ContactInfoItemEntity ContactInfoItem { get; set; } = null!;
 
     [Required]
     [ForeignKey("ContactInfoItem")]
-    public string ContactInfoItemId { get; set; } = null!;
+    public Guid? ContactInfoItemId { get; set; } = null!;
 
     public virtual ServiceProviderEntity? ServiceProvider { get; set; }
 
     [ForeignKey("ServiceProvider")]
-    public string? ServiceProviderId { get; set; }
+    public Guid? ServiceProviderId { get; set; }
 }
