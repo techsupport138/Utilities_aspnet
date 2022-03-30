@@ -23,6 +23,8 @@ public class UserEntity : IdentityUser
     [StringLength(100)]
     public string? Education { get; set; }
 
+    
+
     [StringLength(100)]
     public string? Degree { get; set; }
 
