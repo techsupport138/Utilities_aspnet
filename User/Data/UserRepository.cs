@@ -7,10 +7,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Utilities_aspnet.Models.Dto;
 using Utilities_aspnet.User.Dtos;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities;
 using Utilities_aspnet.Utilities.Data;
+using Utilities_aspnet.Utilities.Entities;
 using Utilities_aspnet.Utilities.Enums;
 using Utilities_aspnet.Utilities.Responses;
 
@@ -21,6 +23,8 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<string>> RegisterWithMobile(RegisterWithMobileDto dto);
     Task<GenericResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto dto);
+    Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token);
+    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName);
 }
 
 public class UserRepository : IUserRepository {
@@ -122,6 +126,58 @@ public class UserRepository : IUserRepository {
         userReadDto.Token = token;
 
         return Task.FromResult(new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
+    }
+
+
+    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName)
+    {
+        var user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userName);
+        if (user == null) { return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found"); }
+        try
+        {
+
+            if (model.FullName != null) user.FullName = model.FullName;
+            if (model.Bio != null) user.Bio = model.Bio;
+            //if (model.BirthDate != null) user.BirthDate = model.BirthDate;
+            if (model.UserName != null) user.UserName = model.UserName;
+            //if (model.LocationId != null) user.LocationId = model.LocationId;
+            if (model.Degree != null) user.Degree = model.Degree;
+            if (model.Education != null) user.Education = model.Education;
+            if (model.Headline != null) user.Headline = model.Headline;
+            if (model.ColorId != null) user.ColorId = model.ColorId;
+            _context.SaveChanges();
+            if (model.contactInformations != null)
+            {
+                UserEntity users = await _context.Set<UserEntity>().Include(x => x.ContactInformations).FirstOrDefaultAsync(x => x.Id == user.Id);
+                _context.Set<ContactInformationEntity>().RemoveRange(users.ContactInformations);
+                foreach (var information in model.contactInformations)
+                {
+                    var contactInfoItem = _context.Set<ContactInfoItemEntity>().Find(information.ContactInfoItemId);
+                    if (contactInfoItem == null)
+                    {
+                        return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The information was not entered correctly");
+                    }
+                    _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity
+                    {
+                        Value = information.Value,
+                        UserId = users.Id,
+                        Visibility = information.Visibility,
+                        ContactInfoItem = contactInfoItem
+                    });
+                    _context.SaveChanges();
+                }
+            }
+
+
+        }
+        catch
+        {
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Bad Request");
+        }
+
+
+        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, "").Result.Result, UtilitiesStatusCodes.Success, "Success");
+
     }
 
     private async Task<JwtSecurityToken> CreateToken(UserEntity user) {

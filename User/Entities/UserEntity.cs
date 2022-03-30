@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Utilities_aspnet.Utilities.Entities;
 using Utilities_aspnet.Utilities.Enums;
 
@@ -29,8 +30,10 @@ public class UserEntity : IdentityUser
     public DateTime? LastLogin { get; set; }
     public DateTime? Birthday { get; set; }
     public DateTime CreateAccount { get; set; } = DateTime.Now;
-    [Required]
-    [EnumDataType(typeof(Colors))]
-    public Colors Color { get; set; } = Colors.Gray;
+
+    public Guid? ColorId { get; set; }
+    [ForeignKey(nameof(ColorId))]
+    public ColorEntity? Color { get; set; }
     public ICollection<MediaEntity>? Media { get; set; }
+    public ICollection<ContactInformationEntity>? ContactInformations { get; set; }
 }

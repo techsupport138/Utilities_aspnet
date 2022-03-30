@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Utilities_aspnet.Extensions;
 using Utilities_aspnet.ServiceProvider.Entities;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Enums;
@@ -17,10 +18,6 @@ namespace Utilities_aspnet.Utilities.Entities {
         public ContentEntity? Content { get; set; }
         [ForeignKey("Content")]
         public Guid? ContentId { get; set; }
-        
-        public UserEntity? User { get; set; }
-        [ForeignKey("Content")]
-        public string? UserId { get; set; }
 
         public ContactInfoItemEntity? ContactInfoItem { get; set; }
 
@@ -31,5 +28,14 @@ namespace Utilities_aspnet.Utilities.Entities {
 
         [ForeignKey("ServiceProvider")]
         public Guid? ServiceProviderId { get; set; }
+
+        [StringLength(450)]
+        public string? UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public UserEntity? User { get; set; }
+
+        [NotMapped]
+        public string Link => $"{NetworkUtil.ServerAddress}/Medias/{FileName}";
     }
 }

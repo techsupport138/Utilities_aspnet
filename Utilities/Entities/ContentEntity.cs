@@ -23,4 +23,8 @@ public class ContentEntity : BaseEntity {
     [Required]
     [EnumDataType(typeof(ContentUseCase))]
     public ContentUseCase UseCase { get; set; }
+
+    [Required]
+    [EnumDataType(typeof(ApprovalStatus))]
+    public ApprovalStatus ApprovalStatus { get; set; } = ApprovalStatus.Pending;
 }
