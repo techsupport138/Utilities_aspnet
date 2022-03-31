@@ -36,6 +36,6 @@ namespace Utilities_aspnet.Utilities.Entities {
         public UserEntity? User { get; set; }
 
         [NotMapped]
-        public string Link => $"{NetworkUtil.ServerAddress}/Medias/{FileName}";
+        public string Link => $"{Server.ServerAddress}/Medias/{FileName}";
     }
 }
