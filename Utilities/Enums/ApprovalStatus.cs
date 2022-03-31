@@ -6,15 +6,10 @@ using System.Threading.Tasks;
 
 namespace Utilities_aspnet.Utilities.Enums
 {
-    public enum Colors
+    public enum ApprovalStatus
     {
-        White = 0,
-        Black = 1,
-        Blue = 2,
-        Red = 3,
-        Green = 4,
-        Yellow = 5,
-        Orange = 6,
-        Gray = 7
+        Pending = 0,
+        Approved = 1,
+        Rejected = 2
     }
 }
