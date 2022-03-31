@@ -23,42 +23,26 @@ public class GenericResponse {
     }
 }
 
-public class Response<T> : ControllerBase
-{
-    public IActionResult ResponseSending(GenericResponse<T> response)
-    {
-        switch ((UtilitiesStatusCodes)response.Status)
-        {
-            case UtilitiesStatusCodes.Success:
-                return Ok(response);
-            case UtilitiesStatusCodes.BadRequest:
-                return BadRequest(response);
-            case UtilitiesStatusCodes.NotFound:
-                return NotFound(response);
-            case UtilitiesStatusCodes.Forbidden:
-                return Forbid();
-            default:
-                return BadRequest(response);
-        }
+public class Response<T> : ControllerBase {
+    public IActionResult ResponseSending(GenericResponse<T> response) {
+        return response.Status switch {
+            UtilitiesStatusCodes.Success => Ok(response),
+            UtilitiesStatusCodes.BadRequest => BadRequest(response),
+            UtilitiesStatusCodes.NotFound => NotFound(response),
+            UtilitiesStatusCodes.Forbidden => Forbid(),
+            _ => BadRequest(response)
+        };
     }
 }
 
-public class Response : ControllerBase
-{
-    public IActionResult ResponseSending(GenericResponse response)
-    {
-        switch ((UtilitiesStatusCodes)response.Status)
-        {
-            case UtilitiesStatusCodes.Success:
-                return Ok(response);
-            case UtilitiesStatusCodes.BadRequest:
-                return BadRequest(response);
-            case UtilitiesStatusCodes.NotFound:
-                return NotFound(response);
-            case UtilitiesStatusCodes.Forbidden:
-                return Forbid();
-            default:
-                return BadRequest(response);
-        }
+public class Response : ControllerBase {
+    public IActionResult ResponseSending(GenericResponse response) {
+        return response.Status switch {
+            UtilitiesStatusCodes.Success => Ok(response),
+            UtilitiesStatusCodes.BadRequest => BadRequest(response),
+            UtilitiesStatusCodes.NotFound => NotFound(response),
+            UtilitiesStatusCodes.Forbidden => Forbid(),
+            _ => BadRequest(response)
+        };
     }
 }

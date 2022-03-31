@@ -12,6 +12,7 @@ using Utilities_aspnet.User.Dtos;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities;
 using Utilities_aspnet.Utilities.Data;
+using Utilities_aspnet.Utilities.Dtos;
 using Utilities_aspnet.Utilities.Entities;
 using Utilities_aspnet.Utilities.Enums;
 using Utilities_aspnet.Utilities.Responses;
@@ -131,7 +132,7 @@ public class UserRepository : IUserRepository {
 
     public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName)
     {
-        var user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userName);
+        UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userName);
         if (user == null) { return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found"); }
         try
         {
@@ -150,9 +151,9 @@ public class UserRepository : IUserRepository {
             {
                 UserEntity users = await _context.Set<UserEntity>().Include(x => x.ContactInformations).FirstOrDefaultAsync(x => x.Id == user.Id);
                 _context.Set<ContactInformationEntity>().RemoveRange(users.ContactInformations);
-                foreach (var information in model.contactInformations)
+                foreach (ContactInformationCreateDto information in model.contactInformations)
                 {
-                    var contactInfoItem = _context.Set<ContactInfoItemEntity>().Find(information.ContactInfoItemId);
+                    ContactInfoItemEntity? contactInfoItem = _context.Set<ContactInfoItemEntity>().Find(information.ContactInfoItemId);
                     if (contactInfoItem == null)
                     {
                         return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The information was not entered correctly");

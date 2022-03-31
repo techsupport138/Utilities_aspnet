@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Utilities_aspnet.Utilities.Entities;
 using Utilities_aspnet.Utilities.Enums;
 
-namespace Utilities_aspnet.Models.Dto
+namespace Utilities_aspnet.Utilities.Dtos
 {
     public class ContactInformationCreateDto
     {

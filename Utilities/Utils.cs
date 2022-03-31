@@ -1,5 +1,4 @@
-﻿using System.Net.WebSockets;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
@@ -84,7 +83,7 @@ public static class StartupExtension {
         }
 
         app.UseHttpsRedirection();
-        var options = new RewriteOptions()
+        RewriteOptions? options = new RewriteOptions()
             .AddRedirectToHttpsPermanent()
             .AddRedirectToWwwPermanent();
         app.UseRewriter(options);

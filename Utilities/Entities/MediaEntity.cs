@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Utilities_aspnet.Extensions;
 using Utilities_aspnet.ServiceProvider.Entities;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Enums;
