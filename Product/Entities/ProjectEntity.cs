@@ -14,4 +14,4 @@ public class ProjectEntity : BaseProductEntity {
     [Required]
     [StringLength(1000)]
     public string Description { get; set; } = null!;
-} 
+}

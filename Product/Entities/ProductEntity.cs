@@ -1,5 +1,3 @@
 namespace Utilities_aspnet.Product.Entities;
 
-public class ProductEntity : BaseProductEntity
-{
-}
+public class ProductEntity : BaseProductEntity { }

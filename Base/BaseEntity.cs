@@ -1,20 +1,13 @@
 using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+namespace Utilities_aspnet.Base;
 
-namespace Utilities_aspnet.Utilities.Entities;
-
-
-public class BaseEntity
-{
+public class BaseEntity {
     [Key]
-    //[BsonId]
-    //[BsonRepresentation(BsonType.ObjectId)]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public Guid Id { get; } = Guid.NewGuid();
+
     [Required]
     public DateTime CreatedAt { get; } = DateTime.Now;
 

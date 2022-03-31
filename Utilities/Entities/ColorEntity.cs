@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Utilities_aspnet.Base;
 
 namespace Utilities_aspnet.Utilities.Entities;
 

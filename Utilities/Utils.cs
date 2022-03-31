@@ -37,9 +37,6 @@ public static class StartupExtension {
                 case DatabaseType.MySql:
                     options.UseMySql(connectionStrings, new MySqlServerVersion(new Version(8, 0, 28))).EnableSensitiveDataLogging();
                     break;
-                case DatabaseType.MongoDb:
-                    builder.Services.Configure<MongoDatabaseSettings>(builder.Configuration.GetSection("MongoDb"));
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
             }

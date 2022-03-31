@@ -1,5 +1,4 @@
-﻿using Utilities_aspnet.Models.Dto;
-using Utilities_aspnet.Utilities.Dtos;
+﻿using Utilities_aspnet.Utilities.Dtos;
 
 namespace Utilities_aspnet.Utilities {
     public static class EnumExtension {
