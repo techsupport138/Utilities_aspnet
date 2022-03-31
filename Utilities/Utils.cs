@@ -1,6 +1,7 @@
 ﻿using System.Net.WebSockets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Utilities_aspnet.Statistic.Data;
+using Utilities_aspnet.User.Data;
+using Utilities_aspnet.Utilities.Data;
 using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities;
@@ -63,6 +66,11 @@ public static class StartupExtension {
 
 
         builder.Services.AddMemoryCache();
+        
+        builder.Services.AddTransient<ISmsSender, SmsSender>();
+        builder.Services.AddTransient<IOtpService, OtpService>();
+        builder.Services.AddTransient<IUserRepository, UserRepository>();
+
         ///todo: همه ریپوزیتوری ها اینجا رجیستر بشند
         builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
         
@@ -76,6 +84,10 @@ public static class StartupExtension {
         }
 
         app.UseHttpsRedirection();
+        var options = new RewriteOptions()
+            .AddRedirectToHttpsPermanent()
+            .AddRedirectToWwwPermanent();
+        app.UseRewriter(options);
         app.UseStaticFiles();
         app.UseAuthorization();
         app.UseRouting();
@@ -94,6 +106,9 @@ public static class StartupExtension {
 
     private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c =>
+        {
+            c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+        });
     }
 }

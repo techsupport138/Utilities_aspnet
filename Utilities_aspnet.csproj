@@ -37,7 +37,6 @@
     <ItemGroup>
       <Folder Include="Ads\Data\" />
       <Folder Include="ServiceProvider\Data" />
-      <Folder Include="Statistic\Dtos\" />
     </ItemGroup>
 
 </Project>

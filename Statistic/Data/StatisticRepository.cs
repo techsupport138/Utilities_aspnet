@@ -9,13 +9,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Caching.Memory;
 using UAParser;
+using Utilities_aspnet.Statistic.Dtos;
 using Utilities_aspnet.Statistic.Entities;
+using Utilities_aspnet.User.Entities;
 
 namespace Utilities_aspnet.Statistic.Data
 {
     public interface IStatisticRepository
     {
         Task<bool> Add(ActionExecutingContext context);
+        Task<AdminStatisticDto> Show();
     }
     public class StatisticRepository : IStatisticRepository
     {
@@ -113,6 +116,92 @@ namespace Utilities_aspnet.Statistic.Data
                 return true;
             }
             return false;
+        }
+
+        public async Task<AdminStatisticDto> Show()
+        {
+            var model = new AdminStatisticDto();
+            model.CountOfTodayVisitor = _dbContext.Set<VisitorEntity>().Count(x => x.Date == DateTime.Now.Date);
+            model.CountOfTodayPageVisit = _dbContext.Set<StatisticEntity>().Count(x => x.Date == DateTime.Now.Date);
+            model.CountOfTodayBot = _dbContext.Set<StatisticEntity>()
+                .Count(x => x.Date == DateTime.Now.Date
+                && (x.UserAgentFamily.Contains("bot") || x.UserAgentFamily.Contains("Bot")));
+
+
+            model.CountOfYesterdayVisitor = _dbContext.Set<VisitorEntity>().Count(x => x.Date == DateTime.Now.Date.AddDays(-1));
+            model.CountOfYesterdayPageVisit = _dbContext.Set<StatisticEntity>().Count(x => x.Date == DateTime.Now.Date.AddDays(-1));
+            model.CountOfYesterdayBot = _dbContext.Set<StatisticEntity>()
+                .Count(x => x.Date == DateTime.Now.Date.AddDays(-1)
+                            && (x.UserAgentFamily.Contains("bot") || x.UserAgentFamily.Contains("Bot")));
+
+            //model.CountTotalComment = _dbContext.Set<Comment>().Count();
+            //model.CountNewComment = _dbContext.Set<Comment>().Count(x => x.CommentPublish == false);
+
+            model.VisitorDic = _dbContext.Set<VisitorEntity>().GroupBy(x => x.Date).Select(y => new { name = y.Key, count = y.Count() })
+                .ToDictionary(k => k.name, i => i.count);
+
+
+            model.UserAgentTodayDic = _dbContext.Set<StatisticEntity>()
+                .Where(x => x.Date == DateTime.Now.Date && (!x.UserAgentFamily.Contains("bot") && !x.UserAgentFamily.Contains("Bot")))
+                .GroupBy(x => x.UserAgentFamily).Select(y => new { name = y.Key, count = y.Count() })
+                    .OrderByDescending(x => x.count)
+                    .ToDictionary(k => k.name, i => i.count);
+
+            model.BotAgentTodayDic = _dbContext.Set<StatisticEntity>()
+                .Where(x => x.Date == DateTime.Now.Date && (x.UserAgentFamily.Contains("bot") || x.UserAgentFamily.Contains("Bot")))
+                .GroupBy(x => x.UserAgentFamily).Select(y => new { name = y.Key, count = y.Count() })
+                .OrderByDescending(x => x.count)
+                .ToDictionary(k => k.name, i => i.count);
+
+
+
+            model.UserAgentDic = _dbContext.Set<StatisticEntity>()
+                .Where(x => !x.UserAgentFamily.Contains("bot") && !x.UserAgentFamily.Contains("Bot"))
+                .GroupBy(x => x.UserAgentFamily).Select(y => new { name = y.Key, count = y.Count() })
+                .OrderByDescending(x => x.count)
+                .ToDictionary(k => k.name, i => i.count);
+
+            model.BotAgentDic = _dbContext.Set<StatisticEntity>()
+                .Where(x => x.UserAgentFamily.Contains("bot") || x.UserAgentFamily.Contains("Bot"))
+                .GroupBy(x => x.UserAgentFamily).Select(y => new { name = y.Key, count = y.Count() })
+                .OrderByDescending(x => x.count)
+                .ToDictionary(k => k.name, i => i.count);
+
+
+            model.TopUrlTodayDic = _dbContext.Set<StatisticEntity>()
+                .Where(x => x.Date == DateTime.Now.Date && !x.UserAgentFamily.Contains("bot") && !x.UserAgentFamily.Contains("Bot"))
+                .GroupBy(x => x.Url).Select(y => new { name = y.Key, count = y.Count() })
+                .OrderByDescending(x => x.count).Take(10)
+                .ToDictionary(k => k.name, i => i.count);
+
+            model.TopUrlDic = _dbContext.Set<StatisticEntity>()
+                .Where(x => !x.UserAgentFamily.Contains("bot") && !x.UserAgentFamily.Contains("Bot"))
+                .GroupBy(x => x.Url).Select(y => new { name = y.Key, count = y.Count() })
+                .OrderByDescending(x => x.count).Take(10)
+                .ToDictionary(k => k.name, i => i.count);
+
+            model.OsDicToday = _dbContext.Set<StatisticEntity>()
+                .Where(x => x.Date == DateTime.Now.Date && !x.UserAgentFamily.Contains("bot") && !x.UserAgentFamily.Contains("Bot"))
+                .GroupBy(x => x.Osfamily).Select(y => new { name = y.Key, count = y.Count() })
+                .OrderByDescending(x => x.count)
+                .ToDictionary(k => k.name, i => i.count);
+
+            model.OsDic = _dbContext.Set<StatisticEntity>()
+                .Where(x => !x.UserAgentFamily.Contains("bot") && !x.UserAgentFamily.Contains("Bot"))
+                .GroupBy(x => x.Osfamily).Select(y => new { name = y.Key, count = y.Count() })
+                .OrderByDescending(x => x.count)
+                .ToDictionary(k => k.name, i => i.count);
+
+            model.HoursDic = _dbContext.Set<StatisticEntity>()
+                .Where(x => !x.UserAgentFamily.Contains("bot") && !x.UserAgentFamily.Contains("Bot"))
+                .GroupBy(x => x.Hours)
+                .Select(y => new { name = y.Key, count = y.Count() })
+                .OrderBy(x => x.name)
+                .ToDictionary(k => k.name, i => i.count);
+
+            model.UserCount = _dbContext.Set<UserEntity>().Count();
+
+            return model;
         }
     }
 }
