@@ -36,7 +36,13 @@
     
     <ItemGroup>
       <Folder Include="Ads\Data\" />
+      <Folder Include="BookMark\Data\" />
+      <Folder Include="DailyPrice\Data\" />
+      <Folder Include="Geo\Data\" />
+      <Folder Include="Job\Data\" />
+      <Folder Include="learn\Data\" />
       <Folder Include="ServiceProvider\Data" />
+      <Folder Include="Tender\Data\" />
     </ItemGroup>
 
 </Project>

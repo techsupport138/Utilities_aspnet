@@ -16,7 +16,7 @@ public class ContentEntity : BaseEntity {
     [StringLength(500)]
     public string? Link { get; set; }
 
-    public ICollection<MediaEntity>? Media { get; set; }
+    public ICollection<MediaEntity>? Media { get; set; } 
 
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
 
