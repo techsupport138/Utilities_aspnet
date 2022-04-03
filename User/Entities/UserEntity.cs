@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Utilities_aspnet.Product.Entities;
 using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.User.Entities;
@@ -36,5 +37,7 @@ public class UserEntity : IdentityUser {
     public ColorEntity? Color { get; set; }
 
     public ICollection<MediaEntity>? Media { get; set; }
+    public ICollection<SpecialtyEntity>? Specialties { get; set; }
+    public ICollection<PostCategoryEntity>? Favorites { get; set; }
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
 }
