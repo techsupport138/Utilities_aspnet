@@ -35,6 +35,10 @@ public class UserEntity : IdentityUser {
 
     [ForeignKey(nameof(ColorId))]
     public ColorEntity? Color { get; set; }
+    public Guid? LocationId { get; set; }
+
+    [ForeignKey(nameof(LocationId))]
+    public LocationEntity? Location { get; set; }
 
     public ICollection<MediaEntity>? Media { get; set; }
     public ICollection<SpecialtyEntity>? Specialties { get; set; }
