@@ -1,28 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Utilities_aspnet.Base;
 using Utilities_aspnet.Comment.Entities;
 using Utilities_aspnet.Geo.Entity;
 using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.Product.Entities;
 
-public class ProjectEntity : BaseProductEntity {
+public class ProjectEntity : BasePEntity {
 
     public Guid CategoryId { get; set; }
     [ForeignKey(nameof(CategoryId))]
-    public virtual ProjectCategoryEntity Category { get; set; }
-
-    [Required]
-    [StringLength(100)]
-    public string Title { get; set; } = null!;
+    public virtual CategoryEntity Category { get; set; }
 
     [Required]
     [StringLength(200)]
     public string Subtitle { get; set; } = null!;
-
-    [Required]
-    [Column(TypeName = "NTEXT")]
-    public string Description { get; set; } = null!;
 
     [Display(Name = "کشور")]
     public int CountryId { get; set; }

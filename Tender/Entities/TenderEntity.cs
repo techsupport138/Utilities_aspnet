@@ -22,8 +22,8 @@ namespace Utilities_aspnet.Tender.Entities
         public UserEntity UserEntity { get; set; }
         public string UserId { get; set; }
 
-        public TenderCategoryEntity TenderCategory { get; set; }
-        public string CategoryId { get; set; }
+        public CategoryEntity TenderCategory { get; set; }
+        public Guid CategoryId { get; set; }
 
 
         public bool Enable { get; set; }

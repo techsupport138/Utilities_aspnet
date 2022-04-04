@@ -28,8 +28,8 @@ namespace Utilities_aspnet.BookMark.Entities
         public TenderEntity? Tender { get; set; } = null!;
         public Guid? TenderId { get; set; } = null!;
 
-        public DPProductEntity? DailyPrice { get; set; } = null!;
-        public Guid? DPProductId { get; set; } = null!;
+        public ProductEntity? DailyPrice { get; set; } = null!;
+        public Guid? ProductId { get; set; } = null!;
         
 
     }

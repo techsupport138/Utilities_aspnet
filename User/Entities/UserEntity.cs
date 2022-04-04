@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Utilities_aspnet.BookMark.Entities;
 using Utilities_aspnet.Product.Entities;
 using Utilities_aspnet.Utilities.Entities;
 
@@ -43,7 +44,11 @@ public class UserEntity : IdentityUser {
     public LocationEntity? Location { get; set; }
 
     public ICollection<MediaEntity>? Media { get; set; }
-    public ICollection<SpecialtyEntity>? Specialties { get; set; }
-    public ICollection<PostCategoryEntity>? Favorites { get; set; }
+
+    public ICollection<BookMarkEntity>? BookMark { get; set; }
+
+    ///todo:از بوکمارک برای نشان کردن استفاده کن
+    //public ICollection<SpecialtyEntity>? Specialties { get; set; }
+    //public ICollection<PostCategoryEntity>? Favorites { get; set; }
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
 }

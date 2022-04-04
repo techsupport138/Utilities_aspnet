@@ -10,7 +10,7 @@ using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.Product.Entities
 {
-    public class PostEntity : BaseProductEntity
+    public class PostEntity : BasePEntity
     {
         [StringLength(250)]
         public string? Title { get; set; }
@@ -26,6 +26,6 @@ namespace Utilities_aspnet.Product.Entities
         public LocationEntity? Location { get; set; }
         public ICollection<MediaEntity>? Medias { get; set; }
         public ICollection<UserEntity>? TeamUsers { get; set; }
-        public ICollection<PostCategoryEntity>? PostCategories { get; set; }
+        //public ICollection<PostCategoryEntity>? PostCategories { get; set; }
     }
 }
