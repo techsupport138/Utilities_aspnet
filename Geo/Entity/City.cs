@@ -14,6 +14,7 @@ using Utilities_aspnet.Tender.Entities;
 
 namespace Utilities_aspnet.Geo.Entity
 {
+    [Table("City")]
     public class City
     {
         [Key]

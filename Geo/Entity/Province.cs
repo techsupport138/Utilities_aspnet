@@ -12,6 +12,7 @@ using Utilities_aspnet.Tender.Entities;
 
 namespace Utilities_aspnet.Geo.Entity
 {
+    [Table("Province")]
     public class Province
     {
         [Key]

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilities_aspnet.Product.Entities;
 using Utilities_aspnet.Utilities.Entities;
+using Utilities_aspnet.Language.Entities;
 
 namespace Utilities_aspnet.Base
 {
@@ -21,6 +22,11 @@ namespace Utilities_aspnet.Base
         [ForeignKey(nameof(MediaId))]
         public MediaEntity? Media { get; set; }
         public Guid? MediaId { get; set; }
+
+        [ForeignKey(nameof(LanguageId))]
+        public LanguageEntity Language { get; set; }
+        [StringLength(5)]
+        public string LanguageId { get; set; } = "fa-IR";
 
         public CategoryForEnum CategoryFor { get; set; }
 
