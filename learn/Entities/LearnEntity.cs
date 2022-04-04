@@ -12,10 +12,11 @@ namespace Utilities_aspnet.learn.Entities
 {
     public class LearnEntity : BaseEntity
     {
-        public LearnCategoryEntity LearnCategory { get; set; }
         [Display(Name = "دسته بندی")]
-        public string LearnCategoryId { get; set; }
-
+        public CategoryEntity AdsCategory { get; set; }
+        public Guid CategoryId { get; set; }
+        
+        
         [Display(Name = "فعال")]
         public bool Enable { get; set; }
 

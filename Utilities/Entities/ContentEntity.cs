@@ -6,6 +6,12 @@ using Utilities_aspnet.Utilities.Enums;
 namespace Utilities_aspnet.Utilities.Entities;
 
 public class ContentEntity : BaseEntity {
+
+    public CategoryEntity ContentCategory { get; set; }
+    public Guid CategoryId { get; set; }
+
+
+
     [StringLength(200)]
     public string? Title { get; set; }
 

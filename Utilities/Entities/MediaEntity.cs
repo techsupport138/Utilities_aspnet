@@ -10,6 +10,7 @@ using Utilities_aspnet.Tender.Entities;
 using Utilities_aspnet.ServiceProvider.Entities;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.DailyPrice.Entities;
+using Utilities_aspnet.Product.Entities;
 
 namespace Utilities_aspnet.Utilities.Entities {
     public class MediaEntity : BaseEntity {
@@ -25,9 +26,9 @@ namespace Utilities_aspnet.Utilities.Entities {
         [ForeignKey("Content")]
         public Guid? ContentId { get; set; }
 
-        public DPProductEntity? DPProduct { get; set; }
-        [ForeignKey("DPProduct")]
-        public Guid? DPProductId { get; set; }
+        public ProductEntity? Product { get; set; }
+        [ForeignKey("Product")]
+        public Guid? ProductId { get; set; }
         
 
         public virtual JobEntity? Job { get; set; }

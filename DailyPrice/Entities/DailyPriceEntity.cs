@@ -6,15 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities_aspnet.Base;
+using Utilities_aspnet.Product.Entities;
 using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.DailyPrice.Entities
 {
     public class DailyPriceEntity: BaseEntity
     {
-        public Guid DPProductId { get; set; }
-        [ForeignKey(nameof(DPProductId))]
-        public DPProductEntity DPProduct { get; set; }
+        public Guid ProductId { get; set; }
+        [ForeignKey(nameof(ProductId))]
+        public ProductEntity Product { get; set; }
 
         public decimal Amount { get; set; }
     }

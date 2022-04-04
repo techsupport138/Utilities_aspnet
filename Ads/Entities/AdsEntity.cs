@@ -19,8 +19,8 @@ namespace Utilities_aspnet.Ads.Entities
         public UserEntity UserEntity { get; set; }
         public string UserId { get; set; }
 
-        public AdsCategoryEntity AdsCategory { get; set; }
-        public string CategoryId { get; set; }
+        public CategoryEntity AdsCategory { get; set; }
+        public Guid CategoryId { get; set; }
 
 
         public bool Enable { get; set; }
