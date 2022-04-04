@@ -19,22 +19,34 @@ namespace Utilities_aspnet.Product.Data
         Task<GenericResponse<PostDto?>> UpdatePost(PostDto post);
         Task<GenericResponse<PostDto?>> DeletePost(Guid id);
 
+        
+    }
     public class PostRepository : IPostRepository
     {
         private readonly DbContext _context;
         private readonly IMapper _mapper;
 
-        public PostRepository(DbContext context , IMapper mapper)
+        public PostRepository(DbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
+        public Task<GenericResponse<PostDto?>> AddPost(PostDto post)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<GenericResponse<PostDto?>> DeletePost(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<GenericResponse<IEnumerable<PostDto?>>> GetAllPosts()
         {
-             List<PostEntity> Content = await _context.Set<PostEntity>()
-                .Where(c=> c.DeletedAt == null)
-                .ToListAsync();
+            List<PostEntity> Content = await _context.Set<PostEntity>()
+               .Where(c => c.DeletedAt == null)
+               .ToListAsync();
             List<PostDto> postDtos = _mapper.Map<List<PostDto>>(Content);
 
             return new GenericResponse<IEnumerable<PostDto?>>(postDtos, Utilities.Enums.UtilitiesStatusCodes.Success,
@@ -53,6 +65,9 @@ namespace Utilities_aspnet.Product.Data
             message: "Success");
         }
 
-       
+        public Task<GenericResponse<PostDto?>> UpdatePost(PostDto post)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

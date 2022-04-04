@@ -20,8 +20,8 @@ namespace Utilities_aspnet.Job.Entities
         public UserEntity UserEntity { get; set; }
         public string UserId { get; set; }
 
-        public JobCategoryEntity JobCategory { get; set; }
-        public string JobCategoryId { get; set; }
+        public CategoryEntity JobCategory { get; set; }
+        public Guid CategoryId { get; set; }
 
         public bool Enable { get; set; }
 
