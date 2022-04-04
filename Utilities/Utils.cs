@@ -1,5 +1,4 @@
-﻿using System.Net.WebSockets;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using StackExchange.Redis;
 using Utilities_aspnet.Statistic.Data;
 using Utilities_aspnet.User.Data;
 using Utilities_aspnet.Utilities.Data;
@@ -18,11 +18,11 @@ namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(this WebApplicationBuilder builder, string connectionStrings,
-        DatabaseType databaseType = DatabaseType.SqlServer) where T : DbContext {
+        DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) where T : DbContext {
         builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
         builder.AddUtilitiesSwagger();
         builder.AddUtilitiesIdentity();
-        
+        if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
     }
 
     private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
@@ -37,9 +37,6 @@ public static class StartupExtension {
                     break;
                 case DatabaseType.MySql:
                     options.UseMySql(connectionStrings, new MySqlServerVersion(new Version(8, 0, 28))).EnableSensitiveDataLogging();
-                    break;
-                case DatabaseType.MongoDb:
-                    builder.Services.Configure<MongoDatabaseSettings>(builder.Configuration.GetSection("MongoDb"));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
@@ -56,24 +53,23 @@ public static class StartupExtension {
         });
 
         builder.Logging.AddEntityFramework<T>();
-
-        builder.Services.AddSession(options =>
-        {
-            options.IdleTimeout = TimeSpan.FromSeconds(604800);
-        });
-
+        builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-
         builder.Services.AddMemoryCache();
-        
+
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
-
-        ///todo: همه ریپوزیتوری ها اینجا رجیستر بشند
         builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
-        
+    }
+
+    private static void AddUtilitiesSwagger(this WebApplicationBuilder builder) {
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+    }
+
+    private static void AddRedis(this WebApplicationBuilder builder, string connectionString) {
+        builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(connectionString));
     }
 
     public static void UseUtilitiesServices(this WebApplication app) {
@@ -84,31 +80,19 @@ public static class StartupExtension {
         }
 
         app.UseHttpsRedirection();
-        var options = new RewriteOptions()
-            .AddRedirectToHttpsPermanent()
-            .AddRedirectToWwwPermanent();
+        RewriteOptions options = new RewriteOptions().AddRedirectToHttpsPermanent().AddRedirectToWwwPermanent();
         app.UseRewriter(options);
         app.UseStaticFiles();
         app.UseAuthorization();
         app.UseRouting();
-        app.UseEndpoints(endpoints=>
-        {
+        app.UseEndpoints(endpoints => {
             endpoints.MapDefaultControllerRoute();
             endpoints.MapRazorPages();
         });
-        
-    }
-
-    private static void AddUtilitiesSwagger(this WebApplicationBuilder builder) {
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
     }
 
     private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
         app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
-        });
+        app.UseSwaggerUI(c => { c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None); });
     }
 }

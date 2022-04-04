@@ -1,10 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Utilities_aspnet.Comment.Entities;
 using Utilities_aspnet.Geo.Entity;
+using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.Product.Entities;
 
 public class ProjectEntity : BaseProductEntity {
+
+    public Guid CategoryId { get; set; }
+    [ForeignKey(nameof(CategoryId))]
+    public virtual ProjectCategoryEntity Category { get; set; }
+
     [Required]
     [StringLength(100)]
     public string Title { get; set; } = null!;
@@ -14,7 +21,7 @@ public class ProjectEntity : BaseProductEntity {
     public string Subtitle { get; set; } = null!;
 
     [Required]
-    [StringLength(1000)]
+    [Column(TypeName = "NTEXT")]
     public string Description { get; set; } = null!;
 
     [Display(Name = "کشور")]
@@ -30,4 +37,10 @@ public class ProjectEntity : BaseProductEntity {
     public virtual Country Country { get; set; }
     [ForeignKey(nameof(ProvinceId))]
     public virtual Province Province { get; set; }
+
+    public IEnumerable<CommentEntity>? Comment { get; set; }
+
+    public ICollection<MediaEntity>? Media { get; set; }
+
 } 
+

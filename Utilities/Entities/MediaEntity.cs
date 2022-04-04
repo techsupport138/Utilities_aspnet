@@ -1,12 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Utilities_aspnet.Extensions;
+using Utilities_aspnet.Base;
+
 using Utilities_aspnet.Job.Entities;
 using Utilities_aspnet.learn.Entities;
-using Utilities_aspnet.ServiceProvider.Entities;
-using Utilities_aspnet.Tender.Entities;
-using Utilities_aspnet.User.Entities;
+using Utilities_aspnet.Base;
 using Utilities_aspnet.Utilities.Enums;
+using Utilities_aspnet.Tender.Entities;
+using Utilities_aspnet.ServiceProvider.Entities;
+using Utilities_aspnet.User.Entities;
+using Utilities_aspnet.DailyPrice.Entities;
 
 namespace Utilities_aspnet.Utilities.Entities {
     public class MediaEntity : BaseEntity {
@@ -22,6 +25,10 @@ namespace Utilities_aspnet.Utilities.Entities {
         [ForeignKey("Content")]
         public Guid? ContentId { get; set; }
 
+        public DPProductEntity? DPProduct { get; set; }
+        [ForeignKey("DPProduct")]
+        public Guid? DPProductId { get; set; }
+        
 
         public virtual JobEntity? Job { get; set; }
         [ForeignKey("JobEntity")]
@@ -48,6 +55,7 @@ namespace Utilities_aspnet.Utilities.Entities {
         public Guid? ServiceProviderId { get; set; }
 
 
+
         
 
 
@@ -59,6 +67,6 @@ namespace Utilities_aspnet.Utilities.Entities {
         public UserEntity? User { get; set; }
 
         [NotMapped]
-        public string Link => $"{NetworkUtil.ServerAddress}/Medias/{FileName}";
+        public string Link => $"{Server.ServerAddress}/Medias/{FileName}";
     }
 }

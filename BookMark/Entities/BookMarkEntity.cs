@@ -9,6 +9,7 @@ using Utilities_aspnet.Ads.Entities;
 using Utilities_aspnet.Tender.Entities;
 using Utilities_aspnet.DailyPrice.Entities;
 using Utilities_aspnet.Product.Entities;
+using Utilities_aspnet.Base;
 
 namespace Utilities_aspnet.BookMark.Entities
 {
@@ -24,11 +25,11 @@ namespace Utilities_aspnet.BookMark.Entities
         public ProjectEntity? Project { get; set; } = null!;
         public Guid? ProjectId { get; set; } = null!;
 
-        public TenderEntity? DailyPrice { get; set; } = null!;
+        public TenderEntity? Tender { get; set; } = null!;
         public Guid? TenderId { get; set; } = null!;
 
-        public DailyPriceEntity? Tender { get; set; } = null!;
-        public Guid? DailyPriceId { get; set; } = null!;
+        public DPProductEntity? DailyPrice { get; set; } = null!;
+        public Guid? DPProductId { get; set; } = null!;
         
 
     }

@@ -1,7 +1,6 @@
-namespace Utilities_aspnet.Utilities.Enums; 
+namespace Utilities_aspnet.Utilities.Enums;
 
 public enum DatabaseType {
     SqlServer = 0,
-    MySql = 1,
-    MongoDb = 2
+    MySql = 1
 }

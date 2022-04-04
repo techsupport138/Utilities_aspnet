@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities_aspnet.Base;
 using Utilities_aspnet.Geo.Entity;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Entities;

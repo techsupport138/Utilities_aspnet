@@ -15,8 +15,9 @@ namespace Utilities_aspnet.Tender.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CategoryId { get; set; }
         [StringLength(200)]
-        public string Category { get; set; }
+        public string Title { get; set; }
 
+        [ForeignKey(nameof(MediaId))]
         public MediaEntity? Media { get; set; }
         public Guid? MediaId { get; set; }
     }

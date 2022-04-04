@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using UAParser;
 using Utilities_aspnet.Statistic.Dtos;
 using Utilities_aspnet.Statistic.Entities;
@@ -41,10 +43,10 @@ namespace Utilities_aspnet.Statistic.Data
             string actionName = context.RouteData.Values["action"].ToString();
             string controllerName = context.RouteData.Values["controller"].ToString();
             string urlName = context.RouteData.Values.ContainsKey("url") ? context.RouteData.Values["url"].ToString() : "";
-            var ip = context.HttpContext.Connection.RemoteIpAddress;
-            var urlReferrer = context.HttpContext.Request.Headers["Referer"].ToString();
-            var userAgent = context.HttpContext.Request.Headers["User-Agent"];
-            var uaParser = Parser.GetDefault();
+            IPAddress? ip = context.HttpContext.Connection.RemoteIpAddress;
+            string? urlReferrer = context.HttpContext.Request.Headers["Referer"].ToString();
+            StringValues userAgent = context.HttpContext.Request.Headers["User-Agent"];
+            Parser? uaParser = Parser.GetDefault();
             ClientInfo c = uaParser.Parse(userAgent);
 
             //Debug.WriteLine(c.UserAgent.Family); // => "Mobile Safari"
@@ -63,15 +65,15 @@ namespace Utilities_aspnet.Statistic.Data
             {
                 ///todo:افزودن به لیست بازدید
                 DateTime data;
-                var key = $"ip_{ip}_{c.Device.Family}";
+                string? key = $"ip_{ip}_{c.Device.Family}";
 
                 if (!_cache.TryGetValue(key, out data))
                 {
-                    var dt = DateTime.Now.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+                    DateTime dt = DateTime.Now.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
                     _cache.Set(key, data, dt);
                     try
                     {
-                        var newv = new VisitorEntity()
+                        VisitorEntity? newv = new VisitorEntity()
                         {
                             Date = DateTime.Now,
                             Hours = (byte)DateTime.Now.Hour,
@@ -90,7 +92,7 @@ namespace Utilities_aspnet.Statistic.Data
 
                 try
                 {
-                    var news = new StatisticEntity()
+                    StatisticEntity? news = new StatisticEntity()
                     {
                         //Url = urlName,
                         //Url = context.HttpContext.Request.Path + "/" + context.HttpContext.Request.QueryString,
@@ -120,7 +122,7 @@ namespace Utilities_aspnet.Statistic.Data
 
         public async Task<AdminStatisticDto> Show()
         {
-            var model = new AdminStatisticDto();
+            AdminStatisticDto? model = new AdminStatisticDto();
             model.CountOfTodayVisitor = _dbContext.Set<VisitorEntity>().Count(x => x.Date == DateTime.Now.Date);
             model.CountOfTodayPageVisit = _dbContext.Set<StatisticEntity>().Count(x => x.Date == DateTime.Now.Date);
             model.CountOfTodayBot = _dbContext.Set<StatisticEntity>()

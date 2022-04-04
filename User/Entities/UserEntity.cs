@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Utilities_aspnet.Utilities.Entities;
-using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.User.Entities;
 
-public class UserEntity : IdentityUser
-{
+public class UserEntity : IdentityUser {
+
+
     [Required]
     public bool Suspend { get; set; } = false;
 
@@ -16,14 +16,13 @@ public class UserEntity : IdentityUser
 
     [StringLength(100)]
     public string? Headline { get; set; }
-    
+
     [StringLength(500)]
     public string? Bio { get; set; }
 
     [StringLength(100)]
     public string? Education { get; set; }
 
-    
 
     [StringLength(100)]
     public string? Degree { get; set; }
@@ -34,8 +33,10 @@ public class UserEntity : IdentityUser
     public DateTime CreateAccount { get; set; } = DateTime.Now;
 
     public Guid? ColorId { get; set; }
+
     [ForeignKey(nameof(ColorId))]
     public ColorEntity? Color { get; set; }
+
     public ICollection<MediaEntity>? Media { get; set; }
-    public ICollection<ContactInformationEntity>? ContactInformations { get; set; }
+    public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
 }

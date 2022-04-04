@@ -21,6 +21,7 @@ namespace Utilities_aspnet.Job.Entities
         [Display(Name = "دسته بندی شغل")]
         public string JobCategoryName { get; set; }
 
+        [ForeignKey(nameof(MediaId))]
         public MediaEntity? Media { get; set; }
         public Guid? MediaId { get; set; }
 

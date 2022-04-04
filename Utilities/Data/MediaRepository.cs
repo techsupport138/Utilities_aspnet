@@ -1,63 +1,57 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-namespace Utilities_aspnet.Data
-{
-    public interface IMediaRepository
-    {
+namespace Utilities_aspnet.Utilities.Data {
+    public interface IMediaRepository {
         bool SaveMedia(IFormFile image, string name);
         bool SaveMedia(IFormFile image, string name, string folder);
         string GetFileName(Guid guid, string ext = ".png");
-        string GetFileName(Guid guid, string folder = "", string ext = ".png");
+        string GetFileName(Guid guid, string folder, string ext);
         string GetFileUrl(string name, string folder);
     }
 
-    public class MediaRepository : IMediaRepository
-    {
+    public class MediaRepository : IMediaRepository {
         private readonly IWebHostEnvironment _env;
 
-        public MediaRepository(IWebHostEnvironment env)
-        {
+        public MediaRepository(IWebHostEnvironment env) {
             _env = env;
         }
 
-        public string GetFileName(Guid guid, string folder = "", string ext = ".png")
-        {
+        public string GetFileName(Guid guid, string folder, string ext) {
             return folder + (guid.ToString("N")) + ext;
         }
-        public string GetFileName(Guid guid, string ext = ".png") { return guid.ToString("N") + ext; }
-        public string GetFileUrl(string name, string folder) { return Path.Combine(folder, name); }
 
-        public bool SaveMedia(IFormFile image, string name, string folder = "")
-        {
-            try
-            {
-                var webRoot = _env.WebRootPath;
-                var nullPath = Path.Combine(webRoot, "Medias", "null.png");
+        public string GetFileName(Guid guid, string ext = ".png") {
+            return guid.ToString("N") + ext;
+        }
+
+        public string GetFileUrl(string name, string folder) {
+            return Path.Combine(folder, name);
+        }
+
+        public bool SaveMedia(IFormFile image, string name, string folder) {
+            try {
+                string webRoot = _env.WebRootPath;
+                string nullPath = Path.Combine(webRoot, "Medias", "null.png");
                 string path = Path.Combine(webRoot, "Medias", folder, name);
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         File.Delete(path);
                     }
-                    catch (Exception)
-                    {
+                    catch (Exception) {
                         // ignored
                     }
 
-                    using var stream = new FileStream(path, FileMode.Create);
+                    using FileStream stream = new(path, FileMode.Create);
                     image.CopyTo(stream);
                     return true;
                 }
-                catch
-                {
+                catch {
                     File.Copy(nullPath, path);
                     return false;
                 }
             }
-            catch
-            {
+            catch {
                 return false;
             }
         }

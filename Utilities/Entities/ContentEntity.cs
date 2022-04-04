@@ -1,16 +1,18 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Utilities_aspnet.Base;
 using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities.Entities;
 
 public class ContentEntity : BaseEntity {
-    [StringLength(100)]
+    [StringLength(200)]
     public string? Title { get; set; }
 
-    [StringLength(100)]
+    [StringLength(200)]
     public string? SubTitle { get; set; }
 
-    [StringLength(2000)]
+    [Column(TypeName = "NTEXT")]
     public string? Description { get; set; }
 
     [StringLength(500)]

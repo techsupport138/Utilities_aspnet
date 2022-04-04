@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.Ads.Entities
 {
@@ -27,8 +28,10 @@ namespace Utilities_aspnet.Ads.Entities
 
         public bool Enable { get; set; }
 
-        
 
+        [ForeignKey(nameof(MediaId))]
+        public MediaEntity? Media { get; set; }
+        public Guid? MediaId { get; set; }
 
         [ForeignKey(nameof(ParentId))]
         [InverseProperty(nameof(AdsCategoryEntity.InverseParent))]

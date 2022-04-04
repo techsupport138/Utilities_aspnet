@@ -18,6 +18,7 @@ namespace Utilities_aspnet.learn.Entities
         [StringLength(50)]
         public string CategoryName { get; set; }
 
+        [ForeignKey(nameof(MediaId))]
         public MediaEntity? Media { get; set; }
         public Guid? MediaId { get; set; }
     }
