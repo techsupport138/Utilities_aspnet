@@ -1,6 +1,7 @@
 ﻿using ImageResizer.AspNetCore.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,7 @@ using Utilities_aspnet.Statistic.Data;
 using Utilities_aspnet.User.Data;
 using Utilities_aspnet.Utilities.Data;
 using Utilities_aspnet.Utilities.Enums;
-
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension
@@ -35,6 +36,8 @@ public static class StartupExtension
         builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
         builder.Services.AddScoped<DbContext, T>();
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        //builder.Services.AddScoped<SignInManager<UserEntity>, SignInManager<UserEntity>>();
+
         builder.Services.AddDbContext<T>(options =>
         {
             switch (databaseType)
@@ -53,6 +56,10 @@ public static class StartupExtension
 
         builder.Services.AddControllersWithViews()
             .AddNewtonsoftJson(i => i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+
+        builder.Services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation();
+
         builder.Services.AddRazorPages();
         builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
         builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options =>
@@ -104,7 +111,7 @@ public static class StartupExtension
             app.UseUtilitiesSwagger();
         }
 
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
         RewriteOptions options = new RewriteOptions().AddRedirectToHttpsPermanent().AddRedirectToWwwPermanent();
         app.UseRewriter(options);
 
@@ -115,6 +122,9 @@ public static class StartupExtension
         app.UseRouting();
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapAreaControllerRoute("Dashboard", "Dashboard",
+                "/Dashboard/{controller=MyDashboard}/{action=Index}/{id?}",
+                new { area = "Dashboard", controller = "MyDashboard", action = "Index" });
             endpoints.MapDefaultControllerRoute();
             endpoints.MapRazorPages();
         });

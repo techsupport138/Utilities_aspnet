@@ -14,42 +14,48 @@ using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.Base.Data
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository: IBaseRepository
     {
-        List<KVPVM> Get(CategoryFilter filter);
+        List<KVPCategoryVM> Get(CategoryFilter filter);
+        Task<CategoryEntity> Get(Guid Id);
         Task<GenericResponse> NewCategory(NewCategoryDto newCategory);
+        Task<GenericResponse> UpdateCategory(NewCategoryDto newCategory);
         Task<GenericResponse> DeleteCategory(Guid id);
     }
-    public class CategoryRepository : ICategoryRepository
+    public class CategoryRepository : BaseRepository, ICategoryRepository
     {
-
-        private readonly DbContext _context;
-        private readonly IMapper _mapper;
+        
         private readonly IUploadRepository _UploadRepository;
 
-        public CategoryRepository(DbContext context, IMapper mapper, IUploadRepository uploadRepository)
+        public CategoryRepository(DbContext context, IMapper mapper, IUploadRepository uploadRepository) 
+            : base(context, mapper)
         {
-            _context = context;
-            _mapper = mapper;
             _UploadRepository = uploadRepository;
         }
-
-        public List<KVPVM> Get(CategoryFilter filter)
+        
+        public List<KVPCategoryVM> Get(CategoryFilter filter)
         {
-            List<KVPVM> content = _context.Set<CategoryEntity>()
+            List<KVPCategoryVM> content = _context.Set<CategoryEntity>()
                  .Where(x => x.LanguageId == filter.Language && x.CategoryFor == filter.CategoryFor)
-                 .Include(x => x.InverseParent).Include(x => x.Media)
+                 .Include(x => x.Media).Include(x=>x.Parent)
                  .Where(x => x.ParentId == null)
-                 .Select(w => new KVPVM()
+                 .Select(w => new KVPCategoryVM()
                  {
                      Key = w.CategoryId,
                      Image = w.Media,
                      Value = w.Title,
-                     Childs = w.InverseParent.Select(x => new KVPVM()
+                     CategoryFor = w.CategoryFor,
+                     LanguageId= w.LanguageId,
+                     ParentId= w.ParentId,
+                     Childs = w.InverseParent.Select(x => new KVPCategoryVM()
                      {
                          Key = x.CategoryId,
                          Image = x.Media,
-                         Value = x.Title
+                         Value = x.Title,
+                         CategoryFor=x.CategoryFor,
+                         LanguageId=x.LanguageId,
+                         ParentId=x.ParentId,
+                         ParentTitle=x.Parent.Title
                      }).ToList()
                  }).ToList();
             return content;
@@ -89,7 +95,40 @@ namespace Utilities_aspnet.Base.Data
             }
             _context.Set<CategoryEntity>().Remove(cat);
             await _context.SaveChangesAsync();
-            return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} delete Success", id = cat.id);
+            return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} delete Success", id: cat.CategoryId);
+        }
+
+        public async Task<CategoryEntity> Get(Guid Id)
+        {
+            var cat = await _context.Set<CategoryEntity>()
+                .Include(x => x.InverseParent)
+                .Include(x=>x.Parent)
+                .FirstOrDefaultAsync(x => x.CategoryId == Id);
+            return cat;
+        }
+
+        public async Task<GenericResponse> UpdateCategory(NewCategoryDto category)
+        {
+            var cat = _context.Set<CategoryEntity>()
+                .Where(x => x.CategoryId == category.CategoryId).First();
+            if (category.File != null)
+            {
+                List<IFormFile> f = new List<IFormFile>() { category.File };
+                var res = await _UploadRepository.UploadMedia(new UploadDto()
+                {
+                    Files = f,
+                    UserId = null,
+                });
+                cat.MediaId= res.Id;
+            }
+
+            
+            cat.Title=category.Title;
+            cat.ParentId=   category.ParentId;
+            cat.LanguageId=category.LanguageId;
+            _context.Set<CategoryEntity>().Update(cat);
+            await _context.SaveChangesAsync();
+            return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} update Success", id: cat.CategoryId);
         }
     }
 }
