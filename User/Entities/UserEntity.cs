@@ -9,12 +9,25 @@ namespace Utilities_aspnet.User.Entities;
 
 public class UserEntity : IdentityUser {
 
+    public UserEntity()
+    {
+        ContactInformation = new List<ContactInformationEntity>();
+        Media=new List  <MediaEntity>();
+        BookMark=new List<BookMarkEntity>();
+    }
 
     [Required]
     public bool Suspend { get; set; } = false;
 
     [StringLength(100)]
-    public string? FullName { get; set; }
+    public string FirstName { get; set; } = default!;
+    [StringLength(100)]
+    public string LastName { get; set; } = default!;
+
+    //public string FullName => FirstName + " " + LastName;
+
+    [StringLength(100)]
+    public string FullName { get; set; } = default!;
 
     [StringLength(100)]
     public string? Headline { get; set; }

@@ -6,8 +6,13 @@ using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.Product.Entities;
 
-public class BasePEntity : BaseEntity {
+public class BasePEntity : BaseEntity
+{
 
+    public BasePEntity()
+    {
+        Media = new List<MediaEntity>();
+    }
     public bool Publish { get; set; } = false;
     public bool Enable { get; set; } = false;
 
@@ -27,7 +32,7 @@ public class BasePEntity : BaseEntity {
     public UserEntity UserEntity { get; set; }
     public string UserId { get; set; }
 
-    
+
 
     public ICollection<MediaEntity>? Media { get; set; }
 

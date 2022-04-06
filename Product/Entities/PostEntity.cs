@@ -23,8 +23,7 @@ namespace Utilities_aspnet.Product.Entities
         public Guid? LocationId { get; set; }
 
         [ForeignKey(nameof(LocationId))]
-        public LocationEntity? Location { get; set; }
-        public ICollection<MediaEntity>? Medias { get; set; }
+        public LocationEntity? Location { get; set; }        
         public ICollection<UserEntity>? TeamUsers { get; set; }
         //public ICollection<PostCategoryEntity>? PostCategories { get; set; }
     }

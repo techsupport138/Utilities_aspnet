@@ -6,7 +6,7 @@ namespace Utilities_aspnet.Base;
 public class BaseEntity {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
     public DateTime CreatedAt { get; } = DateTime.Now;

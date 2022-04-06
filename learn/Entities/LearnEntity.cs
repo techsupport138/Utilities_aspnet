@@ -10,20 +10,15 @@ using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.learn.Entities
 {
-    public class LearnEntity : BaseEntity
+    public class LearnEntity : BaseContentEntity
     {
-        [Display(Name = "دسته بندی")]
-        public CategoryEntity AdsCategory { get; set; }
-        public Guid CategoryId { get; set; }
-        
-        
-        [Display(Name = "فعال")]
-        public bool Enable { get; set; }
 
+        public LearnEntity()
+        {
+            this.UseCase = Utilities.Enums.ContentUseCase.Learn;
+            Id=Guid.NewGuid();
 
-        [StringLength(200)]
-        [Display(Name = "عنوان")]
-        public string Title { get; set; }
+        }
 
         [StringLength(200)]
         [Display(Name = "ناشر")]
@@ -38,13 +33,11 @@ namespace Utilities_aspnet.learn.Entities
         [Display(Name = "افتخارات")]
         public string Honors { get; set; }
 
-        [Column(TypeName = "ntext")]
-        [Display(Name = "خلاصه")]
-        public string Lid { get; set; }
+        
 
         [Display(Name = "قیمت")]
         public int? Amount { get; set; } = null;
 
-        public ICollection<MediaEntity>? Media { get; set; }
+        
     }
 }

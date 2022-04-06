@@ -5,15 +5,11 @@ using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities.Entities;
 
-public class ContentEntity : BaseEntity {
+public class ContentEntity : BaseContentEntity {
 
-    public CategoryEntity ContentCategory { get; set; }
-    public Guid CategoryId { get; set; }
-
-
-
-    [StringLength(200)]
-    public string? Title { get; set; }
+    
+    //[StringLength(200)]
+    //public string? Title { get; set; }
 
     [StringLength(200)]
     public string? SubTitle { get; set; }
@@ -24,13 +20,11 @@ public class ContentEntity : BaseEntity {
     [StringLength(500)]
     public string? Link { get; set; }
 
-    public ICollection<MediaEntity>? Media { get; set; } 
+    
 
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
 
-    [Required]
-    [EnumDataType(typeof(ContentUseCase))]
-    public ContentUseCase UseCase { get; set; }
+    
 
     [Required]
     [EnumDataType(typeof(ApprovalStatus))]

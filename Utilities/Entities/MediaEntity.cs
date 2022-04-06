@@ -51,13 +51,15 @@ namespace Utilities_aspnet.Utilities.Entities {
         public Guid? ContactInfoItemId { get; set; }
 
         public virtual ServiceProviderEntity? ServiceProvider { get; set; }
-
         [ForeignKey("ServiceProvider")]
         public Guid? ServiceProviderId { get; set; }
 
 
+        [ForeignKey("PostEntityId")]
+        public virtual PostEntity? PostEntity { get; set; }        
+        public Guid? PostEntityId { get; set; }
 
-        
+
 
 
 

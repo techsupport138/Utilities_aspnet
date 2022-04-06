@@ -21,7 +21,7 @@ namespace Utilities_aspnet.Utilities.Data {
         public async Task<IEnumerable<ContentDto>> Get() {
             List<ContentEntity> content = await _context.Set<ContentEntity>()
                 .Where(x => x.UseCase != ContentUseCase.HomeSlider ||
-                            (x.UseCase == ContentUseCase.HomeSlider && x.ApprovalStatus == ApprovalStatus.Approved)).Include(x => x.Media)
+                            (x.UseCase == ContentUseCase.HomeSlider && x.ApprovalStatus == ApprovalStatus.Approved)).Include(x => x.MediaList)
                 .Include(x => x.ContactInformation)!.ThenInclude(x => x.ContactInfoItem).ThenInclude(c => c.Media).ToListAsync();
             IEnumerable<ContentDto> contentDto = _mapper.Map<IEnumerable<ContentDto>>(content);
             return contentDto;

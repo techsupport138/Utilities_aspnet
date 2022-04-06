@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using Utilities_aspnet.Utilities.Dtos;
 using Utilities_aspnet.Utilities.Entities;
 using Utilities_aspnet.Utilities.Enums;
@@ -27,7 +28,7 @@ namespace Utilities_aspnet.Utilities.Data {
             if (model.Files.Count < 1) {
                 return new GenericResponse(UtilitiesStatusCodes.BadRequest, "File not uploaded");
             }
-
+            List<Guid>? ids = new List<Guid>();
             foreach (IFormFile file in model.Files) {
                 FileTypes fileType = FileTypes.Image;
                 if (file.ContentType.Contains("svg")) {
@@ -69,10 +70,11 @@ namespace Utilities_aspnet.Utilities.Data {
                 };
                 await _context.Set<MediaEntity>().AddAsync(media);
                 await _context.SaveChangesAsync();
+                ids.Add(media.Id);
                 _mediaRepository.SaveMedia(file, name, folder);
             }
 
-            return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded");
+            return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded",ids);
         }
 
         public async Task<GenericResponse> DeleteMedia(Guid id) {
