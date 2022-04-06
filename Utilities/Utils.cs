@@ -108,8 +108,8 @@ public static class StartupExtension
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseUtilitiesSwagger();
         }
+            app.UseUtilitiesSwagger();
 
         //app.UseHttpsRedirection();
         RewriteOptions options = new RewriteOptions().AddRedirectToHttpsPermanent().AddRedirectToWwwPermanent();
