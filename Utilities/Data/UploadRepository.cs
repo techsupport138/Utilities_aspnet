@@ -54,7 +54,8 @@ namespace Utilities_aspnet.Utilities.Data {
                 string folder = "";
                 if (model.UserId != null) {
                     folder = "Users";
-                    List<MediaEntity> userMedia = _context.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
+                    List<MediaEntity> userMedia =
+                        _context.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
                     if (userMedia.Count > 0) {
                         _context.Set<MediaEntity>().RemoveRange(userMedia);
                         _context.SaveChanges();

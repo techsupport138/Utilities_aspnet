@@ -20,11 +20,13 @@ public class GenericResponse
     public UtilitiesStatusCodes Status { get; set; }
     public string Message { get; set; }
     public List<Guid>? Ids { get; set; }
-    public GenericResponse(UtilitiesStatusCodes status = UtilitiesStatusCodes.Success, string message = "", List<Guid>? ids = null)
+    public Guid? Id { get; set; }
+    public GenericResponse(UtilitiesStatusCodes status = UtilitiesStatusCodes.Success, string message = "", List<Guid>? ids = null,Guid? id=null)
     {
         Status = status;
         Message = message;
         Ids = ids;
+        Id = id;
     }
 }
 

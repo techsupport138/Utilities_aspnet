@@ -9,13 +9,16 @@ using System.Threading.Tasks;
 using Utilities_aspnet.Base.Dtos;
 using Utilities_aspnet.Utilities.Data;
 using Utilities_aspnet.Utilities.Dtos;
+using Utilities_aspnet.Utilities.Enums;
+using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.Base.Data
 {
     public interface ICategoryRepository
     {
         List<KVPVM> Get(CategoryFilter filter);
-        Task<Guid> NewCategory(NewCategoryDto newCategory);
+        Task<GenericResponse> NewCategory(NewCategoryDto newCategory);
+        Task<GenericResponse> DeleteCategory(Guid id);
     }
     public class CategoryRepository : ICategoryRepository
     {
@@ -52,13 +55,13 @@ namespace Utilities_aspnet.Base.Data
             return content;
         }
 
-        public async Task<Guid> NewCategory(NewCategoryDto newCategory)
+        public async Task<GenericResponse> NewCategory(NewCategoryDto newCategory)
         {
             List<IFormFile> f = new List<IFormFile>() { newCategory.File };
             var res = await _UploadRepository.UploadMedia(new UploadDto()
             {
                 Files = f,
-                UserId = "",
+                UserId = null,
             });
             var Cat = new CategoryEntity()
             {
@@ -70,7 +73,23 @@ namespace Utilities_aspnet.Base.Data
             };
             await _context.Set<CategoryEntity>().AddAsync(Cat);
             await _context.SaveChangesAsync();
-            return Cat.CategoryId;
+            return new GenericResponse(UtilitiesStatusCodes.Success, $"Cat {Cat.Title} Created!", id: Cat.CategoryId);
+        }
+
+        public async Task<GenericResponse> DeleteCategory(Guid id)
+        {
+            var cat = _context.Set<CategoryEntity>()
+                .Include(x => x.InverseParent)
+                .Where(x => x.CategoryId == id).First();
+            if (cat.MediaId != null)
+                await _UploadRepository.DeleteMedia(cat.MediaId.Value);
+            if (cat.InverseParent.Count != 0)
+            {
+                return new GenericResponse(UtilitiesStatusCodes.Unhandled, "Has Any Child");
+            }
+            _context.Set<CategoryEntity>().Remove(cat);
+            await _context.SaveChangesAsync();
+            return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} delete Success", id = cat.id);
         }
     }
 }
