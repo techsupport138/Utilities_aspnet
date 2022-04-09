@@ -45,9 +45,9 @@ public class BaseContentEntity : BaseEntity {
     [Display(Name = "متن")]
     public string? Body { get; set; } = null;
 
-    [ForeignKey(nameof(UserID))]
+    [ForeignKey(nameof(UserId))]
     public UserEntity? UserEntity { get; set; }
-    public string? UserID { get; set; } = null;
+    public string? UserId { get; set; } = null;
 
     public int NumberOfLikes { get; set; } = 0;
 

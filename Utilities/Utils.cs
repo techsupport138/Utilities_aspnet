@@ -17,6 +17,8 @@ using Utilities_aspnet.User.Data;
 using Utilities_aspnet.Utilities.Data;
 using Utilities_aspnet.Utilities.Enums;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+
 namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension
@@ -53,7 +55,10 @@ public static class StartupExtension
             }
         });
         //builder.Services.AddSingleton<IFileProvider>(_ => new PhysicalFileProvider(_env.WebRootPath ?? _env.ContentRootPath));
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+        
         builder.Services.AddControllersWithViews()
             .AddNewtonsoftJson(i => i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
@@ -75,7 +80,7 @@ public static class StartupExtension
         builder.Services.AddMemoryCache();
 
 
-        ///todo:همه ریپوزیتوری های مورد استفاده اینجا رجیستر شود
+        //todo:همه ریپوزیتوری های مورد استفاده اینجا رجیستر شود
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -85,9 +90,14 @@ public static class StartupExtension
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 
+        //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
+        //builder.Services.AddWkhtmltopdf("wkhtmltopdf");
+
         //https://github.com/keyone2693/ImageResizer.AspNetCore
         //http://imageresizer.aspnetcore.keyone2693.ir/
         builder.Services.AddImageResizer();
+
+        
 
     }
 

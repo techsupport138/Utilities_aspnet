@@ -14,7 +14,7 @@ using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.Base.Data
 {
-    public interface ICategoryRepository: IBaseRepository
+    public interface ICategoryRepository : IBaseRepository
     {
         List<KVPCategoryVM> Get(CategoryFilter filter);
         Task<CategoryEntity> Get(Guid Id);
@@ -24,38 +24,38 @@ namespace Utilities_aspnet.Base.Data
     }
     public class CategoryRepository : BaseRepository, ICategoryRepository
     {
-        
+
         private readonly IUploadRepository _UploadRepository;
 
-        public CategoryRepository(DbContext context, IMapper mapper, IUploadRepository uploadRepository) 
+        public CategoryRepository(DbContext context, IMapper mapper, IUploadRepository uploadRepository)
             : base(context, mapper)
         {
             _UploadRepository = uploadRepository;
         }
-        
+
         public List<KVPCategoryVM> Get(CategoryFilter filter)
         {
             List<KVPCategoryVM> content = _context.Set<CategoryEntity>()
                  .Where(x => x.LanguageId == filter.Language && x.CategoryFor == filter.CategoryFor)
-                 .Include(x => x.Media).Include(x=>x.Parent)
-                 .Where(x => x.ParentId == null)
+                 .Include(x => x.Media).Include(x => x.Parent)
+                 .Where(x => (!filter.OnlyParent) || (x.ParentId == null && filter.OnlyParent))
                  .Select(w => new KVPCategoryVM()
                  {
                      Key = w.CategoryId,
                      Image = w.Media,
                      Value = w.Title,
                      CategoryFor = w.CategoryFor,
-                     LanguageId= w.LanguageId,
-                     ParentId= w.ParentId,
+                     LanguageId = w.LanguageId,
+                     ParentId = w.ParentId,
                      Childs = w.InverseParent.Select(x => new KVPCategoryVM()
                      {
                          Key = x.CategoryId,
                          Image = x.Media,
                          Value = x.Title,
-                         CategoryFor=x.CategoryFor,
-                         LanguageId=x.LanguageId,
-                         ParentId=x.ParentId,
-                         ParentTitle=x.Parent.Title
+                         CategoryFor = x.CategoryFor,
+                         LanguageId = x.LanguageId,
+                         ParentId = x.ParentId,
+                         ParentTitle = x.Parent.Title
                      }).ToList()
                  }).ToList();
             return content;
@@ -101,8 +101,9 @@ namespace Utilities_aspnet.Base.Data
         public async Task<CategoryEntity> Get(Guid Id)
         {
             var cat = await _context.Set<CategoryEntity>()
+                .Include(x => x.Media)
                 .Include(x => x.InverseParent)
-                .Include(x=>x.Parent)
+                .Include(x => x.Parent)
                 .FirstOrDefaultAsync(x => x.CategoryId == Id);
             return cat;
         }
@@ -119,13 +120,13 @@ namespace Utilities_aspnet.Base.Data
                     Files = f,
                     UserId = null,
                 });
-                cat.MediaId= res.Id;
+                cat.MediaId = res.Id;
             }
 
-            
-            cat.Title=category.Title;
-            cat.ParentId=   category.ParentId;
-            cat.LanguageId=category.LanguageId;
+
+            cat.Title = category.Title;
+            cat.ParentId = category.ParentId;
+            cat.LanguageId = category.LanguageId;
             _context.Set<CategoryEntity>().Update(cat);
             await _context.SaveChangesAsync();
             return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} update Success", id: cat.CategoryId);

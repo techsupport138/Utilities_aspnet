@@ -60,7 +60,9 @@ namespace Utilities_aspnet.Utilities.Entities {
         public Guid? PostEntityId { get; set; }
 
 
-
+        public virtual AdsEntity? Ads { get; set; }
+        [ForeignKey("AdsId")]
+        public Guid? AdsId { get; set; }
 
 
         [StringLength(450)]

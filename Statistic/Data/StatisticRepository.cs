@@ -63,7 +63,7 @@ namespace Utilities_aspnet.Statistic.Data
                 !ignoreAgent.Contains(userAgent) &&
                 !userAgent.Contains("DNTScheduler"))
             {
-                ///todo:افزودن به لیست بازدید
+                //todo:افزودن به لیست بازدید
                 DateTime data;
                 string? key = $"ip_{ip}_{c.Device.Family}";
 

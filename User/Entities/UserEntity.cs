@@ -60,7 +60,7 @@ public class UserEntity : IdentityUser {
 
     public ICollection<BookMarkEntity>? BookMark { get; set; }
 
-    ///todo:از بوکمارک برای نشان کردن استفاده کن
+    //todo:از بوکمارک برای نشان کردن استفاده کن
     //public ICollection<SpecialtyEntity>? Specialties { get; set; }
     //public ICollection<PostCategoryEntity>? Favorites { get; set; }
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }

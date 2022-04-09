@@ -8,14 +8,22 @@ namespace Utilities_aspnet.Base
 {
     public enum CategoryForEnum
     {
-        Ads=1,
-        DP=2,
-        Event=3,
-        Job=4,
-        Learn=5,
-        Prodoct=6,
-        Project=7,  
-        Tender=8,
+        [Display(Name = "تبلیغات")]        
+        Ads = 1,
+        [Display(Name = "قیمت روزانه")]
+        DP =2,
+        [Display(Name = "رویداد ها")]
+        Event =3,
+        [Display(Name = "مشاغل")]
+        Job =4,
+        [Display(Name = "آموزش ها")]
+        Learn =5,
+        [Display(Name = "محصولات")]
+        Prodoct =6,
+        [Display(Name = "پروژه ها")]
+        Project =7,
+        [Display(Name = "مناقصه و مزایده")]
+        Tender =8,
 
     }
 }

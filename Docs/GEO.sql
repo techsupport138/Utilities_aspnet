@@ -1,600 +1,84 @@
-SET IDENTITY_INSERT [dbo].[Country] ON
+USE [NewAnbor_DB]
 GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (1, N'جمهوری اسلامی افقانستان')
+SET IDENTITY_INSERT [dbo].[Country] ON 
 GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (2, N'جمهوری آلبانی')
+INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (1, N'جمهوری اسلامی ایران')
 GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (3, NULL)
+INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (2, N'جمهوری اسلامی افقانستان')
 GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (4, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (5, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (6, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (7, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (8, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (9, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (10, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (11, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (12, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (13, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (14, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (15, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (16, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (17, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (18, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (19, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (20, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (21, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (22, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (23, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (24, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (25, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (26, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (27, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (28, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (29, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (30, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (31, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (32, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (33, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (34, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (35, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (36, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (37, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (38, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (39, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (40, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (41, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (42, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (43, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (44, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (45, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (46, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (47, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (48, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (49, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (50, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (51, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (52, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (53, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (54, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (55, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (56, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (57, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (58, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (59, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (60, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (61, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (62, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (63, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (64, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (65, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (66, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (67, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (68, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (69, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (70, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (71, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (72, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (73, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (74, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (75, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (76, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (77, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (78, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (79, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (80, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (81, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (82, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (83, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (84, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (85, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (86, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (87, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (88, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (89, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (90, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (91, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (92, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (93, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (94, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (95, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (96, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (97, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (98, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (99, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (100, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (101, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (102, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (103, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (104, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (105, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (106, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (107, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (108, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (109, N'جمهوری اسلامی ایران')
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (110, N'جمهوری عراق')
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (111, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (112, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (113, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (114, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (115, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (116, N'ژاپن')
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (117, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (118, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (119, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (120, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (121, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (122, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (123, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (124, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (125, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (126, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (127, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (128, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (129, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (130, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (131, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (132, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (133, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (134, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (135, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (136, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (137, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (138, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (139, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (140, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (141, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (142, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (143, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (144, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (145, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (146, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (147, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (148, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (149, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (150, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (151, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (152, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (153, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (154, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (155, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (156, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (157, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (158, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (159, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (160, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (161, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (162, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (163, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (164, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (165, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (166, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (167, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (168, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (169, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (170, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (171, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (172, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (173, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (174, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (175, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (176, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (177, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (178, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (179, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (180, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (181, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (182, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (183, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (184, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (185, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (186, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (187, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (188, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (189, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (190, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (191, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (192, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (193, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (194, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (195, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (196, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (197, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (198, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (199, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (200, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (201, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (202, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (203, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (204, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (205, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (206, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (207, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (208, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (209, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (210, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (211, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (212, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (213, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (214, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (215, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (216, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (217, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (218, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (219, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (220, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (221, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (222, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (223, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (224, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (225, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (226, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (227, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (228, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (229, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (230, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (231, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (232, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (233, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (234, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (235, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (236, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (237, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (238, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (239, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (240, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (241, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (242, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (243, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (244, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (245, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (246, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (247, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (248, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (249, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (250, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (251, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (252, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (253, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (254, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (255, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (256, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (257, N'یمن')
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (258, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (259, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (260, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (261, NULL)
-GO
-INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (262, NULL)
+INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (3, N'ژاپن')
 GO
 SET IDENTITY_INSERT [dbo].[Country] OFF
 GO
-SET IDENTITY_INSERT [dbo].[Province] ON
+SET IDENTITY_INSERT [dbo].[Province] ON 
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (1, 109, N'آذربايجان شرقي')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (1, 1, N'آذربايجان شرقي')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (2, 109, N'آذربايجان غربي')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (2, 1, N'آذربايجان غربي')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (3, 109, N'اردبيل')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (3, 1, N'اردبيل')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (4, 109, N'اصفهان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (4, 1, N'اصفهان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (5, 109, N'البرز')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (5, 1, N'البرز')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (6, 109, N'ايلام')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (6, 1, N'ايلام')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (7, 109, N'بوشهر')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (7, 1, N'بوشهر')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (8, 109, N'تهران')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (8, 1, N'تهران')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (9, 109, N'چهارمحال وبختياري')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (9, 1, N'چهارمحال وبختياري')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (10, 109, N'خراسان جنوبي')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (10, 1, N'خراسان جنوبي')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (11, 109, N'خراسان رضوي')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (11, 1, N'خراسان رضوي')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (12, 109, N'خراسان شمالي')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (12, 1, N'خراسان شمالي')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (13, 109, N'خوزستان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (13, 1, N'خوزستان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (14, 109, N'زنجان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (14, 1, N'زنجان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (15, 109, N'سمنان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (15, 1, N'سمنان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (16, 109, N'سيستان وبلوچستان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (16, 1, N'سيستان وبلوچستان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (17, 109, N'فارس')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (17, 1, N'فارس')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (18, 109, N'قزوين')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (18, 1, N'قزوين')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (19, 109, N'قم')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (19, 1, N'قم')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (20, 109, N'کردستان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (20, 1, N'کردستان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (21, 109, N'کرمان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (21, 1, N'کرمان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (22, 109, N'کرمانشاه')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (22, 1, N'کرمانشاه')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (23, 109, N'کهگيلويه وبويراحمد')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (23, 1, N'کهگيلويه وبويراحمد')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (24, 109, N'گلستان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (24, 1, N'گلستان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (25, 109, N'گيلان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (25, 1, N'گيلان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (26, 109, N'لرستان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (26, 1, N'لرستان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (27, 109, N'مازندران')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (27, 1, N'مازندران')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (28, 109, N'مرکزي')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (28, 1, N'مرکزي')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (29, 109, N'هرمزگان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (29, 1, N'هرمزگان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (30, 109, N'همدان')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (30, 1, N'همدان')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (31, 109, N'يزد')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (31, 1, N'يزد')
 GO
-INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (100, 109, N'اتباع خارجی')
+INSERT [dbo].[Province] ([ProvinceId], [CountryId], [ProvinceName]) VALUES (100, 1, N'اتباع خارجی')
 GO
 SET IDENTITY_INSERT [dbo].[Province] OFF
 GO
-SET IDENTITY_INSERT [dbo].[City] ON
+SET IDENTITY_INSERT [dbo].[City] ON 
 GO
 INSERT [dbo].[City] ([CityId], [ProvinceId], [CityName]) VALUES (1, 1, N'آذرشهر')
 GO
@@ -3089,3 +2573,4 @@ GO
 INSERT [dbo].[City] ([CityId], [ProvinceId], [CityName]) VALUES (1246, 31, N'يزد')
 GO
 SET IDENTITY_INSERT [dbo].[City] OFF
+GO
