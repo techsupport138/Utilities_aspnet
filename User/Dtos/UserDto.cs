@@ -15,6 +15,8 @@ namespace Utilities_aspnet.User.Dtos {
 
         [Required]
         public string VerificationCode { get; set; } = null!;
+
+        
     }
 
     public class RegisterWithEmailDto {
@@ -29,8 +31,16 @@ namespace Utilities_aspnet.User.Dtos {
         [StringLength(100, MinimumLength = 4)]
         [DataType(DataType.Password)]
         public string Password { get; set; } = null!;
+
+        public string? ReturnUrl { get; set; } = null;
+        public bool Keep { get; set; } = true;
     }
 
+    public class RegisterFormWithEmailDto: RegisterWithEmailDto
+    {
+        [DataType(DataType.Password)]
+        public string ConfirmPassword { get; set; }
+    }
     public class LoginWithEmailDto {
         [Required]
         [StringLength(256)]
@@ -38,7 +48,11 @@ namespace Utilities_aspnet.User.Dtos {
 
         [Required]
         [StringLength(256)]
+        [DataType(DataType.Password)]
         public string Password { get; set; } = null!;
+
+        public string? ReturnUrl { get; set; } = null;
+        public bool Keep { get; set; } = true;
     }
 
     public class ChangePasswordDto {

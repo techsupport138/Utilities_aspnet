@@ -20,14 +20,14 @@ public class UserEntity : IdentityUser {
     public bool Suspend { get; set; } = false;
 
     [StringLength(100)]
-    public string FirstName { get; set; } = default!;
+    public string? FirstName { get; set; } = null;
     [StringLength(100)]
-    public string LastName { get; set; } = default!;
+    public string? LastName { get; set; } = null;
 
     //public string FullName => FirstName + " " + LastName;
 
     [StringLength(100)]
-    public string FullName { get; set; } = default!;
+    public string? FullName { get; set; } = null;
 
     [StringLength(100)]
     public string? Headline { get; set; }

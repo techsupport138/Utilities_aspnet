@@ -13,6 +13,13 @@ namespace Utilities_aspnet.Ads.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "شناسه")]
         public int AdsPackageId { get; set; }
+
+        [ForeignKey(nameof(Language))]
+        public LanguageEntity LanguageEntity { get; set; }
+        [DefaultValue("fa-IR")]
+        public string Language { get; set; } = "fa-IR";
+
+
         [Display(Name = "فعال")]
         public bool Enable { get; set; }
         [Required]

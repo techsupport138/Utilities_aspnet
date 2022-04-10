@@ -15,8 +15,9 @@ namespace Utilities_aspnet.Utilities;
 
 public static class IdentityExtensions {
     public static void AddUtilitiesIdentity(this WebApplicationBuilder builder) {
-        builder.Services.AddIdentity<UserEntity, IdentityRole>(options => { options.SignIn.RequireConfirmedAccount = false; })
-            .AddRoles<IdentityRole>().AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
+        //builder.Services.AddIdentity<UserEntity, IdentityRole>
+        //    (options => { options.SignIn.RequireConfirmedAccount = false; })
+        //    .AddRoles<IdentityRole>().AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions => {
             jwtBearerOptions.RequireHttpsMetadata = false;
             jwtBearerOptions.SaveToken = true;
@@ -50,13 +51,15 @@ public static class IdentityExtensions {
 
         builder.Services.ConfigureApplicationCookie(options => {
             options.AccessDeniedPath = new PathString("/error/403");
-            options.Cookie.Name = "Cookie.medgram_aspnet";
+            options.Cookie.Name = "Cookie.Anbor_aspnet";
             options.Cookie.HttpOnly = false;
             options.ExpireTimeSpan = TimeSpan.FromMinutes(604800);
-            options.LoginPath = new PathString("/Account/Login");
+            options.LoginPath = new PathString("/Dashboard/Account/Login");
             options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
             options.SlidingExpiration = true;
         });
+
+        
     }
 
     public static void SeedUser<T>(this IHost host, string role, string username, string email, string password)
