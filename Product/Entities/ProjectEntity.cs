@@ -9,10 +9,6 @@ namespace Utilities_aspnet.Product.Entities;
 
 public class ProjectEntity : BasePEntity {
 
-    public Guid CategoryId { get; set; }
-    [ForeignKey(nameof(CategoryId))]
-    public virtual CategoryEntity Category { get; set; }
-
     [Required]
     [StringLength(200)]
     public string Subtitle { get; set; } = null!;

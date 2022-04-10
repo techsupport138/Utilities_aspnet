@@ -19,7 +19,7 @@ namespace Utilities_aspnet.Base
         [Display(Name = "آموزش ها")]
         Learn =5,
         [Display(Name = "محصولات")]
-        Prodoct =6,
+        product =6,
         [Display(Name = "پروژه ها")]
         Project =7,
         [Display(Name = "مناقصه و مزایده")]

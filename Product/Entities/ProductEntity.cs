@@ -10,14 +10,6 @@ namespace Utilities_aspnet.Product.Entities;
 
 public class ProductEntity : BasePEntity
 {
-    [ForeignKey(nameof(CategoryId))]
-    public CategoryEntity ProductCategory { get; set; }
-    public Guid CategoryId { get; set; }
-
-
-
-    [ForeignKey(nameof(UserId))]
-    public UserEntity? UserEntity { get; set; }
-    public string? UserId { get; set; } = null;
+    
 
 }

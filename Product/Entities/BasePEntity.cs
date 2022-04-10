@@ -28,9 +28,24 @@ public class BasePEntity : BaseEntity
     [Column(TypeName = "NTEXt")]
     public string Details { get; set; }
 
+
+
+    [ForeignKey(nameof(Language))]
+    public LanguageEntity LanguageEntity { get; set; }
+    [DefaultValue("fa-IR")]
+    public string Language { get; set; } = "fa-IR";
+
+
+
     [ForeignKey(nameof(UserId))]
-    public UserEntity UserEntity { get; set; }
-    public string UserId { get; set; }
+    public UserEntity? UserEntity { get; set; }
+    public string? UserId { get; set; } = null;
+
+
+    [ForeignKey(nameof(CategoryId))]
+    public CategoryEntity Category { get; set; }
+    public Guid CategoryId { get; set; }
+
 
 
 

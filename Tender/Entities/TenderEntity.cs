@@ -12,23 +12,10 @@ using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Entities;
 namespace Utilities_aspnet.Tender.Entities
 {
-    public class TenderEntity: BaseEntity
+    public class TenderEntity: BasePEntity
     {
-        [StringLength(200)]
-        public string Title { get; set; }
-
         public TenderType Type { get; set; }
 
-        public UserEntity UserEntity { get; set; }
-        public string UserId { get; set; }
-
-        public CategoryEntity TenderCategory { get; set; }
-        public Guid CategoryId { get; set; }
-
-
-        public bool Enable { get; set; }
-
-        public bool Publish { get; set; } = false;
 
         [Required]
         [StringLength(50)]

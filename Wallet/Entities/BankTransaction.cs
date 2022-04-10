@@ -14,8 +14,9 @@ namespace Utilities_aspnet.Wallet.Entities
         [Column(TypeName = "datetime")]
         public DateTime? CreateDateTime { get; set; }
         [Required]
-        [StringLength(256)]
         public string UserName { get; set; }
+        [ForeignKey(nameof(UserName))]
+        public virtual UserEntity UserEntity { get; set; }
         [Column("order_id")]
         [StringLength(50)]
         public string OrderId { get; set; }
