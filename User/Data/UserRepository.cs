@@ -300,15 +300,17 @@ public class UserRepository : IUserRepository
         IList<string>? roles = await _userManager.GetRolesAsync(user);
         List<Claim>? claims = new()
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Name, user.Id),
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+            new Claim(ClaimTypes.NameIdentifier, user.UserName),
+            new Claim(ClaimTypes.Name, user.FullName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
         SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
-        JwtSecurityToken token = new(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims, expires: DateTime.Now.AddDays(365),
+        JwtSecurityToken token = new(_config["Tokens:Issuer"],
+            _config["Tokens:Issuer"], claims, 
+            expires: DateTime.Now.AddDays(365),
             signingCredentials: creds);
 
         user.LastLogin = DateTime.Now;

@@ -29,61 +29,25 @@ namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension
 {
-    
+
     public static void SetupUtilities<T>(this WebApplicationBuilder builder, string connectionStrings,
         DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) where T : DbContext
     {
         builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
-        builder.AddUtilitiesSwagger();
-        builder.AddUtilitiesIdentity();
+
+        
+        
         if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
 
         builder.Services.AddDbContext<DbContext>(options =>
                 options.UseSqlServer(connectionStrings)
                     .EnableSensitiveDataLogging(false)
             );
-        builder.Services.AddScoped<SignInManager<UserEntity>, SignInManager<UserEntity>>();
+        
 
-        builder.Services.AddIdentity<UserEntity, IdentityRole>(
-                options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = false;
-                }
-            )
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<DbContext>()
-            .AddDefaultTokenProviders();
+        builder.AddUtilitiesIdentity();
+        builder.AddUtilitiesSwagger();
 
-        builder.Services.Configure<IdentityOptions>(options =>
-        {
-            // Password settings
-            options.Password.RequireDigit = false;
-            options.Password.RequiredLength = 8;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireLowercase = false;
-            //options.User.AllowedUserNameCharacters = "0123456789";
-            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@";
-        });
-
-        builder.Services.Configure<CookiePolicyOptions>(options =>
-        {
-            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            options.CheckConsentNeeded = context => false;
-            options.MinimumSameSitePolicy = SameSiteMode.None;
-            options.Secure = CookieSecurePolicy.Always;
-        });
-
-        builder.Services.ConfigureApplicationCookie(options =>
-        {
-            options.AccessDeniedPath = new PathString("/error/403");
-            options.Cookie.Name = "Cookie.Anbor_aspnet";
-            options.Cookie.HttpOnly = false;
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(604800);
-            options.LoginPath = new PathString("/Dashboard/Account/Login");
-            options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-            options.SlidingExpiration = true;
-        });
         builder.Services.Configure<FormOptions>(x =>
         {
             //x.MultipartBodyLengthLimit = 209715200;
@@ -100,7 +64,7 @@ public static class StartupExtension
             options.IdleTimeout = System.TimeSpan.FromSeconds(604800);
         });
 
-        
+
     }
 
     private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
@@ -166,7 +130,7 @@ public static class StartupExtension
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
-        
+
 
 
         //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
@@ -183,11 +147,12 @@ public static class StartupExtension
     private static void AddUtilitiesSwagger(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c => {
+        builder.Services.AddSwaggerGen(c =>
+        {
             c.UseInlineDefinitionsForEnums();
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory);
-            c.IncludeXmlComments(xmlPath+ "/Phopx.xml");
+            c.IncludeXmlComments(xmlPath + "/Phopx.xml");
             c.IncludeXmlComments(xmlPath + "/Utilities_aspnet.xml");
             c.UseInlineDefinitionsForEnums();
             c.DocumentFilter<SwaggerFilters>();
@@ -203,6 +168,19 @@ public static class StartupExtension
                 Scheme = "Bearer"
             });
             c.OperationFilter<AddSwaggerService>();
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+               {
+                 new OpenApiSecurityScheme
+                 {
+                   Reference = new OpenApiReference
+                   {
+                     Type = ReferenceType.SecurityScheme,
+                     Id = "Bearer"
+                   }
+                  },
+                  new string[] { }
+                }
+              });
         });
     }
 
@@ -224,8 +202,8 @@ public static class StartupExtension
 
         //app.UseHttpsRedirection();
         RewriteOptions options = new RewriteOptions();
-            //.AddRedirectToHttpsPermanent();
-            //.AddRedirectToWwwPermanent();
+        //.AddRedirectToHttpsPermanent();
+        //.AddRedirectToWwwPermanent();
 
 
         app.UseImageResizer();
