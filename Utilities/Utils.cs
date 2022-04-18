@@ -20,11 +20,16 @@ using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
+using System.Reflection;
+using Utilities_aspnet.Utilities.Filters;
+using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.OpenApi.Models;
 
 namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension
 {
+    
     public static void SetupUtilities<T>(this WebApplicationBuilder builder, string connectionStrings,
         DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) where T : DbContext
     {
@@ -94,6 +99,8 @@ public static class StartupExtension
         {
             options.IdleTimeout = System.TimeSpan.FromSeconds(604800);
         });
+
+        
     }
 
     private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
@@ -149,6 +156,8 @@ public static class StartupExtension
 
 
         //todo:همه ریپوزیتوری های مورد استفاده اینجا رجیستر شود
+        builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+        builder.Services.AddTransient<AppSettings>();
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -156,6 +165,8 @@ public static class StartupExtension
         builder.Services.AddTransient<IMediaRepository, MediaRepository>();
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+        builder.Services.AddTransient<IEnumRepository, EnumRepository>();
+        
 
 
         //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
@@ -172,7 +183,27 @@ public static class StartupExtension
     private static void AddUtilitiesSwagger(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c => {
+            c.UseInlineDefinitionsForEnums();
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory);
+            c.IncludeXmlComments(xmlPath+ "/Phopx.xml");
+            c.IncludeXmlComments(xmlPath + "/Utilities_aspnet.xml");
+            c.UseInlineDefinitionsForEnums();
+            c.DocumentFilter<SwaggerFilters>();
+            c.SchemaFilter<SchemaFilter>();
+            c.EnableAnnotations();
+            c.OrderActionsBy(c => c.RelativePath);
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+            c.OperationFilter<AddSwaggerService>();
+        });
     }
 
     private static void AddRedis(this WebApplicationBuilder builder, string connectionString)
@@ -218,6 +249,8 @@ public static class StartupExtension
         app.UseSwaggerUI(c =>
         {
             c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+            c.DefaultModelsExpandDepth(-1);
+
         });
     }
 }

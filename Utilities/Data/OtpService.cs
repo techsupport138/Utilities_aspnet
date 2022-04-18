@@ -29,7 +29,9 @@ namespace Utilities_aspnet.Utilities.Data {
         }
 
         public string? SendOtp(string userId) {
-            bool oldOtp = _context.Set<OtpEntity>().Any(x => x.UserId == userId && x.CreatedAt > DateTime.Now.AddMinutes(-3));
+            var dd = DateTime.Now.AddMinutes(-3);
+            bool oldOtp = _context.Set<OtpEntity>()
+                .Any(x => x.UserId == userId && x.CreatedAt > dd);
             if (oldOtp) {
                 return null;
             }

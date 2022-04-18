@@ -22,12 +22,15 @@ public interface IUserRepository
     Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<string>> RegisterWithMobile(RegisterWithMobileDto dto);
     Task<GenericResponse<UserReadDto?>> LoginWithMobile(LoginWithMobileDto dto);
-    Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token);
+    Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token = null);
     Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName);
 
 
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
+
+
+    Task<GenericResponse<List<ShoppingDto>?>> GetShoppingList(string userName, BuyOrSale type);
 }
 
 public class UserRepository : IUserRepository
@@ -86,7 +89,7 @@ public class UserRepository : IUserRepository
     public async Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser)
     {
         UserEntity? model = _context.Set<UserEntity>()
-            .FirstOrDefault(x => 
+            .FirstOrDefault(x =>
             x.UserName == aspNetUser.UserName ||
             x.Email == aspNetUser.Email);
         if (model != null)
@@ -126,12 +129,16 @@ public class UserRepository : IUserRepository
         {
             UserEntity user = new()
             {
+                Email = "",
                 PhoneNumber = aspNetUser.Mobile,
-                UserName = aspNetUser.Mobile.Replace("+", ""),
+                UserName = aspNetUser.Mobile.Replace("+98", "0").Replace("+", ""),
                 LastLogin = null,
                 EmailConfirmed = false,
                 PhoneNumberConfirmed = false,
-                CreateAccount = DateTime.Now
+                CreateAccount = DateTime.Now,
+                FullName = "",
+                Wallet = 0,
+                Suspend = true
             };
 
             IdentityResult? result = await _userManager.CreateAsync(user, "P@ssw0rd!@#$%^&*");
@@ -143,9 +150,14 @@ public class UserRepository : IUserRepository
         }
     }
 
-    public Task<GenericResponse<UserReadDto?>> GetProfile(string userId, string? token)
+    public Task<GenericResponse<UserReadDto?>> GetProfile(string userId, string? token = null)
     {
-        UserEntity? model = _context.Set<UserEntity>().Include(u => u.Media).FirstOrDefault(u => u.Id == userId);
+        UserEntity? model = _context.Set<UserEntity>()
+            .Include(u => u.Media)
+            .Include(u => u.Colors)
+            .Include(u => u.Specialties)
+            .Include(u => u.Favorites)
+            .FirstOrDefault(u => u.Id == userId);
         UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
         userReadDto.Token = token;
 
@@ -153,9 +165,11 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName)
+    public async Task<GenericResponse<UserReadDto?>>
+        UpdateUser(UpdateProfileDto model, string userName)
     {
-        UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userName);
+        UserEntity? user = _context.Set<UserEntity>()
+            .FirstOrDefault(x => x.Id == userName);
         if (user == null)
         {
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
@@ -163,6 +177,42 @@ public class UserRepository : IUserRepository
 
         try
         {
+            foreach (var item in model.Favorites)
+            {
+                if (!_context.Set<UserToFavoriteEntity>()
+                    .Any(x => x.UserId == userName && x.FavoriteId == item))
+                    _context.Set<UserToFavoriteEntity>()
+                        .Add(new UserToFavoriteEntity()
+                        {
+                            UserId = user.Id,
+                            FavoriteId = item,
+                        });
+            }
+
+            foreach (var item in model.Colors)
+            {
+                if (!_context.Set<UserToColorEntity>()
+                    .Any(x => x.UserId == userName && x.ColorId == item))
+                    _context.Set<UserToColorEntity>()
+                        .Add(new UserToColorEntity()
+                        {
+                            UserId = user.Id,
+                            ColorId = item,
+                        });
+            }
+
+            foreach (var item in model.Specialties)
+            {
+                if (!_context.Set<UserToSpecialtyEntity>()
+                    .Any(x => x.UserId == userName && x.SpecialtyId == item))
+                    _context.Set<UserToSpecialtyEntity>()
+                        .Add(new UserToSpecialtyEntity()
+                        {
+                            UserId = user.Id,
+                            SpecialtyId = item,
+                        });
+            }
+
             if (model.FullName != null) user.FullName = model.FullName;
             if (model.Bio != null) user.Bio = model.Bio;
             //if (model.BirthDate != null) user.BirthDate = model.BirthDate;
@@ -171,7 +221,20 @@ public class UserRepository : IUserRepository
             if (model.Degree != null) user.Degree = model.Degree;
             if (model.Education != null) user.Education = model.Education;
             if (model.Headline != null) user.Headline = model.Headline;
+
+            if (model.WebSite != null) user.WebSite = model.WebSite;
+            if (model.Instagram != null) user.Instagram = model.Instagram;
+            if (model.Telegram != null) user.Telegram = model.Telegram;
+            if (model.PhoneNumber != null) user.PhoneNumber = model.PhoneNumber;
+            if (model.Link != null) user.Link = model.Link;
+            if (model.PublicBio != null) user.PublicBio = model.PublicBio ?? true;
+
             if (model.ColorId != null) user.ColorId = model.ColorId;
+
+            if (model.Birth_Year != null) user.Birth_Year = model.Birth_Year;
+            if (model.Birth_Month != null) user.Birth_Month = model.Birth_Month;
+            if (model.Birth_Day != null) user.Birth_Day = model.Birth_Day;
+
             _context.SaveChanges();
             if (model.ContactInformation != null)
             {
@@ -235,7 +298,7 @@ public class UserRepository : IUserRepository
 
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
 
-        if(user.Suspend) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Forbidden, "User Suspend");
+        if (user.Suspend) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Forbidden, "User Suspend");
 
         var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, lockoutOnFailure: false);
         if (!result.Succeeded) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
@@ -273,5 +336,28 @@ public class UserRepository : IUserRepository
         return new GenericResponse<UserReadDto?>(GetProfile(user.Id, null).Result.Result,
             UtilitiesStatusCodes.Success,
             "Success");
+    }
+
+    public Task<GenericResponse<List<ShoppingDto>?>>
+        GetShoppingList(string userName, BuyOrSale type)
+    {
+        UserEntity? u = _context.Set<UserEntity>()
+            .FirstOrDefault(x => x.UserName == userName);
+        var data = _context.Set<ShoppingListEntity>()
+            .Include(x => x.BankTransaction)
+            .Include(x => x.Product).ThenInclude(x => x.Media)
+            .Where(x => x.BuyOrSale == type && x.UserId == u.Id)
+            .Select(x => new ShoppingDto()
+            {
+                Id = x.Id,
+                BuyOrSale = x.BuyOrSale,
+                Amount = x.Amount,
+                DateTime = x.CreatedAt,
+                OrderId = x.BankTransaction.OrderId,
+                Title = x.Product.Title,
+                Media = x.Product.Media.FirstOrDefault()
+            }).ToList();
+        return Task.FromResult(new GenericResponse<List<ShoppingDto>?>
+            (data, UtilitiesStatusCodes.Success, "Success"));
     }
 }

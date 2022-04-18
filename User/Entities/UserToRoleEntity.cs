@@ -11,7 +11,7 @@ namespace Utilities_aspnet.User.Entities {
 
         [Required]
         [ForeignKey(nameof(Role))]
-        public int RoleID { get; set; }
+        public int RoleId { get; set; }
 
 
         public UserEntity User { get; set; }

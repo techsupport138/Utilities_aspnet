@@ -7,13 +7,14 @@ using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.User.Entities;
 
-public class UserEntity : IdentityUser {
+public class UserEntity : IdentityUser
+{
 
     public UserEntity()
     {
         ContactInformation = new List<ContactInformationEntity>();
-        Media=new List  <MediaEntity>();
-        BookMark=new List<BookMarkEntity>();
+        Media = new List<MediaEntity>();
+        BookMark = new List<BookMarkEntity>();
     }
 
     [Required]
@@ -38,6 +39,18 @@ public class UserEntity : IdentityUser {
     [StringLength(100)]
     public string? Education { get; set; }
 
+    [StringLength(100)]
+    public string? WebSite { get; set; } = null;
+    [StringLength(100)]
+    public string? Instagram { get; set; } = null;
+    [StringLength(100)]
+    public string? Telegram { get; set; } = null;
+    [StringLength(100)]
+    public string? PhoneNumber { get; set; } = null;
+    [StringLength(100)]
+    public string? Link { get; set; } = null;
+
+    public bool PublicBio { get; set; } = true;
 
     [StringLength(100)]
     public string? Degree { get; set; }
@@ -45,12 +58,16 @@ public class UserEntity : IdentityUser {
     public decimal Wallet { get; set; }
     public DateTime? LastLogin { get; set; }
     public DateTime? Birthday { get; set; }
+    public int? Birth_Year { get; set; } = null;
+    public int? Birth_Month { get; set; } = null;
+    public int? Birth_Day { get; set; } = null;
     public DateTime CreateAccount { get; set; } = DateTime.Now;
 
     public Guid? ColorId { get; set; }
-
     [ForeignKey(nameof(ColorId))]
     public ColorEntity? Color { get; set; }
+
+
     public Guid? LocationId { get; set; }
 
     [ForeignKey(nameof(LocationId))]
@@ -58,8 +75,16 @@ public class UserEntity : IdentityUser {
 
     public ICollection<MediaEntity>? Media { get; set; }
 
-    public ICollection<BookMarkEntity>? BookMark { get; set; }
+    
 
+
+    public ICollection<UserToColorEntity>? Colors { get; set; }
+    public ICollection<UserToFavoriteEntity>? Favorites { get; set; }
+    public ICollection<UserToSpecialtyEntity>? Specialties { get; set; }
+    public ICollection<ShoppingListEntity>? ShoppingList { get; set; }
+
+
+    public ICollection<BookMarkEntity>? BookMark { get; set; }
     //todo:از بوکمارک برای نشان کردن استفاده کن
     //public ICollection<SpecialtyEntity>? Specialties { get; set; }
     //public ICollection<PostCategoryEntity>? Favorites { get; set; }
