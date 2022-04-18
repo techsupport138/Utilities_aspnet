@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,19 @@ public static class IdentityExtensions {
         //builder.Services.AddIdentity<UserEntity, IdentityRole>
         //    (options => { options.SignIn.RequireConfirmedAccount = false; })
         //    .AddRoles<IdentityRole>().AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
+
+        var keySecret = "https://SinaMN75.com";
+        var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keySecret));
+
+        //builder.Services.AddTransient(_ => new JwtSignInHandler(symmetricKey));
+
+        builder.Services.AddAuthorization(auth =>
+        {
+            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes()
+                //.AddAuthenticationTypes(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser().Build());
+        });
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions => {
             jwtBearerOptions.RequireHttpsMetadata = false;
             jwtBearerOptions.SaveToken = true;

@@ -17,7 +17,7 @@ namespace Utilities_aspnet.Utilities.Filters
             var isAuthorized = actionMetadata.Any(metadataItem => metadataItem is AuthorizeAttribute);
             var allowAnonymous = actionMetadata.Any(metadataItem => metadataItem is AllowAnonymousAttribute);
 
-            if (!isAuthorized && allowAnonymous)
+            if (!isAuthorized || allowAnonymous)
             {
                 return;
             }

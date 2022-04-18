@@ -218,7 +218,7 @@ public static class StartupExtension
         {
             app.UseDeveloperExceptionPage();
         }
-<<<<<<< HEAD
+
         app.UseDeveloperExceptionPage();
         app.UseUtilitiesSwagger();
 
@@ -226,15 +226,7 @@ public static class StartupExtension
         RewriteOptions options = new RewriteOptions();
             //.AddRedirectToHttpsPermanent();
             //.AddRedirectToWwwPermanent();
-=======
-        app.UseUtilitiesSwagger();
 
-        //app.UseHttpsRedirection();
-        RewriteOptions options = new RewriteOptions()
-            .AddRedirectToHttpsPermanent();
-        //.AddRedirectToWwwPermanent();
->>>>>>> 6c8ada2343f5415400044e5fe1bca399450dfab5
-        app.UseRewriter(options);
 
         app.UseImageResizer();
 
