@@ -21,6 +21,19 @@ namespace Utilities_aspnet.Utilities.Dtos
 
 	}
 
+	public class KVPIVM
+	{
+		public KVPIVM()
+		{
+			Childs = new List<KVPIVM>();
+		}
+		public int Key { get; set; }
+		public string Value { get; set; }
+		public string? Image { get; set; } = null;
+		public List<KVPIVM> Childs { get; set; }
+
+	}
+
 	public class KVPCategoryVM
     {
 		public KVPCategoryVM()
@@ -29,8 +42,9 @@ namespace Utilities_aspnet.Utilities.Dtos
 		}
 		public Guid Key { get; set; }
 		public string Value { get; set; }
-		public MediaEntity? Image { get; set; }
-		public List<KVPCategoryVM> Childs { get; set; }
+		//public MediaEntity? Image { get; set; }
+		public string? Image { get; set; } = null;
+        public List<KVPCategoryVM> Childs { get; set; }
 		public Guid? ParentId { get; set; } = null;
 		public string ParentTitle { get; set; } = null;
 		public string LanguageId { get; set; } = "fa-IR";

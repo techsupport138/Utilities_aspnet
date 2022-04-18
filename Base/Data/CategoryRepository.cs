@@ -42,7 +42,7 @@ namespace Utilities_aspnet.Base.Data
                  .Select(w => new KVPCategoryVM()
                  {
                      Key = w.CategoryId,
-                     Image = w.Media,
+                     Image = w.Media.FileName,
                      Value = w.Title,
                      CategoryFor = w.CategoryFor,
                      LanguageId = w.LanguageId,
@@ -50,7 +50,7 @@ namespace Utilities_aspnet.Base.Data
                      Childs = w.InverseParent.Select(x => new KVPCategoryVM()
                      {
                          Key = x.CategoryId,
-                         Image = x.Media,
+                         Image = x.Media.FileName,
                          Value = x.Title,
                          CategoryFor = x.CategoryFor,
                          LanguageId = x.LanguageId,
