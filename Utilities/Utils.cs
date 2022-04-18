@@ -99,7 +99,11 @@ public static class StartupExtension
     private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
         where T : DbContext
     {
-        builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+        builder.Services.AddCors(c =>
+        c.AddPolicy("AllowOrigin", option =>
+        option.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()));
         builder.Services.AddScoped<DbContext, T>();
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         //builder.Services.AddScoped<SignInManager<UserEntity>, SignInManager<UserEntity>>();
@@ -122,7 +126,7 @@ public static class StartupExtension
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-        
+
         builder.Services.AddControllersWithViews()
             .AddNewtonsoftJson(i => i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
@@ -161,7 +165,7 @@ public static class StartupExtension
         //http://imageresizer.aspnetcore.keyone2693.ir/
         builder.Services.AddImageResizer();
 
-        
+
 
     }
 
@@ -183,12 +187,12 @@ public static class StartupExtension
         {
             app.UseDeveloperExceptionPage();
         }
-            app.UseUtilitiesSwagger();
+        app.UseUtilitiesSwagger();
 
         //app.UseHttpsRedirection();
         RewriteOptions options = new RewriteOptions()
             .AddRedirectToHttpsPermanent();
-            //.AddRedirectToWwwPermanent();
+        //.AddRedirectToWwwPermanent();
         app.UseRewriter(options);
 
         app.UseImageResizer();
