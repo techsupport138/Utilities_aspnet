@@ -158,10 +158,29 @@ public class UserRepository : IUserRepository
             .Include(u => u.Specialties)
             .Include(u => u.Favorites)
             .FirstOrDefault(u => u.Id == userId);
-        UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
-        userReadDto.Token = token;
+        //UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
+        UserReadDto u = new UserReadDto();
+        u.CreatedAt = model.CreateAccount;
+        u.BirthDate = model.Birthday;
+        u.Birth_Day = model.Birth_Day;
+        u.Birth_Year = model.Birth_Year;
+        u.Birth_Month = model.Birth_Month;
+        u.Instagram = model.Instagram;
+        u.Link = model.Link;
+        u.Bio = model.Bio;
+        u.Colors = model.Colors.Select(x => x.Id).ToList();
+        u.Specialties = model.Specialties.Select(x => x.Id).ToList();
+        u.Favorites = model.Favorites.Select(x => x.Id).ToList();
+        u.WebSite = model.WebSite;
+        u.Email = model.Email;
+        u.FullName = model.FullName;
+        u.PhoneNumber = model.PhoneNumber;
+        u.FullName = model.FullName;
+        u.Id = model.Id;
+        u.PublicBio= model.PublicBio;
+        u.Token = token;
 
-        return Task.FromResult(new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
+        return Task.FromResult(new GenericResponse<UserReadDto?>(u, UtilitiesStatusCodes.Success, "Success"));
     }
 
 

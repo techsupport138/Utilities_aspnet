@@ -7,16 +7,16 @@ public class BaseEntity {
     public BaseEntity()
     {
         Id = Guid.NewGuid();
-        CreatedAt = DateTime.Now;   
+        CreatedAt = DateTime.Now;
     }
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    [Required]
+    //[Required]
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public DateTime? DeletedAt { get; set; }

@@ -214,11 +214,12 @@ public static class StartupExtension
         {
             app.UseDeveloperExceptionPage();
         }
-            app.UseUtilitiesSwagger();
+        app.UseDeveloperExceptionPage();
+        app.UseUtilitiesSwagger();
 
         //app.UseHttpsRedirection();
-        RewriteOptions options = new RewriteOptions()
-            .AddRedirectToHttpsPermanent();
+        RewriteOptions options = new RewriteOptions();
+            //.AddRedirectToHttpsPermanent();
             //.AddRedirectToWwwPermanent();
         app.UseRewriter(options);
 
