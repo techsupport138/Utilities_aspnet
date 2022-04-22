@@ -9,7 +9,7 @@ namespace Utilities_aspnet.Utilities.Data
 {
     public interface IEnumRepository
     {
-        Task<GenericResponse<EnumDto?>> GetAll();
+        Task<GenericResponse<EnumDto?>> GetAll(bool ShowCatehory,bool ShowGeo);
     }
     public class EnumRepository : IEnumRepository
     {
@@ -22,7 +22,7 @@ namespace Utilities_aspnet.Utilities.Data
             _mapper = mapper;
         }
 
-        public Task<GenericResponse<EnumDto?>> GetAll()
+        public Task<GenericResponse<EnumDto?>> GetAll(bool ShowCatehory=false, bool ShowGeo=false)
         {
             var model = new EnumDto();
 
@@ -74,6 +74,7 @@ namespace Utilities_aspnet.Utilities.Data
                 })
                 .ToList();
 
+            if(ShowGeo)
             model.GeoList = _context.Set<Province>()
                 .Include(x => x.Cities)
                 .Select(x => new KVPIVM()
@@ -87,7 +88,7 @@ namespace Utilities_aspnet.Utilities.Data
                     }).ToList()
                 }).ToList();
 
-
+            if(ShowCatehory)
             model.Categories = _context.Set<CategoryEntity>()
                  //.Where(x => x.LanguageId == filter.Language && x.CategoryFor == filter.CategoryFor)
                  .Include(x => x.Media).Include(x => x.Parent)
