@@ -166,6 +166,7 @@ public class UserRepository : IUserRepository
         }
         u.UserName = model.UserName;
         u.CreatedAt = model.CreateAccount;
+        u.LastLogin = model.LastLogin;
         u.BirthDate = model.Birthday;
         u.Birth_Day = model.Birth_Day;
         u.Birth_Year = model.Birth_Year;
@@ -302,7 +303,7 @@ public class UserRepository : IUserRepository
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
             new Claim(ClaimTypes.NameIdentifier, user.UserName),
-            new Claim(ClaimTypes.Name, user.FullName),
+            new Claim(ClaimTypes.Name, user.UserName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));

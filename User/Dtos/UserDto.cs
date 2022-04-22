@@ -104,6 +104,7 @@ namespace Utilities_aspnet.User.Dtos
 
         public DateTime? BirthDate { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? LastLogin { get; set; }
         public List<MediaDto>? Media { get; set; }
 
         public List<int> Colors { get; set; }
