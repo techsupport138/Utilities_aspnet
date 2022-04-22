@@ -13,8 +13,18 @@ using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Ads.Entities
 {
-    public class AdsEntity: BaseEntity
+    public class AdsEntity : BaseEntity
     {
+        public AdsEntity()
+        {
+            LanguageEntity = new LanguageEntity();
+            UserEntity = new UserEntity();
+            Category = new CategoryEntity();
+            City = new City();
+            Country = new Country();
+            Province = new Province();
+            Id = new Guid();
+        }
         [ForeignKey(nameof(Language))]
         public LanguageEntity LanguageEntity { get; set; }
         [DefaultValue("fa-IR")]

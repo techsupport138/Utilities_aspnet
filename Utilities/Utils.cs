@@ -29,7 +29,7 @@ namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension
 {
-    
+
     public static void SetupUtilities<T>(this WebApplicationBuilder builder, string connectionStrings,
         DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) where T : DbContext
     {
@@ -100,7 +100,7 @@ public static class StartupExtension
             options.IdleTimeout = System.TimeSpan.FromSeconds(604800);
         });
 
-        
+
     }
 
     private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
@@ -166,7 +166,7 @@ public static class StartupExtension
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
-        
+
 
 
         //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
@@ -183,11 +183,12 @@ public static class StartupExtension
     private static void AddUtilitiesSwagger(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c => {
+        builder.Services.AddSwaggerGen(c =>
+        {
             c.UseInlineDefinitionsForEnums();
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory);
-            c.IncludeXmlComments(xmlPath+ "/Phopx.xml");
+            c.IncludeXmlComments(xmlPath + xmlFile);
             c.IncludeXmlComments(xmlPath + "/Utilities_aspnet.xml");
             c.UseInlineDefinitionsForEnums();
             c.DocumentFilter<SwaggerFilters>();
