@@ -66,7 +66,7 @@ public class UserRepository : IUserRepository
 
         JwtSecurityToken token = await CreateToken(user);
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             status: UtilitiesStatusCodes.Success,
             message: "Success");
     }
@@ -81,7 +81,7 @@ public class UserRepository : IUserRepository
             return new GenericResponse<UserReadDto>(null, UtilitiesStatusCodes.BadRequest, "Verification Code Is Not Valid");
         JwtSecurityToken token = await CreateToken(user);
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success,
             "Success");
     }
@@ -113,7 +113,7 @@ public class UserRepository : IUserRepository
 
         JwtSecurityToken token = await CreateToken(user);
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -150,18 +150,43 @@ public class UserRepository : IUserRepository
         }
     }
 
-    public Task<GenericResponse<UserReadDto?>> GetProfile(string userId, string? token = null)
+    public Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token = null)
     {
         UserEntity? model = _context.Set<UserEntity>()
             .Include(u => u.Media)
             .Include(u => u.Colors)
             .Include(u => u.Specialties)
             .Include(u => u.Favorites)
-            .FirstOrDefault(u => u.Id == userId);
-        UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
-        userReadDto.Token = token;
+            .FirstOrDefault(u => u.UserName == userName);
+        //UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
+        UserReadDto u = new UserReadDto();
+        if(model == null)
+        {
+            return Task.FromResult(new GenericResponse<UserReadDto?>(u, UtilitiesStatusCodes.NotFound, $"User: {userName} Not Found"));
+        }
+        u.UserName = model.UserName;
+        u.CreatedAt = model.CreateAccount;
+        u.BirthDate = model.Birthday;
+        u.Birth_Day = model.Birth_Day;
+        u.Birth_Year = model.Birth_Year;
+        u.Birth_Month = model.Birth_Month;
+        u.Instagram = model.Instagram;
+        u.Link = model.Link;
+        u.Bio = model.Bio;
+        u.Colors = model.Colors.Select(x => x.Id).ToList();
+        u.Specialties = model.Specialties.Select(x => x.Id).ToList();
+        u.Favorites = model.Favorites.Select(x => x.Id).ToList();
+        u.WebSite = model.WebSite;
+        u.Email = model.Email;
+        u.FullName = model.FullName;
+        u.PhoneNumber = model.PhoneNumber;
+        u.FullName = model.FullName;
+        u.Id = model.Id;
+        u.PublicBio= model.PublicBio;
 
-        return Task.FromResult(new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
+        u.Token = token;
+
+        return Task.FromResult(new GenericResponse<UserReadDto?>(u, UtilitiesStatusCodes.Success, "Success"));
     }
 
 
@@ -267,7 +292,7 @@ public class UserRepository : IUserRepository
         }
 
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, "").Result.Result, UtilitiesStatusCodes.Success, "Success");
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, "").Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
     private async Task<JwtSecurityToken> CreateToken(UserEntity user)
@@ -275,15 +300,17 @@ public class UserRepository : IUserRepository
         IList<string>? roles = await _userManager.GetRolesAsync(user);
         List<Claim>? claims = new()
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Name, user.Id),
+            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+            new Claim(ClaimTypes.NameIdentifier, user.UserName),
+            new Claim(ClaimTypes.Name, user.FullName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
         SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
-        JwtSecurityToken token = new(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims, expires: DateTime.Now.AddDays(365),
+        JwtSecurityToken token = new(_config["Tokens:Issuer"],
+            _config["Tokens:Issuer"], claims, 
+            expires: DateTime.Now.AddDays(365),
             signingCredentials: creds);
 
         user.LastLogin = DateTime.Now;
@@ -303,7 +330,7 @@ public class UserRepository : IUserRepository
         var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, lockoutOnFailure: false);
         if (!result.Succeeded) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, null).Result.Result,
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, null).Result.Result,
             status: UtilitiesStatusCodes.Success,
             message: "Success");
     }
@@ -333,7 +360,7 @@ public class UserRepository : IUserRepository
         if (!result.Succeeded)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The information was not entered correctly");
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, null).Result.Result,
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, null).Result.Result,
             UtilitiesStatusCodes.Success,
             "Success");
     }

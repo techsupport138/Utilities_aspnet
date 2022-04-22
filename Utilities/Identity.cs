@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,21 +19,9 @@ public static class IdentityExtensions {
         //builder.Services.AddIdentity<UserEntity, IdentityRole>
         //    (options => { options.SignIn.RequireConfirmedAccount = false; })
         //    .AddRoles<IdentityRole>().AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions => {
-            jwtBearerOptions.RequireHttpsMetadata = false;
-            jwtBearerOptions.SaveToken = true;
-            jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters {
-                RequireSignedTokens = true,
-                ValidateIssuerSigningKey = true,
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                RequireExpirationTime = true,
-                ClockSkew = TimeSpan.Zero,
-                ValidAudience = "https://SinaMN75.com",
-                ValidIssuer = "https://SinaMN75.com",
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("https://SinaMN75.com"))
-            };
-        });
+
+        
+        
 
         builder.Services.Configure<IdentityOptions>(options => {
             options.Password.RequireDigit = false;
@@ -51,7 +40,7 @@ public static class IdentityExtensions {
 
         builder.Services.ConfigureApplicationCookie(options => {
             options.AccessDeniedPath = new PathString("/error/403");
-            options.Cookie.Name = "Cookie.Anbor_aspnet";
+            options.Cookie.Name = "Cookie.Phopx";
             options.Cookie.HttpOnly = false;
             options.ExpireTimeSpan = TimeSpan.FromMinutes(604800);
             options.LoginPath = new PathString("/Dashboard/Account/Login");
@@ -59,7 +48,47 @@ public static class IdentityExtensions {
             options.SlidingExpiration = true;
         });
 
-        
+        var keySecret = "https://SinaMN75.com";
+        var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keySecret));
+
+        //builder.Services.AddTransient(_ => new JwtSignInHandler(symmetricKey));
+
+        builder.Services.AddAuthorization(auth =>
+        {
+            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes()
+                //.AddAuthenticationTypes(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser().Build());
+        });
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions => {
+            jwtBearerOptions.RequireHttpsMetadata = false;
+            jwtBearerOptions.SaveToken = true;
+            jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+            {
+                RequireSignedTokens = true,
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                RequireExpirationTime = true,
+                ClockSkew = TimeSpan.Zero,
+                ValidAudience = "https://SinaMN75.com",
+                ValidIssuer = "https://SinaMN75.com",
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("https://SinaMN75.com"))
+            };
+        });
+
+
+        builder.Services.AddScoped<SignInManager<UserEntity>, SignInManager<UserEntity>>();
+
+        builder.Services.AddIdentity<UserEntity, IdentityRole>(
+                options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                }
+            )
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<DbContext>()
+            .AddDefaultTokenProviders();
     }
 
     public static void SeedUser<T>(this IHost host, string role, string username, string email, string password)

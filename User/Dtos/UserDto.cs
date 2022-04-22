@@ -73,6 +73,13 @@ namespace Utilities_aspnet.User.Dtos
 
     public class UserReadDto
     {
+        public UserReadDto()
+        {
+            Media = new List<MediaDto>();
+            Colors = new List<int>();
+            Specialties = new List<int>();
+            Favorites = new List<int>();
+        }
         public string? Token { get; set; }
         public string? Link { get; set; }
         public string Id { get; set; } = null!;
@@ -97,11 +104,11 @@ namespace Utilities_aspnet.User.Dtos
 
         public DateTime? BirthDate { get; set; }
         public DateTime CreatedAt { get; set; }
-        public IEnumerable<MediaDto>? Media { get; set; }
+        public List<MediaDto>? Media { get; set; }
 
-        public List<Guid> Colors { get; set; }
-        public List<Guid> Specialties { get; set; }
-        public List<Guid> Favorites { get; set; }
+        public List<int> Colors { get; set; }
+        public List<int> Specialties { get; set; }
+        public List<int> Favorites { get; set; }
     }
 
 
