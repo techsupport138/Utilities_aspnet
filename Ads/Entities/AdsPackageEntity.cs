@@ -13,11 +13,9 @@ namespace Utilities_aspnet.Ads.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "شناسه")]
         public int AdsPackageId { get; set; }
-
-        [ForeignKey(nameof(Language))]
-        public LanguageEntity LanguageEntity { get; set; }
+        
         [DefaultValue("fa-IR")]
-        public string Language { get; set; } = "fa-IR";
+        public string LanguageId { get; set; } = "fa-IR";
 
 
         [Display(Name = "فعال")]
@@ -37,5 +35,12 @@ namespace Utilities_aspnet.Ads.Entities
         public int SpecialExpireDate { get; set; }
         [Display(Name = "تعداد روز صفحه اصلی")]
         public int HomePageExpireDate { get; set; }
+
+
+        [ForeignKey(nameof(LanguageId))]
+        [InverseProperty("AdsPackages")]
+        public virtual LanguageEntity LanguageNavigation { get; set; }
+
+
     }
 }

@@ -15,6 +15,15 @@ namespace Utilities_aspnet.Geo.Entity
     [Table("Province")]
     public class Province
     {
+        public Province()
+        {
+            Ads = new HashSet<AdsEntity>();
+            Cities = new HashSet<City>();
+            Jobs = new HashSet<JobEntity>();
+            Projects = new HashSet<ProjectEntity>();
+            Tenders = new HashSet<TenderEntity>();
+        }
+
         [Key]
         [Display(Name = "شناسه")]
         public int ProvinceId { get; set; }

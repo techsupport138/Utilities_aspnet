@@ -8,7 +8,7 @@ namespace Utilities_aspnet.Base.Dtos
 {
     public class CategoryFilter
     {
-        public string? Language { get; set; } = "fa-IR";
+        public string? LanguageId { get; set; } = "fa-IR";
         public CategoryForEnum CategoryFor { get; set; }
         public Guid? CategoryId { get; set; }
         public bool OnlyParent { get; set; } = false;

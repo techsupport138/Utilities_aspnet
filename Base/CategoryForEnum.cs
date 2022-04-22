@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace Utilities_aspnet.Base
 {
-    public enum CategoryForEnum
+    public enum CategoryForEnum : int
     {
-        [Display(Name = "تبلیغات")]        
+        [Display(Name = "تبلیغات")]
         Ads = 1,
         [Display(Name = "قیمت روزانه")]
-        DP =2,
+        DP = 2,
         [Display(Name = "رویداد ها")]
-        Event =3,
+        Event = 3,
         [Display(Name = "مشاغل")]
-        Job =4,
+        Job = 4,
         [Display(Name = "آموزش ها")]
-        Learn =5,
+        Learn = 5,
         [Display(Name = "محصولات")]
-        product =6,
+        product = 6,
         [Display(Name = "پروژه ها")]
-        Project =7,
+        Project = 7,
         [Display(Name = "مناقصه و مزایده")]
-        Tender =8,
+        Tender = 8,
 
     }
 }

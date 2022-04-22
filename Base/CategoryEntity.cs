@@ -13,6 +13,14 @@ namespace Utilities_aspnet.Base
 {
     public class CategoryEntity
     {
+
+        public CategoryEntity()
+        {
+            Language = new LanguageEntity();
+            InverseParent = new HashSet<CategoryEntity>();
+            Parent = null;
+
+        }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid CategoryId { get; set; }

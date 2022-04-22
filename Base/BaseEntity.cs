@@ -6,7 +6,7 @@ namespace Utilities_aspnet.Base;
 public class BaseEntity {
     public BaseEntity()
     {
-        Id = Guid.NewGuid();
+        //Id = Guid.NewGuid();
         CreatedAt = DateTime.Now;
     }
     [Key]

@@ -17,7 +17,6 @@ namespace Utilities_aspnet.Ads.Entities
     {
         public AdsEntity()
         {
-            LanguageEntity = new LanguageEntity();
             UserEntity = new UserEntity();
             Category = new CategoryEntity();
             City = new City();
@@ -25,11 +24,14 @@ namespace Utilities_aspnet.Ads.Entities
             Province = new Province();
             Id = new Guid();
         }
-        [ForeignKey(nameof(Language))]
-        public LanguageEntity LanguageEntity { get; set; }
-        [DefaultValue("fa-IR")]
-        public string Language { get; set; } = "fa-IR";
 
+
+
+        
+        public string LanguageId { get; set; } = "fa-IR";
+        [ForeignKey(nameof(LanguageId))]
+        [InverseProperty("Ads")]
+        public virtual LanguageEntity? LanguageNavigation { get; set; }
 
 
         [ForeignKey(nameof(UserId))]

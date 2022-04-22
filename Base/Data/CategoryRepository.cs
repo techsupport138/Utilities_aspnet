@@ -36,7 +36,7 @@ namespace Utilities_aspnet.Base.Data
         public List<KVPCategoryVM> Get(CategoryFilter filter)
         {
             List<KVPCategoryVM> content = _context.Set<CategoryEntity>()
-                 .Where(x => x.LanguageId == filter.Language && x.CategoryFor == filter.CategoryFor)
+                 .Where(x => x.LanguageId == filter.LanguageId && x.CategoryFor == filter.CategoryFor)
                  .Include(x => x.Media).Include(x => x.Parent)
                  .Where(x => (!filter.OnlyParent) || (x.ParentId == null && filter.OnlyParent))
                  .Select(w => new KVPCategoryVM()
@@ -120,7 +120,7 @@ namespace Utilities_aspnet.Base.Data
                     Files = f,
                     UserId = null,
                 });
-                cat.MediaId = res.Id;
+                cat.MediaId = res.Ids[0];
             }
 
 

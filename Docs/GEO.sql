@@ -1,5 +1,3 @@
-USE [NewAnbor_DB]
-GO
 SET IDENTITY_INSERT [dbo].[Country] ON 
 GO
 INSERT [dbo].[Country] ([CountryId], [CountryName]) VALUES (1, N'جمهوری اسلامی ایران')

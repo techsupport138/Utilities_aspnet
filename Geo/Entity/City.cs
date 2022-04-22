@@ -17,6 +17,14 @@ namespace Utilities_aspnet.Geo.Entity
     [Table("City")]
     public class City
     {
+        public City()
+        {
+            Ads = new HashSet<AdsEntity>();
+            Jobs = new HashSet<JobEntity>();
+            Projects = new HashSet<ProjectEntity>();
+            Tenders = new HashSet<TenderEntity>();
+        }
+
         [Key]
         [Display(Name = "شناسه")]
         public int CityId { get; set; }
