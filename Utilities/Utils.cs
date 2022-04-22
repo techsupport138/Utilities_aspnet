@@ -45,8 +45,9 @@ public static class StartupExtension
             );
         
 
-        builder.AddUtilitiesIdentity();
+        
         builder.AddUtilitiesSwagger();
+        builder.AddUtilitiesIdentity();
 
         builder.Services.Configure<FormOptions>(x =>
         {
@@ -170,7 +171,9 @@ public static class StartupExtension
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-            c.OperationFilter<AddSwaggerService>();
+            //c.OperationFilter<AddSwaggerService>();
+            
+
             c.AddSecurityRequirement(new OpenApiSecurityRequirement {
                {
                  new OpenApiSecurityScheme
@@ -209,12 +212,11 @@ public static class StartupExtension
         //.AddRedirectToWwwPermanent();
 
 
-        app.UseImageResizer();
-
+        app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAuthentication();
-        app.UseAuthorization();
         app.UseRouting();
+        app.UseAuthorization();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapAreaControllerRoute("Dashboard", "Dashboard",
