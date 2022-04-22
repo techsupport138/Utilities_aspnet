@@ -153,7 +153,11 @@ public static class StartupExtension
             c.UseInlineDefinitionsForEnums();
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory);
+<<<<<<< HEAD
+            c.IncludeXmlComments(xmlPath + xmlFile);
+=======
             c.IncludeXmlComments(xmlPath + "/Phopx.xml");
+>>>>>>> 43adfb26d5009afcd6e20fc03f387bd3729c8108
             c.IncludeXmlComments(xmlPath + "/Utilities_aspnet.xml");
             c.UseInlineDefinitionsForEnums();
             c.DocumentFilter<SwaggerFilters>();
