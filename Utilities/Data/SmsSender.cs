@@ -61,7 +61,9 @@ namespace Utilities_aspnet.Utilities.Data {
                 case Sender.FarazSMS:
                     #region FarazSMS
                     RestClient client = new("http://188.0.240.110/api/select");
-                    RestRequest request = new(Method.POST);
+                    RestRequest request = new RestRequest();//  new(Method.Post);
+                    request.Method = Method.Post;
+                    
                     request.AddHeader("cache-control", "no-cache");
                     request.AddHeader("Content-Type", "application/json");
                     request.AddHeader("Authorization", "AccessKey U4-OM_COTYg_NBkwWBQtYeUUv1ODRKDrXEYtmtDfyRY=");
@@ -72,7 +74,7 @@ namespace Utilities_aspnet.Utilities.Data {
                         ",\"patternCode\": \"whrqg2ad1r\"" + ",\"inputData\" : [{\"verification-code\":" + message + "}]}",
                         ParameterType.RequestBody);
 
-                    client.Execute(request);
+                    client.ExecutePostAsync(request);
                     return 0;
                     #endregion
                     break;

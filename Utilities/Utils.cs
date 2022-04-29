@@ -24,6 +24,10 @@ using System.Reflection;
 using Utilities_aspnet.Utilities.Filters;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.OpenApi.Models;
+using Utilities_aspnet.Ads.Data;
+using Utilities_aspnet.Event.Data;
+using Utilities_aspnet.Job.Data;
+using Utilities_aspnet.Learn.Data;
 
 namespace Utilities_aspnet.Utilities;
 
@@ -131,6 +135,13 @@ public static class StartupExtension
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
+
+        builder.Services.AddTransient<IAdsRepository, AdsRepository>();
+        builder.Services.AddTransient<IAdsPackageRepository, AdsPackageRepository>();
+        builder.Services.AddTransient<IEventRepository, EventRepository>();
+        builder.Services.AddTransient<IJobRepository, JobRepository>();
+        builder.Services.AddTransient<ILearnRepository, LearnRepository>();
+        //builder.Services.AddTransient<ILearnRepository, LearnRepository>();
 
 
 

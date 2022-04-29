@@ -14,14 +14,14 @@ public class BaseContentEntity : BaseEntity {
         MediaList=new List<MediaEntity>();
     }
 
-    [ForeignKey(nameof(Language))]
-    public LanguageEntity LanguageEntity { get; set; } 
+    [ForeignKey(nameof(LanguageId))]
+    public LanguageEntity Language { get; set; } 
     [DefaultValue("fa-IR")]
-    public string Language { get; set; } = "fa-IR";
+    public string LanguageId { get; set; } = "fa-IR";
 
 
     [ForeignKey(nameof(CategoryId))]
-    public CategoryEntity ContentCategory { get; set; }
+    public CategoryEntity Category { get; set; }
     public Guid CategoryId { get; set; }
 
     //[ForeignKey(nameof(IntroMediaId))]
@@ -33,6 +33,8 @@ public class BaseContentEntity : BaseEntity {
     [Column(TypeName = "NVARCHAR")]
     [Required]
     public string Title { get; set; }
+
+    public bool Enable { get; set; } = true;
 
     [StringLength(10)]
     public string TinyURL { get; set; }
@@ -46,7 +48,7 @@ public class BaseContentEntity : BaseEntity {
     public string? Body { get; set; } = null;
 
     [ForeignKey(nameof(UserId))]
-    public UserEntity? UserEntity { get; set; }
+    public UserEntity? User { get; set; }
     public string? UserId { get; set; } = null;
 
     public int NumberOfLikes { get; set; } = 0;

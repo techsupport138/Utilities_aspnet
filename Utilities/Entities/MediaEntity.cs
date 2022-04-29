@@ -57,7 +57,7 @@ namespace Utilities_aspnet.Utilities.Entities {
 
         [ForeignKey("PostEntityId")]
         public virtual PostEntity? PostEntity { get; set; }        
-        public Guid? PostEntityId { get; set; }
+        public Guid? PostId { get; set; }
 
 
         public virtual AdsEntity? Ads { get; set; }

@@ -27,7 +27,7 @@ namespace Utilities_aspnet.Ads.Entities
 
 
 
-        
+         
         public string LanguageId { get; set; } = "fa-IR";
         [ForeignKey(nameof(LanguageId))]
         [InverseProperty("Ads")]

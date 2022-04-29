@@ -8,6 +8,8 @@ namespace Utilities_aspnet.Base
 {
     public enum CategoryForEnum : int
     {
+        [Display(Name = "خالی")]
+        NULL = 0,
         [Display(Name = "تبلیغات")]
         Ads = 1,
         [Display(Name = "قیمت روزانه")]

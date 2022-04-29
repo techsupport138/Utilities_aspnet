@@ -12,18 +12,18 @@ using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.Job.Entities
 {
-    public class JobEntity:BaseEntity
+    public class JobEntity: BaseContentEntity
     {
-        [StringLength(200)]
-        public string Title { get; set; }
+        //[StringLength(200)]
+        //public string Title { get; set; }
 
-        public UserEntity UserEntity { get; set; }
-        public string UserId { get; set; }
+        //public UserEntity UserEntity { get; set; }
+        //public string UserId { get; set; }
 
-        public CategoryEntity JobCategory { get; set; }
-        public Guid CategoryId { get; set; }
+        //public CategoryEntity JobCategory { get; set; }
+        //public Guid CategoryId { get; set; }
 
-        public bool Enable { get; set; }
+        //public bool Enable { get; set; }
 
         [Display(Name = "کشور")]
         public int CountryId { get; set; } 
@@ -35,7 +35,7 @@ namespace Utilities_aspnet.Job.Entities
         [Display(Name = "توضیحات")]
         public string Description { get; set; }
 
-        public ICollection<MediaEntity>? Media { get; set; }
+        //public ICollection<MediaEntity>? Media { get; set; }
 
         [ForeignKey(nameof(CityId))]
         public virtual City City { get; set; }
