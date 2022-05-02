@@ -24,6 +24,7 @@ public class LanguageEntity
 
     [Key]
     [StringLength(5)]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string Symbol { get; set; }
     [Required]
     [StringLength(50)]
