@@ -8,6 +8,7 @@ namespace Utilities_aspnet.Language.Entities
         [Key]
         //[BsonId]
         [StringLength(5)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Symbol { get; set; }
     }
 }

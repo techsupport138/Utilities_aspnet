@@ -19,6 +19,7 @@ namespace Utilities_aspnet.Statistic.Entities
 
         [Key]
         [Column(TypeName = "date")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Date { get; set; }
         public int? PersianDateKey { get; set; }
         [StringLength(10)]
