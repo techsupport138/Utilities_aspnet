@@ -21,6 +21,6 @@ namespace Utilities_aspnet.User.Entities
         public UserEntity User { get; set; }
         [StringLength(450)]
         [ForeignKey(nameof(User))]
-        public string UserId { get; set; } = null!;
+        public string UserId { get; set; } 
     }
 }

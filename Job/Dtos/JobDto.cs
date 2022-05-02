@@ -19,11 +19,11 @@ namespace Utilities_aspnet.Job.Dtos
         public Guid CategoryId { get; set; }
         public string Title { get; set; }
         public string TinyURL { get; set; }
-        //public string? Lid { get; set; } = null;
-        public string? Description { get; set; } = null;
-        public string? UserId { get; set; } = null;
+        //public string? Lid { get; set; }
+        public string? Description { get; set; }
+        public string? UserId { get; set; }
         //public int? NumberOfLikes { get; set; } = 0;
-        //public string? Author { get; set; } = null;
+        //public string? Author { get; set; }
         //public ContentUseCase UseCase { get; set; }
         public ContentStatusCase Status { get; set; } = ContentStatusCase.Draft;
 

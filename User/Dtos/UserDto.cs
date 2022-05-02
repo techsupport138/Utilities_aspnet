@@ -8,16 +8,16 @@ namespace Utilities_aspnet.User.Dtos
     public class RegisterWithMobileDto
     {
         [Required]
-        public string Mobile { get; set; } = null!;
+        public string Mobile { get; set; } 
     }
 
     public class LoginWithMobileDto
     {
         [Required]
-        public string Mobile { get; set; } = null!;
+        public string Mobile { get; set; } 
 
         [Required]
-        public string VerificationCode { get; set; } = null!;
+        public string VerificationCode { get; set; } 
 
 
     }
@@ -25,18 +25,18 @@ namespace Utilities_aspnet.User.Dtos
     public class RegisterWithEmailDto
     {
         [Required]
-        public string UserName { get; set; } = null!;
+        public string UserName { get; set; } 
 
         [Required]
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; } = null!;
+        public string Email { get; set; } 
 
         [Required]
         [StringLength(100, MinimumLength = 4)]
         [DataType(DataType.Password)]
-        public string Password { get; set; } = null!;
+        public string Password { get; set; } 
 
-        public string? ReturnUrl { get; set; } = null;
+        public string? ReturnUrl { get; set; }
         public bool Keep { get; set; } = true;
     }
 
@@ -49,26 +49,26 @@ namespace Utilities_aspnet.User.Dtos
     {
         [Required]
         [StringLength(256)]
-        public string Email { get; set; } = null!;
+        public string Email { get; set; } 
 
         [Required]
         [StringLength(256)]
         [DataType(DataType.Password)]
-        public string Password { get; set; } = null!;
+        public string Password { get; set; } 
 
-        public string? ReturnUrl { get; set; } = null;
+        public string? ReturnUrl { get; set; }
         public bool Keep { get; set; } = true;
     }
 
     public class ChangePasswordDto
     {
         [DataType(DataType.Password)]
-        public string OldPassword { get; set; } = null!;
+        public string OldPassword { get; set; } 
 
         [Required]
         [StringLength(100, MinimumLength = 4)]
         [DataType(DataType.Password)]
-        public string NewPassword { get; set; } = null!;
+        public string NewPassword { get; set; } 
     }
 
     public class UserReadDto
@@ -82,8 +82,8 @@ namespace Utilities_aspnet.User.Dtos
         }
         public string? Token { get; set; }
         public string? Link { get; set; }
-        public string Id { get; set; } = null!;
-        public string FullName { get; set; } = null!;
+        public string Id { get; set; } 
+        public string FullName { get; set; } 
         public string? PhoneNumber { get; set; }
         public string? UserName { get; set; }
         public string? Email { get; set; }

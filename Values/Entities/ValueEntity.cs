@@ -36,7 +36,7 @@ namespace Utilities_aspnet.Values.Entities
         public MediaEntity? MediaEntity { get; set; }
 
         [Column(TypeName = "ntext")]
-        public string? Value { get; set; } = null;
+        public string? Value { get; set; }
 
     }
 }

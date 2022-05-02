@@ -36,7 +36,7 @@ namespace Utilities_aspnet.Ads.Entities
 
         [ForeignKey(nameof(UserId))]
         public UserEntity? UserEntity { get; set; }
-        public string? UserId { get; set; } = null;
+        public string? UserId { get; set; }
 
 
         [ForeignKey(nameof(CategoryId))]
@@ -52,11 +52,11 @@ namespace Utilities_aspnet.Ads.Entities
 
         [Column(TypeName = "ntext")]
         [Display(Name = "خلاصه")]
-        public string? Lid { get; set; } = null;
+        public string? Lid { get; set; }
 
         [Column(TypeName = "ntext")]
         [Display(Name = "متن")]
-        public string? Body { get; set; } = null;
+        public string? Body { get; set; }
 
         [Column(TypeName = "money")]
         [Display(Name = "قیمت")]

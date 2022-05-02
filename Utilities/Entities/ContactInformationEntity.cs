@@ -24,11 +24,11 @@ public class ContactInformationEntity : BaseEntity {
     public UserEntity? User { get; set; }
 
     [Required]
-    public virtual ContactInfoItemEntity ContactInfoItem { get; set; } = null!;
+    public virtual ContactInfoItemEntity ContactInfoItem { get; set; } 
 
     [Required]
     [ForeignKey("ContactInfoItem")]
-    public Guid? ContactInfoItemId { get; set; } = null!;
+    public Guid? ContactInfoItemId { get; set; } 
 
     public virtual ServiceProviderEntity? ServiceProvider { get; set; }
 

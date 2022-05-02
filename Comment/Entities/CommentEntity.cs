@@ -17,8 +17,8 @@ public class CommentEntity : BaseEntity {
 
     public double Point { get; set; } = 0;
 
-    public UserEntity UserEntity { get; set; } = null!;
-    public string UserId { get; set; } = null!;
+    public UserEntity UserEntity { get; set; } 
+    public string UserId { get; set; } 
 
     [ForeignKey("ServiceProvider")]
     public Guid? ServiceProviderId { get; set; }

@@ -17,8 +17,8 @@ namespace Utilities_aspnet.Report.Entities
         public ReportTypeEntity ReportTypeEntity { get; set; }
         public int ReportTypeId { get; set; }
 
-        public string? Title { get; set; } = null;
-        public string? Body { get; set; } = null;
+        public string? Title { get; set; }
+        public string? Body { get; set; }
         public bool AdminRead { get; set; } = false;
 
 

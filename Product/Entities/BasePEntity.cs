@@ -39,7 +39,7 @@ public class BasePEntity : BaseEntity
 
     [ForeignKey(nameof(UserId))]
     public UserEntity? UserEntity { get; set; }
-    public string? UserId { get; set; } = null;
+    public string? UserId { get; set; }
 
 
     [ForeignKey(nameof(CategoryId))]

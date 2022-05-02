@@ -10,14 +10,14 @@ namespace Utilities_aspnet.Utilities.Dtos
     {
         public Guid Key { get; set; }
         public string Value { get; set; }
-        public string? Alt { get; set; } = null;
-        public string? Media { get; set; } = null;
+        public string? Alt { get; set; }
+        public string? Media { get; set; }
     }
     public class KVMIVM
     {
         public int Key { get; set; }
         public string Value { get; set; }
-        public string? Alt { get; set; } = null;
-        public string? Media { get; set; } = null;
+        public string? Alt { get; set; }
+        public string? Media { get; set; }
     }
 }

@@ -26,7 +26,7 @@ public class BaseContentEntity : BaseEntity {
 
     //[ForeignKey(nameof(IntroMediaId))]
     //public MediaEntity? IntroMediaEntity { get; set; }
-    //public Guid? IntroMediaId { get; set; } = null;
+    //public Guid? IntroMediaId { get; set; }
 
 
     [StringLength(500)]
@@ -41,20 +41,20 @@ public class BaseContentEntity : BaseEntity {
 
     [Column(TypeName = "ntext")]
     [Display(Name = "خلاصه")]
-    public string? Lid { get; set; } = null;
+    public string? Lid { get; set; }
 
     [Column(TypeName = "ntext")]
     [Display(Name = "متن")]
-    public string? Body { get; set; } = null;
+    public string? Body { get; set; }
 
     [ForeignKey(nameof(UserId))]
     public UserEntity? User { get; set; }
-    public string? UserId { get; set; } = null;
+    public string? UserId { get; set; }
 
     public int NumberOfLikes { get; set; } = 0;
 
     [StringLength(100)]
-    public string? Author { get; set; } = null;
+    public string? Author { get; set; }
 
     [Required]
     [EnumDataType(typeof(ContentUseCase))]

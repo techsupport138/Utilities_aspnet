@@ -25,6 +25,6 @@ namespace Utilities_aspnet.User.Entities
         [Required]
         [StringLength(450)]
         [ForeignKey(nameof(User))]
-        public string UserId { get; set; } = null!;
+        public string UserId { get; set; } 
     }
 }

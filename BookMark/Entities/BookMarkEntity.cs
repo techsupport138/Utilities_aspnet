@@ -19,17 +19,17 @@ namespace Utilities_aspnet.BookMark.Entities
         public string UserId { get; set; }
 
 
-        public AdsEntity? Ads { get; set; } = null!;
-        public Guid? AdsId { get; set; } = null!;
+        public AdsEntity? Ads { get; set; } 
+        public Guid? AdsId { get; set; } 
 
-        public ProjectEntity? Project { get; set; } = null!;
-        public Guid? ProjectId { get; set; } = null!;
+        public ProjectEntity? Project { get; set; } 
+        public Guid? ProjectId { get; set; } 
 
-        public TenderEntity? Tender { get; set; } = null!;
-        public Guid? TenderId { get; set; } = null!;
+        public TenderEntity? Tender { get; set; } 
+        public Guid? TenderId { get; set; } 
 
-        public ProductEntity? DailyPrice { get; set; } = null!;
-        public Guid? ProductId { get; set; } = null!;
+        public ProductEntity? DailyPrice { get; set; } 
+        public Guid? ProductId { get; set; } 
         
 
     }

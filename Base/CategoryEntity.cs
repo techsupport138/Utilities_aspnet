@@ -24,7 +24,7 @@ namespace Utilities_aspnet.Base
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid CategoryId { get; set; }
-        public Guid? ParentId { get; set; } = null;
+        public Guid? ParentId { get; set; }
 
 
         [ForeignKey(nameof(MediaId))]
@@ -33,7 +33,7 @@ namespace Utilities_aspnet.Base
 
         [ForeignKey(nameof(LanguageId))]
         [InverseProperty("Categories")]
-        public virtual LanguageEntity? LanguageNavigation { get; set; } = null;
+        public virtual LanguageEntity? LanguageNavigation { get; set; }
         public string LanguageId { get; set; } = "fa-IR";
 
         public CategoryForEnum CategoryFor { get; set; }

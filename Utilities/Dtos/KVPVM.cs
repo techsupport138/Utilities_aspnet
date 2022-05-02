@@ -29,7 +29,7 @@ namespace Utilities_aspnet.Utilities.Dtos
 		}
 		public int Key { get; set; }
 		public string Value { get; set; }
-		public string? Image { get; set; } = null;
+		public string? Image { get; set; }
 		public List<KVPIVM> Childs { get; set; }
 
 	}
@@ -43,10 +43,10 @@ namespace Utilities_aspnet.Utilities.Dtos
 		public Guid Key { get; set; }
 		public string Value { get; set; }
 		//public MediaEntity? Image { get; set; }
-		public string? Image { get; set; } = null;
+		public string? Image { get; set; }
         public List<KVPCategoryVM> Childs { get; set; }
-		public Guid? ParentId { get; set; } = null;
-		public string ParentTitle { get; set; } = null;
+		public Guid? ParentId { get; set; }
+		public string ParentTitle { get; set; }
 		public string LanguageId { get; set; } = "fa-IR";
 		public CategoryForEnum CategoryFor { get; set; }
 	}

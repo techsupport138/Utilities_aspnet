@@ -21,14 +21,14 @@ public class UserEntity : IdentityUser
     public bool Suspend { get; set; } = false;
 
     [StringLength(100)]
-    public string? FirstName { get; set; } = null;
+    public string? FirstName { get; set; }
     [StringLength(100)]
-    public string? LastName { get; set; } = null;
+    public string? LastName { get; set; }
 
     //public string FullName => FirstName + " " + LastName;
 
     [StringLength(100)]
-    public string? FullName { get; set; } = null;
+    public string? FullName { get; set; }
 
     [StringLength(100)]
     public string? Headline { get; set; }
@@ -40,15 +40,15 @@ public class UserEntity : IdentityUser
     public string? Education { get; set; }
 
     [StringLength(100)]
-    public string? WebSite { get; set; } = null;
+    public string? WebSite { get; set; }
     [StringLength(100)]
-    public string? Instagram { get; set; } = null;
+    public string? Instagram { get; set; }
     [StringLength(100)]
-    public string? Telegram { get; set; } = null;
+    public string? Telegram { get; set; }
     [StringLength(100)]
-    public string? PhoneNumber { get; set; } = null;
+    public string? PhoneNumber { get; set; }
     [StringLength(100)]
-    public string? Link { get; set; } = null;
+    public string? Link { get; set; }
 
     public bool PublicBio { get; set; } = true;
 
@@ -58,9 +58,9 @@ public class UserEntity : IdentityUser
     public decimal Wallet { get; set; }
     public DateTime? LastLogin { get; set; }
     public DateTime? Birthday { get; set; }
-    public int? Birth_Year { get; set; } = null;
-    public int? Birth_Month { get; set; } = null;
-    public int? Birth_Day { get; set; } = null;
+    public int? Birth_Year { get; set; }
+    public int? Birth_Month { get; set; }
+    public int? Birth_Day { get; set; }
     public DateTime CreateAccount { get; set; } = DateTime.Now;
 
     public Guid? ColorId { get; set; }

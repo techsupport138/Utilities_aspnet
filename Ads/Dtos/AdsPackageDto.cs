@@ -8,7 +8,7 @@ namespace Utilities_aspnet.Ads.Dtos
 {
     public class AdsPackageDto
     {
-        public int? AdsPackageId { get; set; } = null;
+        public int? AdsPackageId { get; set; }
         public string LanguageId { get; set; } = "fa-IR";
         public bool Enable { get; set; }
         public string Title { get; set; }

@@ -4,14 +4,14 @@ namespace Utilities_aspnet.Tag.Dtos {
     public class CreateTagDto {
         [Required]
         [StringLength(100)]
-        public string Title { get; set; } = null!;
+        public string Title { get; set; } 
 
         public string? Link { get; set; }
     }
 
     public class GetTagDto {
         public int Id { get; set; }
-        public string Title { get; set; } = null!;
+        public string Title { get; set; } 
         public string? Link { get; set; }
     }
 
@@ -21,7 +21,7 @@ namespace Utilities_aspnet.Tag.Dtos {
 
         [Required]
         [StringLength(100)]
-        public string Title { get; set; } = null!;
+        public string Title { get; set; } 
 
         public string? Link { get; set; }
     }

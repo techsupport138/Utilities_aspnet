@@ -36,7 +36,7 @@ namespace Utilities_aspnet.learn.Entities
         
 
         [Display(Name = "قیمت")]
-        public int? Amount { get; set; } = null;
+        public int? Amount { get; set; }
 
         
     }

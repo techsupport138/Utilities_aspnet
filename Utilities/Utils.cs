@@ -43,10 +43,10 @@ public static class StartupExtension
         
         if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
 
-        builder.Services.AddDbContext<DbContext>(options =>
-                options.UseSqlServer(connectionStrings)
-                    .EnableSensitiveDataLogging(false)
-            );
+        // builder.Services.AddDbContext<DbContext>(options =>
+        //         options.UseSqlServer(connectionStrings)
+        //             .EnableSensitiveDataLogging(false)
+        //     );
         
 
         

@@ -7,7 +7,7 @@ namespace Utilities_aspnet.Product.Entities;
 
 public class VoteFieldEntity : BaseEntity {
 
-    public string Title { get; set; } = null!;
+    public string Title { get; set; } 
     public Guid PostId { get; set; }
     [ForeignKey(nameof(PostId))]
     public PostEntity? Post { get; set; }

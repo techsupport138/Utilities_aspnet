@@ -11,7 +11,7 @@ public class ProjectEntity : BasePEntity {
 
     [Required]
     [StringLength(200)]
-    public string Subtitle { get; set; } = null!;
+    public string Subtitle { get; set; } 
 
     [Display(Name = "کشور")]
     public int CountryId { get; set; }

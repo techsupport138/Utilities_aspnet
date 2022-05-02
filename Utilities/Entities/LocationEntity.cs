@@ -15,9 +15,9 @@ namespace Utilities_aspnet.Utilities.Entities
 
         [Required]
         [StringLength(100)]
-        public string Title { get; set; } = null!;
+        public string Title { get; set; } 
 
-        public ICollection<MediaEntity>? Media { get; set; } = null!;
+        public ICollection<MediaEntity>? Media { get; set; } 
 
         [Required]
         [EnumDataType(typeof(LocationType))]

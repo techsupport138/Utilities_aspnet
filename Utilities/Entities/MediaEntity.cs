@@ -15,7 +15,7 @@ using Utilities_aspnet.Product.Entities;
 namespace Utilities_aspnet.Utilities.Entities {
     public class MediaEntity : BaseEntity {
         [Required]
-        public string FileName { get; set; } = null!;
+        public string FileName { get; set; } 
 
         [Required]
         public FileTypes FileType { get; set; }
