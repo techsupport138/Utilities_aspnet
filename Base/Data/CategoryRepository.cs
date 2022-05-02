@@ -69,6 +69,8 @@ namespace Utilities_aspnet.Base.Data
                 Files = f,
                 UserId = null,
             });
+            var l = _context.Set<LanguageEntity>().Find(newCategory.LanguageId);
+
             var Cat = new CategoryEntity()
             {
                 CategoryFor = newCategory.CategoryFor,
@@ -76,7 +78,9 @@ namespace Utilities_aspnet.Base.Data
                 ParentId = newCategory.ParentId,
                 MediaId = res.Ids[0],
                 Title = newCategory.Title,
+                CategoryId=Guid.NewGuid(),
             };
+            Cat.LanguageNavigation = l;
             await _context.Set<CategoryEntity>().AddAsync(Cat);
             await _context.SaveChangesAsync();
             return new GenericResponse(UtilitiesStatusCodes.Success, $"Cat {Cat.Title} Created!", id: Cat.CategoryId);

@@ -6,5 +6,6 @@ public enum UtilitiesStatusCodes
     BadRequest = 400,
     Forbidden = 403,
     NotFound = 404,
-    Unhandled = 900
+    Unhandled = 900,
+    New=499
 }

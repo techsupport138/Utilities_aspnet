@@ -27,7 +27,7 @@ namespace Utilities_aspnet.Event.Data
             if (id == null)
             {
                 return Task.FromResult(new GenericResponse<EventDto?>
-                    (new EventDto(), UtilitiesStatusCodes.NotFound, "NotFound"));
+                    (new EventDto(), UtilitiesStatusCodes.New, "New"));
             }
             else
             {

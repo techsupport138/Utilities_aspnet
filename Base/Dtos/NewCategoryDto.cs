@@ -16,5 +16,7 @@ namespace Utilities_aspnet.Base.Dtos
         public string Title { get; set; }
         public string UserId { get; set; }
         public IFormFile? File { get; set; } = null;
+        public Guid? MediaId { get; set; } = null;
+        public string? FileName { get; set; }
     }
 }

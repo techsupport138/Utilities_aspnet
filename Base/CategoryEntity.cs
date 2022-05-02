@@ -16,7 +16,7 @@ namespace Utilities_aspnet.Base
 
         public CategoryEntity()
         {
-            Language = new LanguageEntity();
+            LanguageNavigation = new LanguageEntity();
             InverseParent = new HashSet<CategoryEntity>();
             Parent = null;
 
@@ -28,12 +28,12 @@ namespace Utilities_aspnet.Base
 
 
         [ForeignKey(nameof(MediaId))]
-        public MediaEntity? Media { get; set; }
+        public virtual MediaEntity? Media { get; set; }
         public Guid? MediaId { get; set; }
 
         [ForeignKey(nameof(LanguageId))]
-        public LanguageEntity Language { get; set; }
-        [StringLength(5)]
+        [InverseProperty("Categories")]
+        public virtual LanguageEntity? LanguageNavigation { get; set; } = null;
         public string LanguageId { get; set; } = "fa-IR";
 
         public CategoryForEnum CategoryFor { get; set; }

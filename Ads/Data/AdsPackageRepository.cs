@@ -28,7 +28,7 @@ namespace Utilities_aspnet.Ads.Data
             if (id == null)
             {
                 return Task.FromResult(new GenericResponse<AdsPackageDto?>
-                    (new AdsPackageDto(), UtilitiesStatusCodes.NotFound, "NotFound"));
+                    (new AdsPackageDto(), UtilitiesStatusCodes.New, "New"));
             }
             else
             {

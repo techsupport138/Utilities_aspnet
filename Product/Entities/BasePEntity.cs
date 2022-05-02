@@ -30,10 +30,10 @@ public class BasePEntity : BaseEntity
 
 
 
-    [ForeignKey(nameof(Language))]
-    public LanguageEntity LanguageEntity { get; set; }
+    [ForeignKey(nameof(LanguageId))]
+    public virtual LanguageEntity LanguageEntity { get; set; }
     [DefaultValue("fa-IR")]
-    public string Language { get; set; } = "fa-IR";
+    public string LanguageId { get; set; } = "fa-IR";
 
 
 

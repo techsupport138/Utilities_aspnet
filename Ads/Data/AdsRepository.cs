@@ -28,7 +28,7 @@ namespace Utilities_aspnet.Ads.Data
             if (id == null)
             {
                 return Task.FromResult(new GenericResponse<AdsDto?>
-                    (new AdsDto(), UtilitiesStatusCodes.NotFound, "NotFound"));
+                    (new AdsDto(), UtilitiesStatusCodes.New, "New"));
             }
             else
             {
@@ -69,8 +69,10 @@ namespace Utilities_aspnet.Ads.Data
         {
             if (ads.Id == null)
             {
+                var l = _context.Set<LanguageEntity>().Find(ads.LanguageId);
                 var model = new AdsEntity()
                 {
+                    
                     Amount = ads.Amount,
                     Body = ads.Body,
                     CategoryId = ads.CategoryId,
@@ -89,7 +91,11 @@ namespace Utilities_aspnet.Ads.Data
                     //TinyURL= 
                     Title = ads.Title,
                 };
-                _context.Set<AdsEntity>().Add(model);
+                //model.LanguageNavigation = l;
+                //model.Category.LanguageNavigation = l;
+                ///todo:Relation Model null سینا
+                await _context.Set<AdsEntity>().AddAsync(model);
+                await _context.SaveChangesAsync();
                 var up = await _Upload.UploadMedia(new UploadDto()
                 {
                     UserId = ads.UserId,
