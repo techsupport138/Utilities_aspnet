@@ -28,6 +28,7 @@ namespace Utilities_aspnet.Geo.Entity
         }
         [Key]
         [Display(Name = "شناسه")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CountryId { get; set; }
         [StringLength(200)]
         [Display(Name = "نام کشور")]
