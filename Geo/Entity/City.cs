@@ -27,6 +27,7 @@ namespace Utilities_aspnet.Geo.Entity
 
         [Key]
         [Display(Name = "شناسه")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CityId { get; set; }
         [Display(Name = "استان")]
         public int ProvinceId { get; set; }

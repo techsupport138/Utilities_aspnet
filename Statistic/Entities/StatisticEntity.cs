@@ -12,6 +12,7 @@ namespace Utilities_aspnet.Statistic.Entities
     public class StatisticEntity
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long StatisticId { get; set; }
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }
