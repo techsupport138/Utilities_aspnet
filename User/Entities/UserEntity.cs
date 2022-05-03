@@ -12,10 +12,6 @@ public class UserEntity : IdentityUser {
         ContactInformation = new List<ContactInformationEntity>();
         Media = new List<MediaEntity>();
         BookMark = new List<BookMarkEntity>();
-        BookMark = new List<BookMarkEntity>();
-        BookMark = new List<BookMarkEntity>();
-        BookMark = new List<BookMarkEntity>();
-        BookMark = new List<BookMarkEntity>();
     }
 
     public bool? Suspend { get; set; }
@@ -36,10 +32,10 @@ public class UserEntity : IdentityUser {
     public string? Bio { get; set; }
 
     [StringLength(100)]
-    public string? PublicUserName { get; set; }
+    public string? AppUserName { get; set; }
 
     [StringLength(20)]
-    public string? PublicPhoneNumber { get; set; }
+    public string? AppPhoneNumber { get; set; }
 
     public decimal Wallet { get; set; }
     public DateTime? Birthdate { get; set; }

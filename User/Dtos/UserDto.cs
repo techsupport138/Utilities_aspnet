@@ -77,8 +77,8 @@ namespace Utilities_aspnet.User.Dtos {
         public string PhoneNumber { get; set; }
         public string? UserName { get; set; }
         public string? Bio { get; set; }
-        public string? PublicUserName { get; set; }
-        public string? PublicPhoneNumber { get; set; }
+        public string? AppUserName { get; set; }
+        public string? AppPhoneNumber { get; set; }
         public DateTime? BirthDate { get; set; }
         public List<MediaDto>? Media { get; set; }
 
@@ -101,8 +101,8 @@ namespace Utilities_aspnet.User.Dtos {
         public string? Bio { get; set; }
         public DateTime? BirthDate { get; set; }
         public string? Headline { get; set; }
-        public string? PublicUserName { get; set; }
-        public string? PublicPhoneNumber { get; set; }
+        public string? AppUserName { get; set; }
+        public string? AppPhoneNumber { get; set; }
 
         public IEnumerable<ContactInformationCreateDto>? ContactInformation { get; set; }
     }
