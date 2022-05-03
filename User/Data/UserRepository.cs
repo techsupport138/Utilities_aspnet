@@ -19,7 +19,6 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
     Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
     Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName);
-
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
 
@@ -69,10 +68,8 @@ public class UserRepository : IUserRepository {
         UserEntity user = new() {
             Email = aspNetUser.UserName,
             UserName = aspNetUser.UserName,
-            LastLogin = null,
             EmailConfirmed = false,
             PhoneNumberConfirmed = false,
-            CreateAccount = DateTime.Now
         };
 
         IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
@@ -100,10 +97,8 @@ public class UserRepository : IUserRepository {
                 Email = "",
                 PhoneNumber = mobile,
                 UserName = mobile,
-                LastLogin = null,
                 EmailConfirmed = false,
                 PhoneNumberConfirmed = false,
-                CreateAccount = DateTime.Now,
                 FullName = "",
                 Wallet = 0,
                 Suspend = true
@@ -170,9 +165,8 @@ public class UserRepository : IUserRepository {
 
     public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName) {
         UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userName);
-        if (user == null) {
+        if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
-        }
 
         try {
             foreach (Guid item in model.Favorites.Where(item =>
@@ -201,25 +195,9 @@ public class UserRepository : IUserRepository {
 
             if (model.FullName != null) user.FullName = model.FullName;
             if (model.Bio != null) user.Bio = model.Bio;
-            //if (model.BirthDate != null) user.BirthDate = model.BirthDate;
             if (model.UserName != null) user.UserName = model.UserName;
-            //if (model.LocationId != null) user.LocationId = model.LocationId;
-            if (model.Degree != null) user.Degree = model.Degree;
-            if (model.Education != null) user.Education = model.Education;
             if (model.Headline != null) user.Headline = model.Headline;
-
-            if (model.WebSite != null) user.WebSite = model.WebSite;
-            if (model.Instagram != null) user.Instagram = model.Instagram;
-            if (model.Telegram != null) user.Telegram = model.Telegram;
             if (model.PhoneNumber != null) user.PhoneNumber = model.PhoneNumber;
-            if (model.Link != null) user.Link = model.Link;
-            if (model.PublicBio != null) user.PublicBio = model.PublicBio ?? true;
-
-            if (model.ColorId != null) user.ColorId = model.ColorId;
-
-            if (model.Birth_Year != null) user.Birth_Year = model.Birth_Year;
-            if (model.Birth_Month != null) user.Birth_Month = model.Birth_Month;
-            if (model.Birth_Day != null) user.Birth_Day = model.Birth_Day;
 
             await _context.SaveChangesAsync();
             if (model.ContactInformation != null) {
@@ -247,8 +225,7 @@ public class UserRepository : IUserRepository {
         catch {
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Bad Request");
         }
-
-
+        
         return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, "").Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -257,14 +234,12 @@ public class UserRepository : IUserRepository {
 
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
 
-        if (user.Suspend) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Forbidden, "User Suspend");
-
         SignInResult? result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, lockoutOnFailure: false);
         if (!result.Succeeded)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, null).Result.Result, status: UtilitiesStatusCodes.Success,
-            message: "Success");
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName).Result.Result, UtilitiesStatusCodes.Success,
+            "Success");
     }
 
     public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model) {
@@ -276,10 +251,8 @@ public class UserRepository : IUserRepository {
         UserEntity user = new() {
             Email = model.UserName,
             UserName = model.UserName,
-            LastLogin = null,
             EmailConfirmed = false,
             PhoneNumberConfirmed = false,
-            CreateAccount = DateTime.Now,
             Suspend = false,
         };
 
@@ -318,7 +291,6 @@ public class UserRepository : IUserRepository {
         JwtSecurityToken token = new(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims, expires: DateTime.Now.AddDays(365),
             signingCredentials: creds);
 
-        user.LastLogin = DateTime.Now;
         await _userManager.UpdateAsync(user);
         return token;
     }
