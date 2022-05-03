@@ -94,7 +94,7 @@ namespace Utilities_aspnet.Ads.Data
                 //model.LanguageNavigation = l;
                 //model.Category.LanguageNavigation = l;
                 ///todo:Relation Model null سینا
-                await _context.Set<AdsEntity>().AddAsync(model);
+                     _context.Set<AdsEntity>().Add(model);
                 await _context.SaveChangesAsync();
                 var up = await _Upload.UploadMedia(new UploadDto()
                 {

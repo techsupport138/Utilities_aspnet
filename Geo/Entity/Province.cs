@@ -30,14 +30,15 @@ namespace Utilities_aspnet.Geo.Entity
         public int ProvinceId { get; set; }
         [Display(Name = "کشور")]
         public int CountryId { get; set; }
-        [Required]
+        //[Required]
         [StringLength(50)]
         [Display(Name = "نام استان")]
         public string ProvinceName { get; set; }
 
         [ForeignKey(nameof(CountryId))]
         [InverseProperty("Provinces")]
-        public virtual Country Country { get; set; }    
+        public virtual Country Country { get; set; }
+
         [InverseProperty(nameof(City.Province))]
         public virtual ICollection<City> Cities { get; set; }
 
