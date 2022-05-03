@@ -45,7 +45,6 @@ namespace Utilities_aspnet.Geo.Entity
         public virtual ICollection<AdsEntity> Ads { get; set; }
         [InverseProperty(nameof(JobEntity.City))]
         public virtual ICollection<JobEntity> Jobs { get; set; }
-        [InverseProperty(nameof(ProjectEntity.City))]
         public virtual ICollection<ProjectEntity> Projects { get; set; }
         [InverseProperty(nameof(TenderEntity.City))]
         public virtual ICollection<TenderEntity> Tenders { get; set; }

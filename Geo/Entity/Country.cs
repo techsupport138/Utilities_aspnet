@@ -38,7 +38,6 @@ namespace Utilities_aspnet.Geo.Entity
         public virtual ICollection<AdsEntity> Ads { get; set; }
         [InverseProperty(nameof(JobEntity.Country))]
         public virtual ICollection<JobEntity> Jobs { get; set; }
-        [InverseProperty(nameof(ProjectEntity.Country))]
         public virtual ICollection<ProjectEntity> Projects { get; set; }
         [InverseProperty(nameof(Province.Country))]
         public virtual ICollection<Province> Provinces { get; set; }
