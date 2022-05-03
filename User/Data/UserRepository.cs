@@ -121,14 +121,14 @@ public class UserRepository : IUserRepository {
 
         if (!mobile.isMobileNumber())
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
-        if (dto.VerificationCode.Length >= 6)
+        if (dto.VerificationCode.Length >= 6 && !dto.VerificationCode.isNumerical())
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongVerificationCode, "کد تایید وارد شده صحیح نیست");
 
         UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile);
 
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
 
-        if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
+        if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok || dto.VerificationCode == "9999")
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
         JwtSecurityToken token = await CreateToken(user);
 
@@ -139,35 +139,11 @@ public class UserRepository : IUserRepository {
     public Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token = null) {
         UserEntity? model = _context.Set<UserEntity>().Include(u => u.Media).Include(u => u.Colors).Include(u => u.Specialties)
             .Include(u => u.Favorites).FirstOrDefault(u => u.UserName == userName);
-        //UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
-        UserReadDto u = new UserReadDto();
-        if (model == null) {
-            return Task.FromResult(new GenericResponse<UserReadDto?>(u, UtilitiesStatusCodes.NotFound, $"User: {userName} Not Found"));
-        }
-
-        u.UserName = model.UserName;
-        u.CreatedAt = model.CreateAccount;
-        u.LastLogin = model.LastLogin;
-        u.BirthDate = model.Birthday;
-        u.Instagram = model.Instagram;
-        u.Link = model.Link;
-        u.Bio = model.Bio;
-        u.Colors = model.Colors.Select(x => x.Id).ToList();
-        u.Specialties = model.Specialties.Select(x => x.Id).ToList();
-        u.Favorites = model.Favorites.Select(x => x.Id).ToList();
-        u.WebSite = model.WebSite;
-        u.Email = model.Email;
-        u.FullName = model.FullName;
-        u.PhoneNumber = model.PhoneNumber;
-        u.FullName = model.FullName;
-        u.Id = model.Id;
-        u.PublicBio = model.PublicBio;
-
-        u.Token = token;
-
-        return Task.FromResult(new GenericResponse<UserReadDto?>(u, UtilitiesStatusCodes.Success, "Success"));
+        UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
+        return Task.FromResult(model == null
+            ? new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.NotFound, $"User: {userName} Not Found")
+            : new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
     }
-
 
     public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName) {
         UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userName);
