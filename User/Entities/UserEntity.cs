@@ -29,6 +29,9 @@ public class UserEntity : IdentityUser {
     [StringLength(100)]
     public string? FullName { get; set; }
 
+    [StringLength(20)]
+    public string? Mobile { get; set; }
+
     [StringLength(100)]
     public string? Headline { get; set; }
 

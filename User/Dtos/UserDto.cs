@@ -72,28 +72,15 @@ namespace Utilities_aspnet.User.Dtos {
         }
 
         public string? Token { get; set; }
-        public string? Link { get; set; }
         public string Id { get; set; }
         public string FullName { get; set; }
-        public string? PhoneNumber { get; set; }
+        public string Mobile { get; set; }
         public string? UserName { get; set; }
         public string? Email { get; set; }
 
         public string? Bio { get; set; }
-        public string? Point { get; set; }
-
-        public string? WebSite { get; set; }
-        public string? Instagram { get; set; }
-
-        public string? Telegram { get; set; }
-
-        //public string? PhoneNumber { get; set; }
-        //public string? Link { get; set; }
-        public bool? PublicBio { get; set; }
 
         public DateTime? BirthDate { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? LastLogin { get; set; }
         public List<MediaDto>? Media { get; set; }
 
         public List<int> Colors { get; set; }
