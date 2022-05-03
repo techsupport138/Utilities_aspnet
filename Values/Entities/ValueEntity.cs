@@ -35,7 +35,7 @@ namespace Utilities_aspnet.Values.Entities
         [ForeignKey(nameof(MediaId))]
         public MediaEntity? MediaEntity { get; set; }
 
-        [Column(TypeName = "ntext")]
+        
         public string? Value { get; set; }
 
     }

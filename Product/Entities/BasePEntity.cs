@@ -25,7 +25,7 @@ public class BasePEntity : BaseEntity
     [StringLength(500)]
     public string Lid { get; set; }
 
-    [Column(TypeName = "NTEXt")]
+    
     public string Details { get; set; }
 
 

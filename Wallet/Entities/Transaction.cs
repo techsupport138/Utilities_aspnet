@@ -18,7 +18,7 @@ namespace Utilities_aspnet.Wallet.Entities
 
         [Column(TypeName = "datetime")]
         public DateTime CreateDateTime { get; set; }
-        [Column(TypeName = "money")]
+        
         public decimal Amount { get; set; }
         [Required]
         [StringLength(200)]

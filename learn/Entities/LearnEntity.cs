@@ -25,11 +25,11 @@ namespace Utilities_aspnet.learn.Entities
         public string Publisher { get; set; }
 
 
-        [Column(TypeName = "ntext")]
+        
         [Display(Name = "تائیدیه ها")]
         public string Confirmations { get; set; }
 
-        [Column(TypeName = "ntext")]
+        
         [Display(Name = "افتخارات")]
         public string Honors { get; set; }
 
