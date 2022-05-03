@@ -87,7 +87,7 @@ public class UserRepository : IUserRepository {
         UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == dto.Mobile);
         string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
         if (dto.Mobile.Length <= 9 || !mobile.isNumerical())
-            return new GenericResponse<string?>("", UtilitiesStatusCodes.Success, "شماره موبایل وارد شده صحیح نیست");
+            return new GenericResponse<string?>("", UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
 
         if (model != null) {
             string? otp = _otp.SendOtp(model.Id);
