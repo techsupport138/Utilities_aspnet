@@ -11,7 +11,6 @@ public class BasePEntity : BaseEntity {
         Media = new List<MediaEntity>();
     }
 
-    public bool Publish { get; set; } = false;
     public bool Enable { get; set; } = false;
 
     [StringLength(200)]
