@@ -86,7 +86,6 @@ namespace Utilities_aspnet.Utilities.Data
                     AdsId = model.AdsId,
                     JobId = model.JobId,
                     LearnId = model.LearnId,
-                    PostId = model.PostId,
                     ProductId = model.ProductId,
                     TenderId = model.TenderId,
 
