@@ -6,10 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilities_aspnet.Product.Entities;
 
-namespace Utilities_aspnet.Product.Dto
-{
-    public class PostDto
-    {
+namespace Utilities_aspnet.Product.Dto {
+    public class PostDto {
         public Guid Id { get; } = Guid.NewGuid();
         public string? Title { get; set; }
         public string? SubTitle { get; set; }
@@ -19,11 +17,9 @@ namespace Utilities_aspnet.Product.Dto
         public decimal Price { get; set; } = 0;
     }
 
-    public class AutoMapperPost : Profile
-    {
-        public AutoMapperPost()
-        {
-            CreateMap<PostEntity, PostDto>().ReverseMap();
+    public class AutoMapperPost : Profile {
+        public AutoMapperPost() {
+            CreateMap<ProductEntity, PostDto>().ReverseMap();
         }
     }
 }

@@ -3,21 +3,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Utilities_aspnet.Base;
 using Utilities_aspnet.Utilities.Enums;
 
-namespace Utilities_aspnet.Utilities.Entities
-{
+namespace Utilities_aspnet.Utilities.Entities {
     [Table("Location")]
-    public class LocationEntity : BaseEntity
-    {
-
+    public class LocationEntity : BaseEntity {
         public Guid? ParentId { get; set; }
+
         [ForeignKey(nameof(ParentId))]
         public LocationEntity? Parent { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Title { get; set; } 
+        public string Title { get; set; }
 
-        public ICollection<MediaEntity>? Media { get; set; } 
+        public ICollection<MediaEntity>? Media { get; set; }
 
         [Required]
         [EnumDataType(typeof(LocationType))]
@@ -27,5 +25,9 @@ namespace Utilities_aspnet.Utilities.Entities
 
         public double? Longitude { get; set; }
 
+        public Guid? ProductId { get; set; }
+
+        [ForeignKey(nameof(ParentId))]
+        public ProductEntity? Product { get; set; }
     }
 }

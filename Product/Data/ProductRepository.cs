@@ -1,12 +1,9 @@
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Utilities_aspnet.Product.Dto;
-using Utilities_aspnet.Product.Entities;
 
 namespace Utilities_aspnet.Product.Data;
 
-public interface IProjectRepository {
+public interface IProductRepository<T> where T : BasePEntity {
     Task<GetProductDto> Add(AddUpdateProductDto dto);
     Task<IEnumerable<GetProductDto>> Get();
     Task<GetProductDto> GetById(Guid id);
@@ -14,29 +11,29 @@ public interface IProjectRepository {
     void Delete(Guid id);
 }
 
-public class ProjectRepository : IProjectRepository {
+public class ProductRepository<T> : IProductRepository<T> where T : BasePEntity {
     private readonly DbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public ProjectRepository(DbContext dbContext, IMapper mapper) {
+    public ProductRepository(DbContext dbContext, IMapper mapper) {
         _dbContext = dbContext;
         _mapper = mapper;
     }
 
     public async Task<GetProductDto> Add(AddUpdateProductDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
-        EntityEntry<ProjectEntity> i = await _dbContext.Set<ProjectEntity>().AddAsync(_mapper.Map<ProjectEntity>(dto));
+        EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(_mapper.Map<T>(dto));
         await _dbContext.SaveChangesAsync();
         return _mapper.Map<GetProductDto>(i.Entity);
     }
 
     public async Task<IEnumerable<GetProductDto>> Get() {
-        List<ProjectEntity> i = await _dbContext.Set<ProjectEntity>().AsNoTracking().ToListAsync();
+        List<T> i = await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         return _mapper.Map<IEnumerable<GetProductDto>>(i);
     }
 
     public async Task<GetProductDto> GetById(Guid id) {
-        ProjectEntity? i = await _dbContext.Set<ProjectEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+        T? i = await _dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         return _mapper.Map<GetProductDto>(i);
     }
 
@@ -46,7 +43,7 @@ public class ProjectRepository : IProjectRepository {
 
     public async void Delete(Guid id) {
         GetProductDto i = await GetById(id);
-        _dbContext.Set<ProjectEntity>().Remove(_mapper.Map<ProjectEntity>(i));
+        _dbContext.Set<T>().Remove(_mapper.Map<T>(i));
         await _dbContext.SaveChangesAsync();
     }
 }

@@ -8,8 +8,4 @@ using Utilities_aspnet.Base;
 
 namespace Utilities_aspnet.Product.Entities;
 
-public class ProductEntity : BasePEntity
-{
-    
-
-}
+public class ProductEntity : BasePEntity { }

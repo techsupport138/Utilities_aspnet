@@ -10,7 +10,7 @@ public class VoteEntity : BaseEntity {
     public double Score { get; set; } = 0;
     public Guid PostId { get; set; }
     [ForeignKey(nameof(PostId))]
-    public PostEntity? Post { get; set; }
+    public ProductEntity? Post { get; set; }
     public Guid UserId { get; set; }
     [ForeignKey(nameof(UserId))]
     public UserEntity? User { get; set; }

@@ -22,6 +22,7 @@ using Utilities_aspnet.Ads.Data;
 using Utilities_aspnet.Event.Data;
 using Utilities_aspnet.Job.Data;
 using Utilities_aspnet.Learn.Data;
+using Utilities_aspnet.Product.Data;
 
 namespace Utilities_aspnet.Utilities;
 
@@ -101,6 +102,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IEventRepository, EventRepository>();
         builder.Services.AddTransient<IJobRepository, JobRepository>();
         builder.Services.AddTransient<ILearnRepository, LearnRepository>();
+        builder.Services.AddTransient<IProductRepository<ProductEntity>, ProductRepository<ProductEntity>>();
 
         //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
         //https://github.com/keyone2693/ImageResizer.AspNetCore
