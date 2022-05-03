@@ -16,6 +16,8 @@ public interface IUserRepository {
     Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
     Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto);
     Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token = null);
+    Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
+    Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
     Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName);
 
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
@@ -128,7 +130,7 @@ public class UserRepository : IUserRepository {
 
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
 
-        if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok || dto.VerificationCode == "9999")
+        if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
         JwtSecurityToken token = await CreateToken(user);
@@ -143,13 +145,27 @@ public class UserRepository : IUserRepository {
     }
 
     public Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token = null) {
-        UserEntity? model = _context.Set<UserEntity>().Include(u => u.Media).Include(u => u.Colors).Include(u => u.Specialties)
-            .Include(u => u.Favorites).FirstOrDefault(u => u.UserName == userName);
+        UserEntity? model = _context.Set<UserEntity>().AsNoTracking().Include(u => u.Media).Include(u => u.Colors)
+            .Include(u => u.Specialties).Include(u => u.Favorites).FirstOrDefault(u => u.UserName == userName);
         UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
         userReadDto.Token = token;
         return Task.FromResult(model == null
             ? new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.NotFound, $"User: {userName} Not Found")
             : new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
+    }
+
+    public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id) {
+        UserEntity? model = await _context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+        if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
+        UserReadDto dto = _mapper.Map<UserReadDto>(model);
+        return new GenericResponse<UserReadDto?>(dto);
+    }
+
+    public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username) {
+        UserEntity? model = await _context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
+        if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
+        UserReadDto dto = _mapper.Map<UserReadDto>(model);
+        return new GenericResponse<UserReadDto?>(dto);
     }
 
     public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName) {
