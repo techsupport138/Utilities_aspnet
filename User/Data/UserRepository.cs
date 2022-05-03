@@ -120,9 +120,9 @@ public class UserRepository : IUserRepository {
         string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
 
         if (!mobile.isMobileNumber())
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "شماره موبایل وارد شده صحیح نیست");
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
         if (dto.VerificationCode.Length >= 6)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongVerificationCode, "کد تایید وارد شده صحیح نیست");
 
         UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile);
 
