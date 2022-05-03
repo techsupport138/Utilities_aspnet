@@ -31,12 +31,13 @@ namespace Utilities_aspnet.Geo.Entity
         public int CityId { get; set; }
         [Display(Name = "استان")]
         public int ProvinceId { get; set; }
-        [Required]
+        //[Required]
         [StringLength(50)]
         [Display(Name = "شهر")]
         public string CityName { get; set; }
 
         [ForeignKey(nameof(ProvinceId))]
+        [InverseProperty("Cities")]
         public virtual Province Province { get; set; }
 
 

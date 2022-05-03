@@ -24,24 +24,20 @@ namespace Utilities_aspnet.Ads.Entities
             Province = new Province();
             Id = new Guid();
         }
-
-
-
          
         public string LanguageId { get; set; } = "fa-IR";
         [ForeignKey(nameof(LanguageId))]
         [InverseProperty("Ads")]
         public virtual LanguageEntity? LanguageNavigation { get; set; }
 
-
         [ForeignKey(nameof(UserId))]
-        public UserEntity? UserEntity { get; set; }
+        public virtual UserEntity? UserEntity { get; set; }
         public string? UserId { get; set; }
 
-
         [ForeignKey(nameof(CategoryId))]
-        public CategoryEntity Category { get; set; }
+        public virtual CategoryEntity Category { get; set; }
         public Guid CategoryId { get; set; }
+
         [StringLength(500)]
         [Column(TypeName = "NVARCHAR")]
         [Required]
