@@ -30,7 +30,6 @@ namespace Utilities_aspnet.Utilities.Entities {
         [ForeignKey("Product")]
         public Guid? ProductId { get; set; }
         
-
         public virtual JobEntity? Job { get; set; }
         [ForeignKey("JobEntity")]
         public Guid? JobId { get; set; }
@@ -53,13 +52,7 @@ namespace Utilities_aspnet.Utilities.Entities {
         public virtual ServiceProviderEntity? ServiceProvider { get; set; }
         [ForeignKey("ServiceProvider")]
         public Guid? ServiceProviderId { get; set; }
-
-
-        [ForeignKey("PostEntityId")]
-        public virtual ProductEntity? PostEntity { get; set; }        
-        public Guid? PostId { get; set; }
-
-
+        
         public virtual AdsEntity? Ads { get; set; }
         [ForeignKey("AdsId")]
         public Guid? AdsId { get; set; }
