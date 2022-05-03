@@ -15,7 +15,6 @@ public class GenericResponse<T> : GenericResponse {
 
 public class GenericResponse {
     public UtilitiesStatusCodes Status { get; set; }
-    public int StatusCode { get; set; }
     public string Message { get; set; }
     public List<Guid>? Ids { get; set; }
     public Guid? Id { get; set; }
