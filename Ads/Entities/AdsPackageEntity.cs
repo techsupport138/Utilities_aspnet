@@ -25,10 +25,10 @@ namespace Utilities_aspnet.Ads.Entities
         [Display(Name = "عنوان")]
         public string Title { get; set; }
         //[Required]
-        [Column(TypeName = "ntext")]
+        
         [Display(Name = "توضیحات")]
         public string? Details { get; set; }
-        [Column(TypeName = "money")]
+        
         [Display(Name = "قیمت")]
         public decimal Amount { get; set; }
         [Display(Name = "تعداد روز ویژه")]

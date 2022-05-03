@@ -47,7 +47,7 @@ namespace Utilities_aspnet.Tender.Entities
         [StringLength(200)]
         [Display(Name = "موقعیت")]
         public string Location { get; set; }
-        [Column(TypeName = "ntext")]
+        
         [Display(Name = "شرایط")]
         public string Conditions { get; set; }
 

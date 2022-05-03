@@ -39,11 +39,11 @@ public class BaseContentEntity : BaseEntity {
     [StringLength(10)]
     public string TinyURL { get; set; }
 
-    [Column(TypeName = "ntext")]
+    
     [Display(Name = "خلاصه")]
     public string? Lid { get; set; }
 
-    [Column(TypeName = "ntext")]
+    
     [Display(Name = "متن")]
     public string? Body { get; set; }
 

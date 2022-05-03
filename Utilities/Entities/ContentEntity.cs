@@ -14,7 +14,7 @@ public class ContentEntity : BaseContentEntity {
     [StringLength(200)]
     public string? SubTitle { get; set; }
 
-    [Column(TypeName = "NTEXT")]
+    
     public string? Description { get; set; }
 
     [StringLength(500)]
