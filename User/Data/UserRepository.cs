@@ -98,6 +98,8 @@ public class UserRepository : IUserRepository {
                 Email = "",
                 PhoneNumber = mobile,
                 UserName = mobile,
+                PublicUserName = mobile,
+                PublicPhoneNumber = mobile,
                 EmailConfirmed = false,
                 PhoneNumberConfirmed = false,
                 FullName = "",
@@ -196,9 +198,9 @@ public class UserRepository : IUserRepository {
 
             if (dto.FullName != null) user.FullName = dto.FullName;
             if (dto.Bio != null) user.Bio = dto.Bio;
-            if (dto.UserName != null) user.UserName = dto.UserName;
+            if (dto.PublicUserName != null) user.UserName = dto.PublicUserName;
             if (dto.Headline != null) user.Headline = dto.Headline;
-            if (dto.PhoneNumber != null) user.PhoneNumber = dto.PhoneNumber;
+            if (dto.PublicPhoneNumber != null) user.PhoneNumber = dto.PublicPhoneNumber;
 
             await _context.SaveChangesAsync();
             if (dto.ContactInformation != null) {

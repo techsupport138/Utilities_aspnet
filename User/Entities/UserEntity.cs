@@ -35,6 +35,12 @@ public class UserEntity : IdentityUser {
     [StringLength(500)]
     public string? Bio { get; set; }
 
+    [StringLength(100)]
+    public string? PublicUserName { get; set; }
+
+    [StringLength(20)]
+    public string? PublicPhoneNumber { get; set; }
+
     public decimal Wallet { get; set; }
     public DateTime? Birthdate { get; set; }
 
