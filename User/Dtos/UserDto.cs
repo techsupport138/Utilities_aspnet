@@ -103,7 +103,6 @@ namespace Utilities_aspnet.User.Dtos {
         public string? UserName { get; set; }
         public string? Headline { get; set; }
         public string? PhoneNumber { get; set; }
-        public string? Link { get; set; }
 
         public IEnumerable<ContactInformationCreateDto>? ContactInformation { get; set; }
     }

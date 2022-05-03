@@ -164,14 +164,14 @@ public class UserRepository : IUserRepository {
         return new GenericResponse<UserReadDto?>(dto);
     }
 
-    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string id) {
-        UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == id);
+    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string username) {
+        UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.UserName == username);
         if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
         try {
             foreach (Guid item in dto.Favorites.Where(item =>
-                         !_context.Set<UserToFavoriteEntity>().Any(x => x.UserId == id && x.FavoriteId == item))) {
+                         !_context.Set<UserToFavoriteEntity>().Any(x => x.UserId == username && x.FavoriteId == item))) {
                 _context.Set<UserToFavoriteEntity>().Add(new UserToFavoriteEntity() {
                     UserId = user.Id,
                     FavoriteId = item,
@@ -179,7 +179,7 @@ public class UserRepository : IUserRepository {
             }
 
             foreach (Guid item in dto.Colors.Where(item =>
-                         !_context.Set<UserToColorEntity>().Any(x => x.UserId == id && x.ColorId == item))) {
+                         !_context.Set<UserToColorEntity>().Any(x => x.UserId == username && x.ColorId == item))) {
                 _context.Set<UserToColorEntity>().Add(new UserToColorEntity() {
                     UserId = user.Id,
                     ColorId = item,
@@ -187,7 +187,7 @@ public class UserRepository : IUserRepository {
             }
 
             foreach (Guid item in dto.Specialties.Where(item =>
-                         !_context.Set<UserToSpecialtyEntity>().Any(x => x.UserId == id && x.SpecialtyId == item))) {
+                         !_context.Set<UserToSpecialtyEntity>().Any(x => x.UserId == username && x.SpecialtyId == item))) {
                 _context.Set<UserToSpecialtyEntity>().Add(new UserToSpecialtyEntity() {
                     UserId = user.Id,
                     SpecialtyId = item,
