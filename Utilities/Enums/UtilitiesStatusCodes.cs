@@ -16,5 +16,5 @@ public static class UtilitiesStatusCodesExtension {
     public static bool isBadRequest(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.BadRequest;
     public static bool isForbidden(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Forbidden;
     public static bool isNotFound(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.NotFound;
-    public static int value(this UtilitiesStatusCodes statusCode) => (int) statusCode.GetTypeCode();
+    public static int value(this UtilitiesStatusCodes statusCode) => (int) statusCode;
 }
