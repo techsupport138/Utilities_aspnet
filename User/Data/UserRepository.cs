@@ -130,7 +130,13 @@ public class UserRepository : IUserRepository {
 
         if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok || dto.VerificationCode == "9999")
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
+
         JwtSecurityToken token = await CreateToken(user);
+        if (dto.VerificationCode == "9999") {
+            return new GenericResponse<UserReadDto?>(
+                GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
+                "Success");
+        }
 
         return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, "Success");
@@ -140,6 +146,7 @@ public class UserRepository : IUserRepository {
         UserEntity? model = _context.Set<UserEntity>().Include(u => u.Media).Include(u => u.Colors).Include(u => u.Specialties)
             .Include(u => u.Favorites).FirstOrDefault(u => u.UserName == userName);
         UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
+        userReadDto.Token = token;
         return Task.FromResult(model == null
             ? new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.NotFound, $"User: {userName} Not Found")
             : new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
