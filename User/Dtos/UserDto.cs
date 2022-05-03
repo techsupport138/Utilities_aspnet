@@ -74,9 +74,8 @@ namespace Utilities_aspnet.User.Dtos {
         public string? Token { get; set; }
         public string Id { get; set; }
         public string FullName { get; set; }
-        public string Mobile { get; set; }
+        public string PhoneNumber { get; set; }
         public string? UserName { get; set; }
-        public string? Email { get; set; }
 
         public string? Bio { get; set; }
 
@@ -88,22 +87,34 @@ namespace Utilities_aspnet.User.Dtos {
         public List<int> Favorites { get; set; }
     }
 
+    public class UpdateProfileDto {
+        public UpdateProfileDto() {
+            Colors = new List<Guid>();
+            Specialties = new List<Guid>();
+            Favorites = new List<Guid>();
+        }
+
+        public List<Guid> Colors { get; set; }
+        public List<Guid> Specialties { get; set; }
+        public List<Guid> Favorites { get; set; }
+        public string? FullName { get; set; }
+        public string? Bio { get; set; }
+        public DateTime? BirthDate { get; set; }
+        public string? UserName { get; set; }
+        public string? Headline { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Link { get; set; }
+
+        public IEnumerable<ContactInformationCreateDto>? ContactInformation { get; set; }
+    }
 
     public class AutoMapperUsers : Profile {
         public AutoMapperUsers() {
-            //CreateMap<UserEntity, UserReadDto>()
-            //    .ForMember(dest => dest.Link,
-            //    opt => opt.MapFrom(src => "http://95.216.63.209:5012/api/user/" + src.Id)).ReverseMap();
-
             CreateMap<UserEntity, UserReadDto>().ForMember(x => x.Colors, x => x.MapFrom(x => x.Colors.Select(x => x.Color.Id).ToList()));
-
-
             CreateMap<UserEntity, UserReadDto>()
                 .ForMember(x => x.Favorites, x => x.MapFrom(x => x.Favorites.Select(x => x.Favorite.Id).ToList()));
-
             CreateMap<UserEntity, UserReadDto>()
                 .ForMember(x => x.Specialties, x => x.MapFrom(x => x.Specialties.Select(x => x.Specialty.Id).ToList()));
-
             CreateMap<UserEntity, UserReadDto>().ForMember(x => x.Media, x => x.MapFrom(x => x.Media));
         }
     }

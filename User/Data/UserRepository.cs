@@ -68,6 +68,7 @@ public class UserRepository : IUserRepository {
         UserEntity user = new() {
             Email = aspNetUser.UserName,
             UserName = aspNetUser.UserName,
+            PhoneNumber = aspNetUser.UserName,
             EmailConfirmed = false,
             PhoneNumberConfirmed = false,
         };
@@ -225,7 +226,7 @@ public class UserRepository : IUserRepository {
         catch {
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Bad Request");
         }
-        
+
         return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, "").Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -238,8 +239,7 @@ public class UserRepository : IUserRepository {
         if (!result.Succeeded)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName).Result.Result, UtilitiesStatusCodes.Success,
-            "Success");
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
     public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model) {

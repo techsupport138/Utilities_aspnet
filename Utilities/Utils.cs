@@ -78,6 +78,7 @@ public static class StartupExtension {
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
             options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            options.UseCamelCasing(true);
         });
 
         builder.Logging.AddEntityFramework<T>();
