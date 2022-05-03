@@ -1,9 +1,7 @@
 ﻿using ImageResizer.AspNetCore.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -15,14 +13,10 @@ using Utilities_aspnet.Base.Data;
 using Utilities_aspnet.Statistic.Data;
 using Utilities_aspnet.User.Data;
 using Utilities_aspnet.Utilities.Data;
-using Utilities_aspnet.Utilities.Enums;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using System.Reflection;
 using Utilities_aspnet.Utilities.Filters;
-using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.OpenApi.Models;
 using Utilities_aspnet.Ads.Data;
 using Utilities_aspnet.Event.Data;
@@ -31,63 +25,35 @@ using Utilities_aspnet.Learn.Data;
 
 namespace Utilities_aspnet.Utilities;
 
-public static class StartupExtension
-{
-
+public static class StartupExtension {
     public static void SetupUtilities<T>(this WebApplicationBuilder builder, string connectionStrings,
-        DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) where T : DbContext
-    {
+        DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) where T : DbContext {
         builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
 
-        
-        
         if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
 
-        // builder.Services.AddDbContext<DbContext>(options =>
-        //         options.UseSqlServer(connectionStrings)
-        //             .EnableSensitiveDataLogging(false)
-        //     );
-        
-
-        
         builder.AddUtilitiesSwagger();
         builder.AddUtilitiesIdentity();
 
-        builder.Services.Configure<FormOptions>(x =>
-        {
-            //x.MultipartBodyLengthLimit = 209715200;
+        builder.Services.Configure<FormOptions>(x => {
             x.ValueLengthLimit = int.MaxValue;
             x.MultipartBodyLengthLimit = int.MaxValue;
             x.MultipartHeadersLengthLimit = int.MaxValue;
         });
-        builder.Services.Configure<IISServerOptions>(options =>
-        {
+        builder.Services.Configure<IISServerOptions>(options => {
             options.MaxRequestBodySize = int.MaxValue; // or your desired value
         });
-        builder.Services.AddSession(options =>
-        {
-            options.IdleTimeout = System.TimeSpan.FromSeconds(604800);
-        });
-
-
+        builder.Services.AddSession(options => { options.IdleTimeout = System.TimeSpan.FromSeconds(604800); });
     }
 
     private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
-        where T : DbContext
-    {
-        builder.Services.AddCors(c =>
-        c.AddPolicy("AllowOrigin", option =>
-        option.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader()));
+        where T : DbContext {
+        builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
         builder.Services.AddScoped<DbContext, T>();
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        //builder.Services.AddScoped<SignInManager<UserEntity>, SignInManager<UserEntity>>();
 
-        builder.Services.AddDbContext<T>(options =>
-        {
-            switch (databaseType)
-            {
+        builder.Services.AddDbContext<T>(options => {
+            switch (databaseType) {
                 case DatabaseType.SqlServer:
                     options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging();
                     break;
@@ -98,34 +64,28 @@ public static class StartupExtension
                     throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
             }
         });
-        //builder.Services.AddSingleton<IFileProvider>(_ => new PhysicalFileProvider(_env.WebRootPath ?? _env.ContentRootPath));
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
 
         builder.Services.AddControllersWithViews()
             .AddNewtonsoftJson(i => i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
-        builder.Services.AddControllersWithViews()
-            .AddRazorRuntimeCompilation();
-
+        builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
         builder.Services.AddRazorPages();
         builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-        builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options =>
-        {
+        builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {
             options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         });
 
         builder.Logging.AddEntityFramework<T>();
         builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddMemoryCache();
-
-
-        //todo:همه ریپوزیتوری های مورد استفاده اینجا رجیستر شود
         builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+        
         builder.Services.AddTransient<AppSettings>();
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
@@ -135,118 +95,87 @@ public static class StartupExtension
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
-
         builder.Services.AddTransient<IAdsRepository, AdsRepository>();
         builder.Services.AddTransient<IAdsPackageRepository, AdsPackageRepository>();
         builder.Services.AddTransient<IEventRepository, EventRepository>();
         builder.Services.AddTransient<IJobRepository, JobRepository>();
         builder.Services.AddTransient<ILearnRepository, LearnRepository>();
-        //builder.Services.AddTransient<ILearnRepository, LearnRepository>();
-
-
 
         //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
-        //builder.Services.AddWkhtmltopdf("wkhtmltopdf");
-
         //https://github.com/keyone2693/ImageResizer.AspNetCore
         //http://imageresizer.aspnetcore.keyone2693.ir/
         builder.Services.AddImageResizer();
-
-
-
     }
 
-    private static void AddUtilitiesSwagger(this WebApplicationBuilder builder)
-    {
+    private static void AddUtilitiesSwagger(this WebApplicationBuilder builder) {
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c =>
-        {
+        builder.Services.AddSwaggerGen(c => {
             c.UseInlineDefinitionsForEnums();
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory);
+            string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            string xmlPath = Path.Combine(AppContext.BaseDirectory);
 
             c.IncludeXmlComments(xmlPath + xmlFile);
-
             c.IncludeXmlComments(xmlPath + xmlFile);
             c.IncludeXmlComments(xmlPath + "/Utilities_aspnet.xml");
             c.UseInlineDefinitionsForEnums();
             c.DocumentFilter<SwaggerFilters>();
             c.SchemaFilter<SchemaFilter>();
             c.EnableAnnotations();
-            c.OrderActionsBy(c => c.RelativePath);
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+            c.OrderActionsBy(s => s.RelativePath);
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+                Description =
+                    "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-            //c.OperationFilter<AddSwaggerService>();
-            
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-               {
-                 new OpenApiSecurityScheme
-                 {
-                   Reference = new OpenApiReference
-                   {
-                     Type = ReferenceType.SecurityScheme,
-                     Id = "Bearer"
-                   }
-                  },
-                  new string[] { }
+                {
+                    new OpenApiSecurityScheme {
+                        Reference = new OpenApiReference {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
                 }
-              });
+            });
         });
     }
 
-    private static void AddRedis(this WebApplicationBuilder builder, string connectionString)
-    {
+    private static void AddRedis(this WebApplicationBuilder builder, string connectionString) {
         builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(connectionString));
     }
 
-    public static void UseUtilitiesServices(this WebApplication app)
-    {
+    public static void UseUtilitiesServices(this WebApplication app) {
         app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-        if (app.Environment.IsDevelopment())
-        {
+        if (app.Environment.IsDevelopment()) {
             app.UseDeveloperExceptionPage();
         }
 
         app.UseDeveloperExceptionPage();
         app.UseUtilitiesSwagger();
-
-        //app.UseHttpsRedirection();
-        RewriteOptions options = new RewriteOptions();
-        //.AddRedirectToHttpsPermanent();
-        //.AddRedirectToWwwPermanent();
-
-
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapAreaControllerRoute("Dashboard", "Dashboard",
-                "/Dashboard/{controller=MyDashboard}/{action=Index}/{id?}",
-                new { area = "Dashboard", controller = "MyDashboard", action = "Index" });
+        app.UseEndpoints(endpoints => {
+            endpoints.MapAreaControllerRoute("Dashboard", "Dashboard", "/Dashboard/{controller=MyDashboard}/{action=Index}/{id?}",
+                new {area = "Dashboard", controller = "MyDashboard", action = "Index"});
             endpoints.MapDefaultControllerRoute();
             endpoints.MapRazorPages();
         });
         app.UseSession();
     }
 
-    private static void UseUtilitiesSwagger(this IApplicationBuilder app)
-    {
+    private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
         app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
+        app.UseSwaggerUI(c => {
             c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
             c.DefaultModelsExpandDepth(-1);
-
         });
     }
 }
