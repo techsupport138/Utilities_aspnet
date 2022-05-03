@@ -18,7 +18,7 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token = null);
     Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
     Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
-    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName);
+    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string userName);
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
 
@@ -164,48 +164,48 @@ public class UserRepository : IUserRepository {
         return new GenericResponse<UserReadDto?>(dto);
     }
 
-    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto model, string userName) {
-        UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userName);
+    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string id) {
+        UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == id);
         if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
         try {
-            foreach (Guid item in model.Favorites.Where(item =>
-                         !_context.Set<UserToFavoriteEntity>().Any(x => x.UserId == userName && x.FavoriteId == item))) {
+            foreach (Guid item in dto.Favorites.Where(item =>
+                         !_context.Set<UserToFavoriteEntity>().Any(x => x.UserId == id && x.FavoriteId == item))) {
                 _context.Set<UserToFavoriteEntity>().Add(new UserToFavoriteEntity() {
                     UserId = user.Id,
                     FavoriteId = item,
                 });
             }
 
-            foreach (Guid item in model.Colors.Where(item =>
-                         !_context.Set<UserToColorEntity>().Any(x => x.UserId == userName && x.ColorId == item))) {
+            foreach (Guid item in dto.Colors.Where(item =>
+                         !_context.Set<UserToColorEntity>().Any(x => x.UserId == id && x.ColorId == item))) {
                 _context.Set<UserToColorEntity>().Add(new UserToColorEntity() {
                     UserId = user.Id,
                     ColorId = item,
                 });
             }
 
-            foreach (Guid item in model.Specialties.Where(item =>
-                         !_context.Set<UserToSpecialtyEntity>().Any(x => x.UserId == userName && x.SpecialtyId == item))) {
+            foreach (Guid item in dto.Specialties.Where(item =>
+                         !_context.Set<UserToSpecialtyEntity>().Any(x => x.UserId == id && x.SpecialtyId == item))) {
                 _context.Set<UserToSpecialtyEntity>().Add(new UserToSpecialtyEntity() {
                     UserId = user.Id,
                     SpecialtyId = item,
                 });
             }
 
-            if (model.FullName != null) user.FullName = model.FullName;
-            if (model.Bio != null) user.Bio = model.Bio;
-            if (model.UserName != null) user.UserName = model.UserName;
-            if (model.Headline != null) user.Headline = model.Headline;
-            if (model.PhoneNumber != null) user.PhoneNumber = model.PhoneNumber;
+            if (dto.FullName != null) user.FullName = dto.FullName;
+            if (dto.Bio != null) user.Bio = dto.Bio;
+            if (dto.UserName != null) user.UserName = dto.UserName;
+            if (dto.Headline != null) user.Headline = dto.Headline;
+            if (dto.PhoneNumber != null) user.PhoneNumber = dto.PhoneNumber;
 
             await _context.SaveChangesAsync();
-            if (model.ContactInformation != null) {
+            if (dto.ContactInformation != null) {
                 UserEntity? users = await _context.Set<UserEntity>().Include(x => x.ContactInformation)
                     .FirstOrDefaultAsync(x => x.Id == user.Id);
                 _context.Set<ContactInformationEntity>().RemoveRange(users.ContactInformation);
-                foreach (ContactInformationCreateDto information in model.ContactInformation) {
+                foreach (ContactInformationCreateDto information in dto.ContactInformation) {
                     ContactInfoItemEntity? contactInfoItem =
                         await _context.Set<ContactInfoItemEntity>().FindAsync(information.ContactInfoItemId);
                     if (contactInfoItem == null) {
