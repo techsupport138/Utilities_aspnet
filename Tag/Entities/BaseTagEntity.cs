@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Utilities_aspnet.Base;
-using Utilities_aspnet.Utilities.Entities;
+﻿namespace Utilities_aspnet.Tag.Entities;
 
-namespace Utilities_aspnet.Tag.Entities {
-    public class BaseTagEntity : BaseEntity {
-        [Required]
-        public string Title { get; set; } 
+public abstract class BaseTagEntity : BaseEntity {
+    [StringLength(100)]
+    public string? Title { get; set; }
 
-        public string? Link { get; set; }
-        public ICollection<MediaEntity>? Media { get; set; }
-    }
+    public IEnumerable<MediaEntity>? Media { get; set; }
+
+    public ProductEntity? Product { get; set; }
+    public Guid? ProductId { get; set; }
 }

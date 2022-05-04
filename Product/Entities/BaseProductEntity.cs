@@ -1,18 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Utilities_aspnet.Base;
-using Utilities_aspnet.User.Entities;
-using Utilities_aspnet.Utilities.Entities;
+using Utilities_aspnet.Tag.Entities;
 
 namespace Utilities_aspnet.Product.Entities;
 
-public class BasePEntity : BaseEntity {
-    public BasePEntity() {
-        Media = new List<MediaEntity>();
-    }
-
-    public bool Enable { get; set; } = false;
-
+public abstract class BasePEntity : BaseEntity {
     [StringLength(200)]
     public string? Title { get; set; }
 
@@ -22,27 +12,25 @@ public class BasePEntity : BaseEntity {
     [StringLength(1000)]
     public string? Description { get; set; }
 
-    [ForeignKey(nameof(LanguageId))]
-    public LanguageEntity LanguageEntity { get; set; }
+    [DefaultValue(0)]
+    public decimal Price { get; set; } = 0;
 
-    [DefaultValue("fa-IR")]
-    public string LanguageId { get; set; } = "fa-IR";
+    [DefaultValue(false)]
+    public bool IsForSale { get; set; } = false;
 
-    [ForeignKey(nameof(UserId))]
+    [DefaultValue(false)]
+    public bool Enabled { get; set; } = false;
+
     public UserEntity? UserEntity { get; set; }
-
     public string? UserId { get; set; }
 
-    [ForeignKey(nameof(CategoryId))]
-    public CategoryEntity Category { get; set; }
-
-    public Guid CategoryId { get; set; }
-
-    public IEnumerable<MediaEntity>? Media { get; set; }
-
-    public decimal Price { get; set; } = 0;
+    public LocationEntity? Location { get; set; }
     public Guid? LocationId { get; set; }
 
-    [ForeignKey(nameof(LocationId))]
-    public LocationEntity? Location { get; set; }
+    public IEnumerable<MediaEntity>? Media { get; set; }
+    public IEnumerable<CategoryEntity>? Category { get; set; }
+    public IEnumerable<SpecialtyEntity>? Specialty { get; set; }
+    public IEnumerable<TagEntity>? Tag { get; set; }
+    public IEnumerable<UserEntity> Team { get; set; }
+    public IEnumerable<VoteFieldEntity> VoteFields { get; set; }
 }

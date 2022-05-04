@@ -41,8 +41,6 @@ public class UserEntity : IdentityUser {
     public DateTime? Birthdate { get; set; }
 
     public Guid? LocationId { get; set; }
-
-    [ForeignKey(nameof(LocationId))]
     public LocationEntity? Location { get; set; }
 
     public ICollection<MediaEntity>? Media { get; set; }
@@ -51,5 +49,7 @@ public class UserEntity : IdentityUser {
     public ICollection<UserToSpecialtyEntity>? Specialties { get; set; }
     public ICollection<ShoppingListEntity>? ShoppingList { get; set; }
     public ICollection<BookMarkEntity>? BookMark { get; set; }
+    public ICollection<ProductEntity>? Product { get; set; }
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
+    public ICollection<ProductEntity>? MentionInProduct { get; set; }
 }

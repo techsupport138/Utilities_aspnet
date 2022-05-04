@@ -48,5 +48,7 @@ namespace Utilities_aspnet.Base
         public virtual CategoryEntity Parent { get; set; }
         [InverseProperty(nameof(CategoryEntity.Parent))]
         public virtual ICollection<CategoryEntity> InverseParent { get; set; }
+
+        public IEnumerable<ProductEntity> Product { get; set; }
     }
 }
