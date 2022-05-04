@@ -1,7 +1,6 @@
 ﻿using ImageResizer.AspNetCore.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -27,9 +26,9 @@ using Utilities_aspnet.Product.Data;
 namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
-    public static void SetupUtilities<T>(this WebApplicationBuilder builder, string connectionStrings,
-        DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) where T : DbContext {
-        builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
+    public static void SetupUtilities(this WebApplicationBuilder builder, string connectionStrings,
+        DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) {
+        builder.AddUtilitiesServices(connectionStrings, databaseType);
 
         if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
 
@@ -47,13 +46,12 @@ public static class StartupExtension {
         builder.Services.AddSession(options => { options.IdleTimeout = System.TimeSpan.FromSeconds(604800); });
     }
 
-    private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
-        where T : DbContext {
+    private static void AddUtilitiesServices(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) {
         builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-        builder.Services.AddScoped<DbContext, T>();
+        builder.Services.AddScoped<DbContext, AppDbContext>();
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-        builder.Services.AddDbContext<T>(options => {
+        builder.Services.AddDbContext<AppDbContext>(options => {
             switch (databaseType) {
                 case DatabaseType.SqlServer:
                     options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging();
@@ -82,7 +80,7 @@ public static class StartupExtension {
             options.UseCamelCasing(true);
         });
 
-        builder.Logging.AddEntityFramework<T>();
+        builder.Logging.AddEntityFramework<AppDbContext>();
         builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddMemoryCache();
