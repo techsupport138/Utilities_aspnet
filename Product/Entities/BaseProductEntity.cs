@@ -31,7 +31,7 @@ public abstract class BasePEntity : BaseEntity {
     public IEnumerable<CategoryEntity>? Category { get; set; }
     public IEnumerable<SpecialtyEntity>? Specialty { get; set; }
     public IEnumerable<TagEntity>? Tag { get; set; }
-    public IEnumerable<UserEntity> Team { get; set; }
-    public IEnumerable<MentionInProductEntity> MP { get; set; }
+    // public IEnumerable<UserEntity> Team { get; set; }
+    // public IEnumerable<MentionInProductEntity> MP { get; set; }
     public IEnumerable<VoteFieldEntity> VoteFields { get; set; }
 }
