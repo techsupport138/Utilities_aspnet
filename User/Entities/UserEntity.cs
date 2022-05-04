@@ -52,4 +52,5 @@ public class UserEntity : IdentityUser {
     public ICollection<ProductEntity>? Product { get; set; }
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
     public ICollection<ProductEntity>? MentionInProduct { get; set; }
+    public IEnumerable<MentionInProductEntity> MP { get; set; }
 }
