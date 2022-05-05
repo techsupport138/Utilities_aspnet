@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities.Entities {
+﻿using Utilities_aspnet.Product;
+
+namespace Utilities_aspnet.Utilities.Entities {
     [Table("Specialties")]
     public class SpecialtyEntity : BaseEntity {
         [StringLength(100)]

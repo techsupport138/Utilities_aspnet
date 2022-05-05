@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Utilities_aspnet.Product;
 using Utilities_aspnet.Wallet.Entities;
 using ZNetCS.AspNetCore.Logging.EntityFrameworkCore;
 

@@ -22,6 +22,7 @@ using Utilities_aspnet.Ads.Data;
 using Utilities_aspnet.Event.Data;
 using Utilities_aspnet.Job.Data;
 using Utilities_aspnet.Learn.Data;
+using Utilities_aspnet.Product;
 using Utilities_aspnet.Product.Data;
 
 namespace Utilities_aspnet.Utilities;

@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities.Entities;
+﻿using Utilities_aspnet.Product;
+
+namespace Utilities_aspnet.Utilities.Entities;
 
 public class MediaEntity : BaseEntity {
     [Required]
@@ -48,7 +50,7 @@ public class MediaEntity : BaseEntity {
         return dto;
     }
 
-    public static IEnumerable<MediaDto> MapMediaEnumarableDto(IEnumerable<MediaEntity>? e) {
+    public static IEnumerable<MediaDto> MapEnumarableDto(IEnumerable<MediaEntity>? e) {
         IEnumerable<MediaDto> dto = new List<MediaDto>(e?.Select(MapMediaDto) ?? Array.Empty<MediaDto>());
         return dto;
     }

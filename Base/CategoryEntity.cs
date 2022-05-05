@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Utilities_aspnet.Product.Entities;
 using Utilities_aspnet.Utilities.Entities;
 using Utilities_aspnet.Language.Entities;
+using Utilities_aspnet.Product;
 
 namespace Utilities_aspnet.Base
 {

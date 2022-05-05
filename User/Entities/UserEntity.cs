@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Utilities_aspnet.BookMark.Entities;
-using Utilities_aspnet.Product.Entities;
-using Utilities_aspnet.Utilities.Entities;
+using Utilities_aspnet.Product;
+using Utilities_aspnet.User.Dtos;
 
 namespace Utilities_aspnet.User.Entities;
 
@@ -15,29 +12,14 @@ public class UserEntity : IdentityUser {
     }
 
     public bool? Suspend { get; set; }
-
-    [StringLength(100)]
     public string? FirstName { get; set; }
-
-    [StringLength(100)]
     public string? LastName { get; set; }
-
-    [StringLength(100)]
     public string? FullName { get; set; }
-
-    [StringLength(100)]
     public string? Headline { get; set; }
-
-    [StringLength(500)]
     public string? Bio { get; set; }
-
-    [StringLength(100)]
     public string? AppUserName { get; set; }
-
-    [StringLength(20)]
     public string? AppPhoneNumber { get; set; }
-
-    public decimal Wallet { get; set; }
+    public double? Wallet { get; set; }
     public DateTime? Birthdate { get; set; }
 
     public Guid? LocationId { get; set; }
@@ -51,6 +33,25 @@ public class UserEntity : IdentityUser {
     public ICollection<BookMarkEntity>? BookMark { get; set; }
     public ICollection<ProductEntity>? Product { get; set; }
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
-    // public ICollection<ProductEntity>? MentionInProduct { get; set; }
-    // public IEnumerable<MentionInProductEntity> MP { get; set; }
+
+    public static UserReadDto MapReadDto(UserEntity? e) {
+        UserReadDto dto = new() {
+            Id = e.Id,
+            Bio = e.Bio,
+            BirthDate = e.Birthdate,
+            FullName = e.FullName,
+            UserName = e.UserName,
+            PhoneNumber = e.PhoneNumber,
+            AppPhoneNumber = e.AppPhoneNumber,
+            AppUserName = e.AppUserName,
+            Media = MediaEntity.MapEnumarableDto(e.Media)
+        };
+
+        return dto;
+    }
+
+    public static IEnumerable<UserReadDto> MapEnumarableDto(IEnumerable<UserEntity>? e) {
+        IEnumerable<UserReadDto> dto = new List<UserReadDto>(e?.Select(MapReadDto) ?? Array.Empty<UserReadDto>());
+        return dto;
+    }
 }

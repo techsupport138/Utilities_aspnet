@@ -64,36 +64,23 @@ namespace Utilities_aspnet.User.Dtos {
     }
 
     public class UserReadDto {
-        public UserReadDto() {
-            Media = new List<MediaDto>();
-            Colors = new List<int>();
-            Specialties = new List<int>();
-            Favorites = new List<int>();
-        }
-
         public string? Token { get; set; }
-        public string Id { get; set; }
-        public string FullName { get; set; }
-        public string PhoneNumber { get; set; }
+        public string? Id { get; set; }
+        public string? FullName { get; set; }
+        public string? PhoneNumber { get; set; }
         public string? UserName { get; set; }
         public string? Bio { get; set; }
         public string? AppUserName { get; set; }
         public string? AppPhoneNumber { get; set; }
         public DateTime? BirthDate { get; set; }
-        public List<MediaDto>? Media { get; set; }
+        public IEnumerable<MediaDto>? Media { get; set; }
 
-        public List<int> Colors { get; set; }
-        public List<int> Specialties { get; set; }
-        public List<int> Favorites { get; set; }
+        public List<IdTitleDto> Colors { get; set; }
+        public List<IdTitleDto> Specialties { get; set; }
+        public List<IdTitleDto> Favorites { get; set; }
     }
 
     public class UpdateProfileDto {
-        public UpdateProfileDto() {
-            Colors = new List<Guid>();
-            Specialties = new List<Guid>();
-            Favorites = new List<Guid>();
-        }
-
         public List<Guid> Colors { get; set; }
         public List<Guid> Specialties { get; set; }
         public List<Guid> Favorites { get; set; }

@@ -10,6 +10,7 @@ using Utilities_aspnet.Tender.Entities;
 using Utilities_aspnet.DailyPrice.Entities;
 using Utilities_aspnet.Product.Entities;
 using Utilities_aspnet.Base;
+using Utilities_aspnet.Product;
 
 namespace Utilities_aspnet.BookMark.Entities
 {

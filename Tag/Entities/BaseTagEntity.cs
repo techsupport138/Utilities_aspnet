@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Tag.Entities;
+﻿using Utilities_aspnet.Product;
+
+namespace Utilities_aspnet.Tag.Entities;
 
 public abstract class BaseTagEntity : BaseEntity {
     [StringLength(100)]

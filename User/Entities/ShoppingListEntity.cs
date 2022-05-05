@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities_aspnet.Product;
 using Utilities_aspnet.Wallet.Entities;
 
 namespace Utilities_aspnet.User.Entities

@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities_aspnet.Base;
+using Utilities_aspnet.Product;
 //using Utilities_aspnet.Geo.Entity;
 using Utilities_aspnet.Tender.Enum;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Entities;
 namespace Utilities_aspnet.Tender.Entities
 {
-    public class TenderEntity: BasePEntity
+    public class TenderEntity: BaseProductEntity
     {
         public TenderType Type { get; set; }
 
