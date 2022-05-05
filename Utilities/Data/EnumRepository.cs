@@ -49,15 +49,15 @@ namespace Utilities_aspnet.Utilities.Data {
                 }).ToList()
             };
 
-            if (showGeo)
-                model.GeoList = _context.Set<Province>().Include(x => x.Cities).Select(x => new KVPIVM {
-                    Key = x.ProvinceId,
-                    Value = x.ProvinceName,
-                    Childs = x.Cities.Select(y => new KVPIVM {
-                        Key = y.CityId,
-                        Value = y.CityName,
-                    }).ToList()
-                }).ToList();
+            //if (showGeo)
+            //    model.GeoList = _context.Set<Province>().Include(x => x.Cities).Select(x => new KVPIVM {
+            //        Key = x.ProvinceId,
+            //        Value = x.ProvinceName,
+            //        Childs = x.Cities.Select(y => new KVPIVM {
+            //            Key = y.CityId,
+            //            Value = y.CityName,
+            //        }).ToList()
+            //    }).ToList();
 
             if (showCatehory)
                 model.Categories = _context.Set<CategoryEntity>()

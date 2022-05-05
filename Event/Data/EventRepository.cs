@@ -49,9 +49,10 @@ namespace Utilities_aspnet.Event.Data
                     LanguageId = x.LanguageId,
                     TinyURL = x.TinyURL,
                     UseCase = x.UseCase,
-                    CityId=x.CityId,
-                    CountryId=x.CountryId,
-                    ProvinceId=x.ProvinceId,
+                    //CityId=x.CityId,
+                    //CountryId=x.CountryId,
+                    //ProvinceId=x.ProvinceId,
+                    LocationId = x.LocationId,
                 }).FirstOrDefault();
                 if (eventEntity == null)
                 {
@@ -84,9 +85,9 @@ namespace Utilities_aspnet.Event.Data
                     LanguageId = events.LanguageId,
                     TinyURL = events.TinyURL,
                     UseCase = events.UseCase,
-                    CityId = events.CityId,
-                    CountryId = events.CountryId,
-                    ProvinceId = events.ProvinceId,
+                    LocationId = events.LocationId,
+                    //CountryId = events.CountryId,
+                    //ProvinceId = events.ProvinceId,
                 };
                 _context.Set<EventEntity>().Add(model);
                 //var up = await _Upload.UploadMedia(new UploadDto()
@@ -117,10 +118,11 @@ namespace Utilities_aspnet.Event.Data
                 old.LanguageId = events.LanguageId;
                 old.TinyURL = events.TinyURL;
                 old.UseCase = events.UseCase;
-                old.UpdatedAt = DateTime.Now;
-                old.CityId = events.CityId;
-                old.CountryId = events.CountryId;
-                old.ProvinceId = events.ProvinceId;
+                //old.UpdatedAt = DateTime.Now;
+                //old.CityId = events.CityId;
+                //old.CountryId = events.CountryId;
+                //old.ProvinceId = events.ProvinceId;
+                old.LocationId = events.LocationId;
                 _context.Set<EventEntity>().Update(old);
                 //var up = await _Upload.UploadMedia(new UploadDto()
                 //{

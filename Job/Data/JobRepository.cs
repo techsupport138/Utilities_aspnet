@@ -43,9 +43,9 @@ namespace Utilities_aspnet.Job.Data
                     UserId = x.UserId,
                     LanguageId = x.LanguageId,
                     TinyURL = x.TinyURL,
-                    CityId = x.CityId,
-                    CountryId = x.CountryId,
-                    ProvinceId = x.ProvinceId,
+                    //CityId = x.CityId,
+                    //CountryId = x.CountryId,
+                    //ProvinceId = x.ProvinceId,
                     Status = x.Status,
                     Enable = x.Enable,
                 }).FirstOrDefault();
@@ -73,9 +73,9 @@ namespace Utilities_aspnet.Job.Data
                     UserId = job.UserId,
                     LanguageId = job.LanguageId,
                     TinyURL = job.TinyURL,
-                    CityId = job.CityId,
-                    CountryId = job.CountryId,
-                    ProvinceId = job.ProvinceId,
+                    //CityId = job.CityId,
+                    //CountryId = job.CountryId,
+                    //ProvinceId = job.ProvinceId,
                     Status = job.Status,
                     Enable = job.Enable,
                 };
@@ -102,9 +102,9 @@ namespace Utilities_aspnet.Job.Data
                 old.UserId = job.UserId;
                 old.LanguageId = job.LanguageId;
                 old.TinyURL = job.TinyURL;
-                old.CityId = job.CityId;
-                old.CountryId = job.CountryId;
-                old.ProvinceId = job.ProvinceId;
+                //old.CityId = job.CityId;
+                //old.CountryId = job.CountryId;
+                //old.ProvinceId = job.ProvinceId;
                 old.Status = job.Status;
                 old.Enable = job.Enable;
                 old.UpdatedAt = DateTime.Now;

@@ -6,7 +6,10 @@ using Utilities_aspnet.Utilities.Enums;
 namespace Utilities_aspnet.Utilities.Entities {
     [Table("Location")]
     public class LocationEntity : BaseEntity {
-        public Guid? ParentId { get; set; }
+
+        [Key]
+        public int Id { get; set; }
+        public int? ParentId { get; set; }
 
         [ForeignKey(nameof(ParentId))]
         public LocationEntity? Parent { get; set; }
@@ -29,5 +32,9 @@ namespace Utilities_aspnet.Utilities.Entities {
 
         [ForeignKey(nameof(ParentId))]
         public ProductEntity? Product { get; set; }
+        public Guid? AdsId { get; set; }
+
+        [ForeignKey(nameof(AdsId))]
+        public AdsEntity? Ads { get; set; }
     }
 }

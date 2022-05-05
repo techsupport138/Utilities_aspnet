@@ -14,9 +14,10 @@ public class AppDbContext : IdentityDbContext<UserEntity> {
     public DbSet<StatisticEntity> Statistic { get; set; }
     public DbSet<UserRoleEntity> Roles { get; set; }
     public DbSet<UserToRoleEntity> UserToRole { get; set; }
-    public DbSet<City> City { get; set; }
-    public DbSet<Country> Country { get; set; }
-    public DbSet<Province> Province { get; set; }
+    //public DbSet<City> City { get; set; }
+    //public DbSet<Country> Country { get; set; }
+    //public DbSet<Province> Province { get; set; }
+    public DbSet<LocationEntity> Location { get; set; }
     public DbSet<BankTransaction> BankTransaction { get; set; }
     public DbSet<Transaction> Transaction { get; set; }
     public DbSet<ColorEntity> Color { get; set; }

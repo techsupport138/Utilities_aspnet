@@ -28,9 +28,10 @@ namespace Utilities_aspnet.Event.Dtos
         public ContentUseCase UseCase { get; set; }
         public ContentStatusCase Status { get; set; } = ContentStatusCase.Draft;
 
-        public int CountryId { get; set; }
-        public int ProvinceId { get; set; }
-        public int CityId { get; set; }
+        //public int CountryId { get; set; }
+        //public int ProvinceId { get; set; }
+        //public int CityId { get; set; }
+        public int LocationId { get; set; }
 
         public List<IFormFile> files { get; set; }
     }

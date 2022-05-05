@@ -11,7 +11,7 @@ global using Utilities_aspnet.Statistic.Entities;
 global using Utilities_aspnet.ServiceProvider.Entities;
 
 global using Utilities_aspnet.Ads.Entities;
-global using Utilities_aspnet.Geo.Entity;
+//global using Utilities_aspnet.Geo.Entity;
 global using Utilities_aspnet.learn.Entities;
 global using Utilities_aspnet.Job.Entities;
 global using Utilities_aspnet.Tender.Entities;

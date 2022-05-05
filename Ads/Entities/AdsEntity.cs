@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities_aspnet.Base;
-using Utilities_aspnet.Geo.Entity;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Entities;
 using Utilities_aspnet.Utilities.Enums;
@@ -19,9 +18,10 @@ namespace Utilities_aspnet.Ads.Entities
         {
             UserEntity = new UserEntity();
             Category = new CategoryEntity();
-            City = new City();
-            Country = new Country();
-            Province = new Province();
+            //City = new City();
+            //Country = new Country();
+            Location = new LocationEntity();
+            //Province = new Province();
             Id = new Guid();
         }
          
@@ -76,22 +76,26 @@ namespace Utilities_aspnet.Ads.Entities
         [Display(Name = "انتشار")]
         public bool Publish { get; set; } = false;
 
+        public int LocationId { get; set; }
 
-        [Display(Name = "کشور")]
-        public int CountryId { get; set; }
-        [Display(Name = "استان")]
-        public int ProvinceId { get; set; }
-        [Display(Name = "شهر")]
-        public int CityId { get; set; }
+        //[Display(Name = "کشور")]
+        //public int CountryId { get; set; }
+        //[Display(Name = "استان")]
+        //public int ProvinceId { get; set; }
+        //[Display(Name = "شهر")]
+        //public int CityId { get; set; }
 
-        [ForeignKey(nameof(CityId))]
+        //[ForeignKey(nameof(CityId))]
+        //[InverseProperty("Ads")]
+        //public virtual City City { get; set; }
+        //[ForeignKey(nameof(CountryId))]
+        //[InverseProperty("Ads")]
+        //public virtual Country Country { get; set; }
+        //[ForeignKey(nameof(ProvinceId))]
+        //[InverseProperty("Ads")]
+        //public virtual Province Province { get; set; }
+        [ForeignKey(nameof(LocationId))]
         [InverseProperty("Ads")]
-        public virtual City City { get; set; }
-        [ForeignKey(nameof(CountryId))]
-        [InverseProperty("Ads")]
-        public virtual Country Country { get; set; }
-        [ForeignKey(nameof(ProvinceId))]
-        [InverseProperty("Ads")]
-        public virtual Province Province { get; set; }
+        public virtual LocationEntity Location { get; set; }
     }
 }

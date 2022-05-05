@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities_aspnet.Base;
-using Utilities_aspnet.Geo.Entity;
+//using Utilities_aspnet.Geo.Entity;
 using Utilities_aspnet.Tender.Enum;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Entities;
@@ -25,12 +25,12 @@ namespace Utilities_aspnet.Tender.Entities
         [StringLength(200)]
         [Display(Name = "شرکت")]
         public string CompanyName { get; set; }
-        [Display(Name = "کشور")]
-        public int CountryId { get; set; }
-        [Display(Name = "استان")]
-        public int ProvinceId { get; set; }
-        [Display(Name = "شهر")]
-        public int CityId { get; set; }
+        //[Display(Name = "کشور")]
+        //public int CountryId { get; set; }
+        //[Display(Name = "استان")]
+        //public int ProvinceId { get; set; }
+        //[Display(Name = "شهر")]
+        //public int CityId { get; set; }
         [Required]
         [StringLength(50)]
         [Display(Name = "تلفن")]
@@ -54,15 +54,15 @@ namespace Utilities_aspnet.Tender.Entities
 
         public ICollection<MediaEntity>? Media { get; set; }
 
-        [ForeignKey(nameof(CityId))]
-        [InverseProperty("Tenders")]
-        public virtual City City { get; set; }
-        [ForeignKey(nameof(CountryId))]
-        [InverseProperty("Tenders")]
-        public virtual Country Country { get; set; }
-        [ForeignKey(nameof(ProvinceId))]
-        [InverseProperty("Tenders")]
-        public virtual Province Province { get; set; }
+        //[ForeignKey(nameof(CityId))]
+        //[InverseProperty("Tenders")]
+        //public virtual City City { get; set; }
+        //[ForeignKey(nameof(CountryId))]
+        //[InverseProperty("Tenders")]
+        //public virtual Country Country { get; set; }
+        //[ForeignKey(nameof(ProvinceId))]
+        //[InverseProperty("Tenders")]
+        //public virtual Province Province { get; set; }
 
 
     }
