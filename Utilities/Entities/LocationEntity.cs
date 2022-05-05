@@ -5,7 +5,7 @@ using Utilities_aspnet.Utilities.Enums;
 
 namespace Utilities_aspnet.Utilities.Entities {
     [Table("Location")]
-    public class LocationEntity : BaseEntity {
+    public class LocationEntity {
 
         [Key]
         public int Id { get; set; }
