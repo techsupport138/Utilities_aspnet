@@ -1,8 +1,6 @@
-using System.Collections;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Utilities_aspnet.Product.Dto;
 using Utilities_aspnet.Utilities.Responses;
-using Xamarin.Forms.Internals;
 
 namespace Utilities_aspnet.Product.Data;
 
@@ -31,7 +29,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BasePEntity 
     }
 
     public async Task<GenericResponse<IEnumerable<GetProductDto>>> Get() {
-        List<T> i = await _dbContext.Set<T>().AsNoTracking().ToListAsync();
+        IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         return new GenericResponse<IEnumerable<GetProductDto>>(_mapper.Map<IEnumerable<GetProductDto>>(i));
     }
 
