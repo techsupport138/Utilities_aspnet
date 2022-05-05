@@ -17,7 +17,7 @@ namespace Utilities_aspnet.Base.Data
     public interface ICategoryRepository : IBaseRepository
     {
         List<KVPCategoryVM> Get(CategoryFilter filter);
-        Task<CategoryEntity> Get(Guid Id);
+        Task<GetCategoryDto> GetById(Guid id);
         Task<GenericResponse> NewCategory(NewCategoryDto newCategory);
         Task<GenericResponse> UpdateCategory(NewCategoryDto newCategory);
         Task<GenericResponse> DeleteCategory(Guid id);
@@ -63,27 +63,35 @@ namespace Utilities_aspnet.Base.Data
 
         public async Task<GenericResponse> NewCategory(NewCategoryDto newCategory)
         {
-            List<IFormFile> f = new List<IFormFile>() { newCategory.File };
-            var res = await _UploadRepository.UploadMedia(new UploadDto()
-            {
-                Files = f,
-                UserId = null,
-            });
-            var l = _context.Set<LanguageEntity>().Find(newCategory.LanguageId);
-
-            var Cat = new CategoryEntity()
+            GenericResponse res = null;
+            LanguageEntity l = null;
+            
+            var cat = new CategoryEntity()
             {
                 CategoryFor = newCategory.CategoryFor,
                 LanguageId = newCategory.LanguageId,
                 ParentId = newCategory.ParentId,
-                MediaId = res.Ids[0],
                 Title = newCategory.Title,
-                CategoryId=Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
             };
-            Cat.LanguageNavigation = l;
-            await _context.Set<CategoryEntity>().AddAsync(Cat);
+            
+            if (newCategory.File != null)
+            {
+                List<IFormFile> f = new List<IFormFile>() { newCategory.File };
+                 res = await _UploadRepository.UploadMedia(new UploadDto()
+                {
+                    Files = f,
+                    UserId = null,
+                });
+                l = _context.Set<LanguageEntity>().Find(newCategory.LanguageId);
+                
+                cat.MediaId = res.Ids[0];
+            }
+            
+            cat.LanguageNavigation = l;
+            await _context.Set<CategoryEntity>().AddAsync(cat);
             await _context.SaveChangesAsync();
-            return new GenericResponse(UtilitiesStatusCodes.Success, $"Cat {Cat.Title} Created!", id: Cat.CategoryId);
+            return new GenericResponse(UtilitiesStatusCodes.Success, $"Cat {cat.Title} Created!", id: cat.CategoryId);
         }
 
         public async Task<GenericResponse> DeleteCategory(Guid id)
@@ -102,14 +110,16 @@ namespace Utilities_aspnet.Base.Data
             return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} delete Success", id: cat.CategoryId);
         }
 
-        public async Task<CategoryEntity> Get(Guid Id)
+        public async Task<GetCategoryDto> GetById(Guid id)
         {
-            var cat = await _context.Set<CategoryEntity>()
+            CategoryEntity cat = await _context.Set<CategoryEntity>()
                 .Include(x => x.Media)
                 .Include(x => x.InverseParent)
                 .Include(x => x.Parent)
-                .FirstOrDefaultAsync(x => x.CategoryId == Id);
-            return cat;
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CategoryId == id);
+            
+            return _mapper.Map<GetCategoryDto>(cat);
         }
 
         public async Task<GenericResponse> UpdateCategory(NewCategoryDto category)
