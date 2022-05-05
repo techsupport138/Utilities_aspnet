@@ -1,4 +1,3 @@
-using Utilities_aspnet.Tag.Entities;
 using Utilities_aspnet.User.Dtos;
 
 namespace Utilities_aspnet.Product.Dto;
@@ -12,8 +11,16 @@ public class GetProductDto {
     public string? SubTitle { get; set; }
     public decimal Price { get; set; }
     public bool IsForSale { get; set; }
+    public bool IsBookmarked { get; set; }
+    public int VisitsCount { get; set; }
+    public DateTime CreatedAt { get; set; }
     public UserReadDto? User { get; set; }
+    public LocationReadDto Location { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
+    public IEnumerable<IdTitleDto>? Categories { get; set; }
+    public IEnumerable<IdTitleDto>? Team { get; set; }
+    public IEnumerable<IdTitleDto>? Tags { get; set; }
+    public IEnumerable<VoteReadDto>? Votes { get; set; }
 }
 
 public class AddUpdateProductDto {
