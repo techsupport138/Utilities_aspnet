@@ -24,9 +24,9 @@ public abstract class BasePEntity : BaseEntity {
     public UserEntity? UserEntity { get; set; }
     public string? UserId { get; set; }
 
-    public int LocationId { get; set; }
+    public int? LocationId { get; set; }
     [ForeignKey(nameof(LocationId))]
-    public virtual LocationEntity Location { get; set; }
+    public LocationEntity Location { get; set; }
 
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<CategoryEntity>? Category { get; set; }

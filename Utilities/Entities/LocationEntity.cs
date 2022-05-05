@@ -30,7 +30,7 @@ namespace Utilities_aspnet.Utilities.Entities {
 
         public Guid? ProductId { get; set; }
 
-        [ForeignKey(nameof(ParentId))]
+        [ForeignKey(nameof(ProductId))]
         public ProductEntity? Product { get; set; }
         public Guid? AdsId { get; set; }
 
