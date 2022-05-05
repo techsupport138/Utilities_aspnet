@@ -14,7 +14,7 @@ namespace Utilities_aspnet.Base.Dtos
         public string LanguageId { get; set; } = "fa-IR";
         public CategoryForEnum CategoryFor { get; set; }
         public string Title { get; set; }
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public IFormFile? File { get; set; }
         public Guid? MediaId { get; set; }
         public string? FileName { get; set; }
