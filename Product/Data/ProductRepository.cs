@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Utilities_aspnet.Product.Dto;
 using Utilities_aspnet.Utilities.Responses;
@@ -15,15 +17,19 @@ public interface IProductRepository<T> where T : BasePEntity {
 public class ProductRepository<T> : IProductRepository<T> where T : BasePEntity {
     private readonly DbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ProductRepository(DbContext dbContext, IMapper mapper) {
+    public ProductRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _dbContext = dbContext;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GenericResponse<GetProductDto>> Add(AddUpdateProductDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
-        EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(_mapper.Map<T>(dto));
+        T entity = _mapper.Map<T>(dto);
+        entity.UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
         return new GenericResponse<GetProductDto>(_mapper.Map<GetProductDto>(i.Entity));
     }
