@@ -17,7 +17,7 @@ namespace Utilities_aspnet.Base.Data
     public interface ICategoryRepository : IBaseRepository
     {
         List<KVPCategoryVM> Get(CategoryFilter filter);
-        Task<CategoryEntity> Get(Guid Id);
+        Task<GetCategoryDto> GetById(Guid id);
         Task<GenericResponse> NewCategory(NewCategoryDto newCategory);
         Task<GenericResponse> UpdateCategory(NewCategoryDto newCategory);
         Task<GenericResponse> DeleteCategory(Guid id);
@@ -102,14 +102,16 @@ namespace Utilities_aspnet.Base.Data
             return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} delete Success", id: cat.CategoryId);
         }
 
-        public async Task<CategoryEntity> Get(Guid Id)
+        public async Task<GetCategoryDto> GetById(Guid id)
         {
-            var cat = await _context.Set<CategoryEntity>()
+            CategoryEntity cat = await _context.Set<CategoryEntity>()
                 .Include(x => x.Media)
                 .Include(x => x.InverseParent)
                 .Include(x => x.Parent)
-                .FirstOrDefaultAsync(x => x.CategoryId == Id);
-            return cat;
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CategoryId == id);
+            
+            return _mapper.Map<GetCategoryDto>(cat);
         }
 
         public async Task<GenericResponse> UpdateCategory(NewCategoryDto category)
