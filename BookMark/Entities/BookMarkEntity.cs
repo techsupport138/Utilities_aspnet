@@ -17,8 +17,5 @@ namespace Utilities_aspnet.BookMark.Entities {
 
         public TutorialEntity? Tutorial { get; set; }
         public Guid? TutorialId { get; set; }
-
-        public TenderEntity? Tender { get; set; }
-        public Guid? TenderId { get; set; }
     }
 }

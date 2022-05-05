@@ -9,7 +9,6 @@ global using Utilities_aspnet.Utilities.Entities;
 global using Utilities_aspnet.Statistic.Entities;
 global using Utilities_aspnet.Ads.Entities;
 global using Utilities_aspnet.Job.Entities;
-global using Utilities_aspnet.Tender.Entities;
 global using Utilities_aspnet.Product.Entities;
 global using Utilities_aspnet.BookMark.Entities;
 global using Utilities_aspnet.Base;

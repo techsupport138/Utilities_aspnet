@@ -20,9 +20,6 @@ public class MediaEntity : BaseEntity {
     public virtual JobEntity? Job { get; set; }
     public Guid? JobId { get; set; }
 
-    public virtual TenderEntity? Tender { get; set; }
-    public Guid? TenderId { get; set; }
-
     public ContactInfoItemEntity? ContactInfoItem { get; set; }
     public Guid? ContactInfoItemId { get; set; }
 

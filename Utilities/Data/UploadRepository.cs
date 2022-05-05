@@ -86,7 +86,6 @@ namespace Utilities_aspnet.Utilities.Data
                     AdsId = model.AdsId,
                     JobId = model.JobId,
                     ProductId = model.ProductId,
-                    TenderId = model.TenderId,
 
                 };
                 await _context.Set<MediaEntity>().AddAsync(media);

@@ -32,10 +32,6 @@ namespace Utilities_aspnet.Report.Entities
         [ForeignKey(nameof(ProductId))]
         public ProductEntity? ProductEntity { get; set; }
 
-        public Guid? TenderId { get; set; }
-        [ForeignKey(nameof(TenderId))]
-        public TenderEntity? TenderEntity { get; set; }
-
 
     }
 }
