@@ -57,6 +57,12 @@ public class ProductEntity : BaseProductEntity { }
 [Table("Projects")]
 public class ProjectEntity : BaseProductEntity { }
 
+[Table("Tutorials")]
+public class TutorialEntity : BaseProductEntity { }
+
+[Table("Events")]
+public class EventEntity : BaseProductEntity { }
+
 public class ProductReadDto {
     public Guid? Id { get; set; }
     public string? Title { get; set; }

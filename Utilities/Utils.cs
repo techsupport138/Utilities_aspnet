@@ -19,9 +19,7 @@ using System.Reflection;
 using Utilities_aspnet.Utilities.Filters;
 using Microsoft.OpenApi.Models;
 using Utilities_aspnet.Ads.Data;
-using Utilities_aspnet.Event.Data;
 using Utilities_aspnet.Job.Data;
-using Utilities_aspnet.Learn.Data;
 using Utilities_aspnet.Product;
 using Utilities_aspnet.Product.Data;
 
@@ -48,9 +46,10 @@ public static class StartupExtension {
         builder.Services.AddSession(options => { options.IdleTimeout = System.TimeSpan.FromSeconds(604800); });
     }
 
-    private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType)
-        where T : DbContext {
-        builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+    private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings,
+        DatabaseType databaseType) where T : DbContext {
+        builder.Services.AddCors(c =>
+            c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
         builder.Services.AddScoped<DbContext, T>();
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -60,7 +59,8 @@ public static class StartupExtension {
                     options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging();
                     break;
                 case DatabaseType.MySql:
-                    options.UseMySql(connectionStrings, new MySqlServerVersion(new Version(8, 0, 28))).EnableSensitiveDataLogging();
+                    options.UseMySql(connectionStrings, new MySqlServerVersion(new Version(8, 0, 28)))
+                        .EnableSensitiveDataLogging();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
@@ -69,12 +69,13 @@ public static class StartupExtension {
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-        builder.Services.AddControllersWithViews()
-            .AddNewtonsoftJson(i => i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+        builder.Services.AddControllersWithViews().AddNewtonsoftJson(i =>
+            i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
         builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
         builder.Services.AddRazorPages();
-        builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+        builder.Services.AddSingleton<IFileProvider>(
+            new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
         builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {
             options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -100,10 +101,11 @@ public static class StartupExtension {
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
         builder.Services.AddTransient<IAdsRepository, AdsRepository>();
         builder.Services.AddTransient<IAdsPackageRepository, AdsPackageRepository>();
-        builder.Services.AddTransient<IEventRepository, EventRepository>();
         builder.Services.AddTransient<IJobRepository, JobRepository>();
-        builder.Services.AddTransient<ILearnRepository, LearnRepository>();
         builder.Services.AddTransient<IProductRepository<ProductEntity>, ProductRepository<ProductEntity>>();
+        builder.Services.AddTransient<IProductRepository<ProjectEntity>, ProductRepository<ProjectEntity>>();
+        builder.Services.AddTransient<IProductRepository<EventEntity>, ProductRepository<EventEntity>>();
+        builder.Services.AddTransient<IProductRepository<TutorialEntity>, ProductRepository<TutorialEntity>>();
 
         //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
         //https://github.com/keyone2693/ImageResizer.AspNetCore
@@ -167,7 +169,8 @@ public static class StartupExtension {
         app.UseRouting();
         app.UseAuthorization();
         app.UseEndpoints(endpoints => {
-            endpoints.MapAreaControllerRoute("Dashboard", "Dashboard", "/Dashboard/{controller=MyDashboard}/{action=Index}/{id?}",
+            endpoints.MapAreaControllerRoute("Dashboard", "Dashboard",
+                "/Dashboard/{controller=MyDashboard}/{action=Index}/{id?}",
                 new {area = "Dashboard", controller = "MyDashboard", action = "Index"});
             endpoints.MapDefaultControllerRoute();
             endpoints.MapRazorPages();

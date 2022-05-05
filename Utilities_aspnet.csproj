@@ -43,7 +43,6 @@
     
     <ItemGroup>
       <Folder Include="BookMark\Data\" />
-      <Folder Include="DailyPrice\Data\" />
       <Folder Include="Geo\Data\" />
       <Folder Include="Tender\Data\" />
       <Folder Include="Values\Data\" />
