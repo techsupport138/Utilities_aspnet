@@ -282,9 +282,9 @@ public class UserRepository : IUserRepository {
     private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
         IList<string>? roles = await _userManager.GetRolesAsync(user);
         List<Claim>? claims = new() {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(ClaimTypes.NameIdentifier, user.UserName),
-            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Name, user.Id),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
