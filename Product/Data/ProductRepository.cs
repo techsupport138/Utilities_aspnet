@@ -54,4 +54,21 @@ public class ProductRepository<T> : IProductRepository<T> where T : BasePEntity 
         _dbContext.Set<T>().Remove(_mapper.Map<T>(i.Result));
         await _dbContext.SaveChangesAsync();
     }
+
+    private GetProductDto MapProductReadDto(ProductEntity e) {
+        GetProductDto dto = new GetProductDto {
+            Id = e.Id,
+            Title = e.Title,
+            Description = e.Description,
+            Enabled = e.Enabled,
+            Price = e.Price,
+            VisitsCount = e.VisitCount,
+            CreatedAt = e.CreatedAt,
+            IsBookmarked = false,
+            Subtitle = e.SubTitle,
+            IsForSale = e.IsForSale,
+        };
+
+        return dto;
+    }
 }

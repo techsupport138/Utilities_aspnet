@@ -1,4 +1,5 @@
 using Utilities_aspnet.User.Dtos;
+using Utilities_aspnet.Utilities.Dtos;
 
 namespace Utilities_aspnet.Product.Dto;
 
@@ -7,7 +8,6 @@ public class GetProductDto {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
-    public string? SubTitle { get; set; }
     public bool? Enabled { get; set; }
     public bool? IsForSale { get; set; }
     public bool? IsBookmarked { get; set; }
@@ -39,10 +39,31 @@ public class AddUpdateProductDto {
     public IEnumerable<VoteFieldCreateDto>? Votes { get; set; }
 }
 
-public class AutoMapperProject : Profile {
-    public AutoMapperProject() {
+public class AutoMapperProduct : Profile {
+    public AutoMapperProduct() {
         CreateMap<ProductEntity, AddUpdateProductDto>().ReverseMap();
         CreateMap<ProductEntity, GetProductDto>().ReverseMap();
         CreateMap<AddUpdateProductDto, GetProductDto>().ReverseMap();
+    }
+
+    private GetProductDto MapProductReadDto(BasePEntity e) {
+        GetProductDto dto = new GetProductDto {
+            Id = e.Id,
+            Title = e.Title,
+            Description = e.Description,
+            Enabled = e.Enabled,
+            Price = e.Price,
+            VisitsCount = e.VisitCount,
+            CreatedAt = e.CreatedAt,
+            IsBookmarked = false,
+            Subtitle = e.SubTitle,
+            IsForSale = e.IsForSale,
+            Categories = e.Category.Select(i => new IdTitleDto
+                {Id = i.CategoryId.ToString(), Title = i.Title, SubTitle = ""}),
+            Location = new LocationReadDto {Id = e.Location.Id,},
+            Media = MediaEntity.MapMediaEnumarableDto(e.Media),
+        };
+
+        return dto;
     }
 }
