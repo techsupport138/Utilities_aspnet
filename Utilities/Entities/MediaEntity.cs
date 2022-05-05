@@ -1,4 +1,4 @@
-﻿namespace Utilities_aspnet.Utilities.Entities; 
+﻿namespace Utilities_aspnet.Utilities.Entities;
 
 public class MediaEntity : BaseEntity {
     [Required]
@@ -27,9 +27,6 @@ public class MediaEntity : BaseEntity {
 
     public ContactInfoItemEntity? ContactInfoItem { get; set; }
     public Guid? ContactInfoItemId { get; set; }
-
-    public virtual ServiceProviderEntity? ServiceProvider { get; set; }
-    public Guid? ServiceProviderId { get; set; }
 
     public virtual AdsEntity? Ads { get; set; }
     public Guid? AdsId { get; set; }
