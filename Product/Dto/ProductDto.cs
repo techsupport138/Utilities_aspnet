@@ -10,8 +10,8 @@ public class GetProductDto {
     public string Description { get; set; }
     public bool Enabled { get; set; }
     public string? SubTitle { get; set; }
-    public decimal Price { get; set; }
-    public bool IsForSale { get; set; }
+    public decimal? Price { get; set; }
+    public bool? IsForSale { get; set; }
     public UserReadDto? User { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
 }
@@ -21,8 +21,8 @@ public class AddUpdateProductDto {
     public string Subtitle { get; set; }
     public string Description { get; set; }
     public string? SubTitle { get; set; }
-    public decimal Price { get; set; }
-    public bool IsForSale { get; set; }
+    public decimal? Price { get; set; }
+    public bool? IsForSale { get; set; }
     public bool Enabled { get; set; }
 
     public Guid? Location { get; set; }
