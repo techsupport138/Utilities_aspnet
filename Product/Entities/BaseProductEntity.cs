@@ -13,20 +13,20 @@ public abstract class BasePEntity : BaseEntity {
     public string? Description { get; set; }
 
     [DefaultValue(0)]
-    public decimal Price { get; set; } = 0;
+    public decimal? Price { get; set; }
 
     [DefaultValue(false)]
-    public bool IsForSale { get; set; } = false;
+    public bool? IsForSale { get; set; }
 
     [DefaultValue(false)]
-    public bool Enabled { get; set; } = false;
+    public bool? Enabled { get; set; }
 
     public UserEntity? UserEntity { get; set; }
     public string? UserId { get; set; }
 
     public int? LocationId { get; set; }
     [ForeignKey(nameof(LocationId))]
-    public LocationEntity Location { get; set; }
+    public LocationEntity? Location { get; set; }
 
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<CategoryEntity>? Category { get; set; }
