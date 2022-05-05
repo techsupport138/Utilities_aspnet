@@ -41,8 +41,8 @@ public class AddUpdateProductDto {
 
 public class AutoMapperProject : Profile {
     public AutoMapperProject() {
-        CreateMap<ProjectEntity, AddUpdateProductDto>().ReverseMap();
-        CreateMap<ProjectEntity, GetProductDto>().ReverseMap();
+        CreateMap<ProductEntity, AddUpdateProductDto>().ReverseMap();
+        CreateMap<ProductEntity, GetProductDto>().ReverseMap();
         CreateMap<AddUpdateProductDto, GetProductDto>().ReverseMap();
     }
 }
