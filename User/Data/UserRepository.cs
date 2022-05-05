@@ -15,14 +15,12 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
     Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto);
-    Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token = null);
+    Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null);
     Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
     Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
     Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string userName);
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
-
-
     Task<GenericResponse<List<ShoppingDto>?>> GetShoppingList(string userName, BuyOrSale type);
 }
 
@@ -142,13 +140,13 @@ public class UserRepository : IUserRepository {
             UtilitiesStatusCodes.Success, "Success");
     }
 
-    public Task<GenericResponse<UserReadDto?>> GetProfile(string userName, string? token = null) {
+    public Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null) {
         UserEntity? model = _context.Set<UserEntity>().AsNoTracking().Include(u => u.Media).Include(u => u.Colors)
-            .Include(u => u.Specialties).Include(u => u.Favorites).FirstOrDefault(u => u.UserName == userName);
+            .Include(u => u.Specialties).Include(u => u.Favorites).FirstOrDefault(u => u.Id == id);
         UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
         userReadDto.Token = token;
         return Task.FromResult(model == null
-            ? new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.NotFound, $"User: {userName} Not Found")
+            ? new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.NotFound, $"User: {id} Not Found")
             : new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
     }
 
