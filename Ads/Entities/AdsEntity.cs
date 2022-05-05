@@ -95,7 +95,6 @@ namespace Utilities_aspnet.Ads.Entities
         //[InverseProperty("Ads")]
         //public virtual Province Province { get; set; }
         [ForeignKey(nameof(LocationId))]
-        [InverseProperty("Ads")]
         public virtual LocationEntity Location { get; set; }
     }
 }
