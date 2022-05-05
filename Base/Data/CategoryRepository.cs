@@ -63,27 +63,35 @@ namespace Utilities_aspnet.Base.Data
 
         public async Task<GenericResponse> NewCategory(NewCategoryDto newCategory)
         {
-            List<IFormFile> f = new List<IFormFile>() { newCategory.File };
-            var res = await _UploadRepository.UploadMedia(new UploadDto()
-            {
-                Files = f,
-                UserId = null,
-            });
-            var l = _context.Set<LanguageEntity>().Find(newCategory.LanguageId);
-
-            var Cat = new CategoryEntity()
+            GenericResponse res = null;
+            LanguageEntity l = null;
+            
+            var cat = new CategoryEntity()
             {
                 CategoryFor = newCategory.CategoryFor,
                 LanguageId = newCategory.LanguageId,
                 ParentId = newCategory.ParentId,
-                MediaId = res.Ids[0],
                 Title = newCategory.Title,
-                CategoryId=Guid.NewGuid(),
+                CategoryId = Guid.NewGuid(),
             };
-            Cat.LanguageNavigation = l;
-            await _context.Set<CategoryEntity>().AddAsync(Cat);
+            
+            if (newCategory.File != null)
+            {
+                List<IFormFile> f = new List<IFormFile>() { newCategory.File };
+                 res = await _UploadRepository.UploadMedia(new UploadDto()
+                {
+                    Files = f,
+                    UserId = null,
+                });
+                l = _context.Set<LanguageEntity>().Find(newCategory.LanguageId);
+                
+                cat.MediaId = res.Ids[0];
+            }
+            
+            cat.LanguageNavigation = l;
+            await _context.Set<CategoryEntity>().AddAsync(cat);
             await _context.SaveChangesAsync();
-            return new GenericResponse(UtilitiesStatusCodes.Success, $"Cat {Cat.Title} Created!", id: Cat.CategoryId);
+            return new GenericResponse(UtilitiesStatusCodes.Success, $"Cat {cat.Title} Created!", id: cat.CategoryId);
         }
 
         public async Task<GenericResponse> DeleteCategory(Guid id)
