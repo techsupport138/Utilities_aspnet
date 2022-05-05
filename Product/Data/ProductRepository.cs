@@ -40,7 +40,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BasePEntity 
     }
 
     public async Task<GenericResponse<GetProductDto>> GetById(Guid id) {
-        T? i = await _dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+        T? i = await _dbContext.Set<T>().AsNoTracking().Include(i => i.UserEntity).Include(i => i.Category)
+            .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<GetProductDto>(_mapper.Map<GetProductDto>(i));
     }
 
