@@ -36,7 +36,7 @@ public abstract class BaseProductEntity : BaseEntity {
             IsBookmarked = false,
             Subtitle = e.SubTitle,
             IsForSale = e.IsForSale,
-            User = UserEntity.MapReadDto(e.UserEntity),
+            User = UserEntity.MapReadDto(e.User),
             Location = LocationEntity.MapReadDto(e.Location),
             Media = MediaEntity.MapEnumarableDto(e.Media),
         };
