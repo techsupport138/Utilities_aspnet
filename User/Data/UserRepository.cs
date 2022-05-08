@@ -249,7 +249,7 @@ public class UserRepository : IUserRepository {
         }
 
         UserEntity user = new() {
-            Email = model.UserName,
+            Email = model.Email,
             UserName = model.UserName,
             EmailConfirmed = false,
             PhoneNumberConfirmed = false,
