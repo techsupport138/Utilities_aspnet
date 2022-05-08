@@ -64,7 +64,7 @@ public class UserRepository : IUserRepository {
         }
 
         UserEntity user = new() {
-            Email = aspNetUser.UserName,
+            Email = aspNetUser.Email,
             UserName = aspNetUser.UserName,
             PhoneNumber = aspNetUser.UserName,
             EmailConfirmed = false,
