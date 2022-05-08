@@ -259,7 +259,7 @@ public class UserRepository : IUserRepository {
         IdentityResult? result = await _userManager.CreateAsync(user, model.Password);
         return !result.Succeeded
             ? new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The information was not entered correctly")
-            : new GenericResponse<UserReadDto?>(GetProfile(user.UserName, null).Result.Result, UtilitiesStatusCodes.Success, "Success");
+            : new GenericResponse<UserReadDto?>(GetProfile(user.Id, null).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
     public Task<GenericResponse<List<ShoppingDto>?>> GetShoppingList(string userName, BuyOrSale type) {
