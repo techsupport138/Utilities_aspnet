@@ -13,7 +13,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public int? VisitCount { get; set; }
 
     public string? UserId { get; set; }
-    public UserEntity? UserEntity { get; set; }
+    public UserEntity? User { get; set; }
 
     public int? LocationId { get; set; }
     public LocationEntity? Location { get; set; }
