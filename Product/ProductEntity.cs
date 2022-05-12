@@ -70,6 +70,10 @@ public class AdEntity : BaseProductEntity { }
 public class CompanyEntity : BaseProductEntity { }
 
 [Table("Magazine")]
+public class TenderEntity : BaseProductEntity { }
+
+public class ServiceEntity : BaseProductEntity { }
+
 public class MagazineEntity : BaseProductEntity { }
 
 public class ProductReadDto {
