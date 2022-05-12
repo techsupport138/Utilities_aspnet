@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Utilities_aspnet.Base;
 
 public class BaseEntity {
-    public BaseEntity()
-    {
-        //Id = Guid.NewGuid();
+    public BaseEntity() {
         CreatedAt = DateTime.Now;
+        UpdatedAt = DateTime.Now;
     }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -16,8 +16,14 @@ public class BaseEntity {
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-    //[Required]
     public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
+    public DateTime? DeletedAt { get; set; }
+}
+
+public class BaseReadDto {
+    public Guid Id { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Utilities_aspnet.Product;
+using Utilities_aspnet.Report;
 using Utilities_aspnet.User.Dtos;
 
 namespace Utilities_aspnet.User.Entities;
@@ -9,7 +10,7 @@ public class UserEntity : IdentityUser {
         ContactInformation = new List<ContactInformationEntity>();
         Media = new List<MediaEntity>();
     }
-
+    
     public bool? Suspend { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
@@ -31,6 +32,7 @@ public class UserEntity : IdentityUser {
     public ICollection<ShoppingListEntity>? ShoppingList { get; set; }
     public ICollection<ProductEntity>? Product { get; set; }
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
+    public ICollection<ReportEntity>? Report { get; set; }
 
     public static UserReadDto MapReadDto(UserEntity? e) {
         UserReadDto dto = new() {

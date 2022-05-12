@@ -1,3 +1,4 @@
+using Utilities_aspnet.Report;
 using Utilities_aspnet.Tag.Entities;
 using Utilities_aspnet.User.Dtos;
 
@@ -22,7 +23,8 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<CategoryEntity>? Category { get; set; }
     public IEnumerable<SpecialtyEntity>? Specialty { get; set; }
     public IEnumerable<TagEntity>? Tag { get; set; }
-    public IEnumerable<VoteFieldEntity> VoteFields { get; set; }
+    public IEnumerable<VoteFieldEntity> VoteField { get; set; }
+    public IEnumerable<ReportEntity> Report { get; set; }
 
     public static ProductReadDto MapReadDto(ProductEntity e) {
         ProductReadDto dto = new ProductReadDto {
