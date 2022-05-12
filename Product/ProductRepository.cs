@@ -9,7 +9,7 @@ public interface IProductRepository<T> where T : BaseProductEntity {
     Task<GenericResponse<ProductReadDto>> Create(CreateUpdateProductDto dto);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> Read();
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
-    Task<GenericResponse<ProductReadDto>> Update(Guid id, CreateUpdateProductDto dto);
+    Task<GenericResponse<ProductReadDto>> Update(CreateUpdateProductDto dto);
     void Delete(Guid id);
 }
 
@@ -44,7 +44,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
-    public Task<GenericResponse<ProductReadDto>> Update(Guid id, CreateUpdateProductDto dto) {
+    public Task<GenericResponse<ProductReadDto>> Update(CreateUpdateProductDto dto) {
         throw new NotImplementedException();
     }
 
