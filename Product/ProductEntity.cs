@@ -63,6 +63,12 @@ public class TutorialEntity : BaseProductEntity { }
 [Table("Events")]
 public class EventEntity : BaseProductEntity { }
 
+[Table("Ads")]
+public class AdEntity : BaseProductEntity { }
+
+[Table("Company")]
+public class CompanyEntity : BaseProductEntity { }
+
 public class ProductReadDto {
     public Guid? Id { get; set; }
     public string? Title { get; set; }

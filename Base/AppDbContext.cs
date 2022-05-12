@@ -31,6 +31,8 @@
 //     public DbSet<ProjectEntity> Project { get; set; }
 //     public DbSet<TutorialEntity> Tutorial { get; set; }
 //     public DbSet<EventEntity> Event { get; set; }
+//     public DbSet<AdEntity> Ad { get; set; }
+//     public DbSet<CompanyEntity> Company { get; set; }
 //
 //     protected override void OnModelCreating(ModelBuilder builder) {
 //         base.OnModelCreating(builder);
