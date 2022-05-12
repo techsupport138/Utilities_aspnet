@@ -98,7 +98,7 @@ public class ProductReadDto {
     public IEnumerable<VoteReadDto>? Votes { get; set; }
 }
 
-public class AddUpdateProductDto {
+public class CreateUpdateProductDto {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
