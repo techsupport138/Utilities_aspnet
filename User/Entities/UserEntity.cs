@@ -8,7 +8,6 @@ public class UserEntity : IdentityUser {
     public UserEntity() {
         ContactInformation = new List<ContactInformationEntity>();
         Media = new List<MediaEntity>();
-        BookMark = new List<BookMarkEntity>();
     }
 
     public bool? Suspend { get; set; }
@@ -30,7 +29,6 @@ public class UserEntity : IdentityUser {
     public ICollection<UserToFavoriteEntity>? Favorites { get; set; }
     public ICollection<UserToSpecialtyEntity>? Specialties { get; set; }
     public ICollection<ShoppingListEntity>? ShoppingList { get; set; }
-    public ICollection<BookMarkEntity>? BookMark { get; set; }
     public ICollection<ProductEntity>? Product { get; set; }
     public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
 
