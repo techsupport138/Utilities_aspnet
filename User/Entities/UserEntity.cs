@@ -19,7 +19,7 @@ public class UserEntity : IdentityUser {
     public string? Bio { get; set; }
     public string? AppUserName { get; set; }
     public string? AppPhoneNumber { get; set; }
-    public double? Wallet { get; set; }
+    public double Wallet { get; set; } = 0;
     public DateTime? Birthdate { get; set; }
 
     public Guid? LocationId { get; set; }
