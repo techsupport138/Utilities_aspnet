@@ -44,7 +44,6 @@
     <ItemGroup>
       <Folder Include="BookMark\Data\" />
       <Folder Include="Geo\Data\" />
-      <Folder Include="Values\Data\" />
     </ItemGroup>
 
 </Project>

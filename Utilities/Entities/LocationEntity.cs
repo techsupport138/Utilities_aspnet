@@ -31,11 +31,6 @@ public class LocationEntity {
     [ForeignKey(nameof(ProductId))]
     public ProductEntity? Product { get; set; }
 
-    public Guid? AdsId { get; set; }
-
-    [ForeignKey(nameof(AdsId))]
-    public AdsEntity? Ads { get; set; }
-    
     public static LocationReadDto MapReadDto(LocationEntity? e) {
         LocationReadDto dto = new LocationReadDto {
             Id = e.Id,

@@ -5,10 +5,6 @@ namespace Utilities_aspnet.BookMark.Entities {
         public UserEntity UserEntity { get; set; }
         public string UserId { get; set; }
 
-
-        public AdsEntity? Ads { get; set; }
-        public Guid? AdsId { get; set; }
-
         public ProjectEntity? Project { get; set; }
         public Guid? ProjectId { get; set; }
 

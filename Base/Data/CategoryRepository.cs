@@ -36,7 +36,6 @@ namespace Utilities_aspnet.Base.Data
         public List<KVPCategoryVM> Get(CategoryFilter filter)
         {
             List<KVPCategoryVM> content = _context.Set<CategoryEntity>()
-                 .Where(x => x.LanguageId == filter.LanguageId && x.CategoryFor == filter.CategoryFor)
                  .Include(x => x.Media).Include(x => x.Parent)
                  .Where(x => (!filter.OnlyParent) || (x.ParentId == null && filter.OnlyParent))
                  .Select(w => new KVPCategoryVM()
@@ -45,7 +44,6 @@ namespace Utilities_aspnet.Base.Data
                      Image = w.Media.FileName,
                      Value = w.Title,
                      CategoryFor = w.CategoryFor,
-                     LanguageId = w.LanguageId,
                      ParentId = w.ParentId,
                      Childs = w.InverseParent.Select(x => new KVPCategoryVM()
                      {
@@ -53,7 +51,6 @@ namespace Utilities_aspnet.Base.Data
                          Image = x.Media.FileName,
                          Value = x.Title,
                          CategoryFor = x.CategoryFor,
-                         LanguageId = x.LanguageId,
                          ParentId = x.ParentId,
                          ParentTitle = x.Parent.Title
                      }).ToList()
@@ -64,12 +61,10 @@ namespace Utilities_aspnet.Base.Data
         public async Task<GenericResponse> NewCategory(NewCategoryDto newCategory)
         {
             GenericResponse res = null;
-            LanguageEntity l = null;
             
             var cat = new CategoryEntity()
             {
                 CategoryFor = newCategory.CategoryFor,
-                LanguageId = newCategory.LanguageId,
                 ParentId = newCategory.ParentId,
                 Title = newCategory.Title,
                 CategoryId = Guid.NewGuid(),
@@ -83,12 +78,10 @@ namespace Utilities_aspnet.Base.Data
                     Files = f,
                     UserId = null,
                 });
-                l = _context.Set<LanguageEntity>().Find(newCategory.LanguageId);
                 
                 cat.MediaId = res.Ids[0];
             }
             
-            cat.LanguageNavigation = l;
             await _context.Set<CategoryEntity>().AddAsync(cat);
             await _context.SaveChangesAsync();
             return new GenericResponse(UtilitiesStatusCodes.Success, $"Cat {cat.Title} Created!", id: cat.CategoryId);
@@ -140,7 +133,6 @@ namespace Utilities_aspnet.Base.Data
 
             cat.Title = category.Title;
             cat.ParentId = category.ParentId;
-            cat.LanguageId = category.LanguageId;
             _context.Set<CategoryEntity>().Update(cat);
             await _context.SaveChangesAsync();
             return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} update Success", id: cat.CategoryId);

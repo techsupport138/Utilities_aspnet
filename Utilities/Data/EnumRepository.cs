@@ -21,10 +21,6 @@ namespace Utilities_aspnet.Utilities.Data {
 
         public Task<GenericResponse<EnumDto?>> GetAll(bool showCatehory = false, bool showGeo = false) {
             EnumDto model = new() {
-                Language = _context.Set<LanguageEntity>().Select(x => new IdTitleDto {
-                    Title = x.LanguageName,
-                    SubTitle = x.Symbol,
-                }).ToList(),
                 Favorites = _context.Set<FavoriteEntity>().Select(x => new IdTitleDto {
                     Id = x.Id.ToString(),
                     Title = x.Title
@@ -62,20 +58,18 @@ namespace Utilities_aspnet.Utilities.Data {
             if (showCatehory)
                 model.Categories = _context.Set<CategoryEntity>()
                     //.Where(x => x.LanguageId == filter.Language && x.CategoryFor == filter.CategoryFor)
-                    .Include(x => x.Media).Include(x => x.Parent).OrderBy(x => x.LanguageId).OrderBy(x => x.CategoryFor).Select(w =>
+                    .Include(x => x.Media).Include(x => x.Parent).OrderBy(x => x.CategoryFor).Select(w =>
                         new KVPCategoryVM {
                             Key = w.CategoryId,
                             Image = w.Media.FileName,
                             Value = w.Title,
                             CategoryFor = w.CategoryFor,
-                            LanguageId = w.LanguageId,
                             ParentId = w.ParentId,
                             Childs = w.InverseParent.Select(x => new KVPCategoryVM {
                                 Key = x.CategoryId,
                                 Image = x.Media.FileName,
                                 Value = x.Title,
                                 CategoryFor = x.CategoryFor,
-                                LanguageId = x.LanguageId,
                                 ParentId = x.ParentId,
                                 ParentTitle = x.Parent.Title
                             }).ToList()

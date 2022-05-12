@@ -83,8 +83,6 @@ namespace Utilities_aspnet.Utilities.Data
                     FileName = url,
                     FileType = fileType,
                     UserId = model.UserId,
-                    AdsId = model.AdsId,
-                    JobId = model.JobId,
                     ProductId = model.ProductId,
 
                 };

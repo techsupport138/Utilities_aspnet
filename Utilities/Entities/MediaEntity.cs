@@ -17,14 +17,8 @@ public class MediaEntity : BaseEntity {
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
 
-    public virtual JobEntity? Job { get; set; }
-    public Guid? JobId { get; set; }
-
     public ContactInfoItemEntity? ContactInfoItem { get; set; }
     public Guid? ContactInfoItemId { get; set; }
-
-    public virtual AdsEntity? Ads { get; set; }
-    public Guid? AdsId { get; set; }
 
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }

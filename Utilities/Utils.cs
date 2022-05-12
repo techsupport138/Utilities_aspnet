@@ -1,7 +1,6 @@
 ﻿using ImageResizer.AspNetCore.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -18,8 +17,6 @@ using Microsoft.AspNetCore.Http.Features;
 using System.Reflection;
 using Utilities_aspnet.Utilities.Filters;
 using Microsoft.OpenApi.Models;
-using Utilities_aspnet.Ads.Data;
-using Utilities_aspnet.Job.Data;
 using Utilities_aspnet.Product;
 using Utilities_aspnet.Product.Data;
 
@@ -99,9 +96,6 @@ public static class StartupExtension {
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
-        builder.Services.AddTransient<IAdsRepository, AdsRepository>();
-        builder.Services.AddTransient<IAdsPackageRepository, AdsPackageRepository>();
-        builder.Services.AddTransient<IJobRepository, JobRepository>();
         builder.Services.AddTransient<IProductRepository<ProductEntity>, ProductRepository<ProductEntity>>();
         builder.Services.AddTransient<IProductRepository<ProjectEntity>, ProductRepository<ProjectEntity>>();
         builder.Services.AddTransient<IProductRepository<EventEntity>, ProductRepository<EventEntity>>();
