@@ -6,9 +6,9 @@ using Utilities_aspnet.Utilities.Responses;
 namespace Utilities_aspnet.Product.Data;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
-    Task<GenericResponse<ProductReadDto>> Add(AddUpdateProductDto dto);
-    Task<GenericResponse<IEnumerable<ProductReadDto>>> Get();
-    Task<GenericResponse<ProductReadDto>> GetById(Guid id);
+    Task<GenericResponse<ProductReadDto>> Create(AddUpdateProductDto dto);
+    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read();
+    Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(Guid id, AddUpdateProductDto dto);
     void Delete(Guid id);
 }
@@ -24,7 +24,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Add(AddUpdateProductDto dto) {
+    public async Task<GenericResponse<ProductReadDto>> Create(AddUpdateProductDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
         entity.UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -33,12 +33,12 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Get() {
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read() {
         IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking().ToListAsync();
         return new GenericResponse<IEnumerable<ProductReadDto>>(_mapper.Map<IEnumerable<ProductReadDto>>(i));
     }
 
-    public async Task<GenericResponse<ProductReadDto>> GetById(Guid id) {
+    public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
         T? i = await _dbContext.Set<T>().AsNoTracking().Include(i => i.User).Include(i => i.Category)
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
@@ -49,7 +49,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     }
 
     public async void Delete(Guid id) {
-        GenericResponse<ProductReadDto> i = await GetById(id);
+        GenericResponse<ProductReadDto> i = await ReadById(id);
         _dbContext.Set<T>().Remove(_mapper.Map<T>(i.Result));
         await _dbContext.SaveChangesAsync();
     }
