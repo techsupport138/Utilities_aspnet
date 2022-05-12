@@ -34,7 +34,20 @@ namespace Utilities_aspnet.User.Dtos {
         public bool Keep { get; set; } = true;
     }
 
-    public class RegisterFormWithEmailDto : RegisterWithEmailDto {
+    public class RegisterFormWithEmailDto {
+
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(100, MinimumLength = 4)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        public string? ReturnUrl { get; set; }
+        public bool Keep { get; set; } = true;
+
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
     }

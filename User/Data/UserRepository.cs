@@ -239,18 +239,18 @@ public class UserRepository : IUserRepository {
         if (!result.Succeeded)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName).Result.Result, UtilitiesStatusCodes.Success, "Success");
+        return new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
     public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model) {
-        UserEntity? u = _context.Set<UserEntity>().FirstOrDefault(x => x.UserName == model.UserName);
+        UserEntity? u = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == model.Email);
         if (u != null) {
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "This email or username already exists");
         }
 
         UserEntity user = new() {
             Email = model.Email,
-            UserName = model.UserName,
+            UserName = model.Email,
             EmailConfirmed = false,
             PhoneNumberConfirmed = false,
             Suspend = false,
