@@ -69,6 +69,9 @@ public class AdEntity : BaseProductEntity { }
 [Table("Company")]
 public class CompanyEntity : BaseProductEntity { }
 
+[Table("Magazine")]
+public class MagazineEntity : BaseProductEntity { }
+
 public class ProductReadDto {
     public Guid? Id { get; set; }
     public string? Title { get; set; }

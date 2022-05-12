@@ -102,6 +102,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IProductRepository<TutorialEntity>, ProductRepository<TutorialEntity>>();
         builder.Services.AddTransient<IProductRepository<AdEntity>, ProductRepository<AdEntity>>();
         builder.Services.AddTransient<IProductRepository<CompanyEntity>, ProductRepository<CompanyEntity>>();
+        builder.Services.AddTransient<IProductRepository<MagazineEntity>, ProductRepository<MagazineEntity>>();
 
         //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
         //https://github.com/keyone2693/ImageResizer.AspNetCore
