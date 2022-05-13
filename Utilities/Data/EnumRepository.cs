@@ -50,21 +50,21 @@ namespace Utilities_aspnet.Utilities.Data {
             if (showCatehory)
                 model.Categories = _context.Set<CategoryEntity>()
                     //.Where(x => x.LanguageId == filter.Language && x.CategoryFor == filter.CategoryFor)
-                    .Include(x => x.Media).Include(x => x.Parent).OrderBy(x => x.CategoryFor).Select(w =>
+                    .Include(x => x.Media).Include(x => x.Parent).OrderBy(x => x.UseCase).Select(w =>
                         new KVPCategoryVM {
-                            Key = w.CategoryId,
-                            Image = w.Media.FileName,
+                            Key = w.Id,
+                            // Image = w.Media.FileName,
                             Value = w.Title,
-                            CategoryFor = w.CategoryFor,
+                            CategoryFor = w.UseCase,
                             ParentId = w.ParentId,
-                            Childs = w.InverseParent.Select(x => new KVPCategoryVM {
-                                Key = x.CategoryId,
-                                Image = x.Media.FileName,
-                                Value = x.Title,
-                                CategoryFor = x.CategoryFor,
-                                ParentId = x.ParentId,
-                                ParentTitle = x.Parent.Title
-                            }).ToList()
+                            // Childs = w.InverseParent.Select(x => new KVPCategoryVM {
+                            //     Key = x.CategoryId,
+                            //     Image = x.Media.FileName,
+                            //     Value = x.Title,
+                            //     CategoryFor = x.CategoryFor,
+                            //     ParentId = x.ParentId,
+                            //     ParentTitle = x.Parent.Title
+                            // }).ToList()
                         }).ToList();
 
             return Task.FromResult(new GenericResponse<EnumDto?>(model, UtilitiesStatusCodes.Success, "Success"));

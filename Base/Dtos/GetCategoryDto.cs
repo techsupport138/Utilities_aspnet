@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Base.Dtos;
+﻿using Utilities_aspnet.IdTitle;
+
+namespace Utilities_aspnet.Base.Dtos;
 
 public class GetCategoryDto
 {
@@ -6,6 +8,6 @@ public class GetCategoryDto
     public Guid? ParentId { get; set; }
     public Guid? MediaId { get; set; }
     public string LanguageId { get; set; } = "fa-IR";
-    public CategoryForEnum CategoryFor { get; set; }
+    public IdTitleUseCase CategoryFor { get; set; }
     public string Title { get; set; }
 }

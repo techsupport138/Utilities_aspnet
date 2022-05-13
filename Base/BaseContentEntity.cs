@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Base;
+﻿using Utilities_aspnet.IdTitle;
+
+namespace Utilities_aspnet.Base;
 
 public class BaseContentEntity : BaseEntity {
     public BaseContentEntity() {

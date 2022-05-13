@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities_aspnet.IdTitle;
 
 namespace Utilities_aspnet.Base.Dtos
 {
@@ -12,7 +13,7 @@ namespace Utilities_aspnet.Base.Dtos
         public Guid? CategoryId { get; set; }
         public Guid? ParentId { get; set; }
         public string LanguageId { get; set; } = "fa-IR";
-        public CategoryForEnum CategoryFor { get; set; }
+        public IdTitleUseCase CategoryFor { get; set; }
         public string Title { get; set; }
         public string? UserId { get; set; }
         public IFormFile? File { get; set; }

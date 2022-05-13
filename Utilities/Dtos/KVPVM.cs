@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities_aspnet.IdTitle;
 
 namespace Utilities_aspnet.Utilities.Dtos
 {
@@ -48,6 +49,6 @@ namespace Utilities_aspnet.Utilities.Dtos
 		public Guid? ParentId { get; set; }
 		public string ParentTitle { get; set; }
 		public string LanguageId { get; set; } = "fa-IR";
-		public CategoryForEnum CategoryFor { get; set; }
+		public IdTitleUseCase CategoryFor { get; set; }
 	}
 }

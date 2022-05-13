@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities_aspnet.IdTitle;
 
 namespace Utilities_aspnet.Utilities.Data {
     public interface IBaseRepository {
         List<KVVM> GetAllFor();
-        Dictionary<Guid, string> GetParentCategory(CategoryForEnum filter, string Language);
+        Dictionary<Guid, string> GetParentCategory(IdTitleUseCase filter, string Language);
     }
 
     public class BaseRepository : IBaseRepository {
@@ -20,7 +21,7 @@ namespace Utilities_aspnet.Utilities.Data {
         }
 
         public List<KVVM> GetAllFor() {
-            string[] trans = Enum.GetNames(typeof(CategoryForEnum));
+            string[] trans = Enum.GetNames(typeof(IdTitleUseCase));
             var data = new List<KVVM>();
             var v = trans.Select((value, key) => new {value, key}).ToDictionary(x => x.key + 1, x => x.value);
             foreach (var item in v) {
@@ -33,8 +34,8 @@ namespace Utilities_aspnet.Utilities.Data {
             return data;
         }
 
-        public Dictionary<Guid, string> GetParentCategory(CategoryForEnum filter, string Language) {
-            var data = _context.Set<CategoryEntity>().ToDictionary(x => x.CategoryId, x => x.Title);
+        public Dictionary<Guid, string> GetParentCategory(IdTitleUseCase filter, string Language) {
+            var data = _context.Set<CategoryEntity>().ToDictionary(x => x.Id, x => x.Title);
             return data;
         }
     }
