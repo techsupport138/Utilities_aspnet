@@ -21,7 +21,6 @@ public abstract class BaseProductEntity : BaseEntity {
 
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<CategoryEntity>? Category { get; set; }
-    public IEnumerable<SpecialtyEntity>? Specialty { get; set; }
     public IEnumerable<TagEntity>? Tag { get; set; }
     public IEnumerable<VoteFieldEntity> VoteField { get; set; }
     public IEnumerable<ReportEntity> Report { get; set; }
@@ -74,8 +73,10 @@ public class CompanyEntity : BaseProductEntity { }
 [Table("Magazine")]
 public class TenderEntity : BaseProductEntity { }
 
+[Table("Services")]
 public class ServiceEntity : BaseProductEntity { }
 
+[Table("Magazine")]
 public class MagazineEntity : BaseProductEntity { }
 
 public class ProductReadDto {

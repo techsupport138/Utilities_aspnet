@@ -30,19 +30,10 @@ namespace Utilities_aspnet.Utilities.Data {
                     Title = x.Title,
                     SubTitle = x.ColorHex
                 }).ToList(),
-                Specialties = _context.Set<SpecialtyEntity>().Include(x => x.Media).Select(x => new IdTitleDto {
-                    Id = x.Id.ToString(),
-                    Title = x.SpecialtyTitle,
-                    // Media = x.Media
-                }).ToList(),
                 UserRole = _context.Set<UserRoleEntity>().Select(x => new IdTitleDto {
                     Title = x.RoleId.ToString(),
                     SubTitle = x.RoleName,
                 }).ToList(),
-                SpecialtyCategories = _context.Set<SpecialtyCategoryEntity>().Select(x => new IdTitleDto {
-                    Id = x.Id.ToString(),
-                    Title = x.SpecialtyCategoryTitle,
-                }).ToList()
             };
 
             //if (showGeo)

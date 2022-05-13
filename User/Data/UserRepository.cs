@@ -142,7 +142,7 @@ public class UserRepository : IUserRepository {
 
     public Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null) {
         UserEntity? model = _context.Set<UserEntity>().AsNoTracking().Include(u => u.Media).Include(u => u.Colors)
-            .Include(u => u.Specialties).Include(u => u.Favorites).FirstOrDefault(u => u.Id == id);
+            .Include(u => u.Favorites).FirstOrDefault(u => u.Id == id);
         UserReadDto userReadDto = _mapper.Map<UserReadDto>(model);
         userReadDto.Token = token;
         return Task.FromResult(model == null
@@ -183,14 +183,6 @@ public class UserRepository : IUserRepository {
                 _context.Set<UserToColorEntity>().Add(new UserToColorEntity() {
                     UserId = user.Id,
                     ColorId = item,
-                });
-            }
-
-            foreach (Guid item in dto.Specialties.Where(item =>
-                         !_context.Set<UserToSpecialtyEntity>().Any(x => x.UserId == username && x.SpecialtyId == item))) {
-                _context.Set<UserToSpecialtyEntity>().Add(new UserToSpecialtyEntity() {
-                    UserId = user.Id,
-                    SpecialtyId = item,
                 });
             }
 

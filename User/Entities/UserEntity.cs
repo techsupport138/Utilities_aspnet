@@ -10,7 +10,7 @@ public class UserEntity : IdentityUser {
         ContactInformation = new List<ContactInformationEntity>();
         Media = new List<MediaEntity>();
     }
-    
+
     public bool? Suspend { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
@@ -25,14 +25,21 @@ public class UserEntity : IdentityUser {
     public Guid? LocationId { get; set; }
     public LocationEntity? Location { get; set; }
 
-    public ICollection<MediaEntity>? Media { get; set; }
-    public ICollection<UserToColorEntity>? Colors { get; set; }
-    public ICollection<UserToFavoriteEntity>? Favorites { get; set; }
-    public ICollection<UserToSpecialtyEntity>? Specialties { get; set; }
-    public ICollection<ShoppingListEntity>? ShoppingList { get; set; }
-    public ICollection<ProductEntity>? Product { get; set; }
-    public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
-    public ICollection<ReportEntity>? Report { get; set; }
+    public IEnumerable<MediaEntity>? Media { get; set; }
+    public IEnumerable<UserToColorEntity>? Colors { get; set; }
+    public IEnumerable<UserToFavoriteEntity>? Favorites { get; set; }
+    public IEnumerable<ShoppingListEntity>? ShoppingList { get; set; }
+    public IEnumerable<ContactInformationEntity>? ContactInformation { get; set; }
+    public IEnumerable<ReportEntity>? Reports { get; set; }
+    public IEnumerable<ProductEntity>? Products { get; set; }
+    public IEnumerable<ProjectEntity>? Projects { get; set; }
+    public IEnumerable<TutorialEntity>? Tutorials { get; set; }
+    public IEnumerable<EventEntity>? Events { get; set; }
+    public IEnumerable<AdEntity>? Ads { get; set; }
+    public IEnumerable<CompanyEntity>? Companys { get; set; }
+    public IEnumerable<TenderEntity>? Tenders { get; set; }
+    public IEnumerable<ServiceEntity>? Services { get; set; }
+    public IEnumerable<MagazineEntity>? Magazines { get; set; }
 
     public static UserReadDto MapReadDto(UserEntity? e) {
         UserReadDto dto = new() {

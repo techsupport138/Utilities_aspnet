@@ -112,8 +112,6 @@ namespace Utilities_aspnet.User.Dtos {
             CreateMap<UserEntity, UserReadDto>().ForMember(x => x.Colors, x => x.MapFrom(x => x.Colors.Select(x => x.Color.Id).ToList()));
             CreateMap<UserEntity, UserReadDto>()
                 .ForMember(x => x.Favorites, x => x.MapFrom(x => x.Favorites.Select(x => x.Favorite.Id).ToList()));
-            CreateMap<UserEntity, UserReadDto>()
-                .ForMember(x => x.Specialties, x => x.MapFrom(x => x.Specialties.Select(x => x.Specialty.Id).ToList()));
             CreateMap<UserEntity, UserReadDto>().ForMember(x => x.Media, x => x.MapFrom(x => x.Media));
         }
     }
