@@ -106,7 +106,7 @@ public class ProductCreateUpdateDto {
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
-    public IEnumerable<LocationReadDto>? Location { get; set; }
+    public IEnumerable<Guid>? Location { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Tags { get; set; }
