@@ -27,7 +27,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
-        entity.UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));

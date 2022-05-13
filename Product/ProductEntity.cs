@@ -116,14 +116,25 @@ public class ProductCreateUpdateDto {
 
 public class ProductProfile : Profile {
     public ProductProfile() {
+        CreateMap<BaseProductEntity, ProductReadDto>().ReverseMap();
+        CreateMap<BaseProductEntity, ProductCreateUpdateDto>().ReverseMap();
         CreateMap<ProductEntity, ProductReadDto>().ReverseMap();
+        CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap();
         CreateMap<ProjectEntity, ProductReadDto>().ReverseMap();
+        CreateMap<ProjectEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<TutorialEntity, ProductReadDto>().ReverseMap();
         CreateMap<TutorialEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<EventEntity, ProductReadDto>().ReverseMap();
         CreateMap<EventEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<AdEntity, ProductReadDto>().ReverseMap();
         CreateMap<AdEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<CompanyEntity, ProductReadDto>().ReverseMap();
         CreateMap<CompanyEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<TenderEntity, ProductReadDto>().ReverseMap();
         CreateMap<TenderEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<ServiceEntity, ProductReadDto>().ReverseMap();
         CreateMap<ServiceEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<MagazineEntity, ProductReadDto>().ReverseMap();
         CreateMap<MagazineEntity, ProductCreateUpdateDto>().ReverseMap();
     }
 }
