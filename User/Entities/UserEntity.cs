@@ -5,6 +5,7 @@ using Utilities_aspnet.User.Dtos;
 
 namespace Utilities_aspnet.User.Entities;
 
+[Table("Users")]
 public class UserEntity : IdentityUser {
     public UserEntity() {
         ContactInformation = new List<ContactInformationEntity>();
