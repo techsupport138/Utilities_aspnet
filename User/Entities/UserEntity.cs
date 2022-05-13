@@ -21,10 +21,8 @@ public class UserEntity : IdentityUser {
     public string? AppPhoneNumber { get; set; }
     public double Wallet { get; set; } = 0;
     public DateTime? Birthdate { get; set; }
-
-    public Guid? LocationId { get; set; }
-    public LocationEntity? Location { get; set; }
-
+    
+    public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<UserToColorEntity>? Colors { get; set; }
     public IEnumerable<UserToFavoriteEntity>? Favorites { get; set; }
