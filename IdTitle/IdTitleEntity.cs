@@ -2,7 +2,7 @@ using Utilities_aspnet.Product;
 
 namespace Utilities_aspnet.IdTitle;
 
-public class BaseIdTitleEntity : BaseEntity {
+public abstract class BaseIdTitleEntity : BaseEntity {
     public Guid? ParentId { get; set; }
     public BaseIdTitleEntity? Parent { get; set; }
 

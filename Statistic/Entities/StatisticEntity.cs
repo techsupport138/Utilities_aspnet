@@ -40,9 +40,5 @@ namespace Utilities_aspnet.Statistic.Entities
         public string Osfamily { get; set; }
         [StringLength(50)]
         public string DeviceFamily { get; set; }
-
-        [ForeignKey(nameof(Date))]
-        [InverseProperty(nameof(DimDate.Statistics))]
-        public virtual DimDate DateNavigation { get; set; }
     }
 }

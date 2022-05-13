@@ -23,9 +23,5 @@ namespace Utilities_aspnet.Statistic.Entities
         public string Ip { get; set; }
         [StringLength(500)]
         public string LandingPage { get; set; }
-
-        [ForeignKey(nameof(Date))]
-        [InverseProperty(nameof(DimDate.Visitors))]
-        public virtual DimDate DateNavigation { get; set; }
     }
 }
