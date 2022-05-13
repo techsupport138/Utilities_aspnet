@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Utilities_aspnet.IdTitle;
 using Utilities_aspnet.Utilities.Dtos;
 using Utilities_aspnet.Utilities.Entities;
 using Utilities_aspnet.Utilities.Enums;

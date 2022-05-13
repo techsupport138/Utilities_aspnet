@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Utilities_aspnet.Utilities.Responses;
 
-namespace Utilities_aspnet.Tag;
+namespace Utilities_aspnet.IdTitle;
 
 public interface ITagRepository {
     public Task<GenericResponse<TagReadDto>> Create(TagCreateUpdateDto dto);

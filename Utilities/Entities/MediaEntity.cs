@@ -1,5 +1,5 @@
-﻿using Utilities_aspnet.Product;
-using Utilities_aspnet.Tag;
+﻿using Utilities_aspnet.IdTitle;
+using Utilities_aspnet.Product;
 
 namespace Utilities_aspnet.Utilities.Entities;
 

@@ -1,3 +1,5 @@
+using Utilities_aspnet.IdTitle;
+
 namespace Utilities_aspnet.Utilities.Entities;
 
 public class ContactInformationEntity : BaseEntity {

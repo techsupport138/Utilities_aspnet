@@ -1,12 +1,17 @@
-﻿using Utilities_aspnet.Product;
+using Utilities_aspnet.Product;
 
-namespace Utilities_aspnet.Tag;
+namespace Utilities_aspnet.IdTitle;
 
-public abstract class BaseTagEntity : BaseEntity {
-    [StringLength(100)]
-    public string? Title { get; set; }
+public class BaseIdTitleEntity : BaseEntity {
+    [Required]
+    public string Title { get; set; }
 
-    public IEnumerable<MediaEntity>? Media { get; set; }
+    public string? Color { get; set; }
+
+    public ICollection<MediaEntity> Media { get; set; }
+
+    public string? UserId { get; set; }
+    public UserEntity? User { get; set; }
 
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
@@ -37,10 +42,19 @@ public abstract class BaseTagEntity : BaseEntity {
 }
 
 [Table("Tags")]
-public class TagEntity : BaseTagEntity { }
+public class TagEntity : BaseIdTitleEntity { }
 
 [Table("Speciality")]
-public class SpecialityEntity : BaseTagEntity { }
+public class SpecialityEntity : BaseIdTitleEntity { }
+
+[Table("Favorite")]
+public class FavoriteEntity : BaseIdTitleEntity { }
+
+[Table("Colors")]
+public class ColorEntity : BaseIdTitleEntity { }
+
+[Table("ContactInfoItems")]
+public class ContactInfoItemEntity : BaseIdTitleEntity { }
 
 public class TagReadDto {
     public int Id { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities_aspnet.IdTitle;
 using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.Utilities.Data {
@@ -28,7 +29,7 @@ namespace Utilities_aspnet.Utilities.Data {
                 Colors = _context.Set<ColorEntity>().Select(x => new IdTitleDto {
                     Id = x.Id.ToString(),
                     Title = x.Title,
-                    SubTitle = x.ColorHex
+                    SubTitle = x.Color
                 }).ToList(),
                 UserRole = _context.Set<UserRoleEntity>().Select(x => new IdTitleDto {
                     Title = x.RoleId.ToString(),

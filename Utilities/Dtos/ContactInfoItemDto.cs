@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Utilities_aspnet.IdTitle;
 using Utilities_aspnet.Utilities.Entities;
 
 namespace Utilities_aspnet.Utilities.Dtos {
