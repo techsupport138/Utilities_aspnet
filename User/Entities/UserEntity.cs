@@ -23,6 +23,17 @@ public class UserEntity : IdentityUser {
         Services = new List<ServiceEntity>();
         Magazines = new List<MagazineEntity>();
     }
+
+    public bool? Suspend { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? FullName { get; set; }
+    public string? Headline { get; set; }
+    public string? Bio { get; set; }
+    public string? AppUserName { get; set; }
+    public string? AppPhoneNumber { get; set; }
+    public double Wallet { get; set; } = 0;
+    public DateTime? Birthdate { get; set; }
     
     public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
@@ -41,16 +52,6 @@ public class UserEntity : IdentityUser {
     public IEnumerable<ServiceEntity>? Services { get; set; }
     public IEnumerable<MagazineEntity>? Magazines { get; set; }
 
-    public bool? Suspend { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? FullName { get; set; }
-    public string? Headline { get; set; }
-    public string? Bio { get; set; }
-    public string? AppUserName { get; set; }
-    public string? AppPhoneNumber { get; set; }
-    public double Wallet { get; set; } = 0;
-    public DateTime? Birthdate { get; set; }
 
     public static UserReadDto MapReadDto(UserEntity? e) {
         UserReadDto dto = new() {

@@ -14,6 +14,8 @@ public abstract class BaseProductEntity : BaseEntity {
     public int? VisitCount { get; set; }
 
     public string? UserId { get; set; }
+
+    [ForeignKey("UserEntity")]
     public UserEntity? User { get; set; }
 
     public IEnumerable<LocationEntity>? Location { get; set; }
