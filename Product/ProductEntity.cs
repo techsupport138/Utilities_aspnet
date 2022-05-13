@@ -13,8 +13,8 @@ public abstract class BaseProductEntity : BaseEntity {
     public bool? Enabled { get; set; }
     public int? VisitCount { get; set; }
 
-    public string? AspNetUserId { get; set; }
-    public UserEntity? AspNetUser { get; set; }
+    public string? UserId { get; set; }
+    public UserEntity? User { get; set; }
 
     public int? LocationId { get; set; }
     public LocationEntity? Location { get; set; }
@@ -37,7 +37,7 @@ public abstract class BaseProductEntity : BaseEntity {
             IsBookmarked = false,
             Subtitle = e.SubTitle,
             IsForSale = e.IsForSale,
-            User = UserEntity.MapReadDto(e.AspNetUser),
+            User = UserEntity.MapReadDto(e.User),
             Location = LocationEntity.MapReadDto(e.Location),
             Media = MediaEntity.MapEnumarableDto(e.Media),
         };
