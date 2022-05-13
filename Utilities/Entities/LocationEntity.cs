@@ -55,19 +55,21 @@ public class LocationEntity {
 
     public MagazineEntity? Magazine { get; set; }
     public Guid? MagazineId { get; set; }
+}
 
-    public static LocationReadDto MapReadDto(LocationEntity? e) {
-        LocationReadDto dto = new LocationReadDto {
-            Id = e.Id,
-            Latitude = e.Latitude,
-            Longitude = e.Longitude,
-            ParentId = e.ParentId,
-            Title = e.Title,
-            Type = e.Type,
-            Parent = e.Parent == null ? null : MapReadDto(e),
-            Media = MediaEntity.MapEnumarableDto(e.Media),
-        };
+public class LocationReadDto {
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public int? ParentId { get; set; }
+    public LocationReadDto? Parent { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
+    public IEnumerable<MediaDto>? Media { get; set; }
+    public LocationType Type { get; set; }
+}
 
-        return dto;
+public class LocationProfile : Profile {
+    public LocationProfile() {
+        CreateMap<LocationEntity, LocationReadDto>().ReverseMap();
     }
 }
