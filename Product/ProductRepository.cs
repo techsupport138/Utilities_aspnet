@@ -6,10 +6,10 @@ using Utilities_aspnet.Utilities.Responses;
 namespace Utilities_aspnet.Product.Data;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
-    Task<GenericResponse<ProductReadDto>> Create(CreateUpdateProductDto dto);
+    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> Read();
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
-    Task<GenericResponse<ProductReadDto>> Update(CreateUpdateProductDto dto);
+    Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
     void Delete(Guid id);
 }
 
@@ -24,7 +24,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Create(CreateUpdateProductDto dto) {
+    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
         entity.UserId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -44,7 +44,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
-    public Task<GenericResponse<ProductReadDto>> Update(CreateUpdateProductDto dto) {
+    public Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
         throw new NotImplementedException();
     }
 

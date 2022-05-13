@@ -1,5 +1,5 @@
 using Utilities_aspnet.Report;
-using Utilities_aspnet.Tag.Entities;
+using Utilities_aspnet.Tag;
 using Utilities_aspnet.User.Dtos;
 
 namespace Utilities_aspnet.Product;
@@ -99,7 +99,7 @@ public class ProductReadDto {
     public IEnumerable<VoteReadDto>? Votes { get; set; }
 }
 
-public class CreateUpdateProductDto {
+public class ProductCreateUpdateDto {
     public Guid? Id { get; set; }
     public string? Title { get; set; }
     public string? Subtitle { get; set; }

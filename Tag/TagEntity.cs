@@ -1,6 +1,6 @@
 ﻿using Utilities_aspnet.Product;
 
-namespace Utilities_aspnet.Tag.Entities;
+namespace Utilities_aspnet.Tag;
 
 public abstract class BaseTagEntity : BaseEntity {
     [StringLength(100)]
@@ -34,4 +34,29 @@ public abstract class BaseTagEntity : BaseEntity {
 
     public MagazineEntity? Magazine { get; set; }
     public Guid? MagazineId { get; set; }
+}
+
+[Table("Tags")]
+public class TagEntity : BaseTagEntity { }
+
+[Table("Speciality")]
+public class SpecialityEntity : BaseTagEntity { }
+
+public class TagReadDto {
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string? Link { get; set; }
+}
+
+public class TagCreateUpdateDto {
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string? Link { get; set; }
+}
+
+public class TagProfile : Profile {
+    public TagProfile() {
+        CreateMap<TagEntity, TagCreateUpdateDto>().ReverseMap();
+        CreateMap<TagEntity, TagReadDto>().ReverseMap();
+    }
 }

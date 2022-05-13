@@ -38,7 +38,6 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
 		<PackageReference Include="UAParser" Version="3.1.47" />
 		<PackageReference Include="ZNetCS.AspNetCore.Logging.EntityFrameworkCore" Version="6.0.0" />
-
 	</ItemGroup>
 
 </Project>

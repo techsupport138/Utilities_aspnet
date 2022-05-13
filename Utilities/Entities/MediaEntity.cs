@@ -1,4 +1,5 @@
 ﻿using Utilities_aspnet.Product;
+using Utilities_aspnet.Tag;
 
 namespace Utilities_aspnet.Utilities.Entities;
 
@@ -19,7 +20,7 @@ public class MediaEntity : BaseEntity {
 
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }
-
+    
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
 
@@ -46,7 +47,13 @@ public class MediaEntity : BaseEntity {
 
     public MagazineEntity? Magazine { get; set; }
     public Guid? MagazineId { get; set; }
+    
+    public TagEntity? Tag { get; set; }
+    public Guid? TagId { get; set; }
 
+    public SpecialityEntity? Speciality { get; set; }
+    public Guid? SpecialityId { get; set; }
+    
     [NotMapped]
     public string Link => $"{Server.ServerAddress}/Medias/{FileName}";
 
