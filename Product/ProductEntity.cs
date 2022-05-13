@@ -34,11 +34,9 @@ public abstract class BaseProductEntity : BaseEntity {
             Price = e.Price,
             VisitsCount = e.VisitCount,
             CreatedAt = e.CreatedAt,
-            IsBookmarked = false,
             Subtitle = e.SubTitle,
             IsForSale = e.IsForSale,
             User = UserEntity.MapReadDto(e.User),
-            // Location = LocationEntity.MapReadDto(e.Location),
             Media = MediaEntity.MapEnumarableDto(e.Media),
         };
 
@@ -114,4 +112,18 @@ public class ProductCreateUpdateDto {
     public IEnumerable<Guid>? Tags { get; set; }
     public IEnumerable<Guid>? Teams { get; set; }
     public IEnumerable<VoteFieldCreateDto>? Votes { get; set; }
+}
+
+public class ProductProfile : Profile {
+    public ProductProfile() {
+        CreateMap<ProductEntity, ProductReadDto>().ReverseMap();
+        CreateMap<ProjectEntity, ProductReadDto>().ReverseMap();
+        CreateMap<TutorialEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<EventEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<AdEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<CompanyEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<TenderEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<ServiceEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<MagazineEntity, ProductCreateUpdateDto>().ReverseMap();
+    }
 }

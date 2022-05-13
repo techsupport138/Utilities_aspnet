@@ -18,7 +18,6 @@ using System.Reflection;
 using Utilities_aspnet.Utilities.Filters;
 using Microsoft.OpenApi.Models;
 using Utilities_aspnet.Product;
-using Utilities_aspnet.Product.Data;
 
 namespace Utilities_aspnet.Utilities;
 

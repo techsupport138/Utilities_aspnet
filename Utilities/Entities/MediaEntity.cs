@@ -1,4 +1,5 @@
-﻿using Utilities_aspnet.IdTitle;
+﻿using Utilities_aspnet.Content;
+using Utilities_aspnet.IdTitle;
 using Utilities_aspnet.Product;
 
 namespace Utilities_aspnet.Utilities.Entities;

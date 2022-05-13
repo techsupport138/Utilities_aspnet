@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Utilities_aspnet.Utilities.Responses;
 
-namespace Utilities_aspnet.Product.Data;
+namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
     Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> Read();
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
-    void Delete(Guid id);
+    Task<GenericResponse> Delete(Guid id);
 }
 
 public class ProductRepository<T> : IProductRepository<T> where T : BaseProductEntity {
@@ -48,9 +48,10 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         throw new NotImplementedException();
     }
 
-    public async void Delete(Guid id) {
+    public async Task<GenericResponse> Delete(Guid id) {
         GenericResponse<ProductReadDto> i = await ReadById(id);
         _dbContext.Set<T>().Remove(_mapper.Map<T>(i.Result));
         await _dbContext.SaveChangesAsync();
+        return new GenericResponse();
     }
 }
