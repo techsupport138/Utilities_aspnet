@@ -70,7 +70,7 @@ public class AdEntity : BaseProductEntity { }
 [Table("Company")]
 public class CompanyEntity : BaseProductEntity { }
 
-[Table("Magazine")]
+[Table("Tenders")]
 public class TenderEntity : BaseProductEntity { }
 
 [Table("Services")]
