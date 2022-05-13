@@ -8,19 +8,21 @@ namespace Utilities_aspnet.User.Entities;
 public class UserEntity : IdentityUser {
     public UserEntity() {
         ContactInformation = new List<ContactInformationEntity>();
-        Media = new List<MediaEntity>();
+        Location = new List<LocationEntity>();
+        Colors = new List<UserToColorEntity>();
+        Favorites = new List<UserToFavoriteEntity>();
+        ShoppingList = new List<ShoppingListEntity>();
+        Reports = new List<ReportEntity>();
+        Products = new List<ProductEntity>();
+        Projects = new List<ProjectEntity>();
+        Tutorials = new List<TutorialEntity>();
+        Events = new List<EventEntity>();
+        Ads = new List<AdEntity>();
+        Companys = new List<CompanyEntity>();
+        Tenders = new List<TenderEntity>();
+        Services = new List<ServiceEntity>();
+        Magazines = new List<MagazineEntity>();
     }
-
-    public bool? Suspend { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? FullName { get; set; }
-    public string? Headline { get; set; }
-    public string? Bio { get; set; }
-    public string? AppUserName { get; set; }
-    public string? AppPhoneNumber { get; set; }
-    public double Wallet { get; set; } = 0;
-    public DateTime? Birthdate { get; set; }
     
     public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
@@ -38,6 +40,17 @@ public class UserEntity : IdentityUser {
     public IEnumerable<TenderEntity>? Tenders { get; set; }
     public IEnumerable<ServiceEntity>? Services { get; set; }
     public IEnumerable<MagazineEntity>? Magazines { get; set; }
+
+    public bool? Suspend { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? FullName { get; set; }
+    public string? Headline { get; set; }
+    public string? Bio { get; set; }
+    public string? AppUserName { get; set; }
+    public string? AppPhoneNumber { get; set; }
+    public double Wallet { get; set; } = 0;
+    public DateTime? Birthdate { get; set; }
 
     public static UserReadDto MapReadDto(UserEntity? e) {
         UserReadDto dto = new() {

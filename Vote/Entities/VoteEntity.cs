@@ -6,7 +6,7 @@ public class VoteEntity : BaseEntity {
     public double? Score { get; set; } = 0;
 
     public UserEntity? User { get; set; }
-    public Guid? UserId { get; set; }
+    public string? UserId { get; set; }
     
     public VoteFieldEntity? VotingField { get; set; }
     public Guid? VoteFieldId { get; set; }

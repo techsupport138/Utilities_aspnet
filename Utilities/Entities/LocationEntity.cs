@@ -27,7 +27,7 @@ public class LocationEntity {
     public double? Longitude { get; set; }
 
     public UserEntity? User { get; set; }
-    public Guid? UserId { get; set; }
+    public string? UserId { get; set; }
 
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
