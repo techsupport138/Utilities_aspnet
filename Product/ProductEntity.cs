@@ -89,7 +89,7 @@ public class ProductReadDto {
     public int? VisitsCount { get; set; }
     public DateTime? CreatedAt { get; set; }
     public UserReadDto? User { get; set; }
-    public LocationReadDto? Location { get; set; }
+    public IEnumerable<LocationReadDto>? Location { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleDto>? Categories { get; set; }
     public IEnumerable<IdTitleDto>? Team { get; set; }
@@ -106,7 +106,7 @@ public class ProductCreateUpdateDto {
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
-    public Guid? Location { get; set; }
+    public IEnumerable<LocationReadDto>? Location { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Tags { get; set; }
