@@ -16,9 +16,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public string? UserId { get; set; }
     public UserEntity? User { get; set; }
 
-    public int? LocationId { get; set; }
-    public LocationEntity? Location { get; set; }
-
+    public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<CategoryEntity>? Category { get; set; }
     public IEnumerable<TagEntity>? Tag { get; set; }
@@ -38,7 +36,7 @@ public abstract class BaseProductEntity : BaseEntity {
             Subtitle = e.SubTitle,
             IsForSale = e.IsForSale,
             User = UserEntity.MapReadDto(e.User),
-            Location = LocationEntity.MapReadDto(e.Location),
+            // Location = LocationEntity.MapReadDto(e.Location),
             Media = MediaEntity.MapEnumarableDto(e.Media),
         };
 
