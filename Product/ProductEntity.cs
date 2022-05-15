@@ -10,7 +10,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public string? Description { get; set; }
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
-    public bool? Enabled { get; set; }
+    public bool Enabled { get; set; } = false;
     public int? VisitCount { get; set; }
 
     public string? UserId { get; set; }
@@ -82,7 +82,7 @@ public class ProductReadDto {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
-    public bool? Enabled { get; set; }
+    public bool Enabled { get; set; } = false;
     public bool? IsForSale { get; set; }
     public bool? IsBookmarked { get; set; }
     public decimal? Price { get; set; }
@@ -105,7 +105,7 @@ public class ProductCreateUpdateDto {
     public string? SubTitle { get; set; }
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
-    public bool? Enabled { get; set; }
+    public bool Enabled { get; set; } = false;
     public IEnumerable<Guid>? Location { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }

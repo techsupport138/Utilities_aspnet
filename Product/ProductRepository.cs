@@ -44,8 +44,13 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
-    public Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
-        throw new NotImplementedException();
+    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
+        if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
+        T entity = _mapper.Map<T>(dto);
+        //entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        EntityEntry<T> i = _dbContext.Set<T>().Update(entity);
+        await _dbContext.SaveChangesAsync();
+        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
     public async Task<GenericResponse> Delete(Guid id) {
