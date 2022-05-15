@@ -22,8 +22,8 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<CategoryEntity>? Category { get; set; }
     public IEnumerable<TagEntity>? Tag { get; set; }
-    public IEnumerable<VoteFieldEntity> VoteField { get; set; }
-    public IEnumerable<ReportEntity> Report { get; set; }
+    public IEnumerable<VoteFieldEntity>? VoteField { get; set; }
+    public IEnumerable<ReportEntity>? Report { get; set; }
 
     public static ProductReadDto MapReadDto(ProductEntity e) {
         ProductReadDto dto = new ProductReadDto {
