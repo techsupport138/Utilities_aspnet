@@ -24,6 +24,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<TagEntity>? Tag { get; set; }
     public IEnumerable<VoteFieldEntity>? VoteField { get; set; }
     public IEnumerable<ReportEntity>? Report { get; set; }
+    public IEnumerable<SpecialityEntity>? Speciality { get; set; }
 
     public static ProductReadDto MapReadDto(ProductEntity e) {
         ProductReadDto dto = new ProductReadDto {
@@ -106,7 +107,7 @@ public class ProductCreateUpdateDto {
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
     public bool Enabled { get; set; } = false;
-    public IEnumerable<Guid>? Location { get; set; }
+    public IEnumerable<int>? Location { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Tags { get; set; }
