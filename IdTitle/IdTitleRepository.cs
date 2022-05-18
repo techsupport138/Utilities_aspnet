@@ -25,6 +25,7 @@ public class IdTitleRepository<T> : IIdTitleRepository<T> where T : BaseIdTitleE
         T entity = _mapper.Map<T>(dto);
 
         EntityEntry<T>? i = await _dbContext.AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
         return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(i.Entity));
     }
 
