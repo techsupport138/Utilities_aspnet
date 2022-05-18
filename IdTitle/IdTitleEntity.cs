@@ -6,11 +6,9 @@ public abstract class BaseIdTitleEntity : BaseEntity {
 
     [Required]
     public string Title { get; set; }
-
-    public string Subtitle { get; set; }
-
+    
+    public string? Subtitle { get; set; }
     public string? Color { get; set; }
-
     public string? Link { get; set; }
 
     public IdTitleUseCase UseCase { get; set; } = IdTitleUseCase.Null;
