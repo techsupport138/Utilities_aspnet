@@ -8,7 +8,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public string? Description { get; set; }
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
-    public bool Enabled { get; set; } = false;
+    public bool? Enabled { get; set; }
     public int? VisitCount { get; set; }
 
     public string? UserId { get; set; }
@@ -21,30 +21,6 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<VoteFieldEntity>? VoteField { get; set; }
     public IEnumerable<ReportEntity>? Report { get; set; }
     public IEnumerable<SpecialityEntity>? Speciality { get; set; }
-
-    public static ProductReadDto MapReadDto(BaseProductEntity e) {
-        ProductReadDto dto = new ProductReadDto {
-            Id = e.Id,
-            Title = e.Title,
-            Description = e.Description,
-            Enabled = e.Enabled,
-            Price = e.Price,
-            VisitsCount = e.VisitCount,
-            CreatedAt = e.CreatedAt,
-            Subtitle = e.SubTitle,
-            IsForSale = e.IsForSale,
-            User = UserEntity.MapReadDto(e.User),
-            Media = MediaEntity.MapEnumarableDto(e.Media),
-        };
-
-        return dto;
-    }
-
-    public static IEnumerable<ProductReadDto> MapMediaEnumarableDto(IEnumerable<BaseProductEntity>? e) {
-        IEnumerable<ProductReadDto> dto =
-            new List<ProductReadDto>(e?.Select(MapReadDto) ?? Array.Empty<ProductReadDto>());
-        return dto;
-    }
 }
 
 [Table("Products")]

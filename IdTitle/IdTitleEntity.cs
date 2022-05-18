@@ -31,6 +31,12 @@ public abstract class BaseIdTitleEntity : BaseEntity {
 [Table("Tags")]
 public class TagEntity : BaseIdTitleEntity { }
 
+[Table("Brands")]
+public class BrandEntity : BaseIdTitleEntity { }
+
+[Table("References")]
+public class ReferenceEntity : BaseIdTitleEntity { }
+
 [Table("Categories")]
 public class CategoryEntity : BaseIdTitleEntity { }
 

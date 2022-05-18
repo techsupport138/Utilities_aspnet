@@ -15,6 +15,10 @@ public class AutoMapperProfile : Profile {
         CreateMap<ColorEntity, IdTitleCreateUpdateDto>().ReverseMap();
         CreateMap<ContactInfoItemEntity, IdTitleReadDto>().ReverseMap();
         CreateMap<ContactInfoItemEntity, IdTitleCreateUpdateDto>().ReverseMap();
+        CreateMap<BrandEntity, IdTitleReadDto>().ReverseMap();
+        CreateMap<BrandEntity, IdTitleCreateUpdateDto>().ReverseMap();
+        CreateMap<ReferenceEntity, IdTitleReadDto>().ReverseMap();
+        CreateMap<ReferenceEntity, IdTitleCreateUpdateDto>().ReverseMap();
 
         // Product
         CreateMap<BaseProductEntity, ProductReadDto>().ReverseMap();
