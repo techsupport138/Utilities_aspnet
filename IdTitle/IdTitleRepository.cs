@@ -4,7 +4,7 @@ using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.IdTitle;
 
-public interface ITagRepository<T> where T : BaseIdTitleEntity {
+public interface IIdTitleRepository<T> where T : BaseIdTitleEntity {
     public Task<GenericResponse<IdTitleReadDto>> Create(IdTitleCreateUpdateDto dto);
     public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> Read();
     public Task<GenericResponse<IdTitleReadDto>> ReadById(Guid id);
@@ -12,11 +12,11 @@ public interface ITagRepository<T> where T : BaseIdTitleEntity {
     public Task<GenericResponse> Delete(Guid id);
 }
 
-public class TagRepository<T> : ITagRepository<T> where T : BaseIdTitleEntity {
+public class IdTitleRepository<T> : IIdTitleRepository<T> where T : BaseIdTitleEntity {
     private readonly DbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public TagRepository(DbContext context, IMapper mapper) {
+    public IdTitleRepository(DbContext context, IMapper mapper) {
         _dbContext = context;
         _mapper = mapper;
     }
