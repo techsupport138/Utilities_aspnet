@@ -17,13 +17,17 @@ using Microsoft.AspNetCore.Http.Features;
 using System.Reflection;
 using Utilities_aspnet.Utilities.Filters;
 using Microsoft.OpenApi.Models;
+using Utilities_aspnet.IdTitle;
 using Utilities_aspnet.Product;
 
 namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
-    public static void SetupUtilities<T>(this WebApplicationBuilder builder, string connectionStrings,
-        DatabaseType databaseType = DatabaseType.SqlServer, string? redisConnectionString = null) where T : DbContext {
+    public static void SetupUtilities<T>(
+        this WebApplicationBuilder builder,
+        string connectionStrings,
+        DatabaseType databaseType = DatabaseType.SqlServer,
+        string? redisConnectionString = null) where T : DbContext {
         builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
 
         if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
@@ -42,7 +46,9 @@ public static class StartupExtension {
         builder.Services.AddSession(options => { options.IdleTimeout = System.TimeSpan.FromSeconds(604800); });
     }
 
-    private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings,
+    private static void AddUtilitiesServices<T>(
+        this WebApplicationBuilder builder,
+        string connectionStrings,
         DatabaseType databaseType) where T : DbContext {
         builder.Services.AddCors(c =>
             c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
@@ -95,6 +101,12 @@ public static class StartupExtension {
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
+        builder.Services.AddTransient<IIdTitleRepository<CategoryEntity>, IdTitleRepository<CategoryEntity>>();
+        builder.Services.AddTransient<IIdTitleRepository<TagEntity>, IdTitleRepository<TagEntity>>();
+        builder.Services.AddTransient<IIdTitleRepository<ColorEntity>, IdTitleRepository<ColorEntity>>();
+        builder.Services.AddTransient<IIdTitleRepository<FavoriteEntity>, IdTitleRepository<FavoriteEntity>>();
+        builder.Services.AddTransient<IIdTitleRepository<ContactInfoItemEntity>, IdTitleRepository<ContactInfoItemEntity>>();
+        builder.Services.AddTransient<IIdTitleRepository<SpecialityEntity>, IdTitleRepository<SpecialityEntity>>();
         builder.Services.AddTransient<IProductRepository<ProductEntity>, ProductRepository<ProductEntity>>();
         builder.Services.AddTransient<IProductRepository<ProjectEntity>, ProductRepository<ProjectEntity>>();
         builder.Services.AddTransient<IProductRepository<EventEntity>, ProductRepository<EventEntity>>();
