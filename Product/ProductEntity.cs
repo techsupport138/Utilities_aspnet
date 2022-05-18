@@ -18,10 +18,10 @@ public abstract class BaseProductEntity : BaseEntity {
     [ForeignKey("UserEntity")]
     public UserEntity? User { get; set; }
 
-    public IEnumerable<LocationEntity>? Location { get; set; }
+    public IEnumerable<LocationEntity>? Locations { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
-    public IEnumerable<CategoryEntity>? Category { get; set; }
-    public IEnumerable<TagEntity>? Tag { get; set; }
+    public IEnumerable<CategoryEntity>? Categories { get; set; }
+    public IEnumerable<TagEntity>? Tags { get; set; }
     public IEnumerable<VoteFieldEntity>? VoteField { get; set; }
     public IEnumerable<ReportEntity>? Report { get; set; }
     public IEnumerable<SpecialityEntity>? Speciality { get; set; }
@@ -90,12 +90,9 @@ public class ProductReadDto {
     public int? VisitsCount { get; set; }
     public DateTime? CreatedAt { get; set; }
     public UserReadDto? User { get; set; }
-    public IEnumerable<LocationReadDto>? Location { get; set; }
+    public IEnumerable<LocationReadDto>? Locations { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleDto>? Categories { get; set; }
-    public IEnumerable<IdTitleDto>? Team { get; set; }
-    public IEnumerable<IdTitleDto>? Tags { get; set; }
-    public IEnumerable<VoteReadDto>? Votes { get; set; }
 }
 
 public class ProductCreateUpdateDto {
@@ -107,12 +104,10 @@ public class ProductCreateUpdateDto {
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
     public bool Enabled { get; set; } = false;
-    public IEnumerable<int>? Location { get; set; }
+    public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Tags { get; set; }
-    public IEnumerable<Guid>? Teams { get; set; }
-    public IEnumerable<VoteFieldCreateDto>? Votes { get; set; }
 }
 
 public class ProductProfile : Profile {
