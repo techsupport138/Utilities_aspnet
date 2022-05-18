@@ -1,46 +1,53 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Utilities_aspnet.Product;
 using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.IdTitle;
 
-public interface ITagRepository {
-    public Task<GenericResponse<TagReadDto>> Create(TagCreateUpdateDto dto);
-    public Task<GenericResponse<IEnumerable<TagReadDto>>> Read();
-    public Task<GenericResponse<TagReadDto>> ReadById(int id);
-    public Task<GenericResponse<TagReadDto>> Update(TagCreateUpdateDto dto);
-    public Task<GenericResponse> Delete(int id);
+public interface ITagRepository<T> where T : BaseIdTitleEntity {
+    public Task<GenericResponse<IdTitleReadDto>> Create(IdTitleCreateUpdateDto dto);
+    public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> Read();
+    public Task<GenericResponse<IdTitleReadDto>> ReadById(Guid id);
+    public Task<GenericResponse<IdTitleReadDto>> Update(IdTitleCreateUpdateDto dto);
+    public Task<GenericResponse> Delete(Guid id);
 }
 
-public class TagRepository : ITagRepository {
-    private readonly DbContext _context;
+public class TagRepository<T> : ITagRepository<T> where T : BaseIdTitleEntity {
+    private readonly DbContext _dbContext;
     private readonly IMapper _mapper;
 
     public TagRepository(DbContext context, IMapper mapper) {
-        _context = context;
+        _dbContext = context;
         _mapper = mapper;
     }
 
-    public async Task<GenericResponse<TagReadDto>> Create(TagCreateUpdateDto dto) {
+    public async Task<GenericResponse<IdTitleReadDto>> Create(IdTitleCreateUpdateDto dto) {
         TagEntity entity = _mapper.Map<TagEntity>(dto);
 
-        EntityEntry<TagEntity>? i = await _context.AddAsync(entity);
-        return new GenericResponse<TagReadDto>(_mapper.Map<TagReadDto>(i.Entity));
+        EntityEntry<TagEntity>? i = await _dbContext.AddAsync(entity);
+        return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(i.Entity));
     }
 
 
-    public Task<GenericResponse<IEnumerable<TagReadDto>>> Read() {
+    public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> Read() {
+        IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking()
+            .Include(i => i.Media)
+            .ToListAsync();
+        return new GenericResponse<IEnumerable<IdTitleReadDto>>(_mapper.Map<IEnumerable<IdTitleReadDto>>(i));
+    }
+
+    public async Task<GenericResponse<IdTitleReadDto>> ReadById(Guid id) {
+        T? i = await _dbContext.Set<T>().AsNoTracking()
+            .Include(i => i.Media)
+            .FirstOrDefaultAsync(i => i.Id == id);
+        return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(i));
+    }
+
+    public Task<GenericResponse> Delete(Guid id) {
         throw new NotImplementedException();
     }
 
-    public Task<GenericResponse<TagReadDto>> ReadById(int id) {
-        throw new NotImplementedException();
-    }
-
-    public Task<GenericResponse> Delete(int id) {
-        throw new NotImplementedException();
-    }
-
-    public Task<GenericResponse<TagReadDto>> Update(TagCreateUpdateDto dto) {
+    public Task<GenericResponse<IdTitleReadDto>> Update(IdTitleCreateUpdateDto dto) {
         throw new NotImplementedException();
     }
 }

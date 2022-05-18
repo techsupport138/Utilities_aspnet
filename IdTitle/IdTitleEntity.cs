@@ -13,7 +13,7 @@ public abstract class BaseIdTitleEntity : BaseEntity {
 
     public string? Link { get; set; }
 
-    public IdTitleUseCase UseCase { get; set; } = IdTitleUseCase.NULL;
+    public IdTitleUseCase UseCase { get; set; } = IdTitleUseCase.Null;
 
     public ICollection<MediaEntity> Media { get; set; }
     public IEnumerable<UserEntity>? User { get; set; }
@@ -47,7 +47,7 @@ public class ColorEntity : BaseIdTitleEntity { }
 public class ContactInfoItemEntity : BaseIdTitleEntity { }
 
 public enum IdTitleUseCase {
-    NULL = 100,
+    Null = 100,
     Ads = 101,
     Event = 102,
     Job = 103,
@@ -57,21 +57,35 @@ public enum IdTitleUseCase {
     Tender = 108
 }
 
-public class TagReadDto {
-    public int Id { get; set; }
-    public string Title { get; set; }
+public class IdTitleReadDto {
+    public int? Id { get; set; }
+    public string? Title { get; set; }
     public string? Link { get; set; }
+    public string? Color { get; set; }
+    public IdTitleUseCase? UseCase { get; set; }
 }
 
-public class TagCreateUpdateDto {
-    public int Id { get; set; }
-    public string Title { get; set; }
+public class IdTitleCreateUpdateDto {
+    public int? Id { get; set; }
+    public string? Title { get; set; }
     public string? Link { get; set; }
+    public string? Color { get; set; }
+    public IdTitleUseCase? UseCase { get; set; }
 }
 
-public class TagProfile : Profile {
-    public TagProfile() {
-        CreateMap<TagEntity, TagCreateUpdateDto>().ReverseMap();
-        CreateMap<TagEntity, TagReadDto>().ReverseMap();
+public class IdTitleProfile : Profile {
+    public IdTitleProfile() {
+        CreateMap<TagEntity, IdTitleReadDto>().ReverseMap();
+        CreateMap<TagEntity, IdTitleCreateUpdateDto>().ReverseMap();
+        CreateMap<CategoryEntity, IdTitleReadDto>().ReverseMap();
+        CreateMap<CategoryEntity, IdTitleCreateUpdateDto>().ReverseMap();
+        CreateMap<SpecialityEntity, IdTitleReadDto>().ReverseMap();
+        CreateMap<SpecialityEntity, IdTitleCreateUpdateDto>().ReverseMap();
+        CreateMap<FavoriteEntity, IdTitleReadDto>().ReverseMap();
+        CreateMap<FavoriteEntity, IdTitleCreateUpdateDto>().ReverseMap();
+        CreateMap<ColorEntity, IdTitleReadDto>().ReverseMap();
+        CreateMap<ColorEntity, IdTitleCreateUpdateDto>().ReverseMap();
+        CreateMap<ContactInfoItemEntity, IdTitleReadDto>().ReverseMap();
+        CreateMap<ContactInfoItemEntity, IdTitleCreateUpdateDto>().ReverseMap();
     }
 }

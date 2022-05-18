@@ -80,13 +80,28 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     }
 
     public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read() {
-        IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking().Include(i => i.Media).ToListAsync();
+        IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking()
+            .Include(i => i.Media)
+            .Include(i => i.Category)
+            .Include(i => i.Location)
+            .Include(i => i.Report)
+            .Include(i => i.Speciality)
+            .Include(i => i.Tag)
+            .Include(i => i.User)
+            .ToListAsync();
         return new GenericResponse<IEnumerable<ProductReadDto>>(_mapper.Map<IEnumerable<ProductReadDto>>(i));
     }
 
     public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
-        T? i = await _dbContext.Set<T>().AsNoTracking().Include(i => i.User).Include(i => i.Category)
-            .Include(i => i.Media).Include(i => i.Location).FirstOrDefaultAsync(i => i.Id == id);
+        T? i = await _dbContext.Set<T>().AsNoTracking()
+            .Include(i => i.Media)
+            .Include(i => i.Category)
+            .Include(i => i.Location)
+            .Include(i => i.Report)
+            .Include(i => i.Speciality)
+            .Include(i => i.Tag)
+            .Include(i => i.User)
+            .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
