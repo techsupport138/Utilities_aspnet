@@ -69,7 +69,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Include(x => x.Company)
                 .Include(x => x.Magazine)
                 .Include(x => x.Tutorial)
-                .Include(x => x.Event).FirstOrDefaultAsync(x => x.Id == item);
+                .Include(x => x.Event)
+                .FirstOrDefaultAsync(x => x.Id == item);
             if (speciality != null) {
                 specialities.Add(speciality);
             }
