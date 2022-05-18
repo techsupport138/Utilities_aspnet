@@ -94,7 +94,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         entity.Categories = categories;
         entity.Locations = locations;
-        entity.Speciality = specialities;
+        entity.Specialities = specialities;
         entity.Tags = tags;
         EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
@@ -106,8 +106,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Media)
             .Include(i => i.Categories)
             .Include(i => i.Locations)
-            .Include(i => i.Report)
-            .Include(i => i.Speciality)
+            .Include(i => i.Reports)
+            .Include(i => i.Specialities)
             .Include(i => i.Tags)
             .Include(i => i.Brands)
             .Include(i => i.Reference)
@@ -122,8 +122,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Media)
             .Include(i => i.Categories)
             .Include(i => i.Locations)
-            .Include(i => i.Report)
-            .Include(i => i.Speciality)
+            .Include(i => i.Reports)
+            .Include(i => i.Specialities)
             .Include(i => i.Tags)
             .Include(i => i.Brands)
             .Include(i => i.Reference)

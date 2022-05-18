@@ -8,6 +8,9 @@ public abstract class BaseProductEntity : BaseEntity {
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
     public int? VisitCount { get; set; }
+    public string? Address { get; set; }
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
     public string? UserId { get; set; }
     public UserEntity? User { get; set; }
@@ -16,11 +19,12 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<CategoryEntity>? Categories { get; set; }
     public IEnumerable<TagEntity>? Tags { get; set; }
-    public IEnumerable<VoteFieldEntity>? VoteField { get; set; }
-    public IEnumerable<ReportEntity>? Report { get; set; }
-    public IEnumerable<SpecialityEntity>? Speciality { get; set; }
+    public IEnumerable<VoteFieldEntity>? VoteFields { get; set; }
+    public IEnumerable<ReportEntity>? Reports { get; set; }
+    public IEnumerable<SpecialityEntity>? Specialities { get; set; }
     public IEnumerable<BrandEntity>? Brands { get; set; }
     public IEnumerable<ReferenceEntity>? Reference { get; set; }
+    public IEnumerable<ContactInformationEntity>? ContactInformations { get; set; }
 }
 
 [Table("Products")]
@@ -50,8 +54,7 @@ public class ServiceEntity : BaseProductEntity { }
 [Table("Magazine")]
 public class MagazineEntity : BaseProductEntity { }
 
-public class ProductReadDto {
-    public Guid? Id { get; set; }
+public class ProductReadDto : BaseReadDto {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
@@ -60,16 +63,18 @@ public class ProductReadDto {
     public bool? IsBookmarked { get; set; }
     public decimal? Price { get; set; }
     public int? VisitsCount { get; set; }
-    public DateTime? CreatedAt { get; set; }
+    public string? Address { get; set; }
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
     public UserReadDto? User { get; set; }
     public IEnumerable<LocationReadDto>? Locations { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleReadDto>? Categories { get; set; }
     public IEnumerable<IdTitleReadDto>? Brands { get; set; }
-    public IEnumerable<IdTitleReadDto>? Reference { get; set; }
+    public IEnumerable<IdTitleReadDto>? References { get; set; }
     public IEnumerable<IdTitleReadDto>? Tags { get; set; }
-    public IEnumerable<VoteReadDto>? VoteField { get; set; }
-    public IEnumerable<IdTitleReadDto>? Speciality { get; set; }
+    public IEnumerable<VoteReadDto>? VoteFields { get; set; }
+    public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
 }
 
 public class ProductCreateUpdateDto {
@@ -81,9 +86,12 @@ public class ProductCreateUpdateDto {
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
     public bool Enabled { get; set; }
+    public string? Address { get; set; }
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
-    public IEnumerable<Guid>? Reference { get; set; }
+    public IEnumerable<Guid>? References { get; set; }
     public IEnumerable<Guid>? Brands { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Tags { get; set; }

@@ -2,25 +2,41 @@ namespace Utilities_aspnet.Utilities.Entities;
 
 public class ContactInformationEntity : BaseEntity {
     [Required]
-    [StringLength(500)]
-    public string Value { get; set; } = "";
+    public string Value { get; set; }
 
-    [EnumDataType(typeof(VisibilityType))]
+    public string? Link { get; set; }
     public VisibilityType Visibility { get; set; } = VisibilityType.Public;
 
-    [StringLength(500)]
-    public string? Link { get; set; }
-
-    [StringLength(450)]
     public string? UserId { get; set; }
-
-    [ForeignKey(nameof(UserId))]
     public UserEntity? User { get; set; }
 
-    [Required]
+    public Guid? ContactInfoItemId { get; set; }
     public virtual ContactInfoItemEntity ContactInfoItem { get; set; }
 
-    [Required]
-    [ForeignKey("ContactInfoItem")]
-    public Guid? ContactInfoItemId { get; set; }
+    public ProductEntity? Product { get; set; }
+    public Guid? ProductId { get; set; }
+
+    public ProjectEntity? Project { get; set; }
+    public Guid? ProjectId { get; set; }
+
+    public TutorialEntity? Tutorial { get; set; }
+    public Guid? TutorialId { get; set; }
+
+    public EventEntity? Event { get; set; }
+    public Guid? EventId { get; set; }
+
+    public AdEntity? Ad { get; set; }
+    public Guid? AdId { get; set; }
+
+    public CompanyEntity? Company { get; set; }
+    public Guid? CompanyId { get; set; }
+
+    public TenderEntity? Tender { get; set; }
+    public Guid? TenderId { get; set; }
+
+    public ServiceEntity? Service { get; set; }
+    public Guid? ServiceId { get; set; }
+
+    public MagazineEntity? Magazine { get; set; }
+    public Guid? MagazineId { get; set; }
 }
