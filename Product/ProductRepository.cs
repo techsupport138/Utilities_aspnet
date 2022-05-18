@@ -50,7 +50,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             }
         }
 
-        foreach (int item in dto.Location ?? Array.Empty<int>()) {
+        foreach (int item in dto.Locations ?? Array.Empty<int>()) {
             LocationEntity? location = await _dbContext.Set<LocationEntity>().Include(x => x.Project)
                 .Include(x => x.Project)
                 .Include(x => x.Product)
@@ -97,10 +97,10 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             }
         }
 
-        entity.Category = categories;
-        entity.Location = locations;
+        entity.Categories = categories;
+        entity.Locations = locations;
         entity.Speciality = specialities;
-        entity.Tag = tags;
+        entity.Tags = tags;
         EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
@@ -109,11 +109,11 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read() {
         IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking()
             .Include(i => i.Media)
-            .Include(i => i.Category)
-            .Include(i => i.Location)
+            .Include(i => i.Categories)
+            .Include(i => i.Locations)
             .Include(i => i.Report)
             .Include(i => i.Speciality)
-            .Include(i => i.Tag)
+            .Include(i => i.Tags)
             .Include(i => i.User)
             .ToListAsync();
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
@@ -123,11 +123,11 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
         T? i = await _dbContext.Set<T>().AsNoTracking()
             .Include(i => i.Media)
-            .Include(i => i.Category)
-            .Include(i => i.Location)
+            .Include(i => i.Categories)
+            .Include(i => i.Locations)
             .Include(i => i.Report)
             .Include(i => i.Speciality)
-            .Include(i => i.Tag)
+            .Include(i => i.Tags)
             .Include(i => i.User)
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
