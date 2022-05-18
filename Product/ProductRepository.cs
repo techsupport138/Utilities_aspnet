@@ -75,7 +75,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Include(x => x.Company)
                 .Include(x => x.Magazine)
                 .Include(x => x.Tutorial)
-                .Include(x => x.Event)                .FirstOrDefaultAsync(x => x.Id == item);
+                .Include(x => x.Event).FirstOrDefaultAsync(x => x.Id == item);
             if (speciality != null) {
                 specialities.Add(speciality);
             }
@@ -96,7 +96,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 tags.Add(tag);
             }
         }
-        
+
         entity.Category = categories;
         entity.Location = locations;
         entity.Speciality = specialities;
@@ -116,7 +116,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Tag)
             .Include(i => i.User)
             .ToListAsync();
-        return new GenericResponse<IEnumerable<ProductReadDto>>(BaseProductEntity.MapMediaEnumarableDto(i));
+        IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
+        return new GenericResponse<IEnumerable<ProductReadDto>>(dto);
     }
 
     public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
@@ -129,7 +130,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Tag)
             .Include(i => i.User)
             .FirstOrDefaultAsync(i => i.Id == id);
-        return new GenericResponse<ProductReadDto>(BaseProductEntity.MapReadDto(i));
+        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
     public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
