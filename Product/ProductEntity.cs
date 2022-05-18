@@ -26,7 +26,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<ReportEntity>? Report { get; set; }
     public IEnumerable<SpecialityEntity>? Speciality { get; set; }
 
-    public static ProductReadDto MapReadDto(ProductEntity e) {
+    public static ProductReadDto MapReadDto(BaseProductEntity e) {
         ProductReadDto dto = new ProductReadDto {
             Id = e.Id,
             Title = e.Title,
@@ -44,7 +44,7 @@ public abstract class BaseProductEntity : BaseEntity {
         return dto;
     }
 
-    public static IEnumerable<ProductReadDto> MapMediaEnumarableDto(IEnumerable<ProductEntity>? e) {
+    public static IEnumerable<ProductReadDto> MapMediaEnumarableDto(IEnumerable<BaseProductEntity>? e) {
         IEnumerable<ProductReadDto> dto =
             new List<ProductReadDto>(e?.Select(MapReadDto) ?? Array.Empty<ProductReadDto>());
         return dto;

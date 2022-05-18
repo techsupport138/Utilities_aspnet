@@ -52,7 +52,14 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (int item in dto.Location ?? Array.Empty<int>()) {
             LocationEntity? location = await _dbContext.Set<LocationEntity>().Include(x => x.Project)
-                .Include(x => x.Product).Include(x => x.Ad).Include(x => x.Tender)
+                .Include(x => x.Project)
+                .Include(x => x.Product)
+                .Include(x => x.Ad)
+                .Include(x => x.Service)
+                .Include(x => x.Company)
+                .Include(x => x.Magazine)
+                .Include(x => x.Tutorial)
+                .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
             if (location != null) {
                 locations.Add(location);
@@ -61,16 +68,30 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (Guid item in dto.Specialties ?? Array.Empty<Guid>()) {
             SpecialityEntity? speciality = await _dbContext.Set<SpecialityEntity>().Include(x => x.Project)
-                .Include(x => x.Product).Include(x => x.Ad).Include(x => x.Tender)
-                .FirstOrDefaultAsync(x => x.Id == item);
+                .Include(x => x.Project)
+                .Include(x => x.Product)
+                .Include(x => x.Ad)
+                .Include(x => x.Service)
+                .Include(x => x.Company)
+                .Include(x => x.Magazine)
+                .Include(x => x.Tutorial)
+                .Include(x => x.Event)                .FirstOrDefaultAsync(x => x.Id == item);
             if (speciality != null) {
                 specialities.Add(speciality);
             }
         }
 
         foreach (Guid item in dto.Tags ?? Array.Empty<Guid>()) {
-            TagEntity? tag = await _dbContext.Set<TagEntity>().Include(x => x.Project).Include(x => x.Product)
-                .Include(x => x.Ad).Include(x => x.Tender).FirstOrDefaultAsync(x => x.Id == item);
+            TagEntity? tag = await _dbContext.Set<TagEntity>()
+                .Include(x => x.Project)
+                .Include(x => x.Product)
+                .Include(x => x.Ad)
+                .Include(x => x.Service)
+                .Include(x => x.Company)
+                .Include(x => x.Magazine)
+                .Include(x => x.Tutorial)
+                .Include(x => x.Event)
+                .FirstOrDefaultAsync(x => x.Id == item);
             if (tag != null) {
                 tags.Add(tag);
             }
@@ -95,7 +116,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Tag)
             .Include(i => i.User)
             .ToListAsync();
-        return new GenericResponse<IEnumerable<ProductReadDto>>(_mapper.Map<IEnumerable<ProductReadDto>>(i));
+        return new GenericResponse<IEnumerable<ProductReadDto>>(BaseProductEntity.MapMediaEnumarableDto(i));
     }
 
     public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
@@ -108,7 +129,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Tag)
             .Include(i => i.User)
             .FirstOrDefaultAsync(i => i.Id == id);
-        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
+        return new GenericResponse<ProductReadDto>(BaseProductEntity.MapReadDto(i));
     }
 
     public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
