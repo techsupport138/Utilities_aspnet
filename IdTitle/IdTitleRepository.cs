@@ -22,9 +22,9 @@ public class IdTitleRepository<T> : IIdTitleRepository<T> where T : BaseIdTitleE
     }
 
     public async Task<GenericResponse<IdTitleReadDto>> Create(IdTitleCreateUpdateDto dto) {
-        TagEntity entity = _mapper.Map<TagEntity>(dto);
+        T entity = _mapper.Map<T>(dto);
 
-        EntityEntry<TagEntity>? i = await _dbContext.AddAsync(entity);
+        EntityEntry<T>? i = await _dbContext.AddAsync(entity);
         return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(i.Entity));
     }
 
