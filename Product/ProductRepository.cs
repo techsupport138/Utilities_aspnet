@@ -35,8 +35,15 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         List<TagEntity> tags = new();
 
         foreach (Guid item in dto.Categories ?? Array.Empty<Guid>()) {
-            CategoryEntity? category = await _dbContext.Set<CategoryEntity>().Include(x => x.Project)
-                .Include(x => x.Product).Include(x => x.Ad).Include(x => x.Tender)
+            CategoryEntity? category = await _dbContext.Set<CategoryEntity>()
+                .Include(x => x.Project)
+                .Include(x => x.Product)
+                .Include(x => x.Ad)
+                .Include(x => x.Service)
+                .Include(x => x.Company)
+                .Include(x => x.Magazine)
+                .Include(x => x.Tutorial)
+                .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
             if (category != null) {
                 categories.Add(category);
@@ -68,8 +75,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 tags.Add(tag);
             }
         }
-
-
+        
         entity.Category = categories;
         entity.Location = locations;
         entity.Speciality = specialities;
