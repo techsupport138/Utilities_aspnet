@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Utilities_aspnet.User.Entities {
+﻿namespace Utilities_aspnet.User.Entities {
     public class UserRoleEntity {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

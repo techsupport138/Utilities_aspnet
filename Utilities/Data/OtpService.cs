@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Utilities_aspnet.User.Entities;
-
-namespace Utilities_aspnet.Utilities.Data {
+﻿namespace Utilities_aspnet.Utilities.Data {
     public enum OtpResult {
         Ok = 1,
         Incorrect = 2,

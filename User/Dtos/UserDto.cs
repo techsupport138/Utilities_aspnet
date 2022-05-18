@@ -1,8 +1,4 @@
-using AutoMapper;
-using System.ComponentModel.DataAnnotations;
 using Utilities_aspnet.IdTitle;
-using Utilities_aspnet.User.Entities;
-using Utilities_aspnet.Utilities.Dtos;
 
 namespace Utilities_aspnet.User.Dtos {
     public class GetMobileVerificationCodeForLoginDto {

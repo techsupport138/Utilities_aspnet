@@ -1,16 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 using Utilities_aspnet.Base.Dtos;
 using Utilities_aspnet.IdTitle;
 using Utilities_aspnet.Utilities.Data;
-using Utilities_aspnet.Utilities.Dtos;
-using Utilities_aspnet.Utilities.Enums;
 using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.Base.Data

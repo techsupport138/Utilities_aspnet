@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using Utilities_aspnet.Utilities.Dtos;
-using Utilities_aspnet.Utilities.Entities;
-using Utilities_aspnet.Utilities.Enums;
 using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.Utilities.Data

@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using Utilities_aspnet.Utilities.Enums;
-
 namespace Utilities_aspnet.Utilities.Responses;
 
 public class GenericResponse<T> : GenericResponse {

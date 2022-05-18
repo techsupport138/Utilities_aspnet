@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Utilities_aspnet.Statistic.Entities
+﻿namespace Utilities_aspnet.Statistic.Entities
 {
     [Table("Visitor")]
     public class VisitorEntity

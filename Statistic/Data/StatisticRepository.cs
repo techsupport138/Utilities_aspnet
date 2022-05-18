@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using UAParser;
 using Utilities_aspnet.Statistic.Dtos;
-using Utilities_aspnet.Statistic.Entities;
-using Utilities_aspnet.User.Entities;
 
 namespace Utilities_aspnet.Statistic.Data
 {
