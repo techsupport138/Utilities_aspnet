@@ -85,6 +85,8 @@ public static class StartupExtension {
         builder.Services.AddTransient<IIdTitleRepository<FavoriteEntity>, IdTitleRepository<FavoriteEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<ContactInfoItemEntity>, IdTitleRepository<ContactInfoItemEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<SpecialityEntity>, IdTitleRepository<SpecialityEntity>>();
+        builder.Services.AddTransient<IIdTitleRepository<BrandEntity>, IdTitleRepository<BrandEntity>>();
+        builder.Services.AddTransient<IIdTitleRepository<ReferenceEntity>, IdTitleRepository<ReferenceEntity>>();
         builder.Services.AddTransient<IProductRepository<ProductEntity>, ProductRepository<ProductEntity>>();
         builder.Services.AddTransient<IProductRepository<ProjectEntity>, ProductRepository<ProjectEntity>>();
         builder.Services.AddTransient<IProductRepository<EventEntity>, ProductRepository<EventEntity>>();
