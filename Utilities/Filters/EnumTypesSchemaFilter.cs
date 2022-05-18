@@ -1,7 +1,4 @@
-﻿using Microsoft.OpenApi.Any;
-using System.Xml.Linq;
-
-namespace Utilities_aspnet.Utilities.Filters
+﻿namespace Utilities_aspnet.Utilities.Filters
 {
     public class EnumTypesSchemaFilter: ISchemaFilter
     {

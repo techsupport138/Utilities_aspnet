@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-
-namespace Utilities_aspnet.Utilities.Data
+﻿namespace Utilities_aspnet.Utilities.Data
 {
     public interface IUploadRepository
     {

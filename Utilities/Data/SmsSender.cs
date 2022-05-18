@@ -1,7 +1,4 @@
-﻿using RestSharp;
-using SmsIrRestfulNetCore;
-
-namespace Utilities_aspnet.Utilities.Data {
+﻿namespace Utilities_aspnet.Utilities.Data {
     public interface ISmsSender {
         long SendSms(string mobileNumber, string message);
     }

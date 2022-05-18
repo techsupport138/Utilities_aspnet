@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-
 namespace Utilities_aspnet.Utilities;
 
 public static class IdentityExtensions {
