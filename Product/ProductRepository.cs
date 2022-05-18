@@ -23,11 +23,45 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
         entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        List<ReferenceEntity> references = new();
+        List<BrandEntity> brands = new();
         List<CategoryEntity> categories = new();
         List<LocationEntity> locations = new();
         List<SpecialityEntity> specialities = new();
         List<TagEntity> tags = new();
 
+        foreach (Guid item in dto.References ?? Array.Empty<Guid>()) {
+            ReferenceEntity? e = await _dbContext.Set<ReferenceEntity>()
+                .Include(x => x.Project)
+                .Include(x => x.Product)
+                .Include(x => x.Ad)
+                .Include(x => x.Service)
+                .Include(x => x.Company)
+                .Include(x => x.Magazine)
+                .Include(x => x.Tutorial)
+                .Include(x => x.Event)
+                .FirstOrDefaultAsync(x => x.Id == item);
+            if (e != null) {
+                references.Add(e);
+            }
+        }
+        
+        foreach (Guid item in dto.Brands ?? Array.Empty<Guid>()) {
+            BrandEntity? e = await _dbContext.Set<BrandEntity>()
+                .Include(x => x.Project)
+                .Include(x => x.Product)
+                .Include(x => x.Ad)
+                .Include(x => x.Service)
+                .Include(x => x.Company)
+                .Include(x => x.Magazine)
+                .Include(x => x.Tutorial)
+                .Include(x => x.Event)
+                .FirstOrDefaultAsync(x => x.Id == item);
+            if (e != null) {
+                brands.Add(e);
+            }
+        }
+        
         foreach (Guid item in dto.Categories ?? Array.Empty<Guid>()) {
             CategoryEntity? category = await _dbContext.Set<CategoryEntity>()
                 .Include(x => x.Project)
@@ -92,10 +126,12 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             }
         }
 
-        entity.Categories = categories;
-        entity.Locations = locations;
-        entity.Specialities = specialities;
-        entity.Tags = tags;
+        if (!categories.Any()) entity.Categories = categories;
+        if (!brands.Any()) entity.Brands = brands;
+        if (!references.Any()) entity.Reference = references;
+        if (!locations.Any()) entity.Locations = locations;
+        if (!specialities.Any()) entity.Specialities = specialities;
+        if (!tags.Any()) entity.Tags = tags;
         EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));

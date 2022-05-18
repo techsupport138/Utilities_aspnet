@@ -6,7 +6,7 @@ public abstract class BaseIdTitleEntity : BaseEntity {
 
     [Required]
     public string Title { get; set; }
-    
+
     public string Subtitle { get; set; }
 
     public string? Color { get; set; }
@@ -60,7 +60,9 @@ public enum IdTitleUseCase {
     Learn = 104,
     product = 105,
     Project = 107,
-    Tender = 108
+    Tender = 108,
+    Brand = 109,
+    Refrence = 110,
 }
 
 public class IdTitleReadDto {
