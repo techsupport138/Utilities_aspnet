@@ -92,7 +92,7 @@ public class ProductReadDto {
     public UserReadDto? User { get; set; }
     public IEnumerable<LocationReadDto>? Locations { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
-    public IEnumerable<IdTitleDto>? Categories { get; set; }
+    public IEnumerable<IdTitleReadDto>? Categories { get; set; }
 }
 
 public class ProductCreateUpdateDto {

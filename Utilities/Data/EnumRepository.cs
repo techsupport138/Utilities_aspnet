@@ -22,18 +22,18 @@ namespace Utilities_aspnet.Utilities.Data {
 
         public Task<GenericResponse<EnumDto?>> GetAll(bool showCatehory = false, bool showGeo = false) {
             EnumDto model = new() {
-                Favorites = _context.Set<FavoriteEntity>().Select(x => new IdTitleDto {
-                    Id = x.Id.ToString(),
+                Favorites = _context.Set<FavoriteEntity>().Select(x => new IdTitleReadDto {
+                    Id = x.Id,
                     Title = x.Title
                 }).ToList(),
-                Colors = _context.Set<ColorEntity>().Select(x => new IdTitleDto {
-                    Id = x.Id.ToString(),
+                Colors = _context.Set<ColorEntity>().Select(x => new IdTitleReadDto {
+                    Id = x.Id,
                     Title = x.Title,
-                    SubTitle = x.Color
+                    Subtitle = x.Color
                 }).ToList(),
-                UserRole = _context.Set<UserRoleEntity>().Select(x => new IdTitleDto {
+                UserRole = _context.Set<UserRoleEntity>().Select(x => new IdTitleReadDto {
                     Title = x.RoleId.ToString(),
-                    SubTitle = x.RoleName,
+                    Subtitle = x.RoleName,
                 }).ToList(),
             };
 

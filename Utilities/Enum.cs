@@ -1,10 +1,11 @@
-﻿using Utilities_aspnet.Utilities.Dtos;
+﻿using Utilities_aspnet.IdTitle;
+using Utilities_aspnet.Utilities.Dtos;
 
 namespace Utilities_aspnet.Utilities {
     public static class EnumExtension {
-        public static List<IdTitleDto> GetValues<T>() {
-            return (from object itemType in Enum.GetValues(typeof(T))
-                select new IdTitleDto() {Title = Enum.GetName(typeof(T), itemType), Id = itemType.ToString()}).ToList();
+        public static List<IdTitleReadDto> GetValues<T>() {
+            return (from Guid itemType in Enum.GetValues(typeof(T))
+                select new IdTitleReadDto {Title = Enum.GetName(typeof(T), itemType), Id = itemType}).ToList();
         }
     }
 }

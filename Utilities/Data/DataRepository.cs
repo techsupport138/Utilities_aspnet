@@ -28,10 +28,10 @@ namespace Utilities_aspnet.Utilities.Data {
         }
 
         public async Task<object> GetAllEnums() {
-            List<IdTitleDto> approvalStatuses = EnumExtension.GetValues<ApprovalStatus>();
-            List<IdTitleDto> fileTypes = EnumExtension.GetValues<FileTypes>();
-            List<IdTitleDto> visibilityType = EnumExtension.GetValues<VisibilityType>();
-            List<IdTitleDto> contentUseCase = EnumExtension.GetValues<ContentUseCase>();
+            List<IdTitleReadDto> approvalStatuses = EnumExtension.GetValues<ApprovalStatus>();
+            List<IdTitleReadDto> fileTypes = EnumExtension.GetValues<FileTypes>();
+            List<IdTitleReadDto> visibilityType = EnumExtension.GetValues<VisibilityType>();
+            List<IdTitleReadDto> contentUseCase = EnumExtension.GetValues<ContentUseCase>();
 
             var result = new {
                 approvalStatuses,

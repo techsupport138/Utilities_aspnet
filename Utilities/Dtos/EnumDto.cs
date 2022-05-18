@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities_aspnet.IdTitle;
 
 namespace Utilities_aspnet.Utilities.Dtos
 {
@@ -10,21 +11,21 @@ namespace Utilities_aspnet.Utilities.Dtos
     {
         public EnumDto()
         {
-            Language = new List<IdTitleDto>();
-            Colors = new List<IdTitleDto>();
-            Favorites = new List<IdTitleDto>();
-            Specialties = new List<IdTitleDto>();
-            SpecialtyCategories = new List<IdTitleDto>();
+            Language = new List<IdTitleReadDto>();
+            Colors = new List<IdTitleReadDto>();
+            Favorites = new List<IdTitleReadDto>();
+            Specialties = new List<IdTitleReadDto>();
+            SpecialtyCategories = new List<IdTitleReadDto>();
             GeoList = new List<KVPIVM>();
             Categories = new List<KVPCategoryVM>();
-            UserRole = new List<IdTitleDto>();
+            UserRole = new List<IdTitleReadDto>();
         }
-        public List<IdTitleDto> Language { get; set; }
-        public List<IdTitleDto> Colors { get; set; }
-        public List<IdTitleDto> Favorites { get; set; }
-        public List<IdTitleDto> SpecialtyCategories { get; set; }
-        public List<IdTitleDto> Specialties { get; set; }
-        public List<IdTitleDto> UserRole { get; set; }
+        public List<IdTitleReadDto> Language { get; set; }
+        public List<IdTitleReadDto> Colors { get; set; }
+        public List<IdTitleReadDto> Favorites { get; set; }
+        public List<IdTitleReadDto> SpecialtyCategories { get; set; }
+        public List<IdTitleReadDto> Specialties { get; set; }
+        public List<IdTitleReadDto> UserRole { get; set; }
         public List<KVPIVM> GeoList { get; set; }
         public List<KVPCategoryVM> Categories { get; internal set; }
         

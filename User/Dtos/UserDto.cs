@@ -1,5 +1,6 @@
 using AutoMapper;
 using System.ComponentModel.DataAnnotations;
+using Utilities_aspnet.IdTitle;
 using Utilities_aspnet.User.Entities;
 using Utilities_aspnet.Utilities.Dtos;
 
@@ -88,9 +89,9 @@ namespace Utilities_aspnet.User.Dtos {
         public DateTime? BirthDate { get; set; }
         public IEnumerable<MediaDto>? Media { get; set; }
 
-        public List<IdTitleDto> Colors { get; set; }
-        public List<IdTitleDto> Specialties { get; set; }
-        public List<IdTitleDto> Favorites { get; set; }
+        public List<IdTitleReadDto> Colors { get; set; }
+        public List<IdTitleReadDto> Specialties { get; set; }
+        public List<IdTitleReadDto> Favorites { get; set; }
     }
 
     public class UpdateProfileDto {
