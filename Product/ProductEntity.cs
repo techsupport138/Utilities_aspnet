@@ -132,5 +132,6 @@ public class ProductProfile : Profile {
         CreateMap<ServiceEntity, ProductCreateUpdateDto>().ReverseMap();
         CreateMap<MagazineEntity, ProductReadDto>().ReverseMap();
         CreateMap<MagazineEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<MediaEntity, MediaDto>().ReverseMap();
     }
 }
