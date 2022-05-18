@@ -58,7 +58,7 @@ public enum IdTitleUseCase {
 }
 
 public class IdTitleReadDto {
-    public int? Id { get; set; }
+    public Guid? Id { get; set; }
     public string? Title { get; set; }
     public string? Link { get; set; }
     public string? Color { get; set; }
@@ -66,7 +66,7 @@ public class IdTitleReadDto {
 }
 
 public class IdTitleCreateUpdateDto {
-    public int? Id { get; set; }
+    public Guid? Id { get; set; }
     public string? Title { get; set; }
     public string? Link { get; set; }
     public string? Color { get; set; }
