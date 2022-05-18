@@ -109,6 +109,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Report)
             .Include(i => i.Speciality)
             .Include(i => i.Tags)
+            .Include(i => i.Brands)
+            .Include(i => i.Reference)
             .Include(i => i.User)
             .ToListAsync();
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
@@ -123,6 +125,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Report)
             .Include(i => i.Speciality)
             .Include(i => i.Tags)
+            .Include(i => i.Brands)
+            .Include(i => i.Reference)
             .Include(i => i.User)
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));

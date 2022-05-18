@@ -1,5 +1,3 @@
-
-
 namespace Utilities_aspnet.Product;
 
 public abstract class BaseProductEntity : BaseEntity {
@@ -21,6 +19,8 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<VoteFieldEntity>? VoteField { get; set; }
     public IEnumerable<ReportEntity>? Report { get; set; }
     public IEnumerable<SpecialityEntity>? Speciality { get; set; }
+    public IEnumerable<BrandEntity>? Brands { get; set; }
+    public IEnumerable<ReferenceEntity>? Reference { get; set; }
 }
 
 [Table("Products")]
@@ -55,7 +55,7 @@ public class ProductReadDto {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
-    public bool Enabled { get; set; } = false;
+    public bool Enabled { get; set; }
     public bool? IsForSale { get; set; }
     public bool? IsBookmarked { get; set; }
     public decimal? Price { get; set; }
@@ -65,6 +65,11 @@ public class ProductReadDto {
     public IEnumerable<LocationReadDto>? Locations { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleReadDto>? Categories { get; set; }
+    public IEnumerable<IdTitleReadDto>? Brands { get; set; }
+    public IEnumerable<IdTitleReadDto>? Reference { get; set; }
+    public IEnumerable<IdTitleReadDto>? Tags { get; set; }
+    public IEnumerable<VoteReadDto>? VoteField { get; set; }
+    public IEnumerable<IdTitleReadDto>? Speciality { get; set; }
 }
 
 public class ProductCreateUpdateDto {
@@ -75,9 +80,11 @@ public class ProductCreateUpdateDto {
     public string? SubTitle { get; set; }
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
-    public bool Enabled { get; set; } = false;
+    public bool Enabled { get; set; }
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
+    public IEnumerable<Guid>? Reference { get; set; }
+    public IEnumerable<Guid>? Brands { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Tags { get; set; }
 }
