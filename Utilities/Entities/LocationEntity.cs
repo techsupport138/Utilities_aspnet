@@ -67,9 +67,3 @@ public class LocationReadDto {
     public IEnumerable<MediaDto>? Media { get; set; }
     public LocationType Type { get; set; }
 }
-
-public class LocationProfile : Profile {
-    public LocationProfile() {
-        CreateMap<LocationEntity, LocationReadDto>().ReverseMap();
-    }
-}

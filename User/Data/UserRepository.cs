@@ -198,22 +198,22 @@ public class UserRepository : IUserRepository {
                 UserEntity? users = await _context.Set<UserEntity>().Include(x => x.ContactInformation)
                     .FirstOrDefaultAsync(x => x.Id == user.Id);
                 _context.Set<ContactInformationEntity>().RemoveRange(users.ContactInformation);
-                foreach (ContactInformationCreateDto information in dto.ContactInformation) {
-                    ContactInfoItemEntity? contactInfoItem =
-                        await _context.Set<ContactInfoItemEntity>().FindAsync(information.ContactInfoItemId);
-                    if (contactInfoItem == null) {
-                        return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
-                            "The information was not entered correctly");
-                    }
-
-                    _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity {
-                        Value = information.Value,
-                        UserId = users.Id,
-                        Visibility = information.Visibility,
-                        ContactInfoItem = contactInfoItem
-                    });
-                    await _context.SaveChangesAsync();
-                }
+                // foreach (ContactInformationCreateDto information in dto.ContactInformation) {
+                //     ContactInfoItemEntity? contactInfoItem =
+                //         await _context.Set<ContactInfoItemEntity>().FindAsync(information.ContactInfoItemId);
+                //     if (contactInfoItem == null) {
+                //         return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
+                //             "The information was not entered correctly");
+                //     }
+                //
+                //     _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity {
+                //         Value = information.Value,
+                //         UserId = users.Id,
+                //         Visibility = information.Visibility,
+                //         ContactInfoItem = contactInfoItem
+                //     });
+                //     await _context.SaveChangesAsync();
+                // }
             }
         }
         catch {

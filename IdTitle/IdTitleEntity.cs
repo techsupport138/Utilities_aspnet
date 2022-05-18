@@ -75,20 +75,3 @@ public class IdTitleCreateUpdateDto {
     public string? Color { get; set; }
     public IdTitleUseCase? UseCase { get; set; }
 }
-
-public class IdTitleProfile : Profile {
-    public IdTitleProfile() {
-        CreateMap<TagEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<TagEntity, IdTitleCreateUpdateDto>().ReverseMap();
-        CreateMap<CategoryEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<CategoryEntity, IdTitleCreateUpdateDto>().ReverseMap();
-        CreateMap<SpecialityEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<SpecialityEntity, IdTitleCreateUpdateDto>().ReverseMap();
-        CreateMap<FavoriteEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<FavoriteEntity, IdTitleCreateUpdateDto>().ReverseMap();
-        CreateMap<ColorEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<ColorEntity, IdTitleCreateUpdateDto>().ReverseMap();
-        CreateMap<ContactInfoItemEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<ContactInfoItemEntity, IdTitleCreateUpdateDto>().ReverseMap();
-    }
-}

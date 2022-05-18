@@ -74,10 +74,3 @@ public class ContentCreateUpdateDto {
     public string? Description { get; set; }
     public ContentUseCase? UseCase { get; set; }
 }
-
-public class ContentProfile : Profile {
-    public ContentProfile() {
-        CreateMap<ContentEntity, ContentReadDto>().ReverseMap();
-        CreateMap<ContentEntity, ContentCreateUpdateDto>().ReverseMap();
-    }
-}
