@@ -34,7 +34,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         List<SpecialityEntity> specialities = new();
         List<TagEntity> tags = new();
 
-        foreach (Guid item in dto.Categories) {
+        foreach (Guid item in dto.Categories ?? Array.Empty<Guid>()) {
             CategoryEntity? category = await _dbContext.Set<CategoryEntity>().Include(x => x.Project)
                 .Include(x => x.Product).Include(x => x.Ad).Include(x => x.Tender)
                 .FirstOrDefaultAsync(x => x.Id == item);
@@ -43,7 +43,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             }
         }
 
-        foreach (int item in dto.Location) {
+        foreach (int item in dto.Location ?? Array.Empty<int>()) {
             LocationEntity? location = await _dbContext.Set<LocationEntity>().Include(x => x.Project)
                 .Include(x => x.Product).Include(x => x.Ad).Include(x => x.Tender)
                 .FirstOrDefaultAsync(x => x.Id == item);
@@ -52,7 +52,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             }
         }
 
-        foreach (Guid item in dto.Specialties) {
+        foreach (Guid item in dto.Specialties ?? Array.Empty<Guid>()) {
             SpecialityEntity? speciality = await _dbContext.Set<SpecialityEntity>().Include(x => x.Project)
                 .Include(x => x.Product).Include(x => x.Ad).Include(x => x.Tender)
                 .FirstOrDefaultAsync(x => x.Id == item);
@@ -61,7 +61,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             }
         }
 
-        foreach (Guid item in dto.Tags) {
+        foreach (Guid item in dto.Tags ?? Array.Empty<Guid>()) {
             TagEntity? tag = await _dbContext.Set<TagEntity>().Include(x => x.Project).Include(x => x.Product)
                 .Include(x => x.Ad).Include(x => x.Tender).FirstOrDefaultAsync(x => x.Id == item);
             if (tag != null) {
