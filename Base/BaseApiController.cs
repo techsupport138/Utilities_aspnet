@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Utilities_aspnet.Utilities.Responses;
-
-namespace Utilities_aspnet.Base;
+﻿namespace Utilities_aspnet.Base;
 
 [ApiController]
 public abstract class BaseApiController : ControllerBase {

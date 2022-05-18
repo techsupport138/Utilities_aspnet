@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.IdTitle;
-
-namespace Utilities_aspnet.Utilities.Dtos
+﻿namespace Utilities_aspnet.Utilities.Dtos
 {
     public class EnumDto
     {

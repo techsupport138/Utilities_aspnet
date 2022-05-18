@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Utilities_aspnet.Base.Dtos;
-using Utilities_aspnet.IdTitle;
-using Utilities_aspnet.Utilities.Data;
-using Utilities_aspnet.Utilities.Responses;
-
+﻿
 namespace Utilities_aspnet.Base.Data
 {
     public interface ICategoryRepository : IBaseRepository

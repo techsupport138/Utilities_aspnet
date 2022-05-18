@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.IdTitle;
-
-namespace Utilities_aspnet.Utilities {
+﻿namespace Utilities_aspnet.Utilities {
     public static class EnumExtension {
         public static List<IdTitleReadDto> GetValues<T>() {
             return (from Guid itemType in Enum.GetValues(typeof(T))

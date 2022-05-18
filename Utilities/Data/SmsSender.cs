@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using RestSharp;
+﻿using RestSharp;
 using SmsIrRestfulNetCore;
 
 namespace Utilities_aspnet.Utilities.Data {

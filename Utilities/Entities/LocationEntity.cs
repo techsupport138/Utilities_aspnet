@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Product;
-
-namespace Utilities_aspnet.Utilities.Entities;
+﻿namespace Utilities_aspnet.Utilities.Entities;
 
 [Table("Location")]
 public class LocationEntity {

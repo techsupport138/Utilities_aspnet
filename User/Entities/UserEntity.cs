@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Utilities_aspnet.Product;
-using Utilities_aspnet.Report;
-using Utilities_aspnet.User.Dtos;
-
-namespace Utilities_aspnet.User.Entities;
+﻿namespace Utilities_aspnet.User.Entities;
 
 public class UserEntity : IdentityUser {
     public UserEntity() {

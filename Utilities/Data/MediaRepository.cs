@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 
 namespace Utilities_aspnet.Utilities.Data {
     public interface IMediaRepository {

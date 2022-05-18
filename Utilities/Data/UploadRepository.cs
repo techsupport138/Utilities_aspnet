@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Utilities_aspnet.Utilities.Responses;
 
 namespace Utilities_aspnet.Utilities.Data
 {

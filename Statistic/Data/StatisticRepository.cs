@@ -1,12 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
-using UAParser;
-using Utilities_aspnet.Statistic.Dtos;
-
-namespace Utilities_aspnet.Statistic.Data
+﻿namespace Utilities_aspnet.Statistic.Data
 {
     public interface IStatisticRepository
     {

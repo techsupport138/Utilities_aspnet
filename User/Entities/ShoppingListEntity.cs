@@ -1,7 +1,4 @@
-﻿using Utilities_aspnet.Product;
-using Utilities_aspnet.Wallet.Entities;
-
-namespace Utilities_aspnet.User.Entities
+﻿namespace Utilities_aspnet.User.Entities
 {
     [Table("ShoppingList")]
     public class ShoppingListEntity : BaseEntity

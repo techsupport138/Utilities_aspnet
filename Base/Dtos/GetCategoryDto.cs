@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Utilities_aspnet.IdTitle;
-
-namespace Utilities_aspnet.Base.Dtos;
+﻿namespace Utilities_aspnet.Base.Dtos;
 
 public class GetCategoryDto {
     public Guid? CategoryId { get; set; }

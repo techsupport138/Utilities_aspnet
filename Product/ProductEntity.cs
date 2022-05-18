@@ -1,6 +1,4 @@
-using Utilities_aspnet.IdTitle;
-using Utilities_aspnet.Report;
-using Utilities_aspnet.User.Dtos;
+
 
 namespace Utilities_aspnet.Product;
 

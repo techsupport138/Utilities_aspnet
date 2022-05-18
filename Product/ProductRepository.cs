@@ -1,9 +1,3 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Utilities_aspnet.IdTitle;
-using Utilities_aspnet.Utilities.Responses;
-
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {

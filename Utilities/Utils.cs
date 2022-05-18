@@ -1,26 +1,4 @@
-﻿using ImageResizer.AspNetCore.Helpers;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using StackExchange.Redis;
-using Utilities_aspnet.Base.Data;
-using Utilities_aspnet.Statistic.Data;
-using Utilities_aspnet.User.Data;
-using Utilities_aspnet.Utilities.Data;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Http.Features;
-using System.Reflection;
-using Utilities_aspnet.Utilities.Filters;
-using Microsoft.OpenApi.Models;
-using Utilities_aspnet.IdTitle;
-using Utilities_aspnet.Product;
-
-namespace Utilities_aspnet.Utilities;
+﻿namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(

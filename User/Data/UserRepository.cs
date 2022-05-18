@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Utilities_aspnet.User.Dtos;
-using Utilities_aspnet.Utilities;
-using Utilities_aspnet.Utilities.Data;
-using Utilities_aspnet.Utilities.Responses;
+﻿using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Utilities_aspnet.User.Data;
 
@@ -32,8 +24,13 @@ public class UserRepository : IUserRepository {
     private readonly IMapper _mapper;
     private readonly IOtpService _otp;
 
-    public UserRepository(DbContext context, UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager,
-        IConfiguration config, IMapper mapper, IOtpService otp) {
+    public UserRepository(
+        DbContext context,
+        UserManager<UserEntity> userManager,
+        SignInManager<UserEntity> signInManager,
+        IConfiguration config,
+        IMapper mapper,
+        IOtpService otp) {
         _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
@@ -48,11 +45,13 @@ public class UserRepository : IUserRepository {
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
 
         bool result = await _userManager.CheckPasswordAsync(user, model.Password);
-        if (!result) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
+        if (!result)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
         JwtSecurityToken token = await CreateToken(user);
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+        return new GenericResponse<UserReadDto?>(
+            GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, message: "Success");
     }
 
@@ -60,7 +59,8 @@ public class UserRepository : IUserRepository {
         UserEntity? model = _context.Set<UserEntity>()
             .FirstOrDefault(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email);
         if (model != null) {
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "This email or username already exists");
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
+                "This email or username already exists");
         }
 
         UserEntity user = new() {
@@ -73,11 +73,13 @@ public class UserRepository : IUserRepository {
 
         IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
         if (!result.Succeeded)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled, "The information was not entered correctly");
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
+                "The information was not entered correctly");
 
         JwtSecurityToken token = await CreateToken(user);
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+        return new GenericResponse<UserReadDto?>(
+            GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -107,7 +109,8 @@ public class UserRepository : IUserRepository {
 
             IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
             if (!result.Succeeded)
-                return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, "The information was not entered correctly");
+                return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest,
+                    "The information was not entered correctly");
 
             string? otp = _otp.SendOtp(user.Id);
             return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
@@ -120,11 +123,13 @@ public class UserRepository : IUserRepository {
         if (!mobile.isMobileNumber())
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
         if (dto.VerificationCode.Length >= 6 && !dto.VerificationCode.isNumerical())
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongVerificationCode, "کد تایید وارد شده صحیح نیست");
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongVerificationCode,
+                "کد تایید وارد شده صحیح نیست");
 
         UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile);
 
-        if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
+        if (user == null)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
 
         if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
@@ -132,11 +137,13 @@ public class UserRepository : IUserRepository {
         JwtSecurityToken token = await CreateToken(user);
         if (dto.VerificationCode == "9999") {
             return new GenericResponse<UserReadDto?>(
-                GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
+                GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+                UtilitiesStatusCodes.Success,
                 "Success");
         }
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+        return new GenericResponse<UserReadDto?>(
+            GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -219,7 +226,8 @@ public class UserRepository : IUserRepository {
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Bad Request");
         }
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, "").Result.Result, UtilitiesStatusCodes.Success, "Success");
+        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, "").Result.Result, UtilitiesStatusCodes.Success,
+            "Success");
     }
 
     public async Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto model) {
@@ -227,7 +235,8 @@ public class UserRepository : IUserRepository {
 
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
 
-        SignInResult? result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, lockoutOnFailure: false);
+        SignInResult? result =
+            await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, lockoutOnFailure: false);
         if (!result.Succeeded)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
@@ -237,7 +246,8 @@ public class UserRepository : IUserRepository {
     public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model) {
         UserEntity? u = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == model.Email);
         if (u != null) {
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "This email or username already exists");
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
+                "This email or username already exists");
         }
 
         UserEntity user = new() {
@@ -250,7 +260,8 @@ public class UserRepository : IUserRepository {
 
         IdentityResult? result = await _userManager.CreateAsync(user, model.Password);
         return !result.Succeeded
-            ? new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The information was not entered correctly")
+            ? new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
+                "The information was not entered correctly")
             : new GenericResponse<UserReadDto?>(GetProfile(user.Id, null).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -280,7 +291,8 @@ public class UserRepository : IUserRepository {
         if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
         SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
-        JwtSecurityToken token = new(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims, expires: DateTime.Now.AddDays(365),
+        JwtSecurityToken token = new(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
+            expires: DateTime.Now.AddDays(365),
             signingCredentials: creds);
 
         await _userManager.UpdateAsync(user);

@@ -1,4 +1,4 @@
-using Utilities_aspnet.IdTitle;
+using DataType = System.ComponentModel.DataAnnotations.DataType;
 
 namespace Utilities_aspnet.User.Dtos {
     public class GetMobileVerificationCodeForLoginDto {

@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.IdTitle;
-
-namespace Utilities_aspnet.Utilities.Data {
+﻿namespace Utilities_aspnet.Utilities.Data {
     public interface IBaseRepository {
         List<KVVM> GetAllFor();
         Dictionary<Guid, string> GetParentCategory(IdTitleUseCase filter, string Language);

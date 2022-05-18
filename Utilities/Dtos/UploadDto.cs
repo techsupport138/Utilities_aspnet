@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Utilities_aspnet.Utilities.Dtos
+﻿namespace Utilities_aspnet.Utilities.Dtos
 {
     public class UploadDto
     {

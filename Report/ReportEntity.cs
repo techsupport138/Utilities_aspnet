@@ -1,5 +1,3 @@
-using Utilities_aspnet.Product;
-
 namespace Utilities_aspnet.Report;
 
 public class ReportEntity : BaseEntity {

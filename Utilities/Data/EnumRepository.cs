@@ -1,7 +1,4 @@
-﻿using Utilities_aspnet.IdTitle;
-using Utilities_aspnet.Utilities.Responses;
-
-namespace Utilities_aspnet.Utilities.Data {
+﻿namespace Utilities_aspnet.Utilities.Data {
     public interface IEnumRepository {
         Task<GenericResponse<EnumDto?>> GetAll(bool showCatehory, bool showGeo);
     }

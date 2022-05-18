@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Utilities_aspnet.Utilities.Responses;
-
-namespace Utilities_aspnet.Content;
+﻿namespace Utilities_aspnet.Content;
 
 public interface IContentRepository<T> where T : BaseContentEntity {
     Task<GenericResponse<ContentReadDto>> Create(ContentCreateUpdateDto dto);

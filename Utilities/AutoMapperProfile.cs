@@ -1,8 +1,3 @@
-using Utilities_aspnet.Content;
-using Utilities_aspnet.IdTitle;
-using Utilities_aspnet.Product;
-using Utilities_aspnet.User.Dtos;
-
 namespace Utilities_aspnet.Utilities;
 
 public class AutoMapperProfile : Profile {

@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.IdTitle;
-
-namespace Utilities_aspnet.User.Entities
+﻿namespace Utilities_aspnet.User.Entities
 {
     [Table("UserToFavorite")]
     public class UserToFavoriteEntity

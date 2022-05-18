@@ -1,7 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-
-namespace Utilities_aspnet.Utilities.Filters
+﻿namespace Utilities_aspnet.Utilities.Filters
 {
     public class SchemaFilter: ISchemaFilter
     {

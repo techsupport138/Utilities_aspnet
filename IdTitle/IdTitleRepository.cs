@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Utilities_aspnet.Utilities.Responses;
-
-namespace Utilities_aspnet.IdTitle;
+﻿namespace Utilities_aspnet.IdTitle;
 
 public interface IIdTitleRepository<T> where T : BaseIdTitleEntity {
     public Task<GenericResponse<IdTitleReadDto>> Create(IdTitleCreateUpdateDto dto);
