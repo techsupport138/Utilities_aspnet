@@ -53,8 +53,8 @@ public class UserEntity : IdentityUser {
     public IEnumerable<MagazineEntity>? Magazines { get; set; }
 
 
-    public static UserReadDto MapReadDto(UserEntity? e) {
-        UserReadDto dto = new() {
+    public static UserReadDto? MapReadDto(UserEntity? e) {
+        UserReadDto? dto = new() {
             Id = e.Id,
             Bio = e.Bio,
             BirthDate = e.Birthdate,
@@ -69,8 +69,8 @@ public class UserEntity : IdentityUser {
         return dto;
     }
 
-    public static IEnumerable<UserReadDto> MapEnumarableDto(IEnumerable<UserEntity>? e) {
-        IEnumerable<UserReadDto> dto = new List<UserReadDto>(e?.Select(MapReadDto) ?? Array.Empty<UserReadDto>());
+    public static IEnumerable<UserReadDto?>? MapEnumarableDto(IEnumerable<UserEntity?>? e) {
+        IEnumerable<UserReadDto?>? dto = new List<UserReadDto>(e?.Select(MapReadDto) ?? Array.Empty<UserReadDto?>());
         return dto;
     }
 }
