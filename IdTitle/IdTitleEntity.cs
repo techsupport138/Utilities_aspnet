@@ -1,3 +1,5 @@
+using Utilities_aspnet.FormBuilder;
+
 namespace Utilities_aspnet.IdTitle;
 
 public abstract class BaseIdTitleEntity : BaseEntity {
@@ -46,6 +48,7 @@ public class ReferenceEntity : BaseIdTitleEntity {
 public class CategoryEntity : BaseIdTitleEntity {
     public Guid? ParentId { get; set; }
     public CategoryEntity? Parent { get; set; }
+    public virtual ICollection<FormBuilderFieldListEntity> FormBuilderFieldLists { get; set; }
 }
 
 [Table("Specialities")]
