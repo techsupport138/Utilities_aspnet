@@ -61,8 +61,8 @@ public partial class FormBuilderFieldListEntity
 {
 
     [Key]
-    public int FormBuilderFieldId { get; set; }
-    public Guid CategoryId { get; set; }
+    public int Id { get; set; }
+    public Guid? CategoryId { get; set; }
     public int FormBuilderFieldTypeId { get; set; }
     [Required]
     [StringLength(100)]
