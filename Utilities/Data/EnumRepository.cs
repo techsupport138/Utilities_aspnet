@@ -43,7 +43,7 @@
                 model.Categories = _context.Set<CategoryEntity>()
                     //.Where(x => x.LanguageId == filter.Language && x.CategoryFor == filter.CategoryFor)
                     .Include(x => x.Media)
-                    // .Include(x => x.Parent)
+                    .Include(x => x.Parent)
                     .OrderBy(x => x.UseCase)
                     .Select(w =>
                         new KVPCategoryVM {
@@ -51,7 +51,7 @@
                             // Image = w.Media.FileName,
                             Value = w.Title,
                             CategoryFor = w.UseCase,
-                            // ParentId = w.ParentId,
+                            ParentId = w.ParentId,
                             // Childs = w.InverseParent.Select(x => new KVPCategoryVM {
                             //     Key = x.CategoryId,
                             //     Image = x.Media.FileName,

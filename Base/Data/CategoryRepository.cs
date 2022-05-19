@@ -23,8 +23,8 @@ namespace Utilities_aspnet.Base.Data
         // todo hello
         public List<KVPCategoryVM> Get(CategoryFilter filter) {
             List<KVPCategoryVM> content = _context.Set<CategoryEntity>().Include(x => x.Media)
-                // .Include(x => x.Parent)
-                // .Where(x => (!filter.OnlyParent) || (x.ParentId == null && filter.OnlyParent))
+                .Include(x => x.Parent)
+                .Where(x => (!filter.OnlyParent) || (x.ParentId == null && filter.OnlyParent))
                  .Select(w => new KVPCategoryVM()
                  {
                      // Key = w.Id,
@@ -52,7 +52,7 @@ namespace Utilities_aspnet.Base.Data
             var cat = new CategoryEntity()
             {
                 UseCase = newCategory.CategoryFor,
-                // ParentId = newCategory.ParentId,
+                ParentId = newCategory.ParentId,
                 Title = newCategory.Title,
                 Id = Guid.NewGuid(),
             };
@@ -95,7 +95,7 @@ namespace Utilities_aspnet.Base.Data
             CategoryEntity cat = await _context.Set<CategoryEntity>()
                 .Include(x => x.Media)
                 // .Include(x => x.InverseParent)
-                // .Include(x => x.Parent)
+                .Include(x => x.Parent)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
             
@@ -119,7 +119,7 @@ namespace Utilities_aspnet.Base.Data
 
 
             cat.Title = category.Title;
-            // cat.ParentId = category.ParentId;
+            cat.ParentId = category.ParentId;
             _context.Set<CategoryEntity>().Update(cat);
             await _context.SaveChangesAsync();
             return new GenericResponse(UtilitiesStatusCodes.Success, $"Category {cat.Title} update Success", id: cat.Id);
