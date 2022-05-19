@@ -3,8 +3,6 @@ namespace Utilities_aspnet.Utilities;
 public class AutoMapperProfile : Profile {
     public AutoMapperProfile() {
         // IdTitle
-        CreateMap<BaseIdTitleEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<BaseIdTitleEntity, IdTitleCreateUpdateDto>().ReverseMap();
         CreateMap<TagEntity, IdTitleReadDto>().ReverseMap();
         CreateMap<TagEntity, IdTitleCreateUpdateDto>().ReverseMap();
         CreateMap<CategoryEntity, IdTitleReadDto>().ReverseMap();

@@ -24,7 +24,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<ReportEntity>? Reports { get; set; }
     public IEnumerable<SpecialityEntity>? Specialities { get; set; }
     public IEnumerable<BrandEntity>? Brands { get; set; }
-    public IEnumerable<ReferenceEntity>? References { get; set; }
+    public IEnumerable<ReferenceEntity>? Reference { get; set; }
     public IEnumerable<ContactInformationEntity>? ContactInformations { get; set; }
 }
 
@@ -72,7 +72,7 @@ public class ProductReadDto : BaseReadDto {
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleReadDto>? Categories { get; set; }
     public IEnumerable<IdTitleReadDto>? Brands { get; set; }
-    public IEnumerable<IdTitleReadDto>? References { get; set; }
+    public IEnumerable<IdTitleReadDto>? Reference { get; set; }
     public IEnumerable<IdTitleReadDto>? Tags { get; set; }
     public IEnumerable<VoteReadDto>? VoteFields { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
@@ -92,7 +92,7 @@ public class ProductCreateUpdateDto {
     public DateTime? EndDate { get; set; }
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
-    public IEnumerable<Guid>? References { get; set; }
+    public IEnumerable<Guid>? Reference { get; set; }
     public IEnumerable<Guid>? Brands { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Tags { get; set; }
