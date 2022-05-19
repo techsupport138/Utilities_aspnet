@@ -1,8 +1,8 @@
 namespace Utilities_aspnet.IdTitle;
 
 public class BaseIdTitleEntity : BaseEntity {
-    public Guid? ParentId { get; set; }
-    public BaseIdTitleEntity? Parent { get; set; }
+    // public Guid? ParentId { get; set; }
+    // public BaseIdTitleEntity? Parent { get; set; }
 
     [Required]
     public string Title { get; set; }
@@ -14,6 +14,38 @@ public class BaseIdTitleEntity : BaseEntity {
     public IdTitleUseCase UseCase { get; set; } = IdTitleUseCase.Null;
 
     public ICollection<MediaEntity> Media { get; set; }
+
+    
+    // public string UserId { get; set; }
+    // public UserEntity User { get; set; }
+    //
+    // public string UserId { get; set; }
+    // public ProductEntity User { get; set; }
+    //
+    // public string UserId { get; set; }
+    // public ProjectEntity User { get; set; }
+    //
+    // public string UserId { get; set; }
+    // public TutorialEntity User { get; set; }
+    //
+    // public string UserId { get; set; }
+    // public EventEntity User { get; set; }
+    //
+    // public string UserId { get; set; }
+    // public AdEntity User { get; set; }
+    //
+    // public string UserId { get; set; }
+    // public CompanyEntity User { get; set; }    
+    //
+    // public string UserId { get; set; }
+    // public TenderEntity User { get; set; }    
+    //
+    // public string UserId { get; set; }
+    // public ServiceEntity User { get; set; }    
+    //
+    // public string MagazineId { get; set; }
+    // public MagazineEntity Magazine { get; set; }
+
     public IEnumerable<UserEntity>? User { get; set; }
     public IEnumerable<ProductEntity>? Product { get; set; }
     public IEnumerable<ProjectEntity>? Project { get; set; }
