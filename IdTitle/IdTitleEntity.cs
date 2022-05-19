@@ -1,8 +1,6 @@
 namespace Utilities_aspnet.IdTitle;
 
 public class BaseIdTitleEntity : BaseEntity {
-    public Guid? ParentId { get; set; }
-    public BaseIdTitleEntity? Parent { get; set; }
 
     [Required]
     public string Title { get; set; }
@@ -59,28 +57,52 @@ public class BaseIdTitleEntity : BaseEntity {
 }
 
 [Table("Tags")]
-public class TagEntity : BaseIdTitleEntity { }
+public class TagEntity : BaseIdTitleEntity {
+    public Guid? ParentId { get; set; }
+    public TagEntity? Parent { get; set; }
+}
 
 [Table("Brands")]
-public class BrandEntity : BaseIdTitleEntity { }
+public class BrandEntity : BaseIdTitleEntity {
+    public Guid? ParentId { get; set; }
+    public BrandEntity? Parent { get; set; }
+}
 
 [Table("References")]
-public class ReferenceEntity : BaseIdTitleEntity { }
+public class ReferenceEntity : BaseIdTitleEntity {
+    public Guid? ParentId { get; set; }
+    public ReferenceEntity? Parent { get; set; }
+}
 
 [Table("Categories")]
-public class CategoryEntity : BaseIdTitleEntity { }
+public class CategoryEntity : BaseIdTitleEntity {
+    public Guid? ParentId { get; set; }
+    public CategoryEntity? Parent { get; set; }
+}
 
 [Table("Specialities")]
-public class SpecialityEntity : BaseIdTitleEntity { }
+public class SpecialityEntity : BaseIdTitleEntity {
+    public Guid? ParentId { get; set; }
+    public SpecialityEntity? Parent { get; set; }
+}
 
 [Table("Favorites")]
-public class FavoriteEntity : BaseIdTitleEntity { }
+public class FavoriteEntity : BaseIdTitleEntity {
+    public Guid? ParentId { get; set; }
+    public FavoriteEntity? Parent { get; set; }
+}
 
 [Table("Colors")]
-public class ColorEntity : BaseIdTitleEntity { }
+public class ColorEntity : BaseIdTitleEntity {
+    public Guid? ParentId { get; set; }
+    public ColorEntity? Parent { get; set; }
+}
 
 [Table("ContactInfoItems")]
-public class ContactInfoItemEntity : BaseIdTitleEntity { }
+public class ContactInfoItemEntity : BaseIdTitleEntity {
+    public Guid? ParentId { get; set; }
+    public ContactInfoItemEntity? Parent { get; set; }
+}
 
 public enum IdTitleUseCase {
     Null = 100,
