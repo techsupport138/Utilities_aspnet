@@ -2,7 +2,7 @@ namespace Utilities_aspnet.Product;
 
 public abstract class BaseProductEntity : BaseEntity {
     public string? Title { get; set; }
-    public string? SubTitle { get; set; }
+    public string? Subtitle { get; set; }
     public string? Description { get; set; }
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
