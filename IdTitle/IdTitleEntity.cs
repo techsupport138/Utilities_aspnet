@@ -1,6 +1,6 @@
 namespace Utilities_aspnet.IdTitle;
 
-public abstract class BaseIdTitleEntity : BaseEntity {
+public class BaseIdTitleEntity : BaseEntity {
     public Guid? ParentId { get; set; }
     public BaseIdTitleEntity? Parent { get; set; }
 
@@ -63,18 +63,19 @@ public enum IdTitleUseCase {
     Refrence = 110,
 }
 
-public class IdTitleReadDto {
-    public Guid? Id { get; set; }
+public class IdTitleReadDto: BaseReadDto {
+    public BaseIdTitleEntity? Parent { get; set; }
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
-    public string? Link { get; set; }
     public string? Color { get; set; }
+    public string? Link { get; set; }
     public IdTitleUseCase? UseCase { get; set; }
 }
 
 public class IdTitleCreateUpdateDto {
     public Guid? Id { get; set; }
     public string? Title { get; set; }
+    public string? Subtitle { get; set; }
     public string? Link { get; set; }
     public string? Color { get; set; }
     public IdTitleUseCase? UseCase { get; set; }

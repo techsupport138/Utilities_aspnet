@@ -128,7 +128,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         if (!categories.Any()) entity.Categories = categories;
         if (!brands.Any()) entity.Brands = brands;
-        if (!references.Any()) entity.Reference = references;
+        if (!references.Any()) entity.References = references;
         if (!locations.Any()) entity.Locations = locations;
         if (!specialities.Any()) entity.Specialities = specialities;
         if (!tags.Any()) entity.Tags = tags;
@@ -146,7 +146,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Specialities)
             .Include(i => i.Tags)
             .Include(i => i.Brands)
-            .Include(i => i.Reference)
+            .Include(i => i.References)
             .Include(i => i.User)
             .ToListAsync();
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
@@ -162,7 +162,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Specialities)
             .Include(i => i.Tags)
             .Include(i => i.Brands)
-            .Include(i => i.Reference)
+            .Include(i => i.References)
             .Include(i => i.User)
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));

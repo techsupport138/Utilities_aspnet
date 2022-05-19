@@ -23,7 +23,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<ReportEntity>? Reports { get; set; }
     public IEnumerable<SpecialityEntity>? Specialities { get; set; }
     public IEnumerable<BrandEntity>? Brands { get; set; }
-    public IEnumerable<ReferenceEntity>? Reference { get; set; }
+    public IEnumerable<ReferenceEntity>? References { get; set; }
     public IEnumerable<ContactInformationEntity>? ContactInformations { get; set; }
 }
 
@@ -85,7 +85,7 @@ public class ProductCreateUpdateDto {
     public string? SubTitle { get; set; }
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
-    public bool Enabled { get; set; }
+    public bool? Enabled { get; set; }
     public string? Address { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
