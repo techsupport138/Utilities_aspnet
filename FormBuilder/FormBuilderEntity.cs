@@ -51,8 +51,6 @@ public class FormBuilderFieldTypeEntity
     [Required]
     [StringLength(50)]
     public string FieldTypeName { get; set; }
-
-    [InverseProperty(nameof(FormBuilderFieldListEntity.CategoryId))]
     public virtual ICollection<FormBuilderFieldListEntity> FormBuilderFieldLists { get; set; }
 }
 
@@ -62,7 +60,7 @@ public class FormBuilderFieldListEntity
 
     [Key]
     public int Id { get; set; }
-    public Guid CategoryId { get; set; }
+    public Guid? CategoryId { get; set; }
     public int FormBuilderFieldTypeId { get; set; }
     [Required]
     [StringLength(100)]
@@ -74,7 +72,7 @@ public class FormBuilderFieldListEntity
 
     [ForeignKey(nameof(FormBuilderFieldTypeId))]
     public virtual FormBuilderFieldTypeEntity FormBuilderFieldType { get; set; }
-    public CategoryEntity Category { get; set; }
+    public CategoryEntity? Category { get; set; }
     [InverseProperty(nameof(FormBuilderEntity.FormBuilderField))]
     public virtual ICollection<FormBuilderEntity> FormBuilders { get; set; }
 }
