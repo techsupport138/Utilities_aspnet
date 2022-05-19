@@ -1,7 +1,7 @@
 ﻿namespace Utilities_aspnet.FormBuilder;
 
 [Table("FormBuilder")]
-public partial class FormBuilderEntity : BaseEntity
+public class FormBuilderEntity : BaseEntity
 {
     public string UserId { get; set; }
     public int FormBuilderFieldId { get; set; }
@@ -44,7 +44,7 @@ public partial class FormBuilderEntity : BaseEntity
 }
 
 [Table("FormBuilderFieldTypes")]
-public partial class FormBuilderFieldTypeEntity
+public class FormBuilderFieldTypeEntity
 {
     [Key]
     public int Id { get; set; }
@@ -57,12 +57,12 @@ public partial class FormBuilderFieldTypeEntity
 }
 
 [Table("FormBuilderFields")]
-public partial class FormBuilderFieldListEntity
+public class FormBuilderFieldListEntity
 {
 
     [Key]
     public int Id { get; set; }
-    public Guid? CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
     public int FormBuilderFieldTypeId { get; set; }
     [Required]
     [StringLength(100)]
@@ -74,8 +74,7 @@ public partial class FormBuilderFieldListEntity
 
     [ForeignKey(nameof(FormBuilderFieldTypeId))]
     public virtual FormBuilderFieldTypeEntity FormBuilderFieldType { get; set; }
-    [ForeignKey(nameof(CategoryId))]
-    public virtual CategoryEntity Gategory { get; set; }
+    public CategoryEntity Category { get; set; }
     [InverseProperty(nameof(FormBuilderEntity.FormBuilderField))]
     public virtual ICollection<FormBuilderEntity> FormBuilders { get; set; }
 }
