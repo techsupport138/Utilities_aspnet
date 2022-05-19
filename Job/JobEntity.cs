@@ -1,7 +1,7 @@
 ﻿namespace Utilities_aspnet.Job;
 
-[Table("Job")]
-public partial class Job : BaseEntity
+[Table("Jobs")]
+public partial class JobEntity : BaseEntity
 {
     [Required]
     public string UserId { get; set; }
@@ -12,25 +12,25 @@ public partial class Job : BaseEntity
 
     public virtual UserEntity User { get; set; }
     [ForeignKey(nameof(JobFieldId))]
-    [InverseProperty(nameof(JobFieldList.Jobs))]
-    public virtual JobFieldList JobField { get; set; }
+    [InverseProperty(nameof(JobFieldListEntity.Jobs))]
+    public virtual JobFieldListEntity JobField { get; set; }
 }
 
-[Table("FieldType")]
-public partial class FieldType
+[Table("FieldTypes")]
+public partial class FieldTypeEntity
 {
     [Key]
-    public int FieldTypeId { get; set; }
+    public int Id { get; set; }
     [Required]
     [StringLength(50)]
     public string FieldTypeName { get; set; }
 
-    [InverseProperty(nameof(JobFieldList.FieldType))]
-    public virtual ICollection<JobFieldList> JobFieldLists { get; set; }
+    [InverseProperty(nameof(JobFieldListEntity.FieldType))]
+    public virtual ICollection<JobFieldListEntity> JobFieldLists { get; set; }
 }
 
-[Table("JobFieldList")]
-public partial class JobFieldList
+[Table("JobFields")]
+public partial class JobFieldListEntity
 {
 
     [Key]
@@ -46,27 +46,25 @@ public partial class JobFieldList
     public string? OptionList { get; set; }
 
     [ForeignKey(nameof(FieldTypeId))]
-    [InverseProperty("JobFieldLists")]
-    public virtual FieldType FieldType { get; set; }
+    public virtual FieldTypeEntity FieldType { get; set; }
     [ForeignKey(nameof(JobTypeId))]
-    [InverseProperty("JobFieldLists")]
-    public virtual JobType JobType { get; set; }
-    [InverseProperty(nameof(Job.JobField))]
-    public virtual ICollection<Job> Jobs { get; set; }
+    public virtual JobTypeEntity JobType { get; set; }
+    [InverseProperty(nameof(JobEntity.JobField))]
+    public virtual ICollection<JobEntity> Jobs { get; set; }
 }
 
-[Table("JobType")]
-public partial class JobType
+[Table("JobTypes")]
+public partial class JobTypeEntity
 {
 
     [Key]
-    public int JobTypeId { get; set; }
+    public int Id { get; set; }
     [Required]
     [StringLength(50)]
     public string UserTypeName { get; set; }
 
     public bool Enable { get; set; }
 
-    [InverseProperty(nameof(JobFieldList.JobType))]
-    public virtual ICollection<JobFieldList> JobFieldLists { get; set; }
+    [InverseProperty(nameof(JobFieldListEntity.JobType))]
+    public virtual ICollection<JobFieldListEntity> JobFieldLists { get; set; }
 }
