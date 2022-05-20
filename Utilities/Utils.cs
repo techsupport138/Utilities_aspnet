@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Utilities_aspnet.Utilities;
 
@@ -23,7 +24,7 @@ public static class StartupExtension {
         builder.Services.Configure<IISServerOptions>(options => {
             options.MaxRequestBodySize = int.MaxValue; // or your desired value
         });
-        builder.Services.AddSession(options => { options.IdleTimeout = System.TimeSpan.FromSeconds(604800); });
+        builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
     }
 
     private static void AddUtilitiesServices<T>(
@@ -135,9 +136,7 @@ public static class StartupExtension {
 
     public static void UseUtilitiesServices(this WebApplication app) {
         app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-        if (app.Environment.IsDevelopment()) {
-            app.UseDeveloperExceptionPage();
-        }
+        if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
         app.UseDeveloperExceptionPage();
         app.UseUtilitiesSwagger();
@@ -159,7 +158,7 @@ public static class StartupExtension {
     private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
         app.UseSwagger();
         app.UseSwaggerUI(c => {
-            c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+            c.DocExpansion(DocExpansion.None);
             c.DefaultModelsExpandDepth(-1);
         });
     }
@@ -168,12 +167,14 @@ public static class StartupExtension {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context) {
             if (schema.Properties == null) return;
 
-            foreach ((string _, OpenApiSchema? value) in schema.Properties) {
-                if (value.Default != null && value.Example == null) value.Example = value.Default;
-            }
+            foreach ((string _, OpenApiSchema? value) in schema.Properties)
+                if (value.Default != null && value.Example == null)
+                    value.Example = value.Default;
         }
 
-        private string ToCamelCase(string name) => char.ToLowerInvariant(name[0]) + name[1..];
+        private string ToCamelCase(string name) {
+            return char.ToLowerInvariant(name[0]) + name[1..];
+        }
     }
 
     public class SwaggerFilters : IDocumentFilter {

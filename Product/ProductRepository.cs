@@ -10,8 +10,8 @@ public interface IProductRepository<T> where T : BaseProductEntity {
 
 public class ProductRepository<T> : IProductRepository<T> where T : BaseProductEntity, new() {
     private readonly DbContext _dbContext;
-    private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMapper _mapper;
 
     public ProductRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _dbContext = dbContext;
@@ -56,9 +56,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Include(x => x.Tutorial)
                 .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
-            if (e != null) {
-                references.Add(e);
-            }
+            if (e != null) references.Add(e);
         }
 
         foreach (Guid item in dto.Brands ?? Array.Empty<Guid>()) {
@@ -72,9 +70,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Include(x => x.Tutorial)
                 .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
-            if (e != null) {
-                brands.Add(e);
-            }
+            if (e != null) brands.Add(e);
         }
 
         foreach (Guid item in dto.Categories ?? Array.Empty<Guid>()) {
@@ -88,9 +84,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Include(x => x.Tutorial)
                 .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
-            if (category != null) {
-                categories.Add(category);
-            }
+            if (category != null) categories.Add(category);
         }
 
         foreach (int item in dto.Locations ?? Array.Empty<int>()) {
@@ -104,9 +98,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Include(x => x.Tutorial)
                 .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
-            if (location != null) {
-                locations.Add(location);
-            }
+            if (location != null) locations.Add(location);
         }
 
         foreach (Guid item in dto.Specialties ?? Array.Empty<Guid>()) {
@@ -120,9 +112,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Include(x => x.Tutorial)
                 .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
-            if (speciality != null) {
-                specialities.Add(speciality);
-            }
+            if (speciality != null) specialities.Add(speciality);
         }
 
         foreach (Guid item in dto.Tags ?? Array.Empty<Guid>()) {
@@ -136,9 +126,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Include(x => x.Tutorial)
                 .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
-            if (tag != null) {
-                tags.Add(tag);
-            }
+            if (tag != null) tags.Add(tag);
         }
 
         entity.Categories = categories;

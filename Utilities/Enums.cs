@@ -1,4 +1,4 @@
-namespace Utilities_aspnet.Utilities.Enums;
+namespace Utilities_aspnet.Utilities;
 
 public enum UtilitiesStatusCodes {
     Success = 200,
@@ -8,15 +8,29 @@ public enum UtilitiesStatusCodes {
     Unhandled = 900,
     New = 499,
     WrongMobile = 601,
-    WrongVerificationCode = 602,
+    WrongVerificationCode = 602
 }
 
 public static class UtilitiesStatusCodesExtension {
-    public static bool isSuccessful(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Success;
-    public static bool isBadRequest(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.BadRequest;
-    public static bool isForbidden(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Forbidden;
-    public static bool isNotFound(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.NotFound;
-    public static int value(this UtilitiesStatusCodes statusCode) => (int) statusCode;
+    public static bool isSuccessful(this UtilitiesStatusCodes statusCode) {
+        return statusCode == UtilitiesStatusCodes.Success;
+    }
+
+    public static bool isBadRequest(this UtilitiesStatusCodes statusCode) {
+        return statusCode == UtilitiesStatusCodes.BadRequest;
+    }
+
+    public static bool isForbidden(this UtilitiesStatusCodes statusCode) {
+        return statusCode == UtilitiesStatusCodes.Forbidden;
+    }
+
+    public static bool isNotFound(this UtilitiesStatusCodes statusCode) {
+        return statusCode == UtilitiesStatusCodes.NotFound;
+    }
+
+    public static int value(this UtilitiesStatusCodes statusCode) {
+        return (int) statusCode;
+    }
 }
 
 public enum ContentUseCase {
@@ -27,7 +41,7 @@ public enum ContentUseCase {
     SplashScreen = 100,
     Learn = 101,
     Monthly = 102,
-    Newsletters = 103,
+    Newsletters = 103
 }
 
 public enum VisibilityType {
@@ -57,5 +71,5 @@ public enum LocationType {
     Continent = 1,
     Country = 2,
     City = 3,
-    Region = 4,
+    Region = 4
 }

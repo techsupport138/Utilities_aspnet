@@ -1,4 +1,5 @@
 using Utilities_aspnet.FormBuilder;
+using Utilities_aspnet.Vote.Entities;
 
 namespace Utilities_aspnet.Product;
 

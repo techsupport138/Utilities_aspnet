@@ -1,10 +1,10 @@
-﻿namespace Utilities_aspnet.Wallet.Entities; 
+﻿namespace Utilities_aspnet.Wallet.Entities;
 
 public class Transaction {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int TransactionId { get; set; }
-    
+
     public string TransactionUser { get; set; }
 
 

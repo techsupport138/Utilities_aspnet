@@ -17,7 +17,7 @@ public class MediaEntity : BaseEntity {
 
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }
-    
+
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
 
@@ -44,18 +44,18 @@ public class MediaEntity : BaseEntity {
 
     public MagazineEntity? Magazine { get; set; }
     public Guid? MagazineId { get; set; }
-    
+
     public TagEntity? Tag { get; set; }
     public Guid? TagId { get; set; }
 
     public SpecialityEntity? Speciality { get; set; }
     public Guid? SpecialityId { get; set; }
-    
+
     [NotMapped]
     public string Link => $"{Server.ServerAddress}/Medias/{FileName}";
 
     public static MediaDto MapMediaDto(MediaEntity e) {
-        MediaDto dto = new MediaDto {
+        MediaDto dto = new() {
             Id = e.Id.ToString(),
             Link = e.Link,
             Type = e.FileType,

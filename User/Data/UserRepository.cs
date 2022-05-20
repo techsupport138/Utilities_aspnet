@@ -16,11 +16,11 @@ public interface IUserRepository {
 }
 
 public class UserRepository : IUserRepository {
-    private readonly UserManager<UserEntity> _userManager;
-    private readonly SignInManager<UserEntity> _signInManager;
     private readonly DbContext _context;
     private readonly IMapper _mapper;
     private readonly IOtpService _otp;
+    private readonly SignInManager<UserEntity> _signInManager;
+    private readonly UserManager<UserEntity> _userManager;
 
     public UserRepository(
         DbContext context,
@@ -49,23 +49,22 @@ public class UserRepository : IUserRepository {
 
         return new GenericResponse<UserReadDto?>(
             GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-            UtilitiesStatusCodes.Success, message: "Success");
+            UtilitiesStatusCodes.Success, "Success");
     }
 
     public async Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser) {
         UserEntity? model = _context.Set<UserEntity>()
             .FirstOrDefault(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email);
-        if (model != null) {
+        if (model != null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
                 "This email or username already exists");
-        }
 
         UserEntity user = new() {
             Email = aspNetUser.Email,
             UserName = aspNetUser.UserName,
             PhoneNumber = aspNetUser.UserName,
             EmailConfirmed = false,
-            PhoneNumberConfirmed = false,
+            PhoneNumberConfirmed = false
         };
 
         IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
@@ -131,12 +130,11 @@ public class UserRepository : IUserRepository {
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
 
         JwtSecurityToken token = await CreateToken(user);
-        if (dto.VerificationCode == "9999") {
+        if (dto.VerificationCode == "9999")
             return new GenericResponse<UserReadDto?>(
                 GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
                 UtilitiesStatusCodes.Success, "Success"
             );
-        }
 
 
         if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
@@ -221,7 +219,7 @@ public class UserRepository : IUserRepository {
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
 
         SignInResult? result =
-            await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, lockoutOnFailure: false);
+            await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, false);
         if (!result.Succeeded)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
@@ -230,24 +228,23 @@ public class UserRepository : IUserRepository {
 
     public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model) {
         UserEntity? u = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == model.Email);
-        if (u != null) {
+        if (u != null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
                 "This email or username already exists");
-        }
 
         UserEntity user = new() {
             Email = model.Email,
             UserName = model.Email,
             EmailConfirmed = false,
             PhoneNumberConfirmed = false,
-            Suspend = false,
+            Suspend = false
         };
 
         IdentityResult? result = await _userManager.CreateAsync(user, model.Password);
         return !result.Succeeded
             ? new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
                 "The information was not entered correctly")
-            : new GenericResponse<UserReadDto?>(GetProfile(user.Id, null).Result.Result, UtilitiesStatusCodes.Success, "Success");
+            : new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
     private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
@@ -256,7 +253,7 @@ public class UserRepository : IUserRepository {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Name, user.Id),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
         if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes("https://SinaMN75.com"));

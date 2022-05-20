@@ -1,108 +1,107 @@
 using DataType = System.ComponentModel.DataAnnotations.DataType;
 
-namespace Utilities_aspnet.User.Dtos {
-    public class GetMobileVerificationCodeForLoginDto {
-        [Required]
-        public string Mobile { get; set; }
+namespace Utilities_aspnet.User.Dtos; 
 
-        public bool SendSMS { get; set; } = false;
-    }
+public class GetMobileVerificationCodeForLoginDto {
+    [Required]
+    public string Mobile { get; set; }
 
-    public class VerifyMobileForLoginDto {
-        [Required]
-        public string Mobile { get; set; }
+    public bool SendSMS { get; set; } = false;
+}
 
-        [Required]
-        public string VerificationCode { get; set; }
-    }
+public class VerifyMobileForLoginDto {
+    [Required]
+    public string Mobile { get; set; }
 
-    public class RegisterWithEmailDto {
-        [Required]
-        public string UserName { get; set; }
+    [Required]
+    public string VerificationCode { get; set; }
+}
 
-        [Required]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+public class RegisterWithEmailDto {
+    [Required]
+    public string UserName { get; set; }
 
-        [Required]
-        [StringLength(100, MinimumLength = 4)]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+    [Required]
+    [DataType(DataType.EmailAddress)]
+    public string Email { get; set; }
 
-        public string? ReturnUrl { get; set; }
-        public bool Keep { get; set; } = true;
-    }
+    [Required]
+    [StringLength(100, MinimumLength = 4)]
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
 
-    public class RegisterFormWithEmailDto {
+    public string? ReturnUrl { get; set; }
+    public bool Keep { get; set; } = true;
+}
 
-        [Required]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+public class RegisterFormWithEmailDto {
+    [Required]
+    [DataType(DataType.EmailAddress)]
+    public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, MinimumLength = 4)]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+    [Required]
+    [StringLength(100, MinimumLength = 4)]
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
 
-        public string? ReturnUrl { get; set; }
-        public bool Keep { get; set; } = true;
+    public string? ReturnUrl { get; set; }
+    public bool Keep { get; set; } = true;
 
-        [DataType(DataType.Password)]
-        public string ConfirmPassword { get; set; }
-    }
+    [DataType(DataType.Password)]
+    public string ConfirmPassword { get; set; }
+}
 
-    public class LoginWithEmailDto {
-        [Required]
-        [StringLength(256)]
-        public string Email { get; set; }
+public class LoginWithEmailDto {
+    [Required]
+    [StringLength(256)]
+    public string Email { get; set; }
 
-        [Required]
-        [StringLength(256)]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+    [Required]
+    [StringLength(256)]
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
 
-        public string? ReturnUrl { get; set; }
-        public bool Keep { get; set; } = true;
-    }
+    public string? ReturnUrl { get; set; }
+    public bool Keep { get; set; } = true;
+}
 
-    public class ChangePasswordDto {
-        [DataType(DataType.Password)]
-        public string OldPassword { get; set; }
+public class ChangePasswordDto {
+    [DataType(DataType.Password)]
+    public string OldPassword { get; set; }
 
-        [Required]
-        [StringLength(100, MinimumLength = 4)]
-        [DataType(DataType.Password)]
-        public string NewPassword { get; set; }
-    }
+    [Required]
+    [StringLength(100, MinimumLength = 4)]
+    [DataType(DataType.Password)]
+    public string NewPassword { get; set; }
+}
 
-    public class UserReadDto {
-        public string? Token { get; set; }
-        public string? Id { get; set; }
-        public string? FullName { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? UserName { get; set; }
-        public string? Bio { get; set; }
-        public string? AppUserName { get; set; }
-        public string? AppPhoneNumber { get; set; }
-        public DateTime? BirthDate { get; set; }
-        public IEnumerable<MediaDto>? Media { get; set; }
+public class UserReadDto {
+    public string? Token { get; set; }
+    public string? Id { get; set; }
+    public string? FullName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? UserName { get; set; }
+    public string? Bio { get; set; }
+    public string? AppUserName { get; set; }
+    public string? AppPhoneNumber { get; set; }
+    public DateTime? BirthDate { get; set; }
+    public IEnumerable<MediaDto>? Media { get; set; }
 
-        public List<IdTitleReadDto> Colors { get; set; }
-        public List<IdTitleReadDto> Specialties { get; set; }
-        public List<IdTitleReadDto> Favorites { get; set; }
-    }
+    public List<IdTitleReadDto> Colors { get; set; }
+    public List<IdTitleReadDto> Specialties { get; set; }
+    public List<IdTitleReadDto> Favorites { get; set; }
+}
 
-    public class UpdateProfileDto {
-        public List<Guid> Colors { get; set; }
-        public List<Guid> Specialties { get; set; }
-        public List<Guid> Favorites { get; set; }
-        public string? FullName { get; set; }
-        public string? Bio { get; set; }
-        public DateTime? BirthDate { get; set; }
-        public string? Headline { get; set; }
-        public string? AppUserName { get; set; }
-        public string? AppPhoneNumber { get; set; }
+public class UpdateProfileDto {
+    public List<Guid> Colors { get; set; }
+    public List<Guid> Specialties { get; set; }
+    public List<Guid> Favorites { get; set; }
+    public string? FullName { get; set; }
+    public string? Bio { get; set; }
+    public DateTime? BirthDate { get; set; }
+    public string? Headline { get; set; }
+    public string? AppUserName { get; set; }
+    public string? AppPhoneNumber { get; set; }
 
-        public IEnumerable<IdTitleCreateUpdateDto>? ContactInformation { get; set; }
-    }
+    public IEnumerable<IdTitleCreateUpdateDto>? ContactInformation { get; set; }
 }

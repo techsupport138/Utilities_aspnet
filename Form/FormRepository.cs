@@ -4,8 +4,8 @@ public interface IFormRepository<T> { }
 
 public class FormRepository<T> : IFormRepository<T> {
     private readonly DbContext _dbContext;
-    private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMapper _mapper;
 
     public FormRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _dbContext = dbContext;
@@ -14,7 +14,7 @@ public class FormRepository<T> : IFormRepository<T> {
     }
 
     public async Task<GenericResponse<FormEntity>> UpdateFormBuilder(KVVMs model) {
-        foreach (KVVM item in model.KVVM) {
+        foreach (KVVM item in model.KVVM)
             try {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
                     (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
@@ -27,7 +27,7 @@ public class FormRepository<T> : IFormRepository<T> {
                     await _dbContext.SaveChangesAsync();
                 }
                 else {
-                    _dbContext.Set<FormEntity>().Add(new FormEntity() {
+                    _dbContext.Set<FormEntity>().Add(new FormEntity {
                         ProductId = model.ProductId,
                         AdId = model.AdId,
                         CompanyId = model.CompanyId,
@@ -48,7 +48,6 @@ public class FormRepository<T> : IFormRepository<T> {
             catch {
                 // ignored
             }
-        }
 
         return new GenericResponse<FormEntity>(new FormEntity());
     }

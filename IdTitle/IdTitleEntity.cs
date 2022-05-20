@@ -3,10 +3,9 @@ using Utilities_aspnet.FormBuilder;
 namespace Utilities_aspnet.IdTitle;
 
 public abstract class BaseIdTitleEntity : BaseEntity {
-
     [Required]
     public string Title { get; set; }
-    
+
     public string? Subtitle { get; set; }
     public string? Color { get; set; }
     public string? Link { get; set; }
@@ -85,7 +84,7 @@ public enum IdTitleUseCase {
     Project = 107,
     Tender = 108,
     Brand = 109,
-    Refrence = 110,
+    Refrence = 110
 }
 
 public class IdTitleReadDto {

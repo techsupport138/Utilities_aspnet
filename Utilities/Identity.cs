@@ -4,12 +4,10 @@ public static class IdentityExtensions {
     public static void AddUtilitiesIdentity(this WebApplicationBuilder builder) {
         builder.Services.AddIdentity<UserEntity, IdentityRole>(options => { options.SignIn.RequireConfirmedAccount = false; })
             .AddRoles<IdentityRole>().AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions =>
-        {
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions => {
             jwtBearerOptions.RequireHttpsMetadata = false;
             jwtBearerOptions.SaveToken = true;
-            jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
-            {
+            jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters {
                 RequireSignedTokens = true,
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = true,
@@ -86,12 +84,15 @@ public static class IdentityExtensions {
         //});
 
 
-
         //builder.Services.AddScoped<SignInManager<UserEntity>, SignInManager<UserEntity>>();
-
     }
 
-    public static void SeedUser<T>(this IHost host, string role, string username, string email, string password)
+    public static void SeedUser<T>(
+        this IHost host,
+        string role,
+        string username,
+        string email,
+        string password)
         where T : IdentityDbContext {
         try {
             host.Services.CreateScope();
@@ -108,7 +109,7 @@ public static class IdentityExtensions {
             if (context.Users.Any(i => i.UserName == username)) return;
             UserEntity adminUser = new() {
                 UserName = username,
-                Email = email,
+                Email = email
             };
             userManager.CreateAsync(adminUser, password).GetAwaiter().GetResult();
             userManager.AddToRoleAsync(adminUser, adminRole.Name).GetAwaiter().GetResult();

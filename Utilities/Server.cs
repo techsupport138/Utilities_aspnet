@@ -1,13 +1,7 @@
-﻿
-
-namespace Utilities_aspnet.Utilities;
+﻿namespace Utilities_aspnet.Utilities;
 
 public class Server {
     private static IHttpContextAccessor? _httpContextAccessor;
-
-    public static void Configure(IHttpContextAccessor? httpContextAccessor) {
-        _httpContextAccessor = httpContextAccessor;
-    }
 
     private static string? _serverAddress;
 
@@ -21,5 +15,9 @@ public class Server {
             _serverAddress = $"{scheme}://{host}{pathBase}";
             return _serverAddress;
         }
+    }
+
+    public static void Configure(IHttpContextAccessor? httpContextAccessor) {
+        _httpContextAccessor = httpContextAccessor;
     }
 }

@@ -57,3 +57,4 @@
 //         modelBuilder.Entity<ColorEntity>().HasData(list);
 //     }
 // }
+

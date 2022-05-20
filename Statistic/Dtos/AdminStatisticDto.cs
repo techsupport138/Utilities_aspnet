@@ -1,25 +1,22 @@
-﻿namespace Utilities_aspnet.Statistic.Dtos
-{
-    public class AdminStatisticDto
-    {
-        public AdminStatisticDto()
-        {
-            VisitorDic = new Dictionary<DateTime, int>();
-			UserAgentTodayDic = new Dictionary<string, int>();
-			BotAgentTodayDic = new Dictionary<string, int>();
+﻿namespace Utilities_aspnet.Statistic.Dtos; 
 
-			UserAgentDic = new Dictionary<string, int>();
-			BotAgentDic = new Dictionary<string, int>();
+public class AdminStatisticDto {
+    public AdminStatisticDto() {
+        VisitorDic = new Dictionary<DateTime, int>();
+        UserAgentTodayDic = new Dictionary<string, int>();
+        BotAgentTodayDic = new Dictionary<string, int>();
 
-			TopUrlDic = new Dictionary<string, int>();
-			TopUrlTodayDic = new Dictionary<string, int>();
+        UserAgentDic = new Dictionary<string, int>();
+        BotAgentDic = new Dictionary<string, int>();
 
-			OsDic = new Dictionary<string, int>();
-			OsDic=new Dictionary<string, int>();
-			HoursDic = new Dictionary<byte, int>();
+        TopUrlDic = new Dictionary<string, int>();
+        TopUrlTodayDic = new Dictionary<string, int>();
 
+        OsDic = new Dictionary<string, int>();
+        OsDic = new Dictionary<string, int>();
+        HoursDic = new Dictionary<byte, int>();
+    }
 
-		}
     public int CountOfTodayVisitor { get; set; }
     public int CountOfTodayPageVisit { get; set; }
     public int CountOfTodayBot { get; set; }
@@ -47,7 +44,5 @@
     public Dictionary<byte, int> HoursDic { get; set; }
 
 
-
     public int UserCount { get; set; }
-}
 }
