@@ -50,12 +50,6 @@ public static class StartupExtension {
         });
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-        builder.Services.AddControllersWithViews().AddNewtonsoftJson(i =>
-            i.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
-
-        builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-        builder.Services.AddRazorPages();
         builder.Services.AddSingleton<IFileProvider>(
             new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
         builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {
@@ -63,7 +57,6 @@ public static class StartupExtension {
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
             options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            //options.UseCamelCasing(true);
         });
 
         builder.Logging.AddEntityFramework<T>();
@@ -109,13 +102,6 @@ public static class StartupExtension {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c => {
             c.UseInlineDefinitionsForEnums();
-            string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            string xmlPath = Path.Combine(AppContext.BaseDirectory);
-
-            c.IncludeXmlComments(xmlPath + xmlFile);
-            c.IncludeXmlComments(xmlPath + xmlFile);
-            c.IncludeXmlComments(xmlPath + "/Utilities_aspnet.xml");
-            c.UseInlineDefinitionsForEnums();
             c.DocumentFilter<SwaggerFilters>();
             c.SchemaFilter<SchemaFilter>();
             c.EnableAnnotations();
@@ -155,7 +141,7 @@ public static class StartupExtension {
 
         app.UseDeveloperExceptionPage();
         app.UseUtilitiesSwagger();
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAuthentication();
         app.UseRouting();
