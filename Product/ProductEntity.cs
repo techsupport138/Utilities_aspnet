@@ -20,7 +20,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<LocationEntity>? Locations { get; set; }
     public IEnumerable<FavoriteEntity>? Favorites { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
-    public IEnumerable<FormBuilderEntity>? FormBuilders { get; set; }
+    public IEnumerable<FormEntity>? FormBuilders { get; set; }
     public IEnumerable<CategoryEntity>? Categories { get; set; }
     public IEnumerable<TagEntity>? Tags { get; set; }
     public IEnumerable<VoteFieldEntity>? VoteFields { get; set; }

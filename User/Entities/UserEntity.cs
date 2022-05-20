@@ -32,7 +32,7 @@ public class UserEntity : IdentityUser {
     public DateTime? Birthdate { get; set; }
     
     public IEnumerable<LocationEntity>? Location { get; set; }
-    public IEnumerable<FormBuilderEntity>? FormBuilders { get; set; }
+    public IEnumerable<FormEntity>? FormBuilders { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<UserToColorEntity>? Colors { get; set; }
     public IEnumerable<UserToFavoriteEntity>? Favorites { get; set; }
