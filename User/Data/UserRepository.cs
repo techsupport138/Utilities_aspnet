@@ -89,7 +89,8 @@ public class UserRepository : IUserRepository {
             return new GenericResponse<string?>("", UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
 
         if (model != null) {
-            string? otp = _otp.SendOtp(model.Id);
+            string? otp = "0000";
+            if (dto.SendSMS) otp = _otp.SendOtp(model.Id);
             return new GenericResponse<string?>(otp ?? "0000", UtilitiesStatusCodes.Success, "Success");
         }
         else {
@@ -111,7 +112,8 @@ public class UserRepository : IUserRepository {
                 return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest,
                     "The information was not entered correctly");
 
-            string? otp = _otp.SendOtp(user.Id);
+            string? otp = "0000";
+            if (dto.SendSMS) otp = _otp.SendOtp(user.Id);
             return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
     }

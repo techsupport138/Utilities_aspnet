@@ -4,6 +4,8 @@ namespace Utilities_aspnet.User.Dtos {
     public class GetMobileVerificationCodeForLoginDto {
         [Required]
         public string Mobile { get; set; }
+
+        public bool SendSMS { get; set; } = false;
     }
 
     public class VerifyMobileForLoginDto {
