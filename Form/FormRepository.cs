@@ -1,6 +1,8 @@
 namespace Utilities_aspnet.FormBuilder;
 
-public interface IFormRepository<T> { }
+public interface IFormRepository<T> {
+    Task<GenericResponse<List<FormFieldEntity>>> FormFields(Guid categoryId);
+}
 
 public class FormRepository<T> : IFormRepository<T> {
     private readonly DbContext _dbContext;
@@ -50,5 +52,10 @@ public class FormRepository<T> : IFormRepository<T> {
             }
 
         return new GenericResponse<FormEntity>(new FormEntity());
+    }
+    
+    public async Task<GenericResponse<List<FormFieldEntity>>> FormFields(Guid categoryId) {
+        List<FormFieldEntity> model = await _dbContext.Set<FormFieldEntity>().Where(x=>x.CategoryId == categoryId).ToListAsync();
+        return new GenericResponse<List<FormFieldEntity>>(model);
     }
 }

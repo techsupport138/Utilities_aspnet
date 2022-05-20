@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using Utilities_aspnet.FormBuilder;
 
 namespace Utilities_aspnet.Utilities;
 
@@ -92,6 +93,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IProductRepository<MagazineEntity>, ProductRepository<MagazineEntity>>();
         builder.Services.AddTransient<IProductRepository<TenderEntity>, ProductRepository<TenderEntity>>();
         builder.Services.AddTransient<IProductRepository<ServiceEntity>, ProductRepository<ServiceEntity>>();
+        builder.Services.AddTransient<IFormRepository<FormEntity>, FormRepository<FormEntity>>();
 
         //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
         //https://github.com/keyone2693/ImageResizer.AspNetCore

@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities.Data; 
+﻿using Utilities_aspnet.FormBuilder;
+
+namespace Utilities_aspnet.Utilities.Data; 
 
 public interface IEnumRepository {
     Task<GenericResponse<EnumDto?>> GetAll(bool showCatehory, bool showGeo);
@@ -26,6 +28,8 @@ public class EnumRepository : IEnumRepository {
             }).ToList()
         };
 
+        List<IdTitleReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
+        model.FormFieldType = formFieldType;
         //if (showGeo)
         //    model.GeoList = _context.Set<Province>().Include(x => x.Cities).Select(x => new KVPIVM {
         //        Key = x.ProvinceId,

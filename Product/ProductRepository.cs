@@ -1,3 +1,5 @@
+using Utilities_aspnet.FormBuilder;
+
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
@@ -44,6 +46,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         List<LocationEntity> locations = new();
         List<SpecialityEntity> specialities = new();
         List<TagEntity> tags = new();
+        List<FormEntity> forms = new();
 
         foreach (Guid item in dto.References ?? Array.Empty<Guid>()) {
             ReferenceEntity? e = await _dbContext.Set<ReferenceEntity>()
@@ -129,12 +132,28 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (tag != null) tags.Add(tag);
         }
 
+
+        foreach (KVVM item in dto.FormBulder ?? new List<KVVM>())
+            try
+            {
+                forms.Add(new FormEntity
+                {
+                    FormFieldId = item.Key,
+                    Value = item.Value
+                });
+            }
+            catch
+            {
+                // ignored
+            }
+
         entity.Categories = categories;
         entity.Brands = brands;
         entity.References = references;
         entity.Locations = locations;
         entity.Specialities = specialities;
         entity.Tags = tags;
+        entity.FormBuilders = forms;
         EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
