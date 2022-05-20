@@ -38,7 +38,7 @@ public class FormEntity : BaseEntity {
     [InverseProperty(nameof(FormFieldEntity.Forms))]
     public FormFieldEntity FormField { get; set; }
 
-    public int FormFieldId { get; set; }
+    public Guid FormFieldId { get; set; }
 }
 
 [Table("FormFields")]
