@@ -19,7 +19,6 @@ public class UserRepository : IUserRepository {
     private readonly UserManager<UserEntity> _userManager;
     private readonly SignInManager<UserEntity> _signInManager;
     private readonly DbContext _context;
-    private readonly IConfiguration _config;
     private readonly IMapper _mapper;
     private readonly IOtpService _otp;
 
@@ -33,7 +32,6 @@ public class UserRepository : IUserRepository {
         _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
-        _config = config;
         _otp = otp;
         _mapper = mapper;
     }
@@ -261,9 +259,9 @@ public class UserRepository : IUserRepository {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
-        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes("https://SinaMN75.com"));
         SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
-        JwtSecurityToken token = new(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims,
+        JwtSecurityToken token = new("https://SinaMN75.com", "https://SinaMN75.com", claims,
             expires: DateTime.Now.AddDays(365),
             signingCredentials: creds);
 
