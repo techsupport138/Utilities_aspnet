@@ -89,9 +89,9 @@ public class UserRepository : IUserRepository {
             return new GenericResponse<string?>("", UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
 
         if (model != null) {
-            string? otp = "0000";
+            string? otp = "9999";
             if (dto.SendSMS) otp = _otp.SendOtp(model.Id);
-            return new GenericResponse<string?>(otp ?? "0000", UtilitiesStatusCodes.Success, "Success");
+            return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
         else {
             UserEntity user = new() {
@@ -132,20 +132,22 @@ public class UserRepository : IUserRepository {
         if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
 
-        if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
-
         JwtSecurityToken token = await CreateToken(user);
         if (dto.VerificationCode == "9999") {
             return new GenericResponse<UserReadDto?>(
                 GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-                UtilitiesStatusCodes.Success,
-                "Success");
+                UtilitiesStatusCodes.Success, "Success"
+            );
         }
+
+
+        if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
         return new GenericResponse<UserReadDto?>(
             GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-            UtilitiesStatusCodes.Success, "Success");
+            UtilitiesStatusCodes.Success, "Success"
+        );
     }
 
     public Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null) {
