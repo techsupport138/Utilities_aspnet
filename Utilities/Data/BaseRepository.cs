@@ -16,12 +16,12 @@
         public List<KVVM> GetAllFor() {
             string[] trans = Enum.GetNames(typeof(IdTitleUseCase));
             var data = new List<KVVM>();
-            var v = trans.Select((value, key) => new {value, key}).ToDictionary(x => x.key + 1, x => x.value);
+            Dictionary<int, string> v = trans.Select((value, key) => new {value, key}).ToDictionary(x => x.key + 1, x => x.value);
             foreach (var item in v) {
-                data.Add(new KVVM() {
-                    Key = item.Key,
-                    Value = item.Value
-                });
+                // data.Add(new KVVM() {
+                //     Key = item.Key,
+                //     Value = item.Value
+                // });
             }
 
             return data;
