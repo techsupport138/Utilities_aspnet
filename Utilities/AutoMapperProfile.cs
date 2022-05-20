@@ -39,8 +39,10 @@ public class AutoMapperProfile : Profile {
         CreateMap<TenderEntity, ProductCreateUpdateDto>().ReverseMap();
         CreateMap<ServiceEntity, ProductReadDto>().ReverseMap();
         CreateMap<ServiceEntity, ProductCreateUpdateDto>().ReverseMap();
-        CreateMap<MagazineEntity, ProductReadDto>().ReverseMap();
-        CreateMap<MagazineEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<MagazineEntity, ProductReadDto>().ReverseMap().ForMember(x => x.Brands, y => y.Ignore());
+        CreateMap<MagazineEntity, ProductCreateUpdateDto>().ReverseMap().ForMember(x => x.Brands, y => y.Ignore());
+
+        // Others
         CreateMap<MediaEntity, MediaDto>().ReverseMap();
 
         // Content

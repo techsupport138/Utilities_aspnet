@@ -95,7 +95,6 @@ public class IdTitleReadDto {
     public string? Color { get; set; }
     public string? Link { get; set; }
     public IdTitleUseCase? UseCase { get; set; }
-    // public BaseIdTitleEntity? Parent { get; set; }
 }
 
 public class IdTitleCreateUpdateDto {
