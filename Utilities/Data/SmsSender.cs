@@ -15,15 +15,15 @@
         }
         public long SendSms(string mobileNumber, string message) {
 
-            var appSettings = new AppSettings();
+            AppSettings? appSettings = new AppSettings();
             _config.GetSection("AppSettings").Bind(appSettings);
-            var smsSetting = appSettings.SMSPanelSettings;
+            SMSPanelSettings? smsSetting = appSettings.SMSPanelSettings;
             switch (smsSetting.Sender)
             {
                 case Sender.SMS_Ir:
-                    var token = new Token()
+                    string? token = new Token()
                         .GetToken(smsSetting.SmsApiKey, smsSetting.SmsSecret);
-                    var messageSendObject = new MessageSendObject()
+                    MessageSendObject? messageSendObject = new MessageSendObject()
                     {
                         Messages = new List<string> { message }.ToArray(),
                         MobileNumbers = new List<string> { mobileNumber }.ToArray(),

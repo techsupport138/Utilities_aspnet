@@ -49,7 +49,7 @@ namespace Utilities_aspnet.Base.Data
         {
             GenericResponse res = null;
             
-            var cat = new CategoryEntity()
+            CategoryEntity? cat = new CategoryEntity()
             {
                 UseCase = newCategory.CategoryFor,
                 ParentId = newCategory.ParentId,
@@ -76,7 +76,7 @@ namespace Utilities_aspnet.Base.Data
 
         public async Task<GenericResponse> DeleteCategory(Guid id)
         {
-            var cat = _context.Set<CategoryEntity>()
+            CategoryEntity? cat = _context.Set<CategoryEntity>()
                 // .Include(x => x.InverseParent)
                 .Where(x => x.Id == id).First();
             // if (cat.MediaId != null)
@@ -104,12 +104,12 @@ namespace Utilities_aspnet.Base.Data
 
         public async Task<GenericResponse> UpdateCategory(NewCategoryDto category)
         {
-            var cat = _context.Set<CategoryEntity>()
+            CategoryEntity? cat = _context.Set<CategoryEntity>()
                 .Where(x => x.Id == category.CategoryId).First();
             if (category.File != null)
             {
                 List<IFormFile> f = new List<IFormFile>() { category.File };
-                var res = await _UploadRepository.UploadMedia(new UploadDto()
+                GenericResponse? res = await _UploadRepository.UploadMedia(new UploadDto()
                 {
                     Files = f,
                     UserId = null,

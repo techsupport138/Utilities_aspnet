@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(
@@ -174,5 +176,25 @@ public static class StartupExtension {
             c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
             c.DefaultModelsExpandDepth(-1);
         });
+    }
+
+    private class SchemaFilter : ISchemaFilter {
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context) {
+            if (schema.Properties == null) return;
+
+            foreach ((string _, OpenApiSchema? value) in schema.Properties) {
+                if (value.Default != null && value.Example == null) value.Example = value.Default;
+            }
+        }
+
+        private string ToCamelCase(string name) => char.ToLowerInvariant(name[0]) + name[1..];
+    }
+
+    public class SwaggerFilters : IDocumentFilter {
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context) {
+            swaggerDoc.Paths.Remove("/DNTCaptchaImage/Refresh");
+            swaggerDoc.Paths.Remove("/DNTCaptchaImage/Show");
+            IEnumerable<ApiDescription>? z = context.ApiDescriptions;
+        }
     }
 }

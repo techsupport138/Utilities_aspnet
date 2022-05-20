@@ -15,9 +15,9 @@
 
         public List<KVVM> GetAllFor() {
             string[] trans = Enum.GetNames(typeof(IdTitleUseCase));
-            var data = new List<KVVM>();
+            List<KVVM>? data = new List<KVVM>();
             Dictionary<int, string> v = trans.Select((value, key) => new {value, key}).ToDictionary(x => x.key + 1, x => x.value);
-            foreach (var item in v) {
+            foreach (KeyValuePair<int, string> item in v) {
                 // data.Add(new KVVM() {
                 //     Key = item.Key,
                 //     Value = item.Value
@@ -28,7 +28,7 @@
         }
 
         public Dictionary<Guid, string> GetParentCategory(IdTitleUseCase filter, string Language) {
-            var data = _context.Set<CategoryEntity>().ToDictionary(x => x.Id, x => x.Title);
+            Dictionary<Guid, string>? data = _context.Set<CategoryEntity>().ToDictionary(x => x.Id, x => x.Title);
             return data;
         }
     }

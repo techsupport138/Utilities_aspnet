@@ -26,7 +26,7 @@
         }
 
         public string? SendOtp(string userId) {
-            var dd = DateTime.Now.AddMinutes(-3);
+            DateTime dd = DateTime.Now.AddMinutes(-3);
             bool oldOtp = _context.Set<OtpEntity>()
                 .Any(x => x.UserId == userId && x.CreatedAt > dd);
             if (oldOtp) {
