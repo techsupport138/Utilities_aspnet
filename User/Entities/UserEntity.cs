@@ -8,7 +8,6 @@ public class UserEntity : IdentityUser {
         Location = new List<LocationEntity>();
         Colors = new List<UserToColorEntity>();
         Favorites = new List<UserToFavoriteEntity>();
-        ShoppingList = new List<ShoppingListEntity>();
         Reports = new List<ReportEntity>();
         Products = new List<ProductEntity>();
         Projects = new List<ProjectEntity>();
@@ -37,7 +36,6 @@ public class UserEntity : IdentityUser {
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<UserToColorEntity>? Colors { get; set; }
     public IEnumerable<UserToFavoriteEntity>? Favorites { get; set; }
-    public IEnumerable<ShoppingListEntity>? ShoppingList { get; set; }
     public IEnumerable<ContactInformationEntity>? ContactInformation { get; set; }
     public IEnumerable<ReportEntity>? Reports { get; set; }
     public IEnumerable<ProductEntity>? Products { get; set; }

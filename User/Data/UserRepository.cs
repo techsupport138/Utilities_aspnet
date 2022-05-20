@@ -13,7 +13,6 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string userName);
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
-    Task<GenericResponse<List<ShoppingDto>?>> GetShoppingList(string userName, BuyOrSale type);
 }
 
 public class UserRepository : IUserRepository {
@@ -263,21 +262,6 @@ public class UserRepository : IUserRepository {
             ? new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
                 "The information was not entered correctly")
             : new GenericResponse<UserReadDto?>(GetProfile(user.Id, null).Result.Result, UtilitiesStatusCodes.Success, "Success");
-    }
-
-    public Task<GenericResponse<List<ShoppingDto>?>> GetShoppingList(string userName, BuyOrSale type) {
-        UserEntity? u = _context.Set<UserEntity>().FirstOrDefault(x => x.UserName == userName);
-        List<ShoppingDto> data = _context.Set<ShoppingListEntity>().Include(x => x.BankTransaction).Include(x => x.Product)
-            .ThenInclude(x => x.Media).Where(x => x.BuyOrSale == type && x.UserId == u.Id).Select(x => new ShoppingDto() {
-                Id = x.Id,
-                BuyOrSale = x.BuyOrSale,
-                Amount = x.Amount,
-                DateTime = x.CreatedAt,
-                OrderId = x.BankTransaction.OrderId,
-                Title = x.Product.Title,
-                Media = x.Product.Media.FirstOrDefault()
-            }).ToList();
-        return Task.FromResult(new GenericResponse<List<ShoppingDto>?>(data, UtilitiesStatusCodes.Success, "Success"));
     }
 
     private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
