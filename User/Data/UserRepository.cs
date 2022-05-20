@@ -112,7 +112,7 @@ public class UserRepository : IUserRepository {
                 return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest,
                     "The information was not entered correctly");
 
-            string? otp = "0000";
+            string? otp = "9999";
             if (dto.SendSMS) otp = _otp.SendOtp(user.Id);
             return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
@@ -180,22 +180,6 @@ public class UserRepository : IUserRepository {
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
         try {
-            foreach (Guid item in dto.Favorites.Where(item =>
-                         !_context.Set<UserToFavoriteEntity>().Any(x => x.UserId == username && x.FavoriteId == item))) {
-                _context.Set<UserToFavoriteEntity>().Add(new UserToFavoriteEntity() {
-                    UserId = user.Id,
-                    FavoriteId = item,
-                });
-            }
-
-            foreach (Guid item in dto.Colors.Where(item =>
-                         !_context.Set<UserToColorEntity>().Any(x => x.UserId == username && x.ColorId == item))) {
-                _context.Set<UserToColorEntity>().Add(new UserToColorEntity() {
-                    UserId = user.Id,
-                    ColorId = item,
-                });
-            }
-
             if (dto.FullName != null) user.FullName = dto.FullName;
             if (dto.Bio != null) user.Bio = dto.Bio;
             if (dto.AppUserName != null) user.UserName = dto.AppUserName;

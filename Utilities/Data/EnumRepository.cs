@@ -23,10 +23,6 @@
                     Title = x.Title,
                     Subtitle = x.Color
                 }).ToList(),
-                UserRole = _context.Set<UserRoleEntity>().Select(x => new IdTitleReadDto {
-                    Title = x.RoleId.ToString(),
-                    Subtitle = x.RoleName,
-                }).ToList(),
             };
 
             //if (showGeo)
