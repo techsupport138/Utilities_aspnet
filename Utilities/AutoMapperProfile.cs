@@ -22,25 +22,85 @@ public class AutoMapperProfile : Profile {
 
         // Product
         CreateMap<BaseProductEntity, ProductReadDto>().ReverseMap();
-        CreateMap<BaseProductEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<BaseProductEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<ProductEntity, ProductReadDto>().ReverseMap();
-        CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<ProjectEntity, ProductReadDto>().ReverseMap();
-        CreateMap<ProjectEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<ProjectEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<TutorialEntity, ProductReadDto>().ReverseMap();
-        CreateMap<TutorialEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<TutorialEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<EventEntity, ProductReadDto>().ReverseMap();
-        CreateMap<EventEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<EventEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<AdEntity, ProductReadDto>().ReverseMap();
-        CreateMap<AdEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<AdEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<CompanyEntity, ProductReadDto>().ReverseMap();
-        CreateMap<CompanyEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<CompanyEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<TenderEntity, ProductReadDto>().ReverseMap();
-        CreateMap<TenderEntity, ProductCreateUpdateDto>().ReverseMap();
+        CreateMap<TenderEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<ServiceEntity, ProductReadDto>().ReverseMap();
-        CreateMap<ServiceEntity, ProductCreateUpdateDto>().ReverseMap();
-        CreateMap<MagazineEntity, ProductReadDto>().ReverseMap().ForMember(x => x.Brands, y => y.Ignore());
-        CreateMap<MagazineEntity, ProductCreateUpdateDto>().ReverseMap().ForMember(x => x.Brands, y => y.Ignore());
+        CreateMap<ServiceEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
+        CreateMap<MagazineEntity, ProductReadDto>().ReverseMap();
+        CreateMap<MagazineEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
 
         // Others
         CreateMap<MediaEntity, MediaDto>().ReverseMap();
