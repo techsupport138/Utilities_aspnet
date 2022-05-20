@@ -77,18 +77,15 @@ public class FormBuilderFieldListEntity
     public virtual ICollection<FormBuilderEntity> FormBuilders { get; set; }
 }
 
-//[Table("FormBuilderTypes")]
-//public partial class FormBuilderTypeEntity
-//{
-
-//    [Key]
-//    public int Id { get; set; }
-//    [Required]
-//    [StringLength(50)]
-//    public string UserTypeName { get; set; }
-
-//    public bool Enable { get; set; }
-
-//    [InverseProperty(nameof(FormBuilderFieldListEntity.FormBuilderType))]
-//    public virtual ICollection<FormBuilderFieldListEntity> FormBuilderFieldLists { get; set; }
-//}
+public enum FormBuilderUseCase
+{
+    Product = 100,
+    Project = 101,
+    Tutorial = 102,
+    Event = 103,
+    Ad = 104,
+    User = 105,
+    Company = 106,
+    Tender = 107,
+    Magazine = 108
+}
