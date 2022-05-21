@@ -1,5 +1,3 @@
-using Utilities_aspnet.FormBuilder;
-
 namespace Utilities_aspnet.IdTitle;
 
 public abstract class BaseIdTitleEntity : BaseEntity {

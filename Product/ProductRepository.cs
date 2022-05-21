@@ -1,5 +1,3 @@
-using Utilities_aspnet.FormBuilder;
-
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {

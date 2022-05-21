@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.FormBuilder;
-
-namespace Utilities_aspnet.User.Entities;
+﻿namespace Utilities_aspnet.User.Entities;
 
 public class UserEntity : IdentityUser {
     public bool? Suspend { get; set; }

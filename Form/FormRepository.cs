@@ -1,4 +1,4 @@
-namespace Utilities_aspnet.FormBuilder;
+namespace Utilities_aspnet.Form;
 
 public interface IFormRepository<T> {
     Task<GenericResponse<List<FormFieldEntity>>> FormFields(Guid categoryId);

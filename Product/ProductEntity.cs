@@ -1,6 +1,3 @@
-using Utilities_aspnet.FormBuilder;
-using Utilities_aspnet.Vote.Entities;
-
 namespace Utilities_aspnet.Product;
 
 public abstract class BaseProductEntity : BaseEntity {
@@ -80,7 +77,7 @@ public class ProductReadDto : BaseReadDto {
     public IEnumerable<IdTitleReadDto>? Tags { get; set; }
     public IEnumerable<VoteReadDto>? VoteFields { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
-    public IEnumerable<FormEntity>? FormBuilders { get; set; }
+    // public IEnumerable<FormEntity>? FormBuilders { get; set; }
 }
 
 public class ProductCreateUpdateDto {

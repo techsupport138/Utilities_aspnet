@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using Utilities_aspnet.FormBuilder;
-
-namespace Utilities_aspnet.Utilities;
+﻿namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(
