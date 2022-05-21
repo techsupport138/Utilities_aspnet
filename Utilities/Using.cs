@@ -58,7 +58,6 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Hosting;
 global using RestSharp;
-global using SmsIrRestfulNetCore;
 global using Utilities_aspnet.Vote.Entities;
 global using Microsoft.AspNetCore.Mvc.ApiExplorer;
 global using Swashbuckle.AspNetCore.SwaggerUI;

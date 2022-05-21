@@ -21,17 +21,17 @@ public class SmsSender : ISmsSender {
         SMSPanelSettings? smsSetting = appSettings.SMSPanelSettings;
         switch (smsSetting.Sender) {
             case Sender.SMS_Ir:
-                string? token = new Token()
-                    .GetToken(smsSetting.SmsApiKey, smsSetting.SmsSecret);
-                MessageSendObject? messageSendObject = new() {
-                    Messages = new List<string> {message}.ToArray(),
-                    MobileNumbers = new List<string> {mobileNumber}.ToArray(),
-                    LineNumber = smsSetting.LineNumber,
-                    SendDateTime = null,
-                    CanContinueInCaseOfError = true
-                };
-
-                MessageSendResponseObject messageSendResponseObject = new MessageSend().Send(token, messageSendObject);
+                // string? token = new Token()
+                //     .GetToken(smsSetting.SmsApiKey, smsSetting.SmsSecret);
+                // MessageSendObject? messageSendObject = new() {
+                //     Messages = new List<string> {message}.ToArray(),
+                //     MobileNumbers = new List<string> {mobileNumber}.ToArray(),
+                //     LineNumber = smsSetting.LineNumber,
+                //     SendDateTime = null,
+                //     CanContinueInCaseOfError = true
+                // };
+                //
+                // MessageSendResponseObject messageSendResponseObject = new MessageSend().Send(token, messageSendObject);
                 //var _message = new Message()
                 //{
                 //    MessageTypeId = 1,
@@ -44,10 +44,10 @@ public class SmsSender : ISmsSender {
                 //};
                 //_context.Messages.Add(_message);
                 //_context.SaveChanges();
-                if (messageSendResponseObject.IsSuccessful)
-                    return messageSendResponseObject.Ids[0].ID;
-                else
-                    return -1;
+                // if (messageSendResponseObject.IsSuccessful)
+                    // return messageSendResponseObject.Ids[0].ID;
+                // else
+                    // return -1;
                 break;
             case Sender.FarazSMS:
 

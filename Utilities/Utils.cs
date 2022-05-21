@@ -57,7 +57,6 @@ public static class StartupExtension {
             options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         });
 
-        builder.Logging.AddEntityFramework<T>();
         builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddMemoryCache();
