@@ -23,10 +23,7 @@
         <PackageReference Include="ImageResizer.AspNetCore" Version="1.9.0"/>
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.1"/>
         <PackageReference Include="RestSharp" Version="107.3.0"/>
-        <PackageReference Include="SmsIrRestfulNetCore" Version="1.1.4"/>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
-        <PackageReference Include="UAParser" Version="3.1.47"/>
-        <PackageReference Include="ZNetCS.AspNetCore.Logging.EntityFrameworkCore" Version="6.0.0"/>
     </ItemGroup>
 
 </Project>
