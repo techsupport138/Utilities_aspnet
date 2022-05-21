@@ -103,7 +103,6 @@ public static class StartupExtension {
             c.UseInlineDefinitionsForEnums();
             c.DocumentFilter<SwaggerFilters>();
             c.SchemaFilter<SchemaFilter>();
-            c.EnableAnnotations();
             c.OrderActionsBy(s => s.RelativePath);
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
                 Description =

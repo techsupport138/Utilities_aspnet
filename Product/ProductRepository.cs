@@ -23,20 +23,6 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
 
-        // T entity = new T {
-        //     Address = dto.Address,
-        //     Description = dto.Description,
-        //     Enabled = dto.Enabled,
-        //     Price = dto.Price,
-        //     Subtitle = dto.Subtitle,
-        //     Title = dto.Title,
-        //     IsForSale = dto.IsForSale,
-        //     VisitCount = dto.VisitsCount,
-        //     EndDate = dto.EndDate,
-        //     StartDate = dto.StartDate,
-        //     UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-        // };
-
         entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         List<ReferenceEntity> references = new();
         List<BrandEntity> brands = new();
