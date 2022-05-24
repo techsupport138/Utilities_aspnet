@@ -24,11 +24,11 @@ public class UserEntity : IdentityUser
     }
 
     public bool Suspend { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string FullName { get; set; }
-    public string Headline { get; set; }
-    public string Bio { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? FullName { get; set; }
+    public string? Headline { get; set; }
+    public string? Bio { get; set; }
     public string AppUserName { get; set; }
     public string AppPhoneNumber { get; set; }
     public double Wallet { get; set; } = 0;
