@@ -3,6 +3,7 @@ namespace Utilities_aspnet.Form;
 public interface IFormRepository {
     Task<GenericResponse<List<FormFieldReadDto>>> ReadFormFields(Guid categoryId);
     Task<GenericResponse<List<FormFieldReadDto>>> CreateFormFields(List<CreateFormFieldDto> dto);
+    Task<GenericResponse<List<FormReadDto>>> UpdateFormBuilder(KVVMs model);
 }
 
 public class FormRepository : IFormRepository {
@@ -16,45 +17,60 @@ public class FormRepository : IFormRepository {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    //public async Task<GenericResponse<FormEntity>> UpdateFormBuilder(KVVMs model) {
-    //    foreach (KVVM item in model.KVVM)
-    //        try {
-    //            FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
-    //                (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
-    //                 x.CompanyId == model.CompanyId || x.UserId == model.UserId ||
-    //                 x.EventId == model.EventId || x.MagazineId == model.MagazineId || x.ServiceId == model.ServiceId ||
-    //                 x.TenderId == model.TenderId || x.TutorialId == model.TutorialId
-    //                ) && x.FormFieldId == item.Key);
-    //            if (up != null) {
-    //                up.Value = item.Value;
-    //                await _dbContext.SaveChangesAsync();
-    //            }
-    //            else {
-    //                _dbContext.Set<FormEntity>().Add(new FormEntity {
-    //                    ProductId = model.ProductId,
-    //                    AdId = model.AdId,
-    //                    CompanyId = model.CompanyId,
-    //                    UserId = model.UserId,
-    //                    EventId = model.EventId,
-    //                    ProjectId = model.ProjectId,
-    //                    MagazineId = model.MagazineId,
-    //                    TutorialId = model.TutorialId,
-    //                    TenderId = model.TenderId,
-    //                    ServiceId = model.ServiceId,
-    //                    FormFieldId = item.Key,
-    //                    Value = item.Value
-    //                });
-    //            }
+    public async Task<GenericResponse<List<FormReadDto>>> UpdateFormBuilder(KVVMs model)
+    {
+        foreach (KVVM item in model.KVVM)
+        {
+            try
+            {
+                FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
+                    (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
+                     x.CompanyId == model.CompanyId || x.UserId == model.UserId ||
+                     x.EventId == model.EventId || x.MagazineId == model.MagazineId || x.ServiceId == model.ServiceId ||
+                     x.TenderId == model.TenderId || x.TutorialId == model.TutorialId
+                    ) && x.FormFieldId == item.Key);
+                if (up != null)
+                {
+                    up.Value = item.Value;
+                    await _dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    _dbContext.Set<FormEntity>().Add(new FormEntity
+                    {
+                        ProductId = model.ProductId,
+                        AdId = model.AdId,
+                        CompanyId = model.CompanyId,
+                        UserId = model.UserId,
+                        EventId = model.EventId,
+                        ProjectId = model.ProjectId,
+                        MagazineId = model.MagazineId,
+                        TutorialId = model.TutorialId,
+                        TenderId = model.TenderId,
+                        ServiceId = model.ServiceId,
+                        FormFieldId = item.Key,
+                        Value = item.Value
+                    });
+                }
 
-    //            await _dbContext.SaveChangesAsync();
-    //        }
-    //        catch {
-    //            // ignored
-    //        }
+                await _dbContext.SaveChangesAsync();
+            }
+            catch
+            {
+                // ignored
+            }
+        }
 
-    //    return new GenericResponse<FormEntity>(new FormEntity());
-    //}
-    
+        List<FormEntity> entity = await _dbContext.Set<FormEntity>().Where(x =>
+                    (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
+                     x.CompanyId == model.CompanyId || x.UserId == model.UserId ||
+                     x.EventId == model.EventId || x.MagazineId == model.MagazineId || x.ServiceId == model.ServiceId ||
+                     x.TenderId == model.TenderId || x.TutorialId == model.TutorialId
+                    )).ToListAsync();
+
+        return new GenericResponse<List<FormReadDto>>(_mapper.Map<List<FormReadDto>>(entity));
+    }
+
     public async Task<GenericResponse<List<FormFieldReadDto>>> CreateFormFields(List<CreateFormFieldDto> dto ) {
         if (dto.Count<1) throw new ArgumentException("Dto must not be null", nameof(dto));
         Guid categoryId = dto.FirstOrDefault().CategoryId;
