@@ -83,3 +83,13 @@ public class CreateFormFieldDto
 
     public Guid CategoryId { get; set; }
 }
+
+public class FormFieldReadDto
+{
+    public string Label { get; set; }
+    public bool IsRequired { get; set; } = false;
+    public string? OptionList { get; set; }
+    public FormFieldType Type { get; set; }
+
+    public Guid CategoryId { get; set; }
+}
