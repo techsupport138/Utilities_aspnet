@@ -48,7 +48,16 @@ public class UploadRepository : IUploadRepository {
                 FileName = url,
                 FileType = fileType,
                 UserId = model.UserId,
-                ProductId = model.ProductId
+                ProductId = model.ProductId,
+                AdId = model.AdsId,
+                CompanyId = model.CompanyId,
+                EventId = model.EventId,
+                MagazineId = model.MagazineId,
+                ProjectId = model.ProjectId,
+                ServiceId = model.ServiceId,
+                TutorialId = model.TutorialId,
+                TenderId = model.TenderId,
+                CreatedAt =DateTime.Now,
             };
             await _context.Set<MediaEntity>().AddAsync(media);
             await _context.SaveChangesAsync();
