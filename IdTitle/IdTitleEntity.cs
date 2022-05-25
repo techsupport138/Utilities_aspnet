@@ -45,7 +45,7 @@ public class ReferenceEntity : BaseIdTitleEntity {
 public class CategoryEntity : BaseIdTitleEntity {
     public Guid? ParentId { get; set; }
     public CategoryEntity? Parent { get; set; }
-    public ICollection<FormReadDto>? FormBuilderFieldLists { get; set; }
+    public ICollection<FormEntity>? FormBuilderFieldLists { get; set; }
 }
 
 [Table("Specialities")]
