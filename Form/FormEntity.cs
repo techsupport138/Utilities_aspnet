@@ -86,6 +86,7 @@ public class CreateFormFieldDto
 
 public class FormFieldReadDto
 {
+    public Guid Id { get; set; }
     public string Label { get; set; }
     public bool IsRequired { get; set; } = false;
     public string? OptionList { get; set; }
