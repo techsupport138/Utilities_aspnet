@@ -77,7 +77,7 @@ public class ProductReadDto : BaseReadDto {
     public IEnumerable<IdTitleReadDto>? Tags { get; set; }
     public IEnumerable<VoteReadDto>? VoteFields { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
-    // public IEnumerable<FormEntity>? FormBuilders { get; set; }
+    public IEnumerable<FormReadDto>? FormBuilders { get; set; }
 }
 
 public class ProductCreateUpdateDto {

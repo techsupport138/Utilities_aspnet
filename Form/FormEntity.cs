@@ -65,3 +65,11 @@ public enum FormFieldType {
     File,
     Image
 }
+
+
+public class FormReadDto
+{
+    public Guid Id { get; set; }
+    public string Value { get; set; }
+    public Guid FormFieldId { get; set; }
+}
