@@ -1,7 +1,7 @@
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
-    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
+    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string userId);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> Read();
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
@@ -19,11 +19,12 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
+    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string userId) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
 
-        entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        entity.UserId = userId;
         List<ReferenceEntity> references = new();
         List<BrandEntity> brands = new();
         List<CategoryEntity> categories = new();
