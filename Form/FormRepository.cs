@@ -1,11 +1,11 @@
 namespace Utilities_aspnet.Form;
 
-public interface IFormRepository<T> {
+public interface IFormRepository {
     Task<GenericResponse<List<FormReadDto>>> ReadFormFields(Guid categoryId);
     Task<GenericResponse<List<FormReadDto>>> CreateFormFields(List<CreateFormFieldDto> dto);
 }
 
-public class FormRepository<T> : IFormRepository<T> {
+public class FormRepository : IFormRepository {
     private readonly DbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
