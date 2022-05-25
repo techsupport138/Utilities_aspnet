@@ -26,7 +26,7 @@ public class EnumRepository : IEnumRepository {
             }).ToList()
         };
 
-        List<IdTitleReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
+        List<KVIdTitle> formFieldType = EnumExtension.GetValues<FormFieldType>();
         model.FormFieldType = formFieldType;
         //if (showGeo)
         //    model.GeoList = _context.Set<Province>().Include(x => x.Cities).Select(x => new KVPIVM {

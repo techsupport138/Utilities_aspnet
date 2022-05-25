@@ -5,6 +5,11 @@ public class KVVM {
     public string Value { get; set; }
 }
 
+public class KVIdTitle {
+    public int Id { get; set; }
+    public string Title { get; set; }
+}
+
 public class KVVMs {
     //public FormBuilderUseCase UseCase { get; set; }
     //public Guid Id { get; set; }

@@ -20,5 +20,5 @@ public class EnumDto {
     public List<IdTitleReadDto> UserRole { get; set; }
     public List<KVPIVM> GeoList { get; set; }
     public List<KVPCategoryVM> Categories { get; internal set; }
-    public List<IdTitleReadDto> FormFieldType { get; internal set; }
+    public List<KVIdTitle> FormFieldType { get; internal set; }
 }
