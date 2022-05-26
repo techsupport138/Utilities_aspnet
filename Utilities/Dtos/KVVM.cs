@@ -13,7 +13,7 @@ public class KVIdTitle {
 public class KVVMs {
     //public FormBuilderUseCase UseCase { get; set; }
     //public Guid Id { get; set; }
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
     public Guid? ProductId { get; set; }
     public Guid? ProjectId { get; set; }
     public Guid? TutorialId { get; set; }

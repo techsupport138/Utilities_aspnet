@@ -1,7 +1,7 @@
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
-    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
+    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string userId);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> Read();
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
@@ -19,11 +19,12 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
+    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string userId) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
 
-        entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        entity.UserId = userId;
         List<ReferenceEntity> references = new();
         List<BrandEntity> brands = new();
         List<CategoryEntity> categories = new();
@@ -118,6 +119,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
 
         foreach (KVVM item in dto.FormBulder ?? new List<KVVM>())
+        {
             try
             {
                 forms.Add(new FormEntity
@@ -130,6 +132,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             {
                 // ignored
             }
+        }
+
 
         entity.Categories = categories;
         entity.Brands = brands;
@@ -137,9 +141,17 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         entity.Locations = locations;
         entity.Specialities = specialities;
         entity.Tags = tags;
-        entity.FormBuilders = forms;
+        //entity.FormBuilders = forms;
         EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
+        //try
+        //{
+        //    var entity2 = await _dbContext.Set<T>().Include(x => x.FormBuilders).FirstOrDefaultAsync(x => x.Id == i.Entity.Id);
+        //    entity2.FormBuilders = forms;
+        //    await _dbContext.SaveChangesAsync();
+        //}
+        //catch { }
+
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 

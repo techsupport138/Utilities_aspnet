@@ -1,10 +1,12 @@
 namespace Utilities_aspnet.Form;
 
-public interface IFormRepository<T> {
-    Task<GenericResponse<List<FormFieldEntity>>> FormFields(Guid categoryId);
+public interface IFormRepository {
+    Task<GenericResponse<List<FormFieldReadDto>>> ReadFormFields(Guid categoryId);
+    Task<GenericResponse<List<FormFieldReadDto>>> CreateFormFields(List<CreateFormFieldDto> dto);
+    Task<GenericResponse<List<FormReadDto>>> UpdateFormBuilder(KVVMs model);
 }
 
-public class FormRepository<T> : IFormRepository<T> {
+public class FormRepository : IFormRepository {
     private readonly DbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
@@ -15,21 +17,27 @@ public class FormRepository<T> : IFormRepository<T> {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<FormEntity>> UpdateFormBuilder(KVVMs model) {
+    public async Task<GenericResponse<List<FormReadDto>>> UpdateFormBuilder(KVVMs model)
+    {
         foreach (KVVM item in model.KVVM)
-            try {
+        {
+            try
+            {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
                     (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
                      x.CompanyId == model.CompanyId || x.UserId == model.UserId ||
                      x.EventId == model.EventId || x.MagazineId == model.MagazineId || x.ServiceId == model.ServiceId ||
                      x.TenderId == model.TenderId || x.TutorialId == model.TutorialId
                     ) && x.FormFieldId == item.Key);
-                if (up != null) {
+                if (up != null)
+                {
                     up.Value = item.Value;
                     await _dbContext.SaveChangesAsync();
                 }
-                else {
-                    _dbContext.Set<FormEntity>().Add(new FormEntity {
+                else
+                {
+                    _dbContext.Set<FormEntity>().Add(new FormEntity
+                    {
                         ProductId = model.ProductId,
                         AdId = model.AdId,
                         CompanyId = model.CompanyId,
@@ -47,15 +55,40 @@ public class FormRepository<T> : IFormRepository<T> {
 
                 await _dbContext.SaveChangesAsync();
             }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        List<FormEntity> entity = await _dbContext.Set<FormEntity>().Where(x =>
+                    (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
+                     x.CompanyId == model.CompanyId || x.UserId == model.UserId ||
+                     x.EventId == model.EventId || x.MagazineId == model.MagazineId || x.ServiceId == model.ServiceId ||
+                     x.TenderId == model.TenderId || x.TutorialId == model.TutorialId
+                    )).ToListAsync();
+
+        return new GenericResponse<List<FormReadDto>>(_mapper.Map<List<FormReadDto>>(entity));
+    }
+
+    public async Task<GenericResponse<List<FormFieldReadDto>>> CreateFormFields(List<CreateFormFieldDto> dto ) {
+        if (dto.Count<1) throw new ArgumentException("Dto must not be null", nameof(dto));
+        Guid categoryId = dto.FirstOrDefault().CategoryId;
+        foreach (var item in dto)
+            try {
+                FormFieldEntity entity = _mapper.Map<FormFieldEntity>(item);
+                EntityEntry<FormFieldEntity> i = await _dbContext.Set<FormFieldEntity>().AddAsync(entity);
+                await _dbContext.SaveChangesAsync();
+            }
             catch {
                 // ignored
             }
 
-        return new GenericResponse<FormEntity>(new FormEntity());
+        return new GenericResponse<List<FormFieldReadDto>>(ReadFormFields(categoryId).Result.Result);
     }
     
-    public async Task<GenericResponse<List<FormFieldEntity>>> FormFields(Guid categoryId) {
+    public async Task<GenericResponse<List<FormFieldReadDto>>> ReadFormFields(Guid categoryId) {
         List<FormFieldEntity> model = await _dbContext.Set<FormFieldEntity>().Where(x=>x.CategoryId == categoryId).ToListAsync();
-        return new GenericResponse<List<FormFieldEntity>>(model);
+        return new GenericResponse<List<FormFieldReadDto>>(_mapper.Map<List<FormFieldReadDto>>(model));
     }
 }
