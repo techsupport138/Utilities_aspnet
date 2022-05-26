@@ -2,7 +2,7 @@ namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
     Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
-    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read();
+    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto);
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
     Task<GenericResponse> Delete(Guid id);
@@ -154,7 +154,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read() {
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto) {
         IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
@@ -166,6 +166,18 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.References)
             .Include(i => i.User)
             .ToListAsync();
+        if(filterDto != null)
+        {
+            if (filterDto.SearchParameter != null)
+            {
+                i = i.Where(x => x.Title.Contains(filterDto.SearchParameter));
+            }
+            if (filterDto.SortByDate != null)
+            {
+                i = filterDto.SortByDate == true? i.OrderByDescending(x=>x.CreatedAt): i.OrderBy(x => x.CreatedAt);
+            }
+        }
+
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto);
     }
