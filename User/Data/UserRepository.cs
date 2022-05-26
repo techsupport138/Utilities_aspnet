@@ -52,7 +52,7 @@ public class UserRepository : IUserRepository
         var token = await CreateToken(user);
 
         return new GenericResponse<UserReadDto?>(
-            GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -81,7 +81,7 @@ public class UserRepository : IUserRepository
         var token = await CreateToken(user);
 
         return new GenericResponse<UserReadDto?>(
-            GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -152,7 +152,7 @@ public class UserRepository : IUserRepository
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
         return new GenericResponse<UserReadDto?>(
-            GetProfile(user.UserName, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, "Success"
         );
     }
@@ -288,7 +288,7 @@ public class UserRepository : IUserRepository
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Bad Request");
         }
 
-        return new GenericResponse<UserReadDto?>(GetProfile(user.UserName, "").Result.Result, UtilitiesStatusCodes.Success,
+        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, "").Result.Result, UtilitiesStatusCodes.Success,
             "Success");
     }
 

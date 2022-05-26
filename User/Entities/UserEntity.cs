@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.User.Entities;
+﻿using Utilities_aspnet.Follow.Entities;
+
+namespace Utilities_aspnet.User.Entities;
 
 public class UserEntity : IdentityUser
 {
@@ -21,6 +23,8 @@ public class UserEntity : IdentityUser
         Services = new List<ServiceEntity>();
         Magazines = new List<MagazineEntity>();
         Specialties = new List<SpecialityEntity>();
+        Follower = new List<FollowEntity>();
+        Following = new List<FollowEntity>();
     }
 
     public bool Suspend { get; set; }
@@ -34,6 +38,8 @@ public class UserEntity : IdentityUser
     public double Wallet { get; set; } = 0;
     public DateTime Birthdate { get; set; }
 
+    public List<FollowEntity> Follower { get; set; }
+    public List<FollowEntity> Following { get; set; }
     public List<LocationEntity> Location { get; set; }
     public List<FormEntity> FormBuilders { get; set; }
     public List<MediaEntity> Media { get; set; }
