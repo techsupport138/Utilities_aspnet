@@ -99,7 +99,7 @@ public class ProductCreateUpdateDto {
     public IEnumerable<Guid>? Brands { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Tags { get; set; }
-    public List<KVVM> FormBulder { get; set; }
+    //public List<KVVM> FormBulder { get; set; }
 }
 
 public class FilterProductDto

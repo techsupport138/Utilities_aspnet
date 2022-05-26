@@ -117,21 +117,21 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         }
 
 
-        foreach (KVVM item in dto.FormBulder ?? new List<KVVM>())
-        {
-            try
-            {
-                forms.Add(new FormEntity
-                {
-                    FormFieldId = item.Key,
-                    Value = item.Value
-                });
-            }
-            catch
-            {
-                // ignored
-            }
-        }
+        //foreach (KVVM item in dto.FormBulder ?? new List<KVVM>())
+        //{
+        //    try
+        //    {
+        //        forms.Add(new FormEntity
+        //        {
+        //            FormFieldId = item.Key,
+        //            Value = item.Value
+        //        });
+        //    }
+        //    catch
+        //    {
+        //        // ignored
+        //    }
+        //}
 
 
         entity.Categories = categories;
@@ -165,6 +165,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
+            .Include(i => i.FormBuilders)
             .ToListAsync();
         if(filterDto != null)
         {
@@ -193,6 +194,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
+            .Include(i => i.FormBuilders)
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
