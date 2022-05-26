@@ -23,11 +23,18 @@ public class EnumRepository : IEnumRepository {
                 Id = x.Id,
                 Title = x.Title,
                 Subtitle = x.Color
+            }).ToList(),
+            Specialties = _context.Set<SpecialityEntity>().Select(x => new IdTitleReadDto {
+                Id = x.Id,
+                Title = x.Title,
+                Subtitle = x.Color
             }).ToList()
         };
 
         List<KVIdTitle> formFieldType = EnumExtension.GetValues<FormFieldType>();
+        List<KVIdTitle> idTitleUseCase = EnumExtension.GetValues<IdTitleUseCase>();
         model.FormFieldType = formFieldType;
+        model.IdTitleUseCase = idTitleUseCase;
         //if (showGeo)
         //    model.GeoList = _context.Set<Province>().Include(x => x.Cities).Select(x => new KVPIVM {
         //        Key = x.ProvinceId,
