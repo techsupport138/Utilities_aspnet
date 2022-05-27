@@ -11,6 +11,6 @@ public class FollowEntity {
     /// </summary>
     public string TargetUserId { get; set; } = null!;
 
-    public UserEntity SourceUser { get; set; } = null!;
-    public UserEntity TargetUser { get; set; } = null!;
+    public UserEntity? SourceUser { get; set; }
+    public UserEntity? TargetUser { get; set; }
 }
