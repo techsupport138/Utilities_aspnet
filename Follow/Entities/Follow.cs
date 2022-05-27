@@ -2,10 +2,16 @@
 
 public class FollowEntity
 {
-    public Guid SourceUserId { get; set; }
-    public Guid TargetUserId { get; set; }
-    public bool IsRequest { get; set; }
+    /// <summary>
+    /// دنبال کننده - follower
+    /// </summary>
+    public string SourceUserId { get; set; } = null!;
 
-    public UserEntity SourceUser { get; set; }
-    public UserEntity TargetUser { get; set; }
+    /// <summary>
+    /// دنبال شونده - following
+    /// </summary>
+    public string TargetUserId { get; set; } = null!;
+
+    public UserEntity SourceUser { get; set; } = null!;
+    public UserEntity TargetUser { get; set; } = null!;
 }

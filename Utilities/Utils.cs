@@ -1,4 +1,7 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using Utilities_aspnet.Follow.Data;
+using Utilities_aspnet.Wallet.Data;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(
@@ -66,6 +69,8 @@ public static class StartupExtension {
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
+        builder.Services.AddTransient<IFollowRepository, FollowRepository>();
+        builder.Services.AddTransient<IWalletRepository, WalletRepository>();
         builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
         builder.Services.AddTransient<IMediaRepository, MediaRepository>();
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
