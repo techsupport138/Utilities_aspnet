@@ -78,68 +78,92 @@ public class UploadRepository : IUploadRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
     }
 
-    //public async Task<GenericResponse> UploadChunk(UploadDto parameter)
-    //{
-    //    if (parameter.Files.Count < 1) return new GenericResponse(UtilitiesStatusCodes.BadRequest, "File not uploaded");
+    public async Task<GenericResponse> UploadChunk(UploadDto parameter)
+    {
+        if (parameter.Files.Count < 1) return new GenericResponse(UtilitiesStatusCodes.BadRequest, "File not uploaded");
 
-    //    try
-    //    {
-    //        var fileType = FileTypes.Image;
+        try
+        {
+            List<Guid>? ids = new();
+            var fileType = FileTypes.Image;
 
-    //        foreach (var file in parameter.Files)
-    //        {
-    //            var filename = ContentDispositionHeaderValue
-    //                .Parse(file.ContentDisposition)
-    //                .FileName
-    //                .Trim()
-    //                .Value;
+            var filename = ContentDispositionHeaderValue
+                .Parse(parameter.Files.First().ContentDisposition)
+                .FileName
+                .Trim()
+                .Value;
 
-    //            if (file.ContentType.Contains("svg")) fileType = FileTypes.Svg;
+            foreach (var file in parameter.Files)
+            {
+                if (file.ContentType.Contains("svg")) fileType = FileTypes.Svg;
 
-    //            if (file.ContentType.Contains("video")) fileType = FileTypes.Video;
+                if (file.ContentType.Contains("video")) fileType = FileTypes.Video;
 
-    //            if (file.ContentType.Contains("pdf")) fileType = FileTypes.Pdf;
+                if (file.ContentType.Contains("pdf")) fileType = FileTypes.Pdf;
 
-    //            if (file.ContentType.Contains("Voice")) fileType = FileTypes.Voice;
+                if (file.ContentType.Contains("Voice")) fileType = FileTypes.Voice;
 
-    //            if (file.ContentType.Contains("Gif")) fileType = FileTypes.Gif;
+                if (file.ContentType.Contains("Gif")) fileType = FileTypes.Gif;
 
 
-    //            filename = _env.WebRootPath + $@"\{filename}";
-    //            if (!File.Exists(filename))
-    //            {
-    //                await using var fs = File.Create(filename);
-    //                await file.CopyToAsync(fs);
-    //                fs.Flush();
-    //            }
-    //            else
-    //            {
-    //                await using var fs = File.Open(filename, FileMode.Append);
-    //                await file.CopyToAsync(fs);
-    //                fs.Flush();
-    //            }
-    //        }
+                filename = _env.WebRootPath + $@"\{filename}";
+                if (!File.Exists(filename))
+                {
+                    await using var fs = File.Create(filename);
+                    await file.CopyToAsync(fs);
+                    fs.Flush();
+                }
+                else
+                {
+                    await using var fs = File.Open(filename, FileMode.Append);
+                    await file.CopyToAsync(fs);
+                    fs.Flush();
+                }
+            }
 
-    //        var folder = "";
-    //        if (parameter.UserId != null)
-    //        {
-    //            folder = "Users";
-    //            var userMedia =
-    //                _context.Set<MediaEntity>().Where(x => x.UserId == parameter.UserId).ToList();
-    //            if (userMedia.Count > 0)
-    //            {
-    //                _context.Set<MediaEntity>().RemoveRange(userMedia);
-    //                await _context.SaveChangesAsync();
-    //            }
-    //        }
+            var folder = "";
+            if (parameter.UserId != null)
+            {
+                folder = "Users";
+                var userMedia =
+                    _context.Set<MediaEntity>().Where(x => x.UserId == parameter.UserId).ToList();
+                if (userMedia.Count > 0)
+                {
+                    _context.Set<MediaEntity>().RemoveRange(userMedia);
+                    await _context.SaveChangesAsync();
+                }
+            }
 
-    //        return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
-    //    }
-    //    catch
-    //    {
-    //        return new GenericResponse(UtilitiesStatusCodes.BadRequest, "در آپلود فایل خطایی رخ داده است");
-    //    }
-    //}
+            var name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(filename));
+            var url = _mediaRepository.GetFileUrl(name, folder);
+            MediaEntity media = new()
+            {
+                FileName = url,
+                FileType = fileType,
+                UserId = parameter.UserId,
+                ProductId = parameter.ProductId,
+                AdId = parameter.AdsId,
+                CompanyId = parameter.CompanyId,
+                EventId = parameter.EventId,
+                MagazineId = parameter.MagazineId,
+                ProjectId = parameter.ProjectId,
+                ServiceId = parameter.ServiceId,
+                TutorialId = parameter.TutorialId,
+                TenderId = parameter.TenderId,
+                CreatedAt = DateTime.Now,
+            };
+            await _context.Set<MediaEntity>().AddAsync(media);
+            await _context.SaveChangesAsync();
+            ids.Add(media.Id);
+            _mediaRepository.SaveMedia(file, name, folder);
+
+            return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
+        }
+        catch
+        {
+            return new GenericResponse(UtilitiesStatusCodes.BadRequest, "در آپلود فایل خطایی رخ داده است");
+        }
+    }
 
     public async Task<GenericResponse> DeleteMedia(Guid id)
     {
