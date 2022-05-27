@@ -18,7 +18,7 @@ public class FollowRepository : IFollowRepository {
     }
 
     public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
-        List<UserEntity> followers = await _context.Set<FollowEntity>()
+        List<UserEntity?> followers = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.SourceUserId == id)
             .Include(x => x.TargetUser)
@@ -32,7 +32,7 @@ public class FollowRepository : IFollowRepository {
     }
 
     public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id) {
-        List<UserEntity> followings = await _context.Set<FollowEntity>()
+        List<UserEntity?> followings = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.TargetUserId == id)
             .Include(x => x.SourceUser)

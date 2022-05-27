@@ -1,6 +1,11 @@
 ﻿namespace Utilities_aspnet.Follow;
 
 public class FollowEntity {
+
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; }
+
     /// <summary>
     /// follower
     /// </summary>
