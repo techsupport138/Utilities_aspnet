@@ -116,40 +116,14 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (tag != null) tags.Add(tag);
         }
 
-
-        //foreach (KVVM item in dto.FormBulder ?? new List<KVVM>())
-        //{
-        //    try
-        //    {
-        //        forms.Add(new FormEntity
-        //        {
-        //            FormFieldId = item.Key,
-        //            Value = item.Value
-        //        });
-        //    }
-        //    catch
-        //    {
-        //        // ignored
-        //    }
-        //}
-
-
         entity.Categories = categories;
         entity.Brands = brands;
         entity.References = references;
         entity.Locations = locations;
         entity.Specialities = specialities;
         entity.Tags = tags;
-        //entity.FormBuilders = forms;
         EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
         await _dbContext.SaveChangesAsync();
-        //try
-        //{
-        //    var entity2 = await _dbContext.Set<T>().Include(x => x.FormBuilders).FirstOrDefaultAsync(x => x.Id == i.Entity.Id);
-        //    entity2.FormBuilders = forms;
-        //    await _dbContext.SaveChangesAsync();
-        //}
-        //catch { }
 
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
@@ -167,10 +141,11 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.User)
             .Include(i => i.Forms)
             .ToListAsync();
+        
         if (filterDto != null) {
-            if (filterDto.SearchParameter != null) i = i.Where(x => x.Title.Contains(filterDto.SearchParameter));
-            if (filterDto.SortByDate != null)
-                i = filterDto.SortByDate == true ? i.OrderByDescending(x => x.CreatedAt) : i.OrderBy(x => x.CreatedAt);
+            if (filterDto.Query != null) i = i.Where(x => x.Title.Contains(filterDto.Query));
+            if (filterDto.DescendingDate != null)
+                i = filterDto.DescendingDate == true ? i.OrderByDescending(x => x.CreatedAt) : i.OrderBy(x => x.CreatedAt);
         }
 
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);

@@ -55,6 +55,16 @@ public class FormFieldEntity : BaseEntity {
     public IEnumerable<FormEntity> Forms { get; set; }
 }
 
+public class FormFieldDto {
+    public Guid? Id { get; set; }
+    public string? Label { get; set; }
+    public string? Value { get; set; }
+    public bool? IsRequired { get; set; }
+    public string? OptionList { get; set; }
+    public FormFieldType? Type { get; set; }
+    public Guid? CategoryId { get; set; }
+}
+
 public enum FormFieldType {
     SingleLineText,
     MultiLineText,
@@ -64,20 +74,4 @@ public enum FormFieldType {
     Number,
     File,
     Image
-}
-
-// public class FormReadDto {
-//     public Guid Id { get; set; }
-//     public string Value { get; set; }
-//     public Guid FormFieldId { get; set; }
-// }
-
-public class FormFieldDto {
-    public Guid? Id { get; set; }
-    public string? Label { get; set; }
-    public string? Value { get; set; }
-    public bool? IsRequired { get; set; }
-    public string? OptionList { get; set; }
-    public FormFieldType? Type { get; set; }
-    public Guid? CategoryId { get; set; }
 }

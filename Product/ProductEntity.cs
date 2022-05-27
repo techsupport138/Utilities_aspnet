@@ -106,6 +106,6 @@ public class ProductCreateUpdateDto {
 }
 
 public class FilterProductDto {
-    public string? SearchParameter { get; set; }
-    public bool? SortByDate { get; set; }
+    public string? Query { get; set; }
+    public bool? DescendingDate { get; set; }
 }
