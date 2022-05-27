@@ -1,8 +1,8 @@
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
-    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string userId);
-    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read();
+    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
+    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto);
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
     Task<GenericResponse> Delete(Guid id);
@@ -19,12 +19,11 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string userId) {
+    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
 
-        //entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        entity.UserId = userId;
+        entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         List<ReferenceEntity> references = new();
         List<BrandEntity> brands = new();
         List<CategoryEntity> categories = new();
@@ -118,21 +117,21 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         }
 
 
-        foreach (KVVM item in dto.FormBulder ?? new List<KVVM>())
-        {
-            try
-            {
-                forms.Add(new FormEntity
-                {
-                    FormFieldId = item.Key,
-                    Value = item.Value
-                });
-            }
-            catch
-            {
-                // ignored
-            }
-        }
+        //foreach (KVVM item in dto.FormBulder ?? new List<KVVM>())
+        //{
+        //    try
+        //    {
+        //        forms.Add(new FormEntity
+        //        {
+        //            FormFieldId = item.Key,
+        //            Value = item.Value
+        //        });
+        //    }
+        //    catch
+        //    {
+        //        // ignored
+        //    }
+        //}
 
 
         entity.Categories = categories;
@@ -155,7 +154,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read() {
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto) {
         IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
@@ -166,7 +165,20 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
+            .Include(i => i.FormBuilders)
             .ToListAsync();
+        if(filterDto != null)
+        {
+            if (filterDto.SearchParameter != null)
+            {
+                i = i.Where(x => x.Title.Contains(filterDto.SearchParameter));
+            }
+            if (filterDto.SortByDate != null)
+            {
+                i = filterDto.SortByDate == true? i.OrderByDescending(x=>x.CreatedAt): i.OrderBy(x => x.CreatedAt);
+            }
+        }
+
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto);
     }
@@ -182,6 +194,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
+            .Include(i => i.FormBuilders)
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
