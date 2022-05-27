@@ -81,7 +81,7 @@ public class ProductReadDto {
     public IEnumerable<IdTitleReadDto>? Tags { get; set; }
     public IEnumerable<VoteReadDto>? VoteFields { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
-    public IEnumerable<FormReadDto>? Forms { get; set; }
+    public IEnumerable<FormFieldDto>? Forms { get; set; }
 }
 
 public class ProductCreateUpdateDto {
@@ -102,9 +102,7 @@ public class ProductCreateUpdateDto {
     public IEnumerable<Guid>? References { get; set; }
     public IEnumerable<Guid>? Brands { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
-
     public IEnumerable<Guid>? Tags { get; set; }
-    //public List<KVVM> FormBulder { get; set; }
 }
 
 public class FilterProductDto {

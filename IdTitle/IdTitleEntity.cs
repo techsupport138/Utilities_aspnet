@@ -92,7 +92,7 @@ public class IdTitleReadDto {
     public string? Color { get; set; }
     public string? Link { get; set; }
     public IdTitleUseCase? UseCase { get; set; }
-    public List<FormReadDto>? FormBuilderFieldLists { get; set; }
+    public List<FormFieldDto>? FormBuilderFieldLists { get; set; }
 }
 
 public class IdTitleCreateUpdateDto {
