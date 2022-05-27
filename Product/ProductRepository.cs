@@ -165,7 +165,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
-            .Include(i => i.FormBuilders)
+            .Include(i => i.Forms)
             .ToListAsync();
         if (filterDto != null) {
             if (filterDto.SearchParameter != null) i = i.Where(x => x.Title.Contains(filterDto.SearchParameter));
@@ -188,7 +188,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
-            .Include(i => i.FormBuilders)
+            .Include(i => i.Forms)
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }

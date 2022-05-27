@@ -18,7 +18,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<LocationEntity>? Locations { get; set; }
     public IEnumerable<FavoriteEntity>? Favorites { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
-    public IEnumerable<FormEntity>? FormBuilders { get; set; }
+    public IEnumerable<FormEntity>? Forms { get; set; }
     public IEnumerable<CategoryEntity>? Categories { get; set; }
     public IEnumerable<TagEntity>? Tags { get; set; }
     public IEnumerable<VoteFieldEntity>? VoteFields { get; set; }
@@ -77,7 +77,7 @@ public class ProductReadDto : BaseReadDto {
     public IEnumerable<IdTitleReadDto>? Tags { get; set; }
     public IEnumerable<VoteReadDto>? VoteFields { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
-    public IEnumerable<FormReadDto>? FormBuilders { get; set; }
+    public IEnumerable<FormReadDto>? Forms { get; set; }
 }
 
 public class ProductCreateUpdateDto {
