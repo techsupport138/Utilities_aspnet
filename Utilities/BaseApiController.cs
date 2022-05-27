@@ -1,4 +1,4 @@
-﻿namespace Utilities_aspnet.Base;
+﻿namespace Utilities_aspnet.Utilities;
 
 [ApiController]
 public abstract class BaseApiController : ControllerBase {

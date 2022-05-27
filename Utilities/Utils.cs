@@ -1,7 +1,4 @@
-﻿using Utilities_aspnet.Follow.Data;
-using Utilities_aspnet.Wallet.Data;
-
-namespace Utilities_aspnet.Utilities;
+﻿namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(
@@ -69,12 +66,8 @@ public static class StartupExtension {
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
-        builder.Services.AddTransient<IFollowRepository, FollowRepository>();
-        builder.Services.AddTransient<IWalletRepository, WalletRepository>();
-        builder.Services.AddTransient<IStatisticRepository, StatisticRepository>();
         builder.Services.AddTransient<IMediaRepository, MediaRepository>();
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
-        builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
         builder.Services.AddTransient<IIdTitleRepository<CategoryEntity>, IdTitleRepository<CategoryEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<TagEntity>, IdTitleRepository<TagEntity>>();
@@ -94,11 +87,6 @@ public static class StartupExtension {
         builder.Services.AddTransient<IProductRepository<TenderEntity>, ProductRepository<TenderEntity>>();
         builder.Services.AddTransient<IProductRepository<ServiceEntity>, ProductRepository<ServiceEntity>>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
-
-        //https://blog.elmah.io/generate-a-pdf-from-asp-net-core-for-free/
-        //https://github.com/keyone2693/ImageResizer.AspNetCore
-        //http://imageresizer.aspnetcore.keyone2693.ir/
-        builder.Services.AddImageResizer();
     }
 
     private static void AddUtilitiesSwagger(this WebApplicationBuilder builder) {
@@ -171,10 +159,6 @@ public static class StartupExtension {
             foreach ((string _, OpenApiSchema? value) in schema.Properties)
                 if (value.Default != null && value.Example == null)
                     value.Example = value.Default;
-        }
-
-        private string ToCamelCase(string name) {
-            return char.ToLowerInvariant(name[0]) + name[1..];
         }
     }
 
