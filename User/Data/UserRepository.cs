@@ -11,7 +11,7 @@ public interface IUserRepository
     Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null);
     Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
     Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
-    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string userName);
+    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string id);
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
 }
@@ -188,7 +188,7 @@ public class UserRepository : IUserRepository
         return new GenericResponse<UserReadDto?>(dto);
     }
 
-    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string username)
+    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string id)
     {
         UserEntity? user = _context.Set<UserEntity>()
             .Include(x => x.Colors)
@@ -196,7 +196,7 @@ public class UserRepository : IUserRepository
             .Include(x => x.Media)
             .Include(x => x.Specialties)
             .Include(x => x.ContactInformation)
-            .FirstOrDefault(x => x.UserName == username);
+            .FirstOrDefault(x => x.Id == id);
 
         if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
@@ -260,11 +260,11 @@ public class UserRepository : IUserRepository
                 user.Specialties.AddRange(specialties);
             }
 
-            if (dto.Media != null)
-            {
-                MediaEntity? media = _mapper.Map<MediaEntity>(dto.Media);
-                user.Media.Add(media);
-            }
+            //if (dto.Media != null)
+            //{
+            //    MediaEntity? media = _mapper.Map<MediaEntity>(dto.Media);
+            //    user.Media.Add(media);
+            //}
 
             if (dto.ContactInformation != null)
             {
@@ -275,6 +275,7 @@ public class UserRepository : IUserRepository
                     _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity()
                     {
                         UserId = user.Id,
+                        Value = x.Title ?? "",
                         Link = x.Link
                     });
                 });
