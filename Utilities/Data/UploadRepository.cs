@@ -6,6 +6,7 @@ public interface IUploadRepository
 {
     Task<GenericResponse> UploadMedia(UploadDto model);
     Task<GenericResponse> DeleteMedia(Guid id);
+    Task<GenericResponse> UploadChunkMedia(UploadDto parameter);
 }
 
 public class UploadRepository : IUploadRepository
@@ -78,7 +79,7 @@ public class UploadRepository : IUploadRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
     }
 
-    public async Task<GenericResponse> UploadChunk(UploadDto parameter)
+    public async Task<GenericResponse> UploadChunkMedia(UploadDto parameter)
     {
         if (parameter.Files.Count < 1) return new GenericResponse(UtilitiesStatusCodes.BadRequest, "File not uploaded");
 
@@ -92,6 +93,9 @@ public class UploadRepository : IUploadRepository
                 .FileName
                 .Trim()
                 .Value;
+            var extension = Path.GetExtension(filename);
+
+            var signature = Guid.NewGuid();
 
             foreach (var file in parameter.Files)
             {
@@ -106,7 +110,7 @@ public class UploadRepository : IUploadRepository
                 if (file.ContentType.Contains("Gif")) fileType = FileTypes.Gif;
 
 
-                filename = _env.WebRootPath + $@"\{filename}";
+                filename = _env.WebRootPath + $@"\{signature}{extension}";
                 if (!File.Exists(filename))
                 {
                     await using var fs = File.Create(filename);
@@ -134,8 +138,7 @@ public class UploadRepository : IUploadRepository
                 }
             }
 
-            var name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(filename));
-            var url = _mediaRepository.GetFileUrl(name, folder);
+            var url = _mediaRepository.GetFileUrl(filename, folder);
             MediaEntity media = new()
             {
                 FileName = url,
@@ -156,8 +159,6 @@ public class UploadRepository : IUploadRepository
             await _context.SaveChangesAsync();
             
             ids.Add(media.Id);
-
-            //_mediaRepository.SaveMedia(file, name, folder);
 
             return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
         }
