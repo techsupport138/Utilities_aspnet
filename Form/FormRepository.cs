@@ -2,7 +2,7 @@ namespace Utilities_aspnet.Form;
 
 public interface IFormRepository {
     Task<GenericResponse<List<FormFieldDto>>> ReadFormFields(Guid categoryId);
-    Task<GenericResponse<List<FormFieldDto>?>> CreateFormFields(List<FormFieldDto> dto);
+    Task<GenericResponse<List<FormFieldDto>?>> CreateFormFields(FormFieldDto dto);
     Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(KVVMs model);
 }
 
@@ -62,18 +62,16 @@ public class FormRepository : IFormRepository {
         return new GenericResponse<List<FormFieldDto>>(_mapper.Map<List<FormFieldDto>>(entity));
     }
 
-    public async Task<GenericResponse<List<FormFieldDto>?>> CreateFormFields(List<FormFieldDto> dto) {
-        if (dto.Count < 1) throw new ArgumentException("Dto must not be null", nameof(dto));
-        Guid? categoryId = dto.FirstOrDefault().CategoryId;
-        foreach (FormFieldDto? item in dto)
-            try {
-                FormFieldEntity entity = _mapper.Map<FormFieldEntity>(item);
-                EntityEntry<FormFieldEntity> i = await _dbContext.Set<FormFieldEntity>().AddAsync(entity);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch {
-                // ignored
-            }
+    public async Task<GenericResponse<List<FormFieldDto>?>> CreateFormFields(FormFieldDto dto) {
+        Guid? categoryId = dto.CategoryId;
+        try {
+            FormFieldEntity entity = _mapper.Map<FormFieldEntity>(dto);
+            await _dbContext.Set<FormFieldEntity>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch {
+            // ignored
+        }
 
         return categoryId != null
             ? new GenericResponse<List<FormFieldDto>?>(ReadFormFields((Guid) categoryId).Result.Result)

@@ -34,7 +34,7 @@ public class EnumRepository : IEnumRepository {
         List<KVIdTitle> formFieldType = EnumExtension.GetValues<FormFieldType>();
         List<KVIdTitle> idTitleUseCase = EnumExtension.GetValues<IdTitleUseCase>();
         model.FormFieldType = formFieldType;
-        model.IdTitleUseCase = idTitleUseCase;
+        model.CategoryUseCase = idTitleUseCase;
         //if (showGeo)
         //    model.GeoList = _context.Set<Province>().Include(x => x.Cities).Select(x => new KVPIVM {
         //        Key = x.ProvinceId,
