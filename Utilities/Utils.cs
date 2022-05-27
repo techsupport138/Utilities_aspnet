@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using Utilities_aspnet.Follow;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(
@@ -68,6 +70,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IUserRepository, UserRepository>();
         builder.Services.AddTransient<IMediaRepository, MediaRepository>();
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
+        builder.Services.AddTransient<IFollowRepository, FollowRepository>();
         builder.Services.AddTransient<IEnumRepository, EnumRepository>();
         builder.Services.AddTransient<IIdTitleRepository<CategoryEntity>, IdTitleRepository<CategoryEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<TagEntity>, IdTitleRepository<TagEntity>>();
