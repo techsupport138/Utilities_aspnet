@@ -33,10 +33,10 @@ public class UserEntity : IdentityUser
     public string? FullName { get; set; }
     public string? Headline { get; set; }
     public string? Bio { get; set; }
-    public string AppUserName { get; set; }
-    public string AppPhoneNumber { get; set; }
+    public string? AppUserName { get; set; }
+    public string? AppPhoneNumber { get; set; }
     public double Wallet { get; set; } = 0;
-    public DateTime Birthdate { get; set; }
+    public DateTime? Birthdate { get; set; }
 
     //public List<FollowEntity> Follower { get; set; }
     //public List<FollowEntity> Following { get; set; }
