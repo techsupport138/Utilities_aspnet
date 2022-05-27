@@ -84,7 +84,7 @@ public class UploadRepository : IUploadRepository
 
         try
         {
-            List<Guid>? ids = new();
+            List<Guid> ids = new();
             var fileType = FileTypes.Image;
 
             var filename = ContentDispositionHeaderValue
@@ -154,14 +154,16 @@ public class UploadRepository : IUploadRepository
             };
             await _context.Set<MediaEntity>().AddAsync(media);
             await _context.SaveChangesAsync();
+            
             ids.Add(media.Id);
-            _mediaRepository.SaveMedia(file, name, folder);
+
+            //_mediaRepository.SaveMedia(file, name, folder);
 
             return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
         }
         catch
         {
-            return new GenericResponse(UtilitiesStatusCodes.BadRequest, "در آپلود فایل خطایی رخ داده است");
+            return new GenericResponse(UtilitiesStatusCodes.BadRequest, "Fail to upload");
         }
     }
 

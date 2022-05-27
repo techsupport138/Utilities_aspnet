@@ -2,7 +2,8 @@
 
 namespace Utilities_aspnet.User.Data;
 
-public interface IUserRepository {
+public interface IUserRepository
+{
     Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
@@ -15,7 +16,8 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
 }
 
-public class UserRepository : IUserRepository {
+public class UserRepository : IUserRepository
+{
     private readonly DbContext _context;
     private readonly IMapper _mapper;
     private readonly IOtpService _otp;
@@ -28,7 +30,8 @@ public class UserRepository : IUserRepository {
         SignInManager<UserEntity> signInManager,
         IConfiguration config,
         IMapper mapper,
-        IOtpService otp) {
+        IOtpService otp)
+    {
         _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
@@ -36,7 +39,8 @@ public class UserRepository : IUserRepository {
         _mapper = mapper;
     }
 
-    public async Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model) {
+    public async Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model)
+    {
         UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
@@ -52,14 +56,16 @@ public class UserRepository : IUserRepository {
             UtilitiesStatusCodes.Success, "Success");
     }
 
-    public async Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser) {
+    public async Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser)
+    {
         UserEntity? model = _context.Set<UserEntity>()
             .FirstOrDefault(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email);
         if (model != null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
                 "This email or username already exists");
 
-        UserEntity user = new() {
+        UserEntity user = new()
+        {
             Email = aspNetUser.Email,
             UserName = aspNetUser.UserName,
             PhoneNumber = aspNetUser.UserName,
@@ -79,19 +85,23 @@ public class UserRepository : IUserRepository {
             UtilitiesStatusCodes.Success, "Success");
     }
 
-    public async Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
+    public async Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto)
+    {
         UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == dto.Mobile);
         string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
         if (dto.Mobile.Length <= 9 || !mobile.isNumerical())
             return new GenericResponse<string?>("", UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
 
-        if (model != null) {
+        if (model != null)
+        {
             string? otp = "9999";
             if (dto.SendSMS) otp = _otp.SendOtp(model.Id);
             return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
-        else {
-            UserEntity user = new() {
+        else
+        {
+            UserEntity user = new()
+            {
                 Email = "",
                 PhoneNumber = mobile,
                 UserName = mobile,
@@ -115,7 +125,8 @@ public class UserRepository : IUserRepository {
         }
     }
 
-    public async Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto) {
+    public async Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto)
+    {
         string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
 
         if (!mobile.isMobileNumber())
@@ -146,7 +157,8 @@ public class UserRepository : IUserRepository {
         );
     }
 
-    public Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null) {
+    public Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null)
+    {
         UserEntity? model = _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
@@ -160,21 +172,24 @@ public class UserRepository : IUserRepository {
             : new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
     }
 
-    public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id) {
+    public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id)
+    {
         UserEntity? model = await _context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
         UserReadDto? dto = _mapper.Map<UserReadDto>(model);
         return new GenericResponse<UserReadDto?>(dto);
     }
 
-    public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username) {
+    public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username)
+    {
         UserEntity? model = await _context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
         if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
         UserReadDto? dto = _mapper.Map<UserReadDto>(model);
         return new GenericResponse<UserReadDto?>(dto);
     }
 
-    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string username) {
+    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string username)
+    {
         UserEntity? user = _context.Set<UserEntity>()
             .Include(x => x.Colors)
             .Include(x => x.Location)
@@ -186,7 +201,8 @@ public class UserRepository : IUserRepository {
         if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
-        try {
+        try
+        {
             if (!string.IsNullOrEmpty(dto.FullName))
                 user.FullName = dto.FullName;
 
@@ -208,7 +224,8 @@ public class UserRepository : IUserRepository {
             if (!string.IsNullOrEmpty(dto.AppEmail))
                 user.Email = dto.AppEmail;
 
-            if (dto.Colors.Any()) {
+            if (dto.Colors.Any())
+            {
                 _context.Set<ColorEntity>().RemoveRange(user.Colors);
 
                 List<ColorEntity> colors = await _context.Set<ColorEntity>()
@@ -219,7 +236,8 @@ public class UserRepository : IUserRepository {
                 user.Colors.AddRange(colors);
             }
 
-            if (dto.Locations.Any()) {
+            if (dto.Locations.Any())
+            {
                 _context.Set<LocationEntity>().RemoveRange(user.Location);
 
                 List<LocationEntity> locations = await _context.Set<LocationEntity>()
@@ -230,7 +248,8 @@ public class UserRepository : IUserRepository {
                 user.Location.AddRange(locations);
             }
 
-            if (dto.Specialties.Any()) {
+            if (dto.Specialties.Any())
+            {
                 _context.Set<SpecialityEntity>().RemoveRange(user.Specialties);
 
                 List<SpecialityEntity> specialties = await _context.Set<SpecialityEntity>()
@@ -241,16 +260,20 @@ public class UserRepository : IUserRepository {
                 user.Specialties.AddRange(specialties);
             }
 
-            if (dto.Media != null) {
+            if (dto.Media != null)
+            {
                 MediaEntity? media = _mapper.Map<MediaEntity>(dto.Media);
                 user.Media.Add(media);
             }
 
-            if (dto.ContactInformation != null) {
+            if (dto.ContactInformation != null)
+            {
                 _context.Set<ContactInformationEntity>().RemoveRange(user.ContactInformation);
 
-                dto.ContactInformation.ForEach(x => {
-                    _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity() {
+                dto.ContactInformation.ForEach(x =>
+                {
+                    _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity()
+                    {
                         UserId = user.Id,
                         Link = x.Link
                     });
@@ -259,7 +282,8 @@ public class UserRepository : IUserRepository {
 
             await _context.SaveChangesAsync();
         }
-        catch {
+        catch
+        {
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Bad Request");
         }
 
@@ -267,7 +291,8 @@ public class UserRepository : IUserRepository {
             "Success");
     }
 
-    public async Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto model) {
+    public async Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto model)
+    {
         UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
@@ -280,13 +305,15 @@ public class UserRepository : IUserRepository {
         return new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
-    public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model) {
+    public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model)
+    {
         UserEntity? u = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == model.Email);
         if (u != null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
                 "This email or username already exists");
 
-        UserEntity user = new() {
+        UserEntity user = new()
+        {
             Email = model.Email,
             UserName = model.Email,
             EmailConfirmed = false,
@@ -301,7 +328,8 @@ public class UserRepository : IUserRepository {
             : new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
-    private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
+    private async Task<JwtSecurityToken> CreateToken(UserEntity user)
+    {
         IList<string>? roles = await _userManager.GetRolesAsync(user);
         List<Claim>? claims = new() {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
