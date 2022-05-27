@@ -57,6 +57,7 @@ public static class StartupExtension {
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
             options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            options.UseCamelCasing(true);
         });
 
         builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
@@ -132,7 +133,6 @@ public static class StartupExtension {
 
         app.UseDeveloperExceptionPage();
         app.UseUtilitiesSwagger();
-        // app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAuthentication();
         app.UseRouting();
