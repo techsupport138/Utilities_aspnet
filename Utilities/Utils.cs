@@ -48,6 +48,7 @@ public static class StartupExtension {
                     throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
             }
         });
+
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         builder.Services.AddSingleton<IFileProvider>(
@@ -137,6 +138,10 @@ public static class StartupExtension {
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();
+        app.UseCors(builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
         app.UseEndpoints(endpoints => {
             endpoints.MapAreaControllerRoute("Dashboard", "Dashboard",
                 "/Dashboard/{controller=MyDashboard}/{action=Index}/{id?}",
