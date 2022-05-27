@@ -138,10 +138,6 @@ public static class StartupExtension {
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();
-        app.UseCors(builder => builder
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
         app.UseEndpoints(endpoints => {
             endpoints.MapAreaControllerRoute("Dashboard", "Dashboard",
                 "/Dashboard/{controller=MyDashboard}/{action=Index}/{id?}",

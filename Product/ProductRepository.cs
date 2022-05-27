@@ -141,7 +141,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.User)
             .Include(i => i.Forms)
             .ToListAsync();
-        
+
         if (filterDto != null) {
             if (filterDto.Query != null) i = i.Where(x => x.Title.Contains(filterDto.Query));
             if (filterDto.DescendingDate != null)
@@ -149,6 +149,24 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         }
 
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
+        IEnumerable<FormFieldDto> formFieldsDto = new List<FormFieldDto>();
+
+        foreach (T entity in i) {
+            foreach (FormEntity formEntity in entity.Forms) {
+                formFieldsDto.Prepend(new FormFieldDto {
+                    Id = formEntity.Id,
+                    Value = formEntity.Value,
+                    Label = formEntity.FormField.Label,
+                    // Type = formEntity.FormField.Type,
+                    // CategoryId = formEntity.FormField.CategoryId,
+                    // IsRequired = formEntity.FormField.IsRequired,
+                    // OptionList = formEntity.FormField.OptionList,
+                });
+            }
+        }
+
+        dto.Select(x => x.Forms = formFieldsDto);
+
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto);
     }
 
