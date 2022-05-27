@@ -68,7 +68,7 @@ public class FollowRepository : IFollowRepository {
 
         await _context.SaveChangesAsync();
 
-        return new GenericResponse(UtilitiesStatusCodes.Success, "عملیات با موفقیت انجام شد");
+        return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
     public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters) {
@@ -85,7 +85,7 @@ public class FollowRepository : IFollowRepository {
         _context.Set<FollowEntity>().RemoveRange(followings);
         await _context.SaveChangesAsync();
 
-        return new GenericResponse(UtilitiesStatusCodes.Success, "عملیات با موفقیت انجام شد");
+        return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
     public async Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto parameters) {
