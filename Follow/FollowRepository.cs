@@ -52,10 +52,8 @@ public class FollowRepository : IFollowRepository {
             .Select(x => x.Id)
             .ToListAsync();
 
-        DbSet<FollowEntity> queryable = _context.Set<FollowEntity>();
-
         users.ForEach(async targetUserId => {
-            if (await queryable.AnyAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId))
+            if (await _context.Set<FollowEntity>().AnyAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId))
                 return;
 
             FollowEntity follow = new() {
@@ -63,7 +61,7 @@ public class FollowRepository : IFollowRepository {
                 TargetUserId = targetUserId
             };
 
-            await queryable.AddAsync(follow);
+            await _context.Set<FollowEntity>().AddAsync(follow);
         });
 
         await _context.SaveChangesAsync();
