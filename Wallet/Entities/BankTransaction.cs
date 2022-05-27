@@ -1,7 +1,6 @@
 ﻿namespace Utilities_aspnet.Wallet.Entities;
 
-public class BankTransaction
-{
+public class BankTransaction {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int BankTransactionId { get; set; }

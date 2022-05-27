@@ -1,4 +1,4 @@
-﻿namespace Utilities_aspnet.Utilities.Data; 
+﻿namespace Utilities_aspnet.Utilities.Data;
 
 public interface IMediaRepository {
     bool SaveMedia(IFormFile image, string name);

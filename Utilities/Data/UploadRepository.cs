@@ -1,4 +1,4 @@
-﻿namespace Utilities_aspnet.Utilities.Data; 
+﻿namespace Utilities_aspnet.Utilities.Data;
 
 public interface IUploadRepository {
     Task<GenericResponse> UploadMedia(UploadDto model);
@@ -57,7 +57,7 @@ public class UploadRepository : IUploadRepository {
                 ServiceId = model.ServiceId,
                 TutorialId = model.TutorialId,
                 TenderId = model.TenderId,
-                CreatedAt =DateTime.Now,
+                CreatedAt = DateTime.Now
             };
             await _context.Set<MediaEntity>().AddAsync(media);
             await _context.SaveChangesAsync();
