@@ -1,11 +1,6 @@
 ﻿namespace Utilities_aspnet.Follow;
 
-public class FollowEntity {
-
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
-
+public class FollowEntity : BaseEntity {
     /// <summary>
     /// follower
     /// </summary>
