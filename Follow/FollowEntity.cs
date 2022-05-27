@@ -4,17 +4,17 @@ public class FollowEntity {
 
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// follower
     /// </summary>
-    public string SourceUserId { get; set; } = null!;
+    public string? SourceUserId { get; set; }
 
     /// <summary>
     /// following
     /// </summary>
-    public string TargetUserId { get; set; } = null!;
+    public string? TargetUserId { get; set; }
 
     public UserEntity? SourceUser { get; set; }
     public UserEntity? TargetUser { get; set; }
