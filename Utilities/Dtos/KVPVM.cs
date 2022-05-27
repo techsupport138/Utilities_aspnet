@@ -1,4 +1,4 @@
-﻿namespace Utilities_aspnet.Utilities.Dtos; 
+﻿namespace Utilities_aspnet.Utilities.Dtos;
 
 //Key Value Picture View Model with child
 public class KVPVM {

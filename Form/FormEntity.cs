@@ -66,16 +66,13 @@ public enum FormFieldType {
     Image
 }
 
-
-public class FormReadDto
-{
+public class FormReadDto {
     public Guid Id { get; set; }
     public string Value { get; set; }
     public Guid FormFieldId { get; set; }
 }
 
-public class CreateFormFieldDto
-{
+public class CreateFormFieldDto {
     public string Label { get; set; }
     public bool IsRequired { get; set; } = false;
     public string? OptionList { get; set; }
@@ -84,8 +81,7 @@ public class CreateFormFieldDto
     public Guid CategoryId { get; set; }
 }
 
-public class FormFieldReadDto
-{
+public class FormFieldReadDto {
     public Guid Id { get; set; }
     public string Label { get; set; }
     public bool IsRequired { get; set; } = false;

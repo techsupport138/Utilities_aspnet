@@ -167,16 +167,10 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.User)
             .Include(i => i.FormBuilders)
             .ToListAsync();
-        if(filterDto != null)
-        {
-            if (filterDto.SearchParameter != null)
-            {
-                i = i.Where(x => x.Title.Contains(filterDto.SearchParameter));
-            }
+        if (filterDto != null) {
+            if (filterDto.SearchParameter != null) i = i.Where(x => x.Title.Contains(filterDto.SearchParameter));
             if (filterDto.SortByDate != null)
-            {
-                i = filterDto.SortByDate == true? i.OrderByDescending(x=>x.CreatedAt): i.OrderBy(x => x.CreatedAt);
-            }
+                i = filterDto.SortByDate == true ? i.OrderByDescending(x => x.CreatedAt) : i.OrderBy(x => x.CreatedAt);
         }
 
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);

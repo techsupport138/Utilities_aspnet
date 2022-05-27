@@ -1,14 +1,13 @@
-﻿namespace Utilities_aspnet.Follow.Entities;
+﻿namespace Utilities_aspnet.Follow;
 
-public class FollowEntity
-{
+public class FollowEntity {
     /// <summary>
-    /// دنبال کننده - follower
+    /// follower
     /// </summary>
     public string SourceUserId { get; set; } = null!;
 
     /// <summary>
-    /// دنبال شونده - following
+    /// following
     /// </summary>
     public string TargetUserId { get; set; } = null!;
 

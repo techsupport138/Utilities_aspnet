@@ -2,16 +2,14 @@ using DataType = System.ComponentModel.DataAnnotations.DataType;
 
 namespace Utilities_aspnet.User.Dtos;
 
-public class GetMobileVerificationCodeForLoginDto
-{
+public class GetMobileVerificationCodeForLoginDto {
     [Required]
     public string Mobile { get; set; }
 
     public bool SendSMS { get; set; } = false;
 }
 
-public class VerifyMobileForLoginDto
-{
+public class VerifyMobileForLoginDto {
     [Required]
     public string Mobile { get; set; }
 
@@ -19,8 +17,7 @@ public class VerifyMobileForLoginDto
     public string VerificationCode { get; set; }
 }
 
-public class RegisterWithEmailDto
-{
+public class RegisterWithEmailDto {
     [Required]
     public string UserName { get; set; }
 
@@ -37,8 +34,7 @@ public class RegisterWithEmailDto
     public bool Keep { get; set; } = true;
 }
 
-public class RegisterFormWithEmailDto
-{
+public class RegisterFormWithEmailDto {
     [Required]
     [DataType(DataType.EmailAddress)]
     public string Email { get; set; }
@@ -55,8 +51,7 @@ public class RegisterFormWithEmailDto
     public string ConfirmPassword { get; set; }
 }
 
-public class LoginWithEmailDto
-{
+public class LoginWithEmailDto {
     [Required]
     [StringLength(256)]
     public string Email { get; set; }
@@ -70,8 +65,7 @@ public class LoginWithEmailDto
     public bool Keep { get; set; } = true;
 }
 
-public class ChangePasswordDto
-{
+public class ChangePasswordDto {
     [DataType(DataType.Password)]
     public string OldPassword { get; set; }
 
@@ -81,8 +75,7 @@ public class ChangePasswordDto
     public string NewPassword { get; set; }
 }
 
-public class UserReadDto
-{
+public class UserReadDto {
     public string? Token { get; set; }
     public string? Id { get; set; }
     public string? FullName { get; set; }
@@ -99,10 +92,8 @@ public class UserReadDto
     public List<IdTitleReadDto> Favorites { get; set; }
 }
 
-public class UpdateProfileDto
-{
-    public UpdateProfileDto()
-    {
+public class UpdateProfileDto {
+    public UpdateProfileDto() {
         Colors = new List<Guid>();
         Specialties = new List<Guid>();
         Favorites = new List<Guid>();
@@ -112,7 +103,7 @@ public class UpdateProfileDto
 
     public List<Guid> Colors { get; set; }
     public List<Guid> Specialties { get; set; }
-    public List<Guid> Favorites { get; set; }   
+    public List<Guid> Favorites { get; set; }
     public List<int> Locations { get; set; }
     public MediaDto? Media { get; set; }
     public string? FullName { get; set; }
@@ -122,6 +113,7 @@ public class UpdateProfileDto
     public string? Website { get; set; }
     public string? AppUserName { get; set; }
     public string? AppPhoneNumber { get; set; }
+
     [DataType(DataType.EmailAddress)]
     public string? AppEmail { get; set; }
 

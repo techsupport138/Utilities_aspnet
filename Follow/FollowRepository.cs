@@ -1,9 +1,6 @@
-﻿using Utilities_aspnet.Follow.Entities;
+﻿namespace Utilities_aspnet.Follow;
 
-namespace Utilities_aspnet.Follow.Data;
-
-public interface IFollowRepository
-{
+public interface IFollowRepository {
     Task<GenericResponse<FollowReadDto>> GetFollowers(string id);
     Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
     Task<GenericResponse> Follow(string sourceUserId, FollowWriteDto parameters);
@@ -11,20 +8,17 @@ public interface IFollowRepository
     Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto parameters);
 }
 
-public class FollowRepository : IFollowRepository
-{
+public class FollowRepository : IFollowRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
 
-    public FollowRepository(DbContext context, IMapper mapper)
-    {
+    public FollowRepository(DbContext context, IMapper mapper) {
         _context = context;
         _mapper = mapper;
     }
 
-    public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id)
-    {
-        var followers = await _context.Set<FollowEntity>()
+    public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
+        List<UserEntity> followers = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.SourceUserId == id)
             .Include(x => x.TargetUser)
@@ -32,14 +26,13 @@ public class FollowRepository : IFollowRepository
             .Select(x => x.TargetUser)
             .ToListAsync();
 
-        var users = _mapper.Map<IEnumerable<UserReadDto>>(followers);
+        IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followers);
 
-        return new GenericResponse<FollowReadDto>(new FollowReadDto { Followers = users });
+        return new GenericResponse<FollowReadDto>(new FollowReadDto {Followers = users});
     }
 
-    public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id)
-    {
-        var followings = await _context.Set<FollowEntity>()
+    public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id) {
+        List<UserEntity> followings = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.TargetUserId == id)
             .Include(x => x.SourceUser)
@@ -47,28 +40,25 @@ public class FollowRepository : IFollowRepository
             .Select(x => x.SourceUser)
             .ToListAsync();
 
-        var users = _mapper.Map<IEnumerable<UserReadDto>>(followings);
+        IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followings);
 
-        return new GenericResponse<FollowingReadDto>(new FollowingReadDto { Followings = users });
+        return new GenericResponse<FollowingReadDto>(new FollowingReadDto {Followings = users});
     }
 
-    public async Task<GenericResponse> Follow(string sourceUserId, FollowWriteDto parameters)
-    {
-        var users = await _context.Set<UserEntity>()
+    public async Task<GenericResponse> Follow(string sourceUserId, FollowWriteDto parameters) {
+        List<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
             .Select(x => x.Id)
             .ToListAsync();
 
-        var queryable = _context.Set<FollowEntity>();
+        DbSet<FollowEntity> queryable = _context.Set<FollowEntity>();
 
-        users.ForEach(async targetUserId =>
-        {
+        users.ForEach(async targetUserId => {
             if (await queryable.AnyAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId))
                 return;
 
-            var follow = new FollowEntity()
-            {
+            FollowEntity follow = new() {
                 SourceUserId = sourceUserId,
                 TargetUserId = targetUserId
             };
@@ -81,15 +71,14 @@ public class FollowRepository : IFollowRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "عملیات با موفقیت انجام شد");
     }
 
-    public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters)
-    {
-        var users = await _context.Set<UserEntity>()
+    public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters) {
+        List<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
             .Select(x => x.Id)
             .ToListAsync();
 
-        var followings = await _context.Set<FollowEntity>()
+        List<FollowEntity> followings = await _context.Set<FollowEntity>()
             .Where(x => parameters.Followers.Contains(x.SourceUserId) && x.TargetUserId == targetUserId)
             .ToListAsync();
 
@@ -99,15 +88,14 @@ public class FollowRepository : IFollowRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "عملیات با موفقیت انجام شد");
     }
 
-    public async Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto parameters)
-    {
-        var users = await _context.Set<UserEntity>()
+    public async Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto parameters) {
+        List<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
             .Select(x => x.Id)
             .ToListAsync();
 
-        var followings = await _context.Set<FollowEntity>()
+        List<FollowEntity> followings = await _context.Set<FollowEntity>()
             .Where(x => parameters.Followers.Contains(x.TargetUserId) && x.SourceUserId == sourceUserId)
             .ToListAsync();
 

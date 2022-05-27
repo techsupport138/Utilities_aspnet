@@ -1,4 +1,4 @@
-﻿namespace Utilities_aspnet.Utilities.Data; 
+﻿namespace Utilities_aspnet.Utilities.Data;
 
 public interface ISmsSender {
     long SendSms(string mobileNumber, string message);
@@ -45,9 +45,9 @@ public class SmsSender : ISmsSender {
                 //_context.Messages.Add(_message);
                 //_context.SaveChanges();
                 // if (messageSendResponseObject.IsSuccessful)
-                    // return messageSendResponseObject.Ids[0].ID;
+                // return messageSendResponseObject.Ids[0].ID;
                 // else
-                    // return -1;
+                // return -1;
                 break;
             case Sender.FarazSMS:
 
