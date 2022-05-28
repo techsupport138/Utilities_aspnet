@@ -41,10 +41,10 @@ public class AppSettingRepository : IAppSettingRepository {
             .Include(x => x.Parent)
             .OrderBy(x => x.UseCase)
             .Select(w =>
-                new KVPCategoryVM {
-                    Key = w.Id,
-                    Value = w.Title,
-                    CategoryFor = w.UseCase,
+                new IdTitleReadDto {
+                    Id = w.Id,
+                    Title = w.Title,
+                    UseCase = w.UseCase,
                     ParentId = w.ParentId
                 }).ToList();
 

@@ -1,23 +1,13 @@
 ﻿namespace Utilities_aspnet.Utilities.Dtos;
 
 public class EnumDto {
-    public EnumDto() {
-        Language = new List<IdTitleReadDto>();
-        Colors = new List<IdTitleReadDto>();
-        Favorites = new List<IdTitleReadDto>();
-        Specialties = new List<IdTitleReadDto>();
-        SpecialtyCategories = new List<IdTitleReadDto>();
-        Categories = new List<KVPCategoryVM>();
-        UserRole = new List<IdTitleReadDto>();
-    }
 
-    public List<IdTitleReadDto> Language { get; set; }
-    public List<IdTitleReadDto> Colors { get; set; }
-    public List<IdTitleReadDto> Favorites { get; set; }
-    public List<IdTitleReadDto> SpecialtyCategories { get; set; }
-    public List<IdTitleReadDto> Specialties { get; set; }
-    public List<IdTitleReadDto> UserRole { get; set; }
-    public List<KVPCategoryVM> Categories { get; internal set; }
-    public List<IdTitleReadDto> FormFieldType { get; internal set; }
-    public List<IdTitleReadDto> CategoryUseCase { get; internal set; }
+    public List<IdTitleReadDto>? Colors { get; set; }
+    public List<IdTitleReadDto>? Favorites { get; set; }
+    public List<IdTitleReadDto>? SpecialtyCategories { get; set; }
+    public List<IdTitleReadDto>? Specialties { get; set; }
+    public List<IdTitleReadDto>? UserRole { get; set; }
+    public List<IdTitleReadDto>? Categories { get; internal set; }
+    public List<IdTitleReadDto>? FormFieldType { get; internal set; }
+    public List<IdTitleReadDto>? CategoryUseCase { get; internal set; }
 }
