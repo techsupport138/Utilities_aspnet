@@ -3,7 +3,7 @@ namespace Utilities_aspnet.Form;
 public interface IFormRepository {
     Task<GenericResponse<List<FormFieldDto>>> ReadFormFields(Guid categoryId);
     Task<GenericResponse<List<FormFieldDto>?>> CreateFormFields(FormFieldDto dto);
-    Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(KVVMs model);
+    Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(FormCreateDto model);
 }
 
 public class FormRepository : IFormRepository {
@@ -17,7 +17,7 @@ public class FormRepository : IFormRepository {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(KVVMs model) {
+    public async Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(FormCreateDto model) {
         foreach (IdTitleReadDto item in model.KVVM)
             try {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
