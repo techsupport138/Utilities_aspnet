@@ -149,23 +149,23 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         }
 
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
-        IEnumerable<FormFieldDto> formFieldsDto = new List<FormFieldDto>();
-
-        foreach (T entity in i) {
-            foreach (FormEntity formEntity in entity.Forms) {
-                formFieldsDto.Prepend(new FormFieldDto {
-                    Id = formEntity.Id,
-                    Title = formEntity.Title,
-                    Label = formEntity.FormField.Label,
-                    // Type = formEntity.FormField.Type,
-                    // CategoryId = formEntity.FormField.CategoryId,
-                    // IsRequired = formEntity.FormField.IsRequired,
-                    // OptionList = formEntity.FormField.OptionList,
-                });
-            }
-        }
-
-        dto.Select(x => x.Forms = formFieldsDto);
+        
+        // IEnumerable<FormFieldDto> formFieldsDto = new List<FormFieldDto>();
+        // foreach (T entity in i) {
+        //     foreach (FormEntity formEntity in entity.Forms) {
+        //         formFieldsDto.Prepend(new FormFieldDto {
+        //             Id = formEntity.Id,
+        //             Title = formEntity.Title,
+        //             Label = formEntity.FormField.Label,
+        //             // Type = formEntity.FormField.Type,
+        //             // CategoryId = formEntity.FormField.CategoryId,
+        //             // IsRequired = formEntity.FormField.IsRequired,
+        //             // OptionList = formEntity.FormField.OptionList,
+        //         });
+        //     }
+        // }
+        //
+        // dto.Select(x => x.Forms = formFieldsDto);
 
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto);
     }
