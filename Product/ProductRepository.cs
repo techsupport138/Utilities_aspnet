@@ -155,7 +155,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             foreach (FormEntity formEntity in entity.Forms) {
                 formFieldsDto.Prepend(new FormFieldDto {
                     Id = formEntity.Id,
-                    Value = formEntity.Value,
+                    Title = formEntity.Title,
                     Label = formEntity.FormField.Label,
                     // Type = formEntity.FormField.Type,
                     // CategoryId = formEntity.FormField.CategoryId,

@@ -18,16 +18,16 @@ public class FormRepository : IFormRepository {
     }
 
     public async Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(KVVMs model) {
-        foreach (KVVM item in model.KVVM)
+        foreach (IdTitleReadDto item in model.KVVM)
             try {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
                     (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
                      x.CompanyId == model.CompanyId || x.UserId == model.UserId ||
                      x.EventId == model.EventId || x.MagazineId == model.MagazineId || x.ServiceId == model.ServiceId ||
                      x.TenderId == model.TenderId || x.TutorialId == model.TutorialId
-                    ) && x.FormFieldId == item.Key);
+                    ) && x.FormFieldId == item.Id);
                 if (up != null) {
-                    up.Value = item.Value;
+                    up.Title = item.Title;
                     await _dbContext.SaveChangesAsync();
                 }
                 else {
@@ -42,8 +42,8 @@ public class FormRepository : IFormRepository {
                         TutorialId = model.TutorialId,
                         TenderId = model.TenderId,
                         ServiceId = model.ServiceId,
-                        FormFieldId = item.Key,
-                        Value = item.Value
+                        FormFieldId = item.Id,
+                        Title = item.Title
                     });
                 }
 

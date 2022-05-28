@@ -2,7 +2,7 @@
 
 [Table("Forms")]
 public class FormEntity : BaseEntity {
-    public string Value { get; set; }
+    public string Title { get; set; }
 
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }
@@ -36,29 +36,29 @@ public class FormEntity : BaseEntity {
 
     [ForeignKey(nameof(FormFieldId))]
     [InverseProperty(nameof(FormFieldEntity.Forms))]
-    public FormFieldEntity FormField { get; set; }
+    public FormFieldEntity? FormField { get; set; }
 
-    public Guid FormFieldId { get; set; }
+    public Guid? FormFieldId { get; set; }
 }
 
 [Table("FormFields")]
 public class FormFieldEntity : BaseEntity {
-    public string Label { get; set; }
-    public bool IsRequired { get; set; } = false;
+    public string? Label { get; set; }
+    public bool? IsRequired { get; set; } = false;
     public string? OptionList { get; set; }
-    public FormFieldType Type { get; set; }
+    public FormFieldType? Type { get; set; }
 
     public Guid? CategoryId { get; set; }
     public CategoryEntity? Category { get; set; }
 
     [InverseProperty(nameof(FormEntity.FormField))]
-    public IEnumerable<FormEntity> Forms { get; set; }
+    public IEnumerable<FormEntity>? Forms { get; set; }
 }
 
 public class FormFieldDto {
     public Guid? Id { get; set; }
     public string? Label { get; set; }
-    public string? Value { get; set; }
+    public string? Title { get; set; }
     public bool? IsRequired { get; set; }
     public string? OptionList { get; set; }
     public FormFieldType? Type { get; set; }

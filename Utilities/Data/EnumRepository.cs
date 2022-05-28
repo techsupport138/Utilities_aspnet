@@ -1,19 +1,19 @@
 ﻿namespace Utilities_aspnet.Utilities.Data;
 
-public interface IEnumRepository {
-    Task<GenericResponse<EnumDto?>> GetAll(bool showCatehory, bool showGeo);
+public interface IAppSettingRepository {
+    Task<GenericResponse<EnumDto?>> Read();
 }
 
-public class EnumRepository : IEnumRepository {
+public class AppSettingRepository : IAppSettingRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
 
-    public EnumRepository(DbContext context, IMapper mapper) {
+    public AppSettingRepository(DbContext context, IMapper mapper) {
         _context = context;
         _mapper = mapper;
     }
 
-    public Task<GenericResponse<EnumDto?>> GetAll(bool showCatehory = false, bool showGeo = false) {
+    public Task<GenericResponse<EnumDto?>> Read() {
         EnumDto model = new() {
             Favorites = _context.Set<FavoriteEntity>().Select(x => new IdTitleReadDto {
                 Id = x.Id,
@@ -31,42 +31,22 @@ public class EnumRepository : IEnumRepository {
             }).ToList()
         };
 
-        List<KVIdTitle> formFieldType = EnumExtension.GetValues<FormFieldType>();
-        List<KVIdTitle> idTitleUseCase = EnumExtension.GetValues<IdTitleUseCase>();
+        List<IdTitleReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
+        List<IdTitleReadDto> idTitleUseCase = EnumExtension.GetValues<IdTitleUseCase>();
         model.FormFieldType = formFieldType;
         model.CategoryUseCase = idTitleUseCase;
-        //if (showGeo)
-        //    model.GeoList = _context.Set<Province>().Include(x => x.Cities).Select(x => new KVPIVM {
-        //        Key = x.ProvinceId,
-        //        Value = x.ProvinceName,
-        //        Childs = x.Cities.Select(y => new KVPIVM {
-        //            Key = y.CityId,
-        //            Value = y.CityName,
-        //        }).ToList()
-        //    }).ToList();
 
-        if (showCatehory)
-            model.Categories = _context.Set<CategoryEntity>()
-                //.Where(x => x.LanguageId == filter.Language && x.CategoryFor == filter.CategoryFor)
-                .Include(x => x.Media)
-                .Include(x => x.Parent)
-                .OrderBy(x => x.UseCase)
-                .Select(w =>
-                    new KVPCategoryVM {
-                        Key = w.Id,
-                        // Image = w.Media.FileName,
-                        Value = w.Title,
-                        CategoryFor = w.UseCase,
-                        ParentId = w.ParentId
-                        // Childs = w.InverseParent.Select(x => new KVPCategoryVM {
-                        //     Key = x.CategoryId,
-                        //     Image = x.Media.FileName,
-                        //     Value = x.Title,
-                        //     CategoryFor = x.CategoryFor,
-                        //     ParentId = x.ParentId,
-                        //     ParentTitle = x.Parent.Title
-                        // }).ToList()
-                    }).ToList();
+        model.Categories = _context.Set<CategoryEntity>()
+            .Include(x => x.Media)
+            .Include(x => x.Parent)
+            .OrderBy(x => x.UseCase)
+            .Select(w =>
+                new KVPCategoryVM {
+                    Key = w.Id,
+                    Value = w.Title,
+                    CategoryFor = w.UseCase,
+                    ParentId = w.ParentId
+                }).ToList();
 
         return Task.FromResult(new GenericResponse<EnumDto?>(model, UtilitiesStatusCodes.Success, "Success"));
     }

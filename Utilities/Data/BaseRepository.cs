@@ -1,7 +1,7 @@
 ﻿namespace Utilities_aspnet.Utilities.Data;
 
 public interface IBaseRepository {
-    List<KVVM> GetAllFor();
+    List<IdTitleReadDto> GetAllFor();
     Dictionary<Guid, string> GetParentCategory(IdTitleUseCase filter, string Language);
 }
 
@@ -14,9 +14,9 @@ public class BaseRepository : IBaseRepository {
         _mapper = mapper;
     }
 
-    public List<KVVM> GetAllFor() {
+    public List<IdTitleReadDto> GetAllFor() {
         string[] trans = Enum.GetNames(typeof(IdTitleUseCase));
-        List<KVVM>? data = new();
+        List<IdTitleReadDto>? data = new();
         Dictionary<int, string> v = trans.Select((value, key) => new {value, key}).ToDictionary(x => x.key + 1, x => x.value);
         foreach (KeyValuePair<int, string> item in v) {
             // data.Add(new KVVM() {

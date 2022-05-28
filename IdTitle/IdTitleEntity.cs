@@ -78,7 +78,7 @@ public enum IdTitleUseCase {
     Event = 102,
     Job = 103,
     Learn = 104,
-    product = 105,
+    Product = 105,
     Project = 107,
     Tender = 108,
     Brand = 109,
@@ -92,7 +92,6 @@ public class IdTitleReadDto {
     public string? Color { get; set; }
     public string? Link { get; set; }
     public IdTitleUseCase? UseCase { get; set; }
-    public List<FormFieldDto>? FormBuilderFieldLists { get; set; }
 }
 
 public class IdTitleCreateUpdateDto {

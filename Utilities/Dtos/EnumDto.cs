@@ -7,7 +7,6 @@ public class EnumDto {
         Favorites = new List<IdTitleReadDto>();
         Specialties = new List<IdTitleReadDto>();
         SpecialtyCategories = new List<IdTitleReadDto>();
-        GeoList = new List<KVPIVM>();
         Categories = new List<KVPCategoryVM>();
         UserRole = new List<IdTitleReadDto>();
     }
@@ -18,8 +17,7 @@ public class EnumDto {
     public List<IdTitleReadDto> SpecialtyCategories { get; set; }
     public List<IdTitleReadDto> Specialties { get; set; }
     public List<IdTitleReadDto> UserRole { get; set; }
-    public List<KVPIVM> GeoList { get; set; }
     public List<KVPCategoryVM> Categories { get; internal set; }
-    public List<KVIdTitle> FormFieldType { get; internal set; }
-    public List<KVIdTitle> CategoryUseCase { get; internal set; }
+    public List<IdTitleReadDto> FormFieldType { get; internal set; }
+    public List<IdTitleReadDto> CategoryUseCase { get; internal set; }
 }

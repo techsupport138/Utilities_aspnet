@@ -73,7 +73,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IMediaRepository, MediaRepository>();
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<IFollowRepository, FollowRepository>();
-        builder.Services.AddTransient<IEnumRepository, EnumRepository>();
+        builder.Services.AddTransient<IAppSettingRepository, AppSettingRepository>();
         builder.Services.AddTransient<IIdTitleRepository<CategoryEntity>, IdTitleRepository<CategoryEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<TagEntity>, IdTitleRepository<TagEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<ColorEntity>, IdTitleRepository<ColorEntity>>();
