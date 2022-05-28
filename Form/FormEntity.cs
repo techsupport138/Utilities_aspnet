@@ -77,7 +77,7 @@ public class FormCreateDto {
     public Guid? ServiceId { get; set; }
     public Guid? MagazineId { get; set; }
 
-    public List<IdTitleReadDto> KVVM { get; set; }
+    public List<IdTitleReadDto> Form { get; set; }
 }
 
 public enum FormFieldType {

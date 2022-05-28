@@ -18,7 +18,7 @@ public class FormRepository : IFormRepository {
     }
 
     public async Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(FormCreateDto model) {
-        foreach (IdTitleReadDto item in model.KVVM)
+        foreach (IdTitleReadDto item in model.Form)
             try {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
                     (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
