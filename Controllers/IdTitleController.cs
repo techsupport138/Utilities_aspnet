@@ -34,7 +34,7 @@ public class IdTitleController : BaseApiController {
         return Result(i);
     }
 
-    [HttpGet("Category/{useCase}")]
+    [HttpGet("Category/ReadByUseCase/{useCase}")]
     public async Task<ActionResult<GenericResponse<IEnumerable<IdTitleReadDto>>>> ReadCategoryByUseCase(IdTitleUseCase useCase) {
         GenericResponse<IEnumerable<IdTitleReadDto>> i = await _categoryRepository.ReadByUseCase(useCase);
         return Result(i);
@@ -70,7 +70,7 @@ public class IdTitleController : BaseApiController {
         return Result(i);
     }
     
-    [HttpGet("Brand/{useCase}")]
+    [HttpGet("Brand/ReadByUseCase/{useCase}")]
     public async Task<ActionResult<GenericResponse<IEnumerable<IdTitleReadDto>>>> ReadBrandByUseCase(IdTitleUseCase useCase) {
         GenericResponse<IEnumerable<IdTitleReadDto>> i = await _brandRepository.ReadByUseCase(useCase);
         return Result(i);
@@ -106,7 +106,7 @@ public class IdTitleController : BaseApiController {
         return Result(i);
     }
     
-    [HttpGet("Reference/{useCase}")]
+    [HttpGet("Reference/ReadByUseCase/{useCase}")]
     public async Task<ActionResult<GenericResponse<IEnumerable<IdTitleReadDto>>>> ReadReferenceByUseCase(IdTitleUseCase useCase) {
         GenericResponse<IEnumerable<IdTitleReadDto>> i = await _referenceRepository.ReadByUseCase(useCase);
         return Result(i);
