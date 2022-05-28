@@ -4,6 +4,7 @@ public interface IIdTitleRepository<T> where T : BaseIdTitleEntity {
     public Task<GenericResponse<IdTitleReadDto>> Create(IdTitleCreateUpdateDto dto);
     public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> Read();
     public Task<GenericResponse<IdTitleReadDto>> ReadById(Guid id);
+    public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCase(IdTitleUseCase useCase);
     public Task<GenericResponse<IdTitleReadDto>> Update(IdTitleCreateUpdateDto dto);
     public Task<GenericResponse> Delete(Guid id);
 }
@@ -27,17 +28,25 @@ public class IdTitleRepository<T> : IIdTitleRepository<T> where T : BaseIdTitleE
 
 
     public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> Read() {
-        IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking()
-            .Include(i => i.Media)
+        IEnumerable<T> i = await _dbContext.Set<T>()
+            .Include(i => i.Media).AsNoTracking()
             .ToListAsync();
         return new GenericResponse<IEnumerable<IdTitleReadDto>>(_mapper.Map<IEnumerable<IdTitleReadDto>>(i));
     }
 
     public async Task<GenericResponse<IdTitleReadDto>> ReadById(Guid id) {
-        T? i = await _dbContext.Set<T>().AsNoTracking()
-            .Include(i => i.Media)
+        T? i = await _dbContext.Set<T>()
+            .Include(i => i.Media).AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(i));
+    }
+
+    public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCase(IdTitleUseCase useCase) {
+        IEnumerable<T> i = await _dbContext.Set<T>()
+            .Include(i => i.Media)
+            .Where(i => i.UseCase == useCase).AsNoTracking()
+            .ToListAsync();
+        return new GenericResponse<IEnumerable<IdTitleReadDto>>(_mapper.Map<IEnumerable<IdTitleReadDto>>(i));
     }
 
     public Task<GenericResponse> Delete(Guid id) {
