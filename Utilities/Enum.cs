@@ -3,7 +3,7 @@
 public static class EnumExtension {
     public static List<IdTitleReadDto> GetValues<T>() {
         return (from int itemType in Enum.GetValues(typeof(T))
-            select new IdTitleReadDto {Title = Enum.GetName(typeof(T), itemType), Id = ToGuid(itemType)}).ToList();
+            select new IdTitleReadDto {Title = Enum.GetName(typeof(T), itemType), SecondaryId = itemType}).ToList();
     }
 
     public static Guid ToGuid(int value) {

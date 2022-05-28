@@ -87,6 +87,7 @@ public enum IdTitleUseCase {
 
 public class IdTitleReadDto {
     public Guid? Id { get; set; }
+    public int? SecondaryId { get; set; }
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Color { get; set; }
