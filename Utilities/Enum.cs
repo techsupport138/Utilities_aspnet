@@ -2,7 +2,13 @@
 
 public static class EnumExtension {
     public static List<IdTitleReadDto> GetValues<T>() {
-        return (from Guid itemType in Enum.GetValues(typeof(T))
-            select new IdTitleReadDto {Title = Enum.GetName(typeof(T), itemType), Id = itemType}).ToList();
+        return (from int itemType in Enum.GetValues(typeof(T))
+            select new IdTitleReadDto {Title = Enum.GetName(typeof(T), itemType), Id = ToGuid(itemType)}).ToList();
+    }
+
+    public static Guid ToGuid(int value) {
+        byte[] bytes = new byte[16];
+        BitConverter.GetBytes(value).CopyTo(bytes, 0);
+        return new Guid(bytes);
     }
 }
