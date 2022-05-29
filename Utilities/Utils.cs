@@ -12,7 +12,9 @@ public static class StartupExtension {
 
         if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
 
-        builder.AddUtilitiesSwagger();
+        var serviceProvider = builder.Services.BuildServiceProvider().GetService<IServiceProvider>();
+
+        builder.AddUtilitiesSwagger(serviceProvider);
         builder.AddUtilitiesIdentity();
 
         builder.Services.Configure<FormOptions>(x => {
@@ -92,9 +94,11 @@ public static class StartupExtension {
         builder.Services.AddTransient<IProductRepository<TenderEntity>, ProductRepository<TenderEntity>>();
         builder.Services.AddTransient<IProductRepository<ServiceEntity>, ProductRepository<ServiceEntity>>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 
-    private static void AddUtilitiesSwagger(this WebApplicationBuilder builder) {
+    private static void AddUtilitiesSwagger(this WebApplicationBuilder builder, IServiceProvider serviceProvider) {
+        NetworkUtil.Configure(serviceProvider.GetService<IHttpContextAccessor>());
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c => {
             c.UseInlineDefinitionsForEnums();
