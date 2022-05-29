@@ -32,6 +32,9 @@ public class MediaRepository : IMediaRepository {
             string webRoot = _env.WebRootPath;
             string nullPath = Path.Combine(webRoot, "Medias", "null.png");
             string path = Path.Combine(webRoot, "Medias", folder, name);
+            string uploadDir = Path.Combine(webRoot, "Medias", folder);
+            if (!Directory.Exists(uploadDir))
+                Directory.CreateDirectory(uploadDir);
             try {
                 try {
                     File.Delete(path);
