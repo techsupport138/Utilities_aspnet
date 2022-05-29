@@ -52,7 +52,7 @@ public class FollowRepository : IFollowRepository {
             .Select(x => x.Id)
             .ToListAsync();
 
-        foreach (var targetUserId in users)
+        foreach (string? targetUserId in users)
         {
             if (await _context.Set<FollowEntity>().AnyAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId))
                 continue;

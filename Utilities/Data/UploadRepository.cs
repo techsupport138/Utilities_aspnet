@@ -2,60 +2,49 @@
 
 namespace Utilities_aspnet.Utilities.Data;
 
-public interface IUploadRepository
-{
+public interface IUploadRepository {
     Task<GenericResponse> UploadMedia(UploadDto model);
     Task<GenericResponse> DeleteMedia(Guid id);
     Task<GenericResponse> UploadChunkMedia(UploadDto parameter);
 }
 
-public class UploadRepository : IUploadRepository
-{
+public class UploadRepository : IUploadRepository {
     private readonly DbContext _context;
     private readonly IWebHostEnvironment _env;
     private readonly IMediaRepository _mediaRepository;
 
-    public UploadRepository(DbContext context, IWebHostEnvironment env, IMediaRepository mediaRepository)
-    {
+    public UploadRepository(DbContext context, IWebHostEnvironment env, IMediaRepository mediaRepository) {
         _env = env;
         _mediaRepository = mediaRepository;
         _context = context;
     }
 
-    public async Task<GenericResponse> UploadMedia(UploadDto model)
-    {
+    public async Task<GenericResponse> UploadMedia(UploadDto model) {
         if (model.Files.Count < 1) return new GenericResponse(UtilitiesStatusCodes.BadRequest, "File not uploaded");
-        List<Guid>? ids = new();
-        foreach (var file in model.Files)
-        {
-            var fileType = FileTypes.Image;
-            if (file.ContentType.Contains("svg")) fileType = FileTypes.Svg;
+        List<Guid> ids = new();
+        foreach (IFormFile file in model.Files) {
+            FileTypes fileType = FileTypes.Image;
+            
+            if (file.ContentType.ToLower().Contains("svg")) fileType = FileTypes.Svg;
+            if (file.ContentType.ToLower().Contains("video")) fileType = FileTypes.Video;
+            if (file.ContentType.ToLower().Contains("pdf")) fileType = FileTypes.Pdf;
+            if (file.ContentType.ToLower().Contains("Voice")) fileType = FileTypes.Voice;
+            if (file.ContentType.ToLower().Contains("Gif")) fileType = FileTypes.Gif;
 
-            if (file.ContentType.Contains("video")) fileType = FileTypes.Video;
-
-            if (file.ContentType.Contains("pdf")) fileType = FileTypes.Pdf;
-
-            if (file.ContentType.Contains("Voice")) fileType = FileTypes.Voice;
-
-            if (file.ContentType.Contains("Gif")) fileType = FileTypes.Gif;
-
-            var folder = "";
-            if (model.UserId != null)
-            {
+            string folder = "";
+            if (model.UserId != null) {
                 folder = "Users";
-                var userMedia =
+                List<MediaEntity> userMedia =
                     _context.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
-                if (userMedia.Count > 0)
-                {
+                if (userMedia.Count > 0) {
                     _context.Set<MediaEntity>().RemoveRange(userMedia);
                     await _context.SaveChangesAsync();
                 }
             }
 
-            var name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(file.FileName));
-            var url = _mediaRepository.GetFileUrl(name, folder);
-            MediaEntity media = new()
-            {
+            string name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(file.FileName));
+            string url = _mediaRepository.GetFileUrl(name, folder);
+            MediaEntity media = new() {
                 FileName = url,
                 FileType = fileType,
                 UserId = model.UserId,
@@ -79,68 +68,55 @@ public class UploadRepository : IUploadRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
     }
 
-    public async Task<GenericResponse> UploadChunkMedia(UploadDto parameter)
-    {
+    public async Task<GenericResponse> UploadChunkMedia(UploadDto parameter) {
         if (parameter.Files.Count < 1) return new GenericResponse(UtilitiesStatusCodes.BadRequest, "File not uploaded");
 
-        try
-        {
+        try {
             List<Guid> ids = new();
-            var fileType = FileTypes.Image;
+            FileTypes fileType = FileTypes.Image;
 
-            var filename = ContentDispositionHeaderValue
+            string? filename = ContentDispositionHeaderValue
                 .Parse(parameter.Files.First().ContentDisposition)
                 .FileName
                 .Trim()
                 .Value;
-            var extension = Path.GetExtension(filename);
+            string extension = Path.GetExtension(filename);
 
-            var signature = Guid.NewGuid();
+            Guid signature = Guid.NewGuid();
 
-            foreach (var file in parameter.Files)
-            {
+            foreach (IFormFile file in parameter.Files) {
                 if (file.ContentType.Contains("svg")) fileType = FileTypes.Svg;
-
                 if (file.ContentType.Contains("video")) fileType = FileTypes.Video;
-
                 if (file.ContentType.Contains("pdf")) fileType = FileTypes.Pdf;
-
                 if (file.ContentType.Contains("Voice")) fileType = FileTypes.Voice;
-
                 if (file.ContentType.Contains("Gif")) fileType = FileTypes.Gif;
 
-
                 filename = _env.WebRootPath + $@"\{signature}{extension}";
-                if (!File.Exists(filename))
-                {
-                    await using var fs = File.Create(filename);
+                if (!File.Exists(filename)) {
+                    await using FileStream fs = File.Create(filename);
                     await file.CopyToAsync(fs);
                     fs.Flush();
                 }
-                else
-                {
-                    await using var fs = File.Open(filename, FileMode.Append);
+                else {
+                    await using FileStream fs = File.Open(filename, FileMode.Append);
                     await file.CopyToAsync(fs);
                     fs.Flush();
                 }
             }
 
-            var folder = "";
-            if (parameter.UserId != null)
-            {
+            string folder = "";
+            if (parameter.UserId != null) {
                 folder = "Users";
-                var userMedia =
+                List<MediaEntity> userMedia =
                     _context.Set<MediaEntity>().Where(x => x.UserId == parameter.UserId).ToList();
-                if (userMedia.Count > 0)
-                {
+                if (userMedia.Count > 0) {
                     _context.Set<MediaEntity>().RemoveRange(userMedia);
                     await _context.SaveChangesAsync();
                 }
             }
 
-            var url = _mediaRepository.GetFileUrl(filename, folder);
-            MediaEntity media = new()
-            {
+            string url = _mediaRepository.GetFileUrl(filename, folder);
+            MediaEntity media = new() {
                 FileName = url,
                 FileType = fileType,
                 UserId = parameter.UserId,
@@ -157,20 +133,16 @@ public class UploadRepository : IUploadRepository
             };
             await _context.Set<MediaEntity>().AddAsync(media);
             await _context.SaveChangesAsync();
-            
             ids.Add(media.Id);
-
             return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
         }
-        catch
-        {
+        catch {
             return new GenericResponse(UtilitiesStatusCodes.BadRequest, "Fail to upload");
         }
     }
 
-    public async Task<GenericResponse> DeleteMedia(Guid id)
-    {
-        var media = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == id);
+    public async Task<GenericResponse> DeleteMedia(Guid id) {
+        MediaEntity? media = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == id);
         if (media == null) return new GenericResponse(UtilitiesStatusCodes.NotFound, "File not Found");
 
         _context.Set<MediaEntity>().Remove(media);
