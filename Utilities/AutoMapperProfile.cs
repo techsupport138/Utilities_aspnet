@@ -117,6 +117,7 @@ public class AutoMapperProfile : Profile {
 
         // Form
         CreateMap<FormEntity, FormFieldDto>().ReverseMap();
+        CreateMap<FormEntity, FormDto>().ReverseMap();
         CreateMap<FormFieldEntity, FormFieldDto>().ReverseMap();
     }
 }

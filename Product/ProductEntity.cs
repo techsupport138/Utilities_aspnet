@@ -81,7 +81,7 @@ public class ProductReadDto {
     public IEnumerable<IdTitleReadDto>? Tags { get; set; }
     public IEnumerable<VoteReadDto>? VoteFields { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
-    public IEnumerable<FormFieldDto>? Forms { get; set; }
+    public IEnumerable<FormDto>? Forms { get; set; }
 }
 
 public class ProductCreateUpdateDto {

@@ -139,7 +139,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
-            .Include(i => i.Forms)
+            .Include(i => i.Forms).ThenInclude(x=>x.FormField)
             .ToListAsync();
 
         if (filterDto != null) {

@@ -55,6 +55,11 @@ public class FormFieldEntity : BaseEntity {
     public IEnumerable<FormEntity>? Forms { get; set; }
 }
 
+public class FormDto {
+    public Guid? Id { get; set; }
+    public string Title { get; set; }
+    public FormFieldDto? FormField { get; set; }
+}
 public class FormFieldDto {
     public Guid? Id { get; set; }
     public string? Label { get; set; }
