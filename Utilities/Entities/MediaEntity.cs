@@ -52,7 +52,8 @@ public class MediaEntity : BaseEntity {
     public Guid? SpecialityId { get; set; }
 
     [NotMapped]
-    public string Link => $"{Server.ServerAddress}/Medias/{FileName}";
+    public string Link => $"{NetworkUtil.ServerAddress}/Medias/{FileName}";
+    //public string Link => $"{Server.ServerAddress}/Medias/{FileName}";
 
     public static MediaDto MapMediaDto(MediaEntity e) {
         MediaDto dto = new() {
