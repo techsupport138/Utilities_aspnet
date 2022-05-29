@@ -3,7 +3,7 @@
 namespace Utilities_aspnet.Utilities.Data;
 
 public interface IUploadRepository {
-    Task<GenericResponse<MediaDto>> UploadMedia(UploadDto model);
+    Task<GenericResponse<List<MediaDto>?>> UploadMedia(UploadDto model);
     Task<GenericResponse> DeleteMedia(Guid id);
     Task<GenericResponse> UploadChunkMedia(UploadDto parameter);
 }
@@ -25,10 +25,10 @@ public class UploadRepository : IUploadRepository {
         _context = context;
     }
 
-    public async Task<GenericResponse<MediaDto>> UploadMedia(UploadDto model) {
+    public async Task<GenericResponse<List<MediaDto>?>> UploadMedia(UploadDto model) {
         if (model.Files.Count < 1)
-            return new GenericResponse<MediaDto>(null, UtilitiesStatusCodes.BadRequest, "File not uploaded");
-        List<Guid> ids = new();
+            return new GenericResponse<List<MediaDto>?>(null, UtilitiesStatusCodes.BadRequest, "File not uploaded");
+        List<MediaEntity> medias = new();
         foreach (IFormFile file in model.Files) {
             FileTypes fileType = FileTypes.Image;
 
@@ -68,11 +68,11 @@ public class UploadRepository : IUploadRepository {
             };
             await _context.Set<MediaEntity>().AddAsync(media);
             await _context.SaveChangesAsync();
-            ids.Add(media.Id);
+            medias.Add(media);
             _mediaRepository.SaveMedia(file, name, folder);
         }
 
-        return new GenericResponse<MediaDto>(null, UtilitiesStatusCodes.Success, "File uploaded");
+        return new GenericResponse<List<MediaDto>?>(_mapper.Map<List<MediaDto>>(medias), UtilitiesStatusCodes.Success, "File uploaded");
     }
 
     public async Task<GenericResponse> UploadChunkMedia(UploadDto parameter) {
