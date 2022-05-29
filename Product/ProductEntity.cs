@@ -4,14 +4,20 @@ public abstract class BaseProductEntity : BaseEntity {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
-    public decimal? Price { get; set; }
+    public string? Address { get; set; }
+    public string? Author { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
+    public decimal? Price { get; set; }
     public int? VisitCount { get; set; }
-    public string? Address { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-
+    public ProductStatus? Status { get; set; }
+    
     public string? UserId { get; set; }
     public UserEntity? User { get; set; }
 
@@ -108,4 +114,11 @@ public class ProductCreateUpdateDto {
 public class FilterProductDto {
     public string? Query { get; set; }
     public bool? DescendingDate { get; set; }
+}
+
+public enum ProductStatus {
+    Released,
+    Expired,
+    InQueue,
+    Deleted
 }
