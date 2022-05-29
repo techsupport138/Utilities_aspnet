@@ -3,7 +3,7 @@
 namespace Utilities_aspnet.Utilities.Data;
 
 public interface IUploadRepository {
-    Task<GenericResponse> UploadMedia(UploadDto model);
+    Task<GenericResponse<MediaDto>> UploadMedia(UploadDto model);
     Task<GenericResponse> DeleteMedia(Guid id);
     Task<GenericResponse> UploadChunkMedia(UploadDto parameter);
 }
@@ -11,20 +11,27 @@ public interface IUploadRepository {
 public class UploadRepository : IUploadRepository {
     private readonly DbContext _context;
     private readonly IWebHostEnvironment _env;
+    private readonly IMapper _mapper;
     private readonly IMediaRepository _mediaRepository;
 
-    public UploadRepository(DbContext context, IWebHostEnvironment env, IMediaRepository mediaRepository) {
+    public UploadRepository(
+        DbContext context,
+        IWebHostEnvironment env,
+        IMediaRepository mediaRepository,
+        IMapper mapper) {
         _env = env;
         _mediaRepository = mediaRepository;
+        _mapper = mapper;
         _context = context;
     }
 
-    public async Task<GenericResponse> UploadMedia(UploadDto model) {
-        if (model.Files.Count < 1) return new GenericResponse(UtilitiesStatusCodes.BadRequest, "File not uploaded");
+    public async Task<GenericResponse<MediaDto>> UploadMedia(UploadDto model) {
+        if (model.Files.Count < 1)
+            return new GenericResponse<MediaDto>(null, UtilitiesStatusCodes.BadRequest, "File not uploaded");
         List<Guid> ids = new();
         foreach (IFormFile file in model.Files) {
             FileTypes fileType = FileTypes.Image;
-            
+
             if (file.ContentType.ToLower().Contains("svg")) fileType = FileTypes.Svg;
             if (file.ContentType.ToLower().Contains("video")) fileType = FileTypes.Video;
             if (file.ContentType.ToLower().Contains("pdf")) fileType = FileTypes.Pdf;
@@ -65,7 +72,7 @@ public class UploadRepository : IUploadRepository {
             _mediaRepository.SaveMedia(file, name, folder);
         }
 
-        return new GenericResponse(UtilitiesStatusCodes.Success, "File uploaded", ids);
+        return new GenericResponse<MediaDto>(null, UtilitiesStatusCodes.Success, "File uploaded");
     }
 
     public async Task<GenericResponse> UploadChunkMedia(UploadDto parameter) {
