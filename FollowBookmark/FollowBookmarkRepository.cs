@@ -19,7 +19,7 @@ public interface IFollowBookmarkRepository
     // void ToggleBookmarkMagazine(string userId, long id);
     // void ToggleBookmarkTag(string userId, long id);
     // void ToggleBookmarkSpeciality(string userId, long id);
-    Task<GenericResponse> ToggleBookmark(Guid id);
+    Task<GenericResponse> ToggleBookmark(BookmarkWriteDto parameters);
 }
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository
@@ -35,146 +35,84 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse> ToggleBookmark(Guid id)
+    public async Task<GenericResponse> ToggleBookmark(BookmarkWriteDto parameters)
     {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
-                x.ProductId == id ||
-                x.ProjectId == id ||
-                x.TutorialId == id ||
-                x.EventId == id ||
-                x.AdId == id ||
-                x.CompanyId == id ||
-                x.TenderId == id ||
-                x.ServiceId == id ||
-                x.MagazineId == id ||
-                x.TagId == id ||
-                x.SpecialityId == id
+                x.ProductId == parameters.ProductId ||
+                x.ProjectId == parameters.ProductId ||
+                x.TutorialId == parameters.TutorialId ||
+                x.EventId == parameters.EventId ||
+                x.AdId == parameters.AdId ||
+                x.CompanyId == parameters.CompanyId ||
+                x.TenderId == parameters.TenderId ||
+                x.ServiceId == parameters.ServiceId ||
+                x.MagazineId == parameters.MagazineId ||
+                x.TagId == parameters.TagId ||
+                x.SpecialityId == parameters.SpecialityId
             ) && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
         if (oldBookmark == null)
         {
             BookmarkEntity bookmark = new() { UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name! };
 
-            try
+            if (parameters.ProductId.HasValue)
             {
-                bookmark.ProductId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.ProductId = parameters.ProductId;
             }
 
-            try
+            if (parameters.ProjectId.HasValue)
             {
-                bookmark.ProjectId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.ProjectId = parameters.ProjectId;
             }
 
-            try
+            if (parameters.TutorialId.HasValue)
             {
-                bookmark.TutorialId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.TutorialId = parameters.TutorialId;
             }
 
-            try
+            if (parameters.EventId.HasValue)
             {
-                bookmark.EventId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.EventId = parameters.EventId;
             }
 
-            try
+            if (parameters.AdId.HasValue)
             {
-                bookmark.AdId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.AdId = parameters.AdId;
             }
 
-            try
+            if (parameters.CompanyId.HasValue)
             {
-                bookmark.CompanyId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.CompanyId = parameters.CompanyId;
             }
 
-            try
+            if (parameters.TenderId.HasValue)
             {
-                bookmark.TenderId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.TenderId = parameters.TenderId;
             }
 
-            try
+            if (parameters.ServiceId.HasValue)
             {
-                bookmark.ServiceId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.ServiceId = parameters.ServiceId;
             }
 
-            try
+            if (parameters.MagazineId.HasValue)
             {
-                bookmark.MagazineId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.MagazineId = parameters.MagazineId;
             }
 
-            try
+            if (parameters.TagId.HasValue)
             {
-                bookmark.TagId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
+                bookmark.TagId = parameters.TagId;
             }
 
-            try
+            if (parameters.SpecialityId.HasValue)
             {
-                bookmark.SpecialityId = id;
-                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
-                await _context.SaveChangesAsync();
+                bookmark.SpecialityId = parameters.SpecialityId;
             }
-            catch (Exception)
-            {
-                // ignored
-            }
+
+
+            await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            await _context.SaveChangesAsync();
         }
         else
         {
@@ -182,7 +120,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
             await _context.SaveChangesAsync();
         }
 
-        return new GenericResponse();
+        return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
     public async Task<GenericResponse<IEnumerable<BookmarkEntity>>> GetBookMarks()
