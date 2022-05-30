@@ -8,16 +8,20 @@ namespace Utilities_aspnet.Controllers;
 [ApiController]
 public class BookmarkController : BaseApiController {
     private readonly IFollowBookmarkRepository _repository;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public BookmarkController(IFollowBookmarkRepository repository, IHttpContextAccessor httpContextAccessor) {
+    public BookmarkController(IFollowBookmarkRepository repository) {
         _repository = repository;
-        _httpContextAccessor = httpContextAccessor;
     }
 
-    [HttpPost("ToggleBookmark/{id}")]
+    [HttpPost("{id:guid}")]
     public async Task<IActionResult> ToggleBookmark(Guid id) {
-        GenericResponse i = await _repository.ToggleBookmark(_httpContextAccessor.HttpContext!.User.Identity!.Name!, id);
+        GenericResponse i = await _repository.ToggleBookmark(id);
+        return Result(i);
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult<GenericResponse<BookmarkReadDto>>> GetBookmarks() {
+        GenericResponse i = await _repository.GetBookmarks();
         return Result(i);
     }
 }

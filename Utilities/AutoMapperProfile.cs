@@ -1,3 +1,5 @@
+using Utilities_aspnet.FollowBookmark;
+
 namespace Utilities_aspnet.Utilities;
 
 public class AutoMapperProfile : Profile {
@@ -102,21 +104,15 @@ public class AutoMapperProfile : Profile {
             .ForMember(x => x.Specialities, y => y.Ignore())
             .ForMember(x => x.Tags, y => y.Ignore());
 
-        // Others
-        CreateMap<MediaEntity, MediaDto>().ReverseMap();
 
-        // Content
+        CreateMap<MediaEntity, MediaDto>().ReverseMap();
+        CreateMap<MediaEntity, MediaDto>().ReverseMap();
         CreateMap<ContentEntity, ContentReadDto>().ReverseMap();
         CreateMap<ContentEntity, ContentCreateUpdateDto>().ReverseMap();
-
-        // Location
         CreateMap<LocationEntity, LocationReadDto>().ReverseMap();
-
-        // User
         CreateMap<UserEntity, UserReadDto>().ReverseMap();
-
-        // Form
         CreateMap<FormEntity, FormDto>().ReverseMap();
         CreateMap<FormFieldEntity, FormFieldDto>().ReverseMap();
+        CreateMap<BookmarkEntity, BookmarkReadDto>().ReverseMap();
     }
 }

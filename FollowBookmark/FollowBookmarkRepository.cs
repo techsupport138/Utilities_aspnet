@@ -18,19 +18,27 @@ public interface IFollowBookmarkRepository {
     // void ToggleBookmarkMagazine(string userId, long id);
     // void ToggleBookmarkTag(string userId, long id);
     // void ToggleBookmarkSpeciality(string userId, long id);
-    Task<GenericResponse> ToggleBookmark(string userId, Guid id);
+    Task<GenericResponse> ToggleBookmark(Guid id);
+    Task<GenericResponse<IEnumerable<BookmarkReadDto>>> GetBookmarks();
 }
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public FollowBookmarkRepository(DbContext context, IMapper mapper) {
+    public FollowBookmarkRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _context = context;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse> ToggleBookmark(string userId, Guid id) {
+    public async Task<GenericResponse<IEnumerable<BookmarkReadDto>>> GetBookmarks() {
+        List<BookmarkEntity> i = await _context.Set<BookmarkEntity>().ToListAsync();
+        return new GenericResponse<IEnumerable<BookmarkReadDto>>(_mapper.Map<IEnumerable<BookmarkReadDto>>(i));
+    }
+
+    public async Task<GenericResponse> ToggleBookmark(Guid id) {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
                 x.ProductId == id ||
@@ -44,9 +52,9 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
                 x.MagazineId == id ||
                 x.TagId == id ||
                 x.SpecialityId == id
-            ) && x.UserId == userId);
+            ) && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
         if (oldBookmark == null) {
-            BookmarkEntity bookmark = new() {UserId = userId,};
+            BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
             try {
                 bookmark.ProductId = id;
