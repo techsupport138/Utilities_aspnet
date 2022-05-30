@@ -41,7 +41,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         List<TagEntity> tags = new();
         List<FormEntity> forms = new();
 
-        foreach (Guid item in dto.References ?? Array.Empty<Guid>())
+        foreach (Guid item in dto.References ?? new List<Guid>())
         {
             ReferenceEntity? e = await _context.Set<ReferenceEntity>()
                 .Include(x => x.Project)
@@ -56,7 +56,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (e != null) references.Add(e);
         }
 
-        foreach (Guid item in dto.Brands ?? Array.Empty<Guid>())
+        foreach (Guid item in dto.Brands ?? new List<Guid>())
         {
             BrandEntity? e = await _context.Set<BrandEntity>()
                 .Include(x => x.Project)
@@ -71,7 +71,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (e != null) brands.Add(e);
         }
 
-        foreach (Guid item in dto.Categories ?? Array.Empty<Guid>())
+        foreach (Guid item in dto.Categories ?? new List<Guid>())
         {
             CategoryEntity? category = await _context.Set<CategoryEntity>()
                 .Include(x => x.Project)
@@ -86,7 +86,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (category != null) categories.Add(category);
         }
 
-        foreach (int item in dto.Locations ?? Array.Empty<int>())
+        foreach (int item in dto.Locations ?? new List<int>())
         {
             LocationEntity? location = await _context.Set<LocationEntity>().Include(x => x.Project)
                 .Include(x => x.Project)
@@ -101,7 +101,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (location != null) locations.Add(location);
         }
 
-        foreach (Guid item in dto.Specialties ?? Array.Empty<Guid>())
+        foreach (Guid item in dto.Specialties ?? new List<Guid>())
         {
             SpecialityEntity? speciality = await _context.Set<SpecialityEntity>().Include(x => x.Project)
                 .Include(x => x.Project)
@@ -116,7 +116,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (speciality != null) specialities.Add(speciality);
         }
 
-        foreach (Guid item in dto.Tags ?? Array.Empty<Guid>())
+        foreach (Guid item in dto.Tags ?? new List<Guid>())
         {
             TagEntity? tag = await _context.Set<TagEntity>()
                 .Include(x => x.Project)
@@ -338,7 +338,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
             product.Forms = forms;
         }
-        
+
         if (parameters.VoteFields != null && parameters.VoteFields.Any())
         {
             var voteFields = await _context.Set<VoteFieldEntity>()
@@ -347,7 +347,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
             product.VoteFields = voteFields;
         }
-        
+
         if (parameters.Reports != null && parameters.Reports.Any())
         {
             var reports = await _context.Set<ReportEntity>()
