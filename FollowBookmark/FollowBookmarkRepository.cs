@@ -51,6 +51,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.ProductId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -59,6 +60,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.ProjectId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -67,6 +69,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.TutorialId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -75,6 +78,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.EventId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -83,6 +87,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.AdId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -91,6 +96,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.CompanyId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -99,6 +105,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.TenderId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -107,6 +114,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.ServiceId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -115,6 +123,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.MagazineId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -123,6 +132,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.TagId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
@@ -131,12 +141,11 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             try {
                 bookmark.SpecialityId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+                await _context.SaveChangesAsync();
             }
             catch (Exception) {
                 // ignored
             }
-
-            await _context.SaveChangesAsync();
         }
         else {
             _context.Set<BookmarkEntity>().Remove(oldBookmark);
