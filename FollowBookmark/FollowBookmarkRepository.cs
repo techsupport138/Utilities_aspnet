@@ -1,9 +1,10 @@
 ﻿namespace Utilities_aspnet.FollowBookmark;
 
-public interface IFollowBookmarkRepository {
+public interface IFollowBookmarkRepository
+{
     Task<GenericResponse<FollowReadDto>> GetFollowers(string id);
     Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
-    Task<GenericResponse> Follow(string sourceUserId, FollowWriteDto dto);
+    Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto dto);
     Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto dto);
     Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto dto);
 
@@ -21,18 +22,21 @@ public interface IFollowBookmarkRepository {
     Task<GenericResponse> ToggleBookmark(Guid id);
 }
 
-public class FollowBookmarkRepository : IFollowBookmarkRepository {
+public class FollowBookmarkRepository : IFollowBookmarkRepository
+{
     private readonly DbContext _context;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public FollowBookmarkRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+    public FollowBookmarkRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    {
         _context = context;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
     }
-    
-    public async Task<GenericResponse> ToggleBookmark(Guid id) {
+
+    public async Task<GenericResponse> ToggleBookmark(Guid id)
+    {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
                 x.ProductId == id ||
@@ -47,109 +51,133 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
                 x.TagId == id ||
                 x.SpecialityId == id
             ) && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
-        if (oldBookmark == null) {
-            BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
+        if (oldBookmark == null)
+        {
+            BookmarkEntity bookmark = new() { UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name! };
 
-            try {
+            try
+            {
                 bookmark.ProductId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.ProjectId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.TutorialId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.EventId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.AdId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.CompanyId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.TenderId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.ServiceId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.MagazineId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.TagId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
 
-            try {
+            try
+            {
                 bookmark.SpecialityId = id;
                 await _context.Set<BookmarkEntity>().AddAsync(bookmark);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception) {
+            catch (Exception)
+            {
                 // ignored
             }
         }
-        else {
+        else
+        {
             _context.Set<BookmarkEntity>().Remove(oldBookmark);
             await _context.SaveChangesAsync();
         }
@@ -157,7 +185,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
         return new GenericResponse();
     }
 
-    public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
+    public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id)
+    {
         List<UserEntity?> followers = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.SourceUserId == id)
@@ -168,10 +197,11 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
         IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followers);
 
-        return new GenericResponse<FollowReadDto>(new FollowReadDto {Followers = users});
+        return new GenericResponse<FollowReadDto>(new FollowReadDto { Followers = users });
     }
 
-    public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id) {
+    public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id)
+    {
         List<UserEntity?> followings = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.TargetUserId == id)
@@ -182,28 +212,35 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
         IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followings);
 
-        return new GenericResponse<FollowingReadDto>(new FollowingReadDto {Followings = users});
+        return new GenericResponse<FollowingReadDto>(new FollowingReadDto { Followings = users });
     }
 
-    public async Task<GenericResponse> Follow(string sourceUserId, FollowWriteDto parameters) {
+    public async Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto parameters)
+    {
         List<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
             .Select(x => x.Id)
             .ToListAsync();
 
-        foreach (string? targetUserId in users) {
-            if (await _context.Set<FollowEntity>()
-                    .AnyAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId))
-                continue;
+        foreach (string? targetUserId in users)
+        {
+            var follow = await _context.Set<FollowEntity>()
+                .FirstOrDefaultAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId);
+            if (follow != null)
+            {
+                _context.Set<FollowEntity>().Remove(follow);
+            }
+            else
+            {
+                follow = new FollowEntity
+                {
+                    SourceUserId = sourceUserId,
+                    TargetUserId = targetUserId
+                };
 
-            FollowEntity follow = new() {
-                SourceUserId = sourceUserId,
-                TargetUserId = targetUserId
-            };
-
-            await _context.Set<FollowEntity>().AddAsync(follow);
-            await _context.Set<FollowEntity>().AddAsync(follow);
+                await _context.Set<FollowEntity>().AddAsync(follow);
+            }
         }
 
         await _context.SaveChangesAsync();
@@ -211,7 +248,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters) {
+    public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters)
+    {
         List<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
@@ -228,7 +266,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto parameters) {
+    public async Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto parameters)
+    {
         List<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
