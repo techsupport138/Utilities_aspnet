@@ -1,20 +1,62 @@
-﻿namespace Utilities_aspnet.Follow;
+﻿namespace Utilities_aspnet.FollowBookmark;
 
-public interface IFollowRepository {
+public interface IFollowBookmarkRepository {
     Task<GenericResponse<FollowReadDto>> GetFollowers(string id);
     Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
-    Task<GenericResponse> Follow(string sourceUserId, FollowWriteDto parameters);
-    Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters);
-    Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto parameters);
+    Task<GenericResponse> Follow(string sourceUserId, FollowWriteDto dto);
+    Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto dto);
+    Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto dto);
+
+    // void ToggleBookmarkProduct(string userId, long id);
+    // void ToggleBookmarkProject(string userId, long id);
+    // void ToggleBookmarkTutorial(string userId, long id);
+    // void ToggleBookmarkEvent(string userId, long id);
+    // void ToggleBookmarkAd(string userId, long id);
+    // void ToggleBookmarkCompany(string userId, long id);
+    // void ToggleBookmarkTender(string userId, long id);
+    // void ToggleBookmarkService(string userId, long id);
+    // void ToggleBookmarkMagazine(string userId, long id);
+    // void ToggleBookmarkTag(string userId, long id);
+    // void ToggleBookmarkSpeciality(string userId, long id);
+    void ToggleBookmark(string userId, Guid id);
 }
 
-public class FollowRepository : IFollowRepository {
+public class FollowBookmarkRepository : IFollowBookmarkRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
 
-    public FollowRepository(DbContext context, IMapper mapper) {
+    public FollowBookmarkRepository(DbContext context, IMapper mapper) {
         _context = context;
         _mapper = mapper;
+    }
+    
+    public void ToggleBookmark(string userId, Guid id) {
+        BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
+            .FirstOrDefault(x => (
+                x.ProductId == id ||
+                x.ProjectId == id ||
+                x.TutorialId == id ||
+                x.EventId == id ||
+                x.AdId == id ||
+                x.CompanyId == id ||
+                x.TenderId == id ||
+                x.ServiceId == id ||
+                x.MagazineId == id ||
+                x.TagId == id ||
+                x.SpecialityId == id
+            ) && x.UserId == userId);
+        if (oldBookmark == null) {
+            BookmarkEntity bookmark = new() {
+                SpecialityId = id,
+                UserId = userId
+            };
+            _context.Set<BookmarkEntity>().Add(bookmark);
+            _context.SaveChanges();
+        }
+        else {
+            _context.Set<BookmarkEntity>().Remove(oldBookmark);
+            _context.SaveChangesAsync();
+        }
     }
 
     public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
@@ -52,13 +94,12 @@ public class FollowRepository : IFollowRepository {
             .Select(x => x.Id)
             .ToListAsync();
 
-        foreach (string? targetUserId in users)
-        {
-            if (await _context.Set<FollowEntity>().AnyAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId))
+        foreach (string? targetUserId in users) {
+            if (await _context.Set<FollowEntity>()
+                    .AnyAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId))
                 continue;
 
-            FollowEntity follow = new()
-            {
+            FollowEntity follow = new() {
                 SourceUserId = sourceUserId,
                 TargetUserId = targetUserId
             };

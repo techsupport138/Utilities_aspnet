@@ -1,4 +1,4 @@
-﻿using Utilities_aspnet.Follow;
+﻿using Utilities_aspnet.FollowBookmark;
 
 namespace Utilities_aspnet.Utilities;
 
@@ -12,7 +12,7 @@ public static class StartupExtension {
 
         if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
 
-        var serviceProvider = builder.Services.BuildServiceProvider().GetService<IServiceProvider>();
+        IServiceProvider? serviceProvider = builder.Services.BuildServiceProvider().GetService<IServiceProvider>();
 
         builder.AddUtilitiesSwagger(serviceProvider);
         builder.AddUtilitiesIdentity();
@@ -74,7 +74,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IUserRepository, UserRepository>();
         builder.Services.AddTransient<IMediaRepository, MediaRepository>();
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
-        builder.Services.AddTransient<IFollowRepository, FollowRepository>();
+        builder.Services.AddTransient<IFollowBookmarkRepository, FollowBookmarkRepository>();
         builder.Services.AddTransient<IAppSettingRepository, AppSettingRepository>();
         builder.Services.AddTransient<IIdTitleRepository<CategoryEntity>, IdTitleRepository<CategoryEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<TagEntity>, IdTitleRepository<TagEntity>>();

@@ -18,10 +18,10 @@ namespace Utilities_aspnet.Utilities
             {
                 if (_ServerAddress == null)
                 {
-                    var request = _httpContextAccessor.HttpContext.Request;
-                    var scheme = request.Scheme;
-                    var host = request.Host.ToUriComponent();
-                    var pathBase = request.PathBase.ToUriComponent();
+                    HttpRequest? request = _httpContextAccessor.HttpContext.Request;
+                    string? scheme = request.Scheme;
+                    string? host = request.Host.ToUriComponent();
+                    string? pathBase = request.PathBase.ToUriComponent();
 
                     _ServerAddress = $"{scheme}://{host}{pathBase}";
                 }

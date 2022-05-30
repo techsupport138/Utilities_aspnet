@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Follow;
-
-namespace Utilities_aspnet.User.Entities;
+﻿namespace Utilities_aspnet.User.Entities;
 
 public class UserEntity : IdentityUser
 {
