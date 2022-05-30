@@ -6,7 +6,6 @@ public interface IFollowBookmarkRepository
     Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
     Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto dto);
     Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto dto);
-    Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto dto);
 
     // void ToggleBookmarkProduct(string userId, long id);
     // void ToggleBookmarkProject(string userId, long id);
@@ -264,23 +263,5 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
         await _context.SaveChangesAsync();
 
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
-    }
-
-    public async Task<GenericResponse> RemoveFollowers(string sourceUserId, FollowWriteDto parameters)
-    {
-        List<string> users = await _context.Set<UserEntity>()
-            .AsNoTracking()
-            .Where(x => parameters.Followers.Contains(x.Id))
-            .Select(x => x.Id)
-            .ToListAsync();
-
-        List<FollowEntity> followings = await _context.Set<FollowEntity>()
-            .Where(x => parameters.Followers.Contains(x.TargetUserId) && x.SourceUserId == sourceUserId)
-            .ToListAsync();
-
-        _context.Set<FollowEntity>().RemoveRange(followings);
-        await _context.SaveChangesAsync();
-
-        return new GenericResponse(UtilitiesStatusCodes.Success, "عملیات با موفقیت انجام شد");
     }
 }
