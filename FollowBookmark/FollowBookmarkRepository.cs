@@ -6,6 +6,7 @@ public interface IFollowBookmarkRepository
     Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
     Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto dto);
     Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto dto);
+    Task<GenericResponse<IEnumerable<BookmarkEntity>>> GetBookMarks();
 
     // void ToggleBookmarkProduct(string userId, long id);
     // void ToggleBookmarkProject(string userId, long id);
@@ -182,6 +183,28 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
         }
 
         return new GenericResponse();
+    }
+
+    public async Task<GenericResponse<IEnumerable<BookmarkEntity>>> GetBookMarks()
+    {
+        var bookmarks = await _context.Set<BookmarkEntity>()
+            .AsNoTracking()
+            .Include(x => x.Ad)
+            .Include(x => x.Color)
+            .Include(x => x.Company)
+            .Include(x => x.Event)
+            .Include(x => x.Magazine)
+            .Include(x => x.Product)
+            .Include(x => x.Project)
+            .Include(x => x.Service)
+            .Include(x => x.Speciality)
+            .Include(x => x.Tag)
+            .Include(x => x.Tutorial)
+            .Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
+            .ToListAsync();
+
+        return new GenericResponse<IEnumerable<BookmarkEntity>>(bookmarks);
+
     }
 
     public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id)
