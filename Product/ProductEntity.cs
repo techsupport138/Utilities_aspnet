@@ -1,6 +1,7 @@
 namespace Utilities_aspnet.Product;
 
-public abstract class BaseProductEntity : BaseEntity {
+public abstract class BaseProductEntity : BaseEntity
+{
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
@@ -17,7 +18,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public ProductStatus? Status { get; set; }
-    
+
     public string? UserId { get; set; }
     public UserEntity? User { get; set; }
 
@@ -62,7 +63,8 @@ public class ServiceEntity : BaseProductEntity { }
 [Table("Magazine")]
 public class MagazineEntity : BaseProductEntity { }
 
-public class ProductReadDto {
+public class ProductReadDto
+{
     public Guid? Id { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
@@ -90,12 +92,26 @@ public class ProductReadDto {
     public IEnumerable<FormDto>? Forms { get; set; }
 }
 
-public class ProductCreateUpdateDto {
+public class ProductCreateUpdateDto
+{
+    public ProductCreateUpdateDto()
+    {
+        Locations = new List<int>();
+        Favorites = new List<Guid>();
+        Categories = new List<Guid>();
+        References = new List<Guid>();
+        Brands = new List<Guid>();
+        Specialties = new List<Guid>();
+        Tags = new List<Guid>();
+        Forms = new List<Guid>();
+        VoteFields = new List<Guid>();
+        Reports = new List<Guid>();
+    }
+
     public Guid? Id { get; set; }
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
-    public string? SubTitle { get; set; }
     public decimal? Price { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
@@ -103,20 +119,26 @@ public class ProductCreateUpdateDto {
     public string? Address { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public IEnumerable<int>? Locations { get; set; }
-    public IEnumerable<Guid>? Categories { get; set; }
-    public IEnumerable<Guid>? References { get; set; }
-    public IEnumerable<Guid>? Brands { get; set; }
-    public IEnumerable<Guid>? Specialties { get; set; }
-    public IEnumerable<Guid>? Tags { get; set; }
+    public List<int>? Locations { get; set; }
+    public List<Guid>? Favorites { get; set; }
+    public List<Guid>? Categories { get; set; }
+    public List<Guid>? References { get; set; }
+    public List<Guid>? Brands { get; set; }
+    public List<Guid>? Specialties { get; set; }
+    public List<Guid>? Tags { get; set; }
+    public List<Guid>? Forms { get; set; }
+    public List<Guid>? VoteFields { get; set; }
+    public List<Guid>? Reports { get; set; }
 }
 
-public class FilterProductDto {
+public class FilterProductDto
+{
     public string? Query { get; set; }
     public bool? DescendingDate { get; set; }
 }
 
-public enum ProductStatus {
+public enum ProductStatus
+{
     Released,
     Expired,
     InQueue,

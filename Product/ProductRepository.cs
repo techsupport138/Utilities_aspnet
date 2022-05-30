@@ -14,14 +14,14 @@ public interface IProductRepository<T> where T : BaseProductEntity
 
 public class ProductRepository<T> : IProductRepository<T> where T : BaseProductEntity, new()
 {
-    private readonly DbContext _dbContext;
+    private readonly DbContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
     private readonly IIdentity? _user;
 
-    public ProductRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    public ProductRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
-        _dbContext = dbContext;
+        _context = context;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _user = _httpContextAccessor?.HttpContext?.User.Identity;
@@ -43,7 +43,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (Guid item in dto.References ?? Array.Empty<Guid>())
         {
-            ReferenceEntity? e = await _dbContext.Set<ReferenceEntity>()
+            ReferenceEntity? e = await _context.Set<ReferenceEntity>()
                 .Include(x => x.Project)
                 .Include(x => x.Product)
                 .Include(x => x.Ad)
@@ -58,7 +58,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (Guid item in dto.Brands ?? Array.Empty<Guid>())
         {
-            BrandEntity? e = await _dbContext.Set<BrandEntity>()
+            BrandEntity? e = await _context.Set<BrandEntity>()
                 .Include(x => x.Project)
                 .Include(x => x.Product)
                 .Include(x => x.Ad)
@@ -73,7 +73,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (Guid item in dto.Categories ?? Array.Empty<Guid>())
         {
-            CategoryEntity? category = await _dbContext.Set<CategoryEntity>()
+            CategoryEntity? category = await _context.Set<CategoryEntity>()
                 .Include(x => x.Project)
                 .Include(x => x.Product)
                 .Include(x => x.Ad)
@@ -88,7 +88,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (int item in dto.Locations ?? Array.Empty<int>())
         {
-            LocationEntity? location = await _dbContext.Set<LocationEntity>().Include(x => x.Project)
+            LocationEntity? location = await _context.Set<LocationEntity>().Include(x => x.Project)
                 .Include(x => x.Project)
                 .Include(x => x.Product)
                 .Include(x => x.Ad)
@@ -103,7 +103,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (Guid item in dto.Specialties ?? Array.Empty<Guid>())
         {
-            SpecialityEntity? speciality = await _dbContext.Set<SpecialityEntity>().Include(x => x.Project)
+            SpecialityEntity? speciality = await _context.Set<SpecialityEntity>().Include(x => x.Project)
                 .Include(x => x.Project)
                 .Include(x => x.Product)
                 .Include(x => x.Ad)
@@ -118,7 +118,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (Guid item in dto.Tags ?? Array.Empty<Guid>())
         {
-            TagEntity? tag = await _dbContext.Set<TagEntity>()
+            TagEntity? tag = await _context.Set<TagEntity>()
                 .Include(x => x.Project)
                 .Include(x => x.Product)
                 .Include(x => x.Ad)
@@ -137,15 +137,15 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         entity.Locations = locations;
         entity.Specialities = specialities;
         entity.Tags = tags;
-        EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+        EntityEntry<T> i = await _context.Set<T>().AddAsync(entity);
+        await _context.SaveChangesAsync();
 
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
     public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto)
     {
-        IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking()
+        IEnumerable<T> i = await _context.Set<T>().AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
             .Include(i => i.Locations)
@@ -171,7 +171,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         // ReSharper disable once InvertIf
         if (_user != null)
         {
-            IEnumerable<BookmarkEntity> bookmark = _dbContext.Set<BookmarkEntity>()
+            IEnumerable<BookmarkEntity> bookmark = _context.Set<BookmarkEntity>()
                 .AsNoTracking()
                 .Where(x => x.UserId == _user.Name)
                 .ToList();
@@ -199,7 +199,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
     public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id)
     {
-        T? i = await _dbContext.Set<T>().AsNoTracking()
+        T? i = await _context.Set<T>().AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
             .Include(i => i.Locations)
@@ -214,21 +214,161 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto)
+    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto parameters)
     {
-        if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
-        T entity = _mapper.Map<T>(dto);
-        //entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        EntityEntry<T> i = _dbContext.Set<T>().Update(entity);
-        await _dbContext.SaveChangesAsync();
-        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
+        var product = await _context.Set<ProductEntity>()
+            .AsNoTracking()
+            .Include(x => x.Locations)
+            .Include(x => x.Favorites)
+            .Include(x => x.Media)
+            .Include(x => x.Forms)
+            .Include(x => x.Categories)
+            .Include(x => x.Tags)
+            .Include(x => x.VoteFields)
+            .Include(x => x.Reports)
+            .Include(x => x.Specialities)
+            .Include(x => x.Brands)
+            .Include(x => x.References)
+            .Include(x => x.ContactInformations)
+            .Where(x => x.Id == parameters.Id)
+            .FirstOrDefaultAsync();
+
+        if (product == null)
+            return new GenericResponse<ProductReadDto>(new ProductReadDto());
+
+        if (!string.IsNullOrEmpty(parameters.Title))
+            product.Title = parameters.Title;
+
+        if (!string.IsNullOrEmpty(parameters.Subtitle))
+            product.Subtitle = parameters.Subtitle;
+
+        if (!string.IsNullOrEmpty(parameters.Description))
+            product.Description = parameters.Description;
+
+        if (parameters.Price.HasValue)
+            product.Price = parameters.Price.Value;
+
+        if (parameters.IsForSale.HasValue)
+            product.IsForSale = parameters.IsForSale.Value;
+
+        if (parameters.Enabled.HasValue)
+            product.Enabled = parameters.Enabled.Value;
+
+        if (parameters.VisitsCount.HasValue)
+            product.VisitCount = parameters.VisitsCount.Value;
+
+        if (!string.IsNullOrEmpty(parameters.Address))
+            product.Address = parameters.Address;
+
+        if (parameters.StartDate.HasValue)
+            product.StartDate = parameters.StartDate.Value;
+
+        if (parameters.EndDate.HasValue)
+            product.EndDate = parameters.EndDate.Value;
+
+
+        if (parameters.Locations != null && parameters.Locations.Any())
+        {
+            var locations = await _context.Set<LocationEntity>()
+                .Where(x => parameters.Locations.Contains(x.Id))
+                .ToListAsync();
+
+            product.Locations = locations;
+        }
+
+        if (parameters.Favorites != null && parameters.Favorites.Any())
+        {
+            var favorites = await _context.Set<FavoriteEntity>()
+                .Where(x => parameters.Favorites.Contains(x.Id))
+                .ToListAsync();
+
+            product.Favorites = favorites;
+        }
+
+        if (parameters.Categories != null && parameters.Categories.Any())
+        {
+            var categories = await _context.Set<CategoryEntity>()
+                .Where(x => parameters.Categories.Contains(x.Id))
+                .ToListAsync();
+
+            product.Categories = categories;
+        }
+
+        if (parameters.References != null && parameters.References.Any())
+        {
+            var references = await _context.Set<ReferenceEntity>()
+                .Where(x => parameters.References.Contains(x.Id))
+                .ToListAsync();
+
+            product.References = references;
+        }
+
+        if (parameters.Brands != null && parameters.Brands.Any())
+        {
+            var brands = await _context.Set<BrandEntity>()
+                .Where(x => parameters.Brands.Contains(x.Id))
+                .ToListAsync();
+
+            product.Brands = brands;
+        }
+
+        if (parameters.Specialties != null && parameters.Specialties.Any())
+        {
+            var specialities = await _context.Set<SpecialityEntity>()
+                .Where(x => parameters.Specialties.Contains(x.Id))
+                .ToListAsync();
+
+            product.Specialities = specialities;
+        }
+
+        if (parameters.Tags != null && parameters.Tags.Any())
+        {
+            var tags = await _context.Set<TagEntity>()
+                .Where(x => parameters.Tags.Contains(x.Id))
+                .ToListAsync();
+
+            product.Tags = tags;
+        }
+
+        if (parameters.Forms != null && parameters.Forms.Any())
+        {
+            var forms = await _context.Set<FormEntity>()
+                .Where(x => parameters.Forms.Contains(x.Id))
+                .ToListAsync();
+
+            product.Forms = forms;
+        }
+        
+        if (parameters.VoteFields != null && parameters.VoteFields.Any())
+        {
+            var voteFields = await _context.Set<VoteFieldEntity>()
+                .Where(x => parameters.VoteFields.Contains(x.Id))
+                .ToListAsync();
+
+            product.VoteFields = voteFields;
+        }
+        
+        if (parameters.Reports != null && parameters.Reports.Any())
+        {
+            var reports = await _context.Set<ReportEntity>()
+                .Where(x => parameters.Reports.Contains(x.Id))
+                .ToListAsync();
+
+            product.Reports = reports;
+        }
+
+        _context.Update(product);
+        await _context.SaveChangesAsync();
+
+        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(product));
+
     }
 
     public async Task<GenericResponse> Delete(Guid id)
     {
         GenericResponse<ProductReadDto> i = await ReadById(id);
-        _dbContext.Set<T>().Remove(_mapper.Map<T>(i.Result));
-        await _dbContext.SaveChangesAsync();
+        _context.Set<T>().Remove(_mapper.Map<T>(i.Result));
+        await _context.SaveChangesAsync();
         return new GenericResponse();
     }
 }
