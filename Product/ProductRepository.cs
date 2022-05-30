@@ -1,3 +1,6 @@
+using System.Security.Principal;
+using Utilities_aspnet.FollowBookmark;
+
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity {
@@ -12,11 +15,13 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     private readonly DbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
+    private readonly IIdentity? _user;
 
     public ProductRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _dbContext = dbContext;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
+        _user = _httpContextAccessor?.HttpContext?.User.Identity;
     }
 
     public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
@@ -139,8 +144,9 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
-            .Include(i => i.Forms).ThenInclude(x=>x.FormField)
+            .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
             .ToListAsync();
+
 
         if (filterDto != null) {
             if (filterDto.Query != null) i = i.Where(x => x.Title.Contains(filterDto.Query));
@@ -148,24 +154,27 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 i = filterDto.DescendingDate == true ? i.OrderByDescending(x => x.CreatedAt) : i.OrderBy(x => x.CreatedAt);
         }
 
-        IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i);
-        
-        // IEnumerable<FormFieldDto> formFieldsDto = new List<FormFieldDto>();
-        // foreach (T entity in i) {
-        //     foreach (FormEntity formEntity in entity.Forms) {
-        //         formFieldsDto.Prepend(new FormFieldDto {
-        //             Id = formEntity.Id,
-        //             Title = formEntity.Title,
-        //             Label = formEntity.FormField.Label,
-        //             // Type = formEntity.FormField.Type,
-        //             // CategoryId = formEntity.FormField.CategoryId,
-        //             // IsRequired = formEntity.FormField.IsRequired,
-        //             // OptionList = formEntity.FormField.OptionList,
-        //         });
-        //     }
-        // }
-        //
-        // dto.Select(x => x.Forms = formFieldsDto);
+        IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i).ToList();
+
+        // ReSharper disable once InvertIf
+        if (_user != null) {
+            IEnumerable<BookmarkEntity> bookmark = _dbContext.Set<BookmarkEntity>().Where(x => x.UserId == _user.Name).ToList();
+
+            foreach (ProductReadDto productReadDto in dto) {
+                foreach (BookmarkEntity bookmarkEntity in bookmark) {
+                    if (bookmarkEntity.AdId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                    if (bookmarkEntity.ProductId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                    if (bookmarkEntity.ProjectId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                    if (bookmarkEntity.CompanyId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                    if (bookmarkEntity.EventId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                    if (bookmarkEntity.MagazineId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                    if (bookmarkEntity.TenderId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                    if (bookmarkEntity.TutorialId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                    if (bookmarkEntity.ServiceId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                }
+            }
+        }
+
 
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto);
     }
@@ -181,7 +190,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
-            .Include(i => i.Forms).ThenInclude(x => x.FormField)
+            .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
