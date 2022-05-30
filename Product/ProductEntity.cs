@@ -137,6 +137,32 @@ public class FilterProductDto
     public bool? DescendingDate { get; set; }
 }
 
+public class ProductSearchArgs
+{
+    public string? Title { get; set; }
+    public string? SubTitle { get; set; }
+    public string? Description { get; set; }
+    public decimal? StartPriceRange { get; set; }
+    public decimal? EndPriceRange { get; set; }
+    public bool? Enabled { get; set; }
+    public bool? IsForSale { get; set; }
+    public bool? IsBookmarked { get; set; }
+    public int? VisitsCount { get; set; }
+    public string? Address { get; set; }
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
+    public string? Location { get; set; }
+    public string? Media { get; set; }
+    public string? Category { get; set; }
+    public string? Brand { get; set; }
+    public string? Reference { get; set; }
+    public string? Tag { get; set; }
+    public string? Speciality { get; set; }
+    public int PageSize { get; set; }
+    public int PageNumber { get; set; }
+    public string OrderDirection { get; set; } = "ASC";
+}
+
 public enum ProductStatus
 {
     Released,

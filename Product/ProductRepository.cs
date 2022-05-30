@@ -6,7 +6,7 @@ namespace Utilities_aspnet.Product;
 public interface IProductRepository<T> where T : BaseProductEntity
 {
     Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
-    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto);
+    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(ProductSearchArgs? paraneters);
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
     Task<GenericResponse> Delete(Guid id);
@@ -143,9 +143,10 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto)
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(ProductSearchArgs? parameters)
     {
-        IEnumerable<T> i = await _context.Set<T>().AsNoTracking()
+        IQueryable<T> queryable = _context.Set<T>()
+            .AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
             .Include(i => i.Locations)
@@ -155,18 +156,55 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Brands)
             .Include(i => i.References)
             .Include(i => i.User)
-            .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
-            .ToListAsync();
+            .Include(i => i.Forms)!
+            .ThenInclude(x => x.FormField);
 
 
-        if (filterDto != null)
+        if (parameters != null)
         {
-            if (filterDto.Query != null) i = i.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(filterDto.Query));
-            if (filterDto.DescendingDate != null)
-                i = filterDto.DescendingDate == true ? i.OrderByDescending(x => x.CreatedAt) : i.OrderBy(x => x.CreatedAt);
+            if (!string.IsNullOrEmpty(parameters.Title))
+                queryable = queryable.Where(x =>
+                    !string.IsNullOrEmpty(x.Title) && x.Title.Contains(parameters.Title));
+
+
+            if (!string.IsNullOrEmpty(parameters.SubTitle))
+                queryable = queryable.Where(x =>
+                    !string.IsNullOrEmpty(x.Subtitle) && x.Subtitle.Contains(parameters.SubTitle));
+
+            if (!string.IsNullOrEmpty(parameters.Description))
+                queryable = queryable.Where(x =>
+                    !string.IsNullOrEmpty(x.Description) && x.Description.Contains(parameters.Description));
+
+            if (parameters.StartPriceRange.HasValue)
+                queryable = queryable.Where(x => x.Price >= parameters.StartPriceRange.Value);
+
+            if (parameters.EndPriceRange.HasValue)
+                queryable = queryable.Where(x => x.Price <= parameters.EndPriceRange.Value);
+
+            if (parameters.Enabled == true)
+                queryable = queryable.Where(x => x.Enabled == parameters.Enabled);
+
+            if (parameters.IsForSale.HasValue)
+                queryable = queryable.Where(x => x.IsForSale == parameters.IsForSale);
+
+            //TODO Bookmark filter
+
+            if (parameters.VisitsCount.HasValue)
+                queryable = queryable.Where(x => x.VisitCount == parameters.VisitsCount);
+
+            if (!string.IsNullOrEmpty(parameters.Address))
+                queryable = queryable.Where(x =>
+                    !string.IsNullOrEmpty(x.Address) && x.Address.Contains(parameters.Address));
+
+            if (parameters.StartDate.HasValue)
+                queryable = queryable.Where(x => x.StartDate >= parameters.StartDate);
+
+
+            if (parameters.EndPriceRange.HasValue)
+                queryable = queryable.Where(x => x.EndDate <= parameters.EndDate);
         }
 
-        IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i).ToList();
+        IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
 
         // ReSharper disable once InvertIf
         if (_user != null)
