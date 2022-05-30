@@ -18,7 +18,7 @@ public interface IFollowBookmarkRepository {
     // void ToggleBookmarkMagazine(string userId, long id);
     // void ToggleBookmarkTag(string userId, long id);
     // void ToggleBookmarkSpeciality(string userId, long id);
-    void ToggleBookmark(string userId, Guid id);
+    Task<GenericResponse> ToggleBookmark(string userId, Guid id);
 }
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
@@ -29,8 +29,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
         _context = context;
         _mapper = mapper;
     }
-    
-    public void ToggleBookmark(string userId, Guid id) {
+
+    public async Task<GenericResponse> ToggleBookmark(string userId, Guid id) {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
                 x.ProductId == id ||
@@ -47,16 +47,28 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             ) && x.UserId == userId);
         if (oldBookmark == null) {
             BookmarkEntity bookmark = new() {
+                ProductId = id,
+                ProjectId = id,
+                TutorialId = id,
+                EventId = id,
+                AdId = id,
+                CompanyId = id,
+                TenderId = id,
+                ServiceId = id,
+                MagazineId = id,
+                TagId = id,
                 SpecialityId = id,
-                UserId = userId
+                UserId = userId,
             };
-            _context.Set<BookmarkEntity>().Add(bookmark);
-            _context.SaveChanges();
+            await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            await _context.SaveChangesAsync();
         }
         else {
             _context.Set<BookmarkEntity>().Remove(oldBookmark);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
+
+        return new GenericResponse();
     }
 
     public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
