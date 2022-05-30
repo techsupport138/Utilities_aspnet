@@ -19,7 +19,6 @@ public interface IFollowBookmarkRepository {
     // void ToggleBookmarkTag(string userId, long id);
     // void ToggleBookmarkSpeciality(string userId, long id);
     Task<GenericResponse> ToggleBookmark(Guid id);
-    Task<GenericResponse<IEnumerable<BookmarkReadDto>>> GetBookmarks();
 }
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
@@ -32,12 +31,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
     }
-
-    public async Task<GenericResponse<IEnumerable<BookmarkReadDto>>> GetBookmarks() {
-        List<BookmarkEntity> i = await _context.Set<BookmarkEntity>().ToListAsync();
-        return new GenericResponse<IEnumerable<BookmarkReadDto>>(_mapper.Map<IEnumerable<BookmarkReadDto>>(i));
-    }
-
+    
     public async Task<GenericResponse> ToggleBookmark(Guid id) {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (

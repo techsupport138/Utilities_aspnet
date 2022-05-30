@@ -48,20 +48,3 @@ public class BookmarkEntity : BaseEntity {
     public ColorEntity? Color { get; set; }
     public Guid? ColorId { get; set; }
 }
-
-public class BookmarkReadDto {
-    public ProductEntity? Product { get; set; }
-    public Guid? ProductId { get; set; }
-
-    public ProjectEntity? Project { get; set; }
-    public TutorialEntity? Tutorial { get; set; }
-    public EventEntity? Event { get; set; }
-    public AdEntity? Ad { get; set; }
-    public CompanyEntity? Company { get; set; }
-    public TenderEntity? Tender { get; set; }
-    public ServiceEntity? Service { get; set; }
-    public MagazineEntity? Magazine { get; set; }
-    public TagEntity? Tag { get; set; }
-    public SpecialityEntity? Speciality { get; set; }
-    public ColorEntity? Color { get; set; }
-}
