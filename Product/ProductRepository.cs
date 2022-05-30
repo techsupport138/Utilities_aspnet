@@ -216,7 +216,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
     public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto parameters)
     {
-        var product = await _context.Set<ProductEntity>()
+        var entity = await _context.Set<ProductEntity>()
             .AsNoTracking()
             .Include(x => x.Locations)
             .Include(x => x.Favorites)
@@ -233,38 +233,38 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Where(x => x.Id == parameters.Id)
             .FirstOrDefaultAsync();
 
-        if (product == null)
+        if (entity == null)
             return new GenericResponse<ProductReadDto>(new ProductReadDto());
 
         if (!string.IsNullOrEmpty(parameters.Title))
-            product.Title = parameters.Title;
+            entity.Title = parameters.Title;
 
         if (!string.IsNullOrEmpty(parameters.Subtitle))
-            product.Subtitle = parameters.Subtitle;
+            entity.Subtitle = parameters.Subtitle;
 
         if (!string.IsNullOrEmpty(parameters.Description))
-            product.Description = parameters.Description;
+            entity.Description = parameters.Description;
 
         if (parameters.Price.HasValue)
-            product.Price = parameters.Price.Value;
+            entity.Price = parameters.Price.Value;
 
         if (parameters.IsForSale.HasValue)
-            product.IsForSale = parameters.IsForSale.Value;
+            entity.IsForSale = parameters.IsForSale.Value;
 
         if (parameters.Enabled.HasValue)
-            product.Enabled = parameters.Enabled.Value;
+            entity.Enabled = parameters.Enabled.Value;
 
         if (parameters.VisitsCount.HasValue)
-            product.VisitCount = parameters.VisitsCount.Value;
+            entity.VisitCount = parameters.VisitsCount.Value;
 
         if (!string.IsNullOrEmpty(parameters.Address))
-            product.Address = parameters.Address;
+            entity.Address = parameters.Address;
 
         if (parameters.StartDate.HasValue)
-            product.StartDate = parameters.StartDate.Value;
+            entity.StartDate = parameters.StartDate.Value;
 
         if (parameters.EndDate.HasValue)
-            product.EndDate = parameters.EndDate.Value;
+            entity.EndDate = parameters.EndDate.Value;
 
 
         if (parameters.Locations != null && parameters.Locations.Any())
@@ -273,7 +273,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.Locations.Contains(x.Id))
                 .ToListAsync();
 
-            product.Locations = locations;
+            entity.Locations = locations;
         }
 
         if (parameters.Favorites != null && parameters.Favorites.Any())
@@ -282,7 +282,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.Favorites.Contains(x.Id))
                 .ToListAsync();
 
-            product.Favorites = favorites;
+            entity.Favorites = favorites;
         }
 
         if (parameters.Categories != null && parameters.Categories.Any())
@@ -291,7 +291,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.Categories.Contains(x.Id))
                 .ToListAsync();
 
-            product.Categories = categories;
+            entity.Categories = categories;
         }
 
         if (parameters.References != null && parameters.References.Any())
@@ -300,7 +300,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.References.Contains(x.Id))
                 .ToListAsync();
 
-            product.References = references;
+            entity.References = references;
         }
 
         if (parameters.Brands != null && parameters.Brands.Any())
@@ -309,7 +309,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.Brands.Contains(x.Id))
                 .ToListAsync();
 
-            product.Brands = brands;
+            entity.Brands = brands;
         }
 
         if (parameters.Specialties != null && parameters.Specialties.Any())
@@ -318,7 +318,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.Specialties.Contains(x.Id))
                 .ToListAsync();
 
-            product.Specialities = specialities;
+            entity.Specialities = specialities;
         }
 
         if (parameters.Tags != null && parameters.Tags.Any())
@@ -327,7 +327,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.Tags.Contains(x.Id))
                 .ToListAsync();
 
-            product.Tags = tags;
+            entity.Tags = tags;
         }
 
         if (parameters.Forms != null && parameters.Forms.Any())
@@ -336,7 +336,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.Forms.Contains(x.Id))
                 .ToListAsync();
 
-            product.Forms = forms;
+            entity.Forms = forms;
         }
 
         if (parameters.VoteFields != null && parameters.VoteFields.Any())
@@ -345,7 +345,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.VoteFields.Contains(x.Id))
                 .ToListAsync();
 
-            product.VoteFields = voteFields;
+            entity.VoteFields = voteFields;
         }
 
         if (parameters.Reports != null && parameters.Reports.Any())
@@ -354,13 +354,13 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .Where(x => parameters.Reports.Contains(x.Id))
                 .ToListAsync();
 
-            product.Reports = reports;
+            entity.Reports = reports;
         }
 
-        _context.Update(product);
+        _context.Update(entity);
         await _context.SaveChangesAsync();
 
-        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(product));
+        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(entity));
 
     }
 
