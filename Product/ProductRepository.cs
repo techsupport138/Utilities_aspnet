@@ -3,7 +3,8 @@ using Utilities_aspnet.FollowBookmark;
 
 namespace Utilities_aspnet.Product;
 
-public interface IProductRepository<T> where T : BaseProductEntity {
+public interface IProductRepository<T> where T : BaseProductEntity
+{
     Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto);
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
@@ -11,20 +12,23 @@ public interface IProductRepository<T> where T : BaseProductEntity {
     Task<GenericResponse> Delete(Guid id);
 }
 
-public class ProductRepository<T> : IProductRepository<T> where T : BaseProductEntity, new() {
+public class ProductRepository<T> : IProductRepository<T> where T : BaseProductEntity, new()
+{
     private readonly DbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
     private readonly IIdentity? _user;
 
-    public ProductRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+    public ProductRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    {
         _dbContext = dbContext;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _user = _httpContextAccessor?.HttpContext?.User.Identity;
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
+    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto)
+    {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
 
@@ -37,7 +41,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         List<TagEntity> tags = new();
         List<FormEntity> forms = new();
 
-        foreach (Guid item in dto.References ?? Array.Empty<Guid>()) {
+        foreach (Guid item in dto.References ?? Array.Empty<Guid>())
+        {
             ReferenceEntity? e = await _dbContext.Set<ReferenceEntity>()
                 .Include(x => x.Project)
                 .Include(x => x.Product)
@@ -51,7 +56,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (e != null) references.Add(e);
         }
 
-        foreach (Guid item in dto.Brands ?? Array.Empty<Guid>()) {
+        foreach (Guid item in dto.Brands ?? Array.Empty<Guid>())
+        {
             BrandEntity? e = await _dbContext.Set<BrandEntity>()
                 .Include(x => x.Project)
                 .Include(x => x.Product)
@@ -65,7 +71,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (e != null) brands.Add(e);
         }
 
-        foreach (Guid item in dto.Categories ?? Array.Empty<Guid>()) {
+        foreach (Guid item in dto.Categories ?? Array.Empty<Guid>())
+        {
             CategoryEntity? category = await _dbContext.Set<CategoryEntity>()
                 .Include(x => x.Project)
                 .Include(x => x.Product)
@@ -79,7 +86,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (category != null) categories.Add(category);
         }
 
-        foreach (int item in dto.Locations ?? Array.Empty<int>()) {
+        foreach (int item in dto.Locations ?? Array.Empty<int>())
+        {
             LocationEntity? location = await _dbContext.Set<LocationEntity>().Include(x => x.Project)
                 .Include(x => x.Project)
                 .Include(x => x.Product)
@@ -93,7 +101,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (location != null) locations.Add(location);
         }
 
-        foreach (Guid item in dto.Specialties ?? Array.Empty<Guid>()) {
+        foreach (Guid item in dto.Specialties ?? Array.Empty<Guid>())
+        {
             SpecialityEntity? speciality = await _dbContext.Set<SpecialityEntity>().Include(x => x.Project)
                 .Include(x => x.Project)
                 .Include(x => x.Product)
@@ -107,7 +116,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (speciality != null) specialities.Add(speciality);
         }
 
-        foreach (Guid item in dto.Tags ?? Array.Empty<Guid>()) {
+        foreach (Guid item in dto.Tags ?? Array.Empty<Guid>())
+        {
             TagEntity? tag = await _dbContext.Set<TagEntity>()
                 .Include(x => x.Project)
                 .Include(x => x.Product)
@@ -133,7 +143,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto) {
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? filterDto)
+    {
         IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
@@ -148,8 +159,9 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .ToListAsync();
 
 
-        if (filterDto != null) {
-            if (filterDto.Query != null) i = i.Where(x => x.Title.Contains(filterDto.Query));
+        if (filterDto != null)
+        {
+            if (filterDto.Query != null) i = i.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(filterDto.Query));
             if (filterDto.DescendingDate != null)
                 i = filterDto.DescendingDate == true ? i.OrderByDescending(x => x.CreatedAt) : i.OrderBy(x => x.CreatedAt);
         }
@@ -157,11 +169,17 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(i).ToList();
 
         // ReSharper disable once InvertIf
-        if (_user != null) {
-            IEnumerable<BookmarkEntity> bookmark = _dbContext.Set<BookmarkEntity>().Where(x => x.UserId == _user.Name).ToList();
+        if (_user != null)
+        {
+            IEnumerable<BookmarkEntity> bookmark = _dbContext.Set<BookmarkEntity>()
+                .AsNoTracking()
+                .Where(x => x.UserId == _user.Name)
+                .ToList();
 
-            foreach (ProductReadDto productReadDto in dto) {
-                foreach (BookmarkEntity bookmarkEntity in bookmark) {
+            foreach (ProductReadDto productReadDto in dto)
+            {
+                foreach (BookmarkEntity bookmarkEntity in bookmark)
+                {
                     if (bookmarkEntity.AdId == productReadDto.Id) productReadDto.IsBookmarked = true;
                     if (bookmarkEntity.ProductId == productReadDto.Id) productReadDto.IsBookmarked = true;
                     if (bookmarkEntity.ProjectId == productReadDto.Id) productReadDto.IsBookmarked = true;
@@ -179,7 +197,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto);
     }
 
-    public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
+    public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id)
+    {
         T? i = await _dbContext.Set<T>().AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
@@ -195,7 +214,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
+    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto)
+    {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
         //entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -204,7 +224,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse> Delete(Guid id) {
+    public async Task<GenericResponse> Delete(Guid id)
+    {
         GenericResponse<ProductReadDto> i = await ReadById(id);
         _dbContext.Set<T>().Remove(_mapper.Map<T>(i.Result));
         await _dbContext.SaveChangesAsync();
