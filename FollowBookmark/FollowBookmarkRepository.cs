@@ -46,21 +46,96 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
                 x.SpecialityId == id
             ) && x.UserId == userId);
         if (oldBookmark == null) {
-            BookmarkEntity bookmark = new() {
-                ProductId = id,
-                ProjectId = id,
-                TutorialId = id,
-                EventId = id,
-                AdId = id,
-                CompanyId = id,
-                TenderId = id,
-                ServiceId = id,
-                MagazineId = id,
-                TagId = id,
-                SpecialityId = id,
-                UserId = userId,
-            };
-            await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            BookmarkEntity bookmark = new() {UserId = userId,};
+
+            try {
+                bookmark.ProductId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.ProjectId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.TutorialId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.EventId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.AdId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.CompanyId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.TenderId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.ServiceId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.MagazineId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.TagId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+            try {
+                bookmark.SpecialityId = id;
+                await _context.Set<BookmarkEntity>().AddAsync(bookmark);
+            }
+            catch (Exception) {
+                // ignored
+            }
+
             await _context.SaveChangesAsync();
         }
         else {

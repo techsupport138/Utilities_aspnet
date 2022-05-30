@@ -30,7 +30,7 @@ public class UserController : BaseApiController {
             GenericResponse i = await _userRepository.GetProfile(User.Identity!.Name!);
             return StatusCode(i.Status.value(), i);
         }
-        catch (Exception e) {
+        catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value(),
                 new GenericResponse<UserReadDto>(null, UtilitiesStatusCodes.Unhandled, "یه مشکلی پیش اومده"));
         }
@@ -43,7 +43,7 @@ public class UserController : BaseApiController {
             GenericResponse i = await _userRepository.UpdateUser(dto, User.Identity.Name);
             return StatusCode(i.Status.value(), i);
         }
-        catch (Exception e) {
+        catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value());
         }
     }
