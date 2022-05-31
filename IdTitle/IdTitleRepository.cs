@@ -51,8 +51,10 @@ public class IdTitleRepository<T> : IIdTitleRepository<T> where T : BaseIdTitleE
 
     public async Task<GenericResponse> Delete(Guid id) {
         T? i = await _dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
-        if (i != null) i.DeletedAt = DateTime.Now;
+        _dbContext.Remove(i);
         await _dbContext.SaveChangesAsync();
+        
+        
         return new GenericResponse();
     }
 
