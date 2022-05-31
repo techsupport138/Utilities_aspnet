@@ -111,5 +111,13 @@ public class AutoMapperProfile : Profile {
         CreateMap<UserEntity, UserReadDto>().ReverseMap();
         CreateMap<FormEntity, FormDto>().ReverseMap();
         CreateMap<FormFieldEntity, FormFieldDto>().ReverseMap();
+
+        CreateMap<CreateProfileDto, UserEntity>()
+            .ForMember(x => x.Colors, y => y.Ignore())
+            .ForMember(x => x.Specialties, y => y.Ignore())
+            .ForMember(x => x.Favorites, y => y.Ignore())
+            .ForMember(x => x.Location, y => y.Ignore())
+            .ForMember(x => x.Media, y => y.Ignore())
+            .ForMember(x => x.ContactInformation, y => y.Ignore());
     }
 }

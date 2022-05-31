@@ -11,6 +11,9 @@ public class UserEntity : IdentityUser {
     public string? AppPhoneNumber { get; set; }
     public double? Wallet { get; set; } = 0;
     public DateTime? Birthdate { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 
     public List<LocationEntity>? Location { get; set; }
     public List<FormEntity>? FormBuilders { get; set; }

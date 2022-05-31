@@ -119,3 +119,31 @@ public class UpdateProfileDto {
 
     public List<IdTitleCreateUpdateDto>? ContactInformation { get; set; }
 }
+
+public class CreateProfileDto {
+    public CreateProfileDto() {
+        Colors = new List<Guid>();
+        Specialties = new List<Guid>();
+        Favorites = new List<Guid>();
+        Locations = new List<int>();
+        ContactInformation = new List<IdTitleCreateUpdateDto>();
+    }
+
+    public List<Guid> Colors { get; set; }
+    public List<Guid> Specialties { get; set; }
+    public List<Guid> Favorites { get; set; }
+    public List<int> Locations { get; set; }
+    public MediaDto? Media { get; set; }
+    public string? FullName { get; set; }
+    public string? Bio { get; set; }
+    public DateTime? BirthDate { get; set; }
+    public string? Headline { get; set; }
+    public string? Website { get; set; }
+    public string? AppUserName { get; set; }
+    public string? AppPhoneNumber { get; set; }
+
+    [DataType(DataType.EmailAddress)]
+    public string? AppEmail { get; set; }
+
+    public List<IdTitleCreateUpdateDto>? ContactInformation { get; set; }
+}
