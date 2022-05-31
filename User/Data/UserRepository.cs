@@ -229,8 +229,6 @@ public class UserRepository : IUserRepository
 
             if (dto.Colors.Any())
             {
-                _context.Set<ColorEntity>().RemoveRange(user.Colors);
-
                 List<ColorEntity> colors = await _context.Set<ColorEntity>()
                     .AsNoTracking()
                     .Where(x => dto.Colors.Contains(x.Id))
@@ -241,8 +239,6 @@ public class UserRepository : IUserRepository
 
             if (dto.Locations.Any())
             {
-                _context.Set<LocationEntity>().RemoveRange(user.Location);
-
                 List<LocationEntity> locations = await _context.Set<LocationEntity>()
                     .AsNoTracking()
                     .Where(x => dto.Locations.Contains(x.Id))
@@ -253,8 +249,6 @@ public class UserRepository : IUserRepository
 
             if (dto.Specialties.Any())
             {
-                _context.Set<SpecialityEntity>().RemoveRange(user.Specialties);
-
                 List<SpecialityEntity> specialties = await _context.Set<SpecialityEntity>()
                     .AsNoTracking()
                     .Where(x => dto.Specialties.Contains(x.Id))
@@ -269,20 +263,15 @@ public class UserRepository : IUserRepository
             //    user.Media.Add(media);
             //}
 
-            if (dto.ContactInformation != null)
+            dto.ContactInformation?.ForEach(x =>
             {
-                _context.Set<ContactInformationEntity>().RemoveRange(user.ContactInformation);
-
-                dto.ContactInformation.ForEach(x =>
+                _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity()
                 {
-                    _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity()
-                    {
-                        UserId = user.Id,
-                        Value = x.Title ?? "",
-                        Link = x.Link
-                    });
+                    UserId = user.Id,
+                    Value = x.Title ?? "",
+                    Link = x.Link
                 });
-            }
+            });
 
             await _context.SaveChangesAsync();
         }
