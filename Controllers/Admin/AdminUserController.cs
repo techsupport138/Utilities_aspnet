@@ -1,13 +1,13 @@
 ﻿namespace Utilities_aspnet.Controllers.Admin;
 
-[Route("api/admin/[controller]/[action]")]
+[Route("api/[controller]/[action]")]
 [ApiController]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class UserController : BaseApiController
+public class AdminUserController : BaseApiController
 {
     private readonly IUserRepository _userRepository;
 
-    public UserController(IUserRepository userRepository)
+    public AdminUserController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
