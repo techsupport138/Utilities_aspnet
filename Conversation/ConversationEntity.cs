@@ -1,40 +1,35 @@
-﻿namespace Utilities_aspnet.Conversation; 
+﻿namespace Utilities_aspnet.Conversation;
 
-public class ConversationEntity : BaseEntity {
+public class ConversationEntity : BaseEntity
+{
     [StringLength(450)]
-    [ForeignKey(nameof(FromUserNavigation))]
+    [ForeignKey(nameof(FromUser))]
     public string FromUserId { get; set; } = null!;
 
     [StringLength(450)]
-    [ForeignKey(nameof(ToUserNavigation))]
+    [ForeignKey(nameof(ToUser))]
     public string ToUserId { get; set; } = null!;
 
     [StringLength(500)]
     public string MessageText { get; set; } = null!;
 
-    public virtual UserEntity FromUserNavigation { get; set; } = null!;
-    public virtual UserEntity ToUserNavigation { get; set; } = null!;
+    public virtual UserEntity FromUser { get; set; } = null!;
+    public virtual UserEntity ToUser { get; set; } = null!;
 }
 
-public class ConversationsDto {
+public class ConversationsDto
+{
     public Guid Id { get; set; }
-
-    [StringLength(450)]
-    public string UserId { get; set; }
-
-    [StringLength(500)]
-    public string MessageText { get; set; }
-
-    public string Name { get; set; }
+    public string UserId { get; set; } = null!;
+    public string? MessageText { get; set; }
+    public string? FullName { get; set; }
     public DateTime DateTime { get; set; }
-    public string ImageUrl { get; set; }
+    public string? ProfileImage { get; set; }
     public bool Send { get; set; }
 }
 
-public class AddConversationDto {
-    [StringLength(450)]
-    public string UserId { get; set; }
-
-    [StringLength(500)]
-    public string MessageText { get; set; }
+public class AddConversationDto
+{
+    public string UserId { get; set; } = null!;
+    public string MessageText { get; set; } = null!;
 }
