@@ -133,12 +133,6 @@ public class ProductCreateUpdateDto
 
 public class FilterProductDto
 {
-    public string? Query { get; set; }
-    public bool? DescendingDate { get; set; }
-}
-
-public class ProductSearchArgs
-{
     public string? Title { get; set; }
     public string? SubTitle { get; set; }
     public string? Description { get; set; }
