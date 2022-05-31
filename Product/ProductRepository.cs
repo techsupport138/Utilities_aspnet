@@ -156,6 +156,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Bookmarks)
             .Include(i => i.Forms)!
             .ThenInclude(x => x.FormField)
+            .Where(x=>x.DeletedAt == null)
             .ToListAsync();
 
 
@@ -288,7 +289,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.References)
             .Include(i => i.User)
             .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
-            .FirstOrDefaultAsync(i => i.Id == id);
+            .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
