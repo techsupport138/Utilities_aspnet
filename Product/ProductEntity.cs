@@ -33,6 +33,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<BrandEntity>? Brands { get; set; }
     public IEnumerable<ReferenceEntity>? References { get; set; }
     public IEnumerable<ContactInformationEntity>? ContactInformations { get; set; }
+    public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
 }
 
 [Table("Products")]
@@ -156,15 +157,24 @@ public class FilterProductDto {
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public string? Location { get; set; }
-    public string? Media { get; set; }
     public string? Category { get; set; }
     public string? Brand { get; set; }
     public string? Reference { get; set; }
     public string? Tag { get; set; }
     public string? Speciality { get; set; }
+
+    public ProductFilterOrder? FilterOrder { get; set; }
+
     public int PageSize { get; set; }
     public int PageNumber { get; set; }
-    public string OrderDirection { get; set; } = "ASC";
+}
+
+public enum ProductFilterOrder
+{
+    LowPrice,
+    HighPrice,
+    AToZ,
+    ZToA
 }
 
 public enum ProductStatus {
