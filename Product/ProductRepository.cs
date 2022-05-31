@@ -6,7 +6,7 @@ namespace Utilities_aspnet.Product;
 public interface IProductRepository<T> where T : BaseProductEntity
 {
     Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
-    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(ProductSearchArgs? paraneters);
+    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? paraneters);
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
     Task<GenericResponse> Delete(Guid id);
@@ -143,7 +143,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(ProductSearchArgs? parameters)
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? parameters)
     {
         IQueryable<T> queryable = _context.Set<T>()
             .AsNoTracking()
