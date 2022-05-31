@@ -13,6 +13,7 @@ public abstract class BaseIdTitleEntity : BaseEntity {
     public ICollection<MediaEntity> Media { get; set; }
     public IEnumerable<UserEntity>? User { get; set; }
     public IEnumerable<ProductEntity>? Product { get; set; }
+    public IEnumerable<DailyPriceEntity>? DailyPrice { get; set; }
     public IEnumerable<ProjectEntity>? Project { get; set; }
     public IEnumerable<TutorialEntity>? Tutorial { get; set; }
     public IEnumerable<EventEntity>? Event { get; set; }

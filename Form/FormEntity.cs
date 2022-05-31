@@ -9,6 +9,9 @@ public class FormEntity : BaseEntity {
 
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
+    
+    public DailyPriceEntity? DailyPrice { get; set; }
+    public Guid? DailyPriceId { get; set; }
 
     public ProjectEntity? Project { get; set; }
     public Guid? ProjectId { get; set; }
