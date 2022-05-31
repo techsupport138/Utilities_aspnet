@@ -15,11 +15,4 @@ public class BookmarkController : BaseApiController {
         GenericResponse i = await _repository.ToggleBookmark(parameters);
         return Result(i);
     }
-
-    [HttpGet]
-    public async Task<ActionResult<GenericResponse<IEnumerable<BookmarkEntity>>>> GetBookMarks() {
-        GenericResponse<IEnumerable<BookmarkEntity>>? result = await _repository.GetBookMarks();
-
-        return Result(result);
-    }
 }
