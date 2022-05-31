@@ -45,6 +45,14 @@ public class AutoMapperProfile : Profile {
             .ForMember(x => x.Brands, y => y.Ignore())
             .ForMember(x => x.Specialities, y => y.Ignore())
             .ForMember(x => x.Tags, y => y.Ignore());
+        CreateMap<DailyPriceEntity, ProductReadDto>().ReverseMap();
+        CreateMap<DailyPriceEntity, ProductCreateUpdateDto>().ReverseMap()
+            .ForMember(x => x.Locations, y => y.Ignore())
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.References, y => y.Ignore())
+            .ForMember(x => x.Brands, y => y.Ignore())
+            .ForMember(x => x.Specialities, y => y.Ignore())
+            .ForMember(x => x.Tags, y => y.Ignore());
         CreateMap<TutorialEntity, ProductReadDto>().ReverseMap();
         CreateMap<TutorialEntity, ProductCreateUpdateDto>().ReverseMap()
             .ForMember(x => x.Locations, y => y.Ignore())
