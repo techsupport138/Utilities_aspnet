@@ -388,6 +388,53 @@ public class UserRepository : IUserRepository
     {
         var user = _mapper.Map<UserEntity>(parameter);
 
+        if (parameter.Colors.Any())
+        {
+            List<ColorEntity> colors = await _context.Set<ColorEntity>()
+                .AsNoTracking()
+                .Where(x => parameter.Colors.Contains(x.Id))
+                .ToListAsync();
+
+            user.Colors ??= new List<ColorEntity>();
+
+            user.Colors.AddRange(colors);
+        }
+
+        if (parameter.Locations.Any())
+        {
+            List<LocationEntity> locations = await _context.Set<LocationEntity>()
+                .AsNoTracking()
+                .Where(x => parameter.Locations.Contains(x.Id))
+                .ToListAsync();
+
+            user.Location ??= new List<LocationEntity>();
+
+            user.Location.AddRange(locations);
+        }
+
+        if (parameter.Specialties.Any())
+        {
+            List<SpecialityEntity> specialties = await _context.Set<SpecialityEntity>()
+                .AsNoTracking()
+                .Where(x => parameter.Specialties.Contains(x.Id))
+                .ToListAsync();
+
+            user.Specialties ??= new List<SpecialityEntity>();
+
+            user.Specialties.AddRange(specialties);
+        }
+
+
+        parameter.ContactInformation?.ForEach(x =>
+        {
+            _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity()
+            {
+                UserId = user.Id,
+                Value = x.Title ?? "",
+                Link = x.Link
+            });
+        });
+
         await _context.Set<UserEntity>().AddAsync(user);
         await _context.SaveChangesAsync();
 
