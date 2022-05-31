@@ -1,5 +1,3 @@
-using Utilities_aspnet.FollowBookmark;
-
 namespace Utilities_aspnet.Utilities;
 
 public class AutoMapperProfile : Profile {

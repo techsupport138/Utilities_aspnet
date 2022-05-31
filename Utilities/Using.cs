@@ -48,3 +48,6 @@ global using RestSharp;
 global using Utilities_aspnet.Vote.Entities;
 global using Microsoft.AspNetCore.Mvc.ApiExplorer;
 global using Swashbuckle.AspNetCore.SwaggerUI;
+global using System.Security.Principal;
+global using Utilities_aspnet.FollowBookmark;
+global using Microsoft.AspNetCore.Authorization;

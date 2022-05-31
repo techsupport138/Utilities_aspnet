@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Utilities_aspnet.Utilities; 
+﻿namespace Utilities_aspnet.Utilities; 
 
 public class NetworkUtil {
     private static IHttpContextAccessor _httpContextAccessor;

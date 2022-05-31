@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
-
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]

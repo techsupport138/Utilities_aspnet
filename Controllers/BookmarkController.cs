@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Utilities_aspnet.FollowBookmark;
-
-namespace Utilities_aspnet.Controllers;
+﻿namespace Utilities_aspnet.Controllers;
 
 [Route("api/[controller]/[action]")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
