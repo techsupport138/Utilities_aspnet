@@ -1,20 +1,23 @@
 ﻿namespace Utilities_aspnet.Conversation; 
 
 public interface IConversationRepository {
-    Task<GenericResponse<IEnumerable<ConversationsDto>?>> SendConversation(AddConversationDto model, string userId);
-    Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversationByUserId(string id, string userId);
-    Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversatios(string userId);
+    Task<GenericResponse<IEnumerable<ConversationsDto>?>> SendConversation(AddConversationDto model);
+    Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversationByUserId(string id);
+    Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversatios();
 }
 
 public class ConversationRepository : IConversationRepository {
     private readonly DbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ConversationRepository(DbContext context) {
+    public ConversationRepository(DbContext context, IHttpContextAccessor httpContextAccessor) {
         _context = context;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> SendConversation(AddConversationDto model, string userId) {
+    public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> SendConversation(AddConversationDto model) {
         UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == model.UserId);
+        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         UserEntity? myUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
         if (user == null) return new GenericResponse<IEnumerable<ConversationsDto>?>(null, UtilitiesStatusCodes.BadRequest);
         ConversationEntity? conversation = new ConversationEntity() {
@@ -26,10 +29,11 @@ public class ConversationRepository : IConversationRepository {
         await _context.Set<ConversationEntity>().AddAsync(conversation);
         await _context.SaveChangesAsync();
 
-        return new GenericResponse<IEnumerable<ConversationsDto>?>(GetConversationByUserId(model.UserId, userId).Result.Result);
+        return new GenericResponse<IEnumerable<ConversationsDto>?>(GetConversationByUserId(model.UserId).Result.Result);
     }
 
-    public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversationByUserId(string id, string userId) {
+    public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversationByUserId(string id) {
+        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         UserEntity? user = await _context.Set<UserEntity>().Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
         if (user == null) return new GenericResponse<IEnumerable<ConversationsDto>?>(null, UtilitiesStatusCodes.BadRequest);
         List<ConversationEntity>? conversation = await _context.Set<ConversationEntity>()
@@ -54,7 +58,8 @@ public class ConversationRepository : IConversationRepository {
         return new GenericResponse<IEnumerable<ConversationsDto>?>(conversations);
     }
 
-    public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversatios(string userId) {
+    public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversatios() {
+        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         List<string>? ToUserId = await _context.Set<ConversationEntity>().Where(x => x.FromUserId == userId)
             .Select(x => x.ToUserId).ToListAsync();
         List<string>? FromUserId = await _context.Set<ConversationEntity>().Where(x => x.ToUserId == userId)

@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using Utilities_aspnet.Conversation;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(
@@ -92,6 +94,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IProductRepository<TenderEntity>, ProductRepository<TenderEntity>>();
         builder.Services.AddTransient<IProductRepository<ServiceEntity>, ProductRepository<ServiceEntity>>();
         builder.Services.AddTransient<IProductRepository<DailyPriceEntity>, ProductRepository<DailyPriceEntity>>();
+        builder.Services.AddTransient<IConversationRepository, ConversationRepository>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
