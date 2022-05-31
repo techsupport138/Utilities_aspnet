@@ -67,21 +67,24 @@ public class MagazineEntity : BaseProductEntity { }
 
 public class ProductReadDto {
     public Guid? Id { get; set; }
-    public DateTime? CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-    public DateTime? DeletedAt { get; set; }
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
-    public bool Enabled { get; set; }
-    public bool? IsForSale { get; set; }
-    public bool? IsBookmarked { get; set; }
-    public decimal? Price { get; set; }
-    public int? VisitsCount { get; set; }
     public string? Address { get; set; }
+    public string? Author { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public bool? IsForSale { get; set; }
+    public bool? Enabled { get; set; }
+    public bool? IsBookmarked { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
+    public int? VisitsCount { get; set; }
+    public decimal? Price { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public UserReadDto? User { get; set; }
+    public ProductStatus? Status { get; set; }
     public IEnumerable<LocationReadDto>? Locations { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleReadDto>? Categories { get; set; }
@@ -111,13 +114,19 @@ public class ProductCreateUpdateDto {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
-    public decimal? Price { get; set; }
+    public string? Address { get; set; }
+    public string? Author { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
     public int? VisitsCount { get; set; }
-    public string? Address { get; set; }
+    public decimal? Price { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
+    public ProductStatus? Status { get; set; }
     public List<int>? Locations { get; set; }
     public List<Guid>? Favorites { get; set; }
     public List<Guid>? Categories { get; set; }
