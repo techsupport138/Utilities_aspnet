@@ -23,11 +23,12 @@ public class UserEntity : IdentityUser {
     public List<ContactInformationEntity>? ContactInformation { get; set; }
     public List<ReportEntity>? Reports { get; set; }
     public List<ProductEntity>? Products { get; set; }
+    public List<DailyPriceEntity>? DailyPrices { get; set; }
     public List<ProjectEntity>? Projects { get; set; }
     public List<TutorialEntity>? Tutorials { get; set; }
     public List<EventEntity>? Events { get; set; }
     public List<AdEntity>? Ads { get; set; }
-    public List<CompanyEntity>? Companys { get; set; }
+    public List<CompanyEntity>? Companies { get; set; }
     public List<TenderEntity>? Tenders { get; set; }
     public List<ServiceEntity>? Services { get; set; }
     public List<MagazineEntity>? Magazines { get; set; }

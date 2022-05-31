@@ -23,6 +23,9 @@ public class MediaEntity : BaseEntity {
 
     public ProjectEntity? Project { get; set; }
     public Guid? ProjectId { get; set; }
+    
+    public DailyPriceEntity? DailyPrice { get; set; }
+    public Guid? DailyPriceId { get; set; }
 
     public TutorialEntity? Tutorial { get; set; }
     public Guid? TutorialId { get; set; }
