@@ -234,6 +234,8 @@ public class UserRepository : IUserRepository
                     .Where(x => dto.Colors.Contains(x.Id))
                     .ToListAsync();
 
+                user.Colors ??= new List<ColorEntity>();
+
                 user.Colors.AddRange(colors);
             }
 
@@ -244,6 +246,8 @@ public class UserRepository : IUserRepository
                     .Where(x => dto.Locations.Contains(x.Id))
                     .ToListAsync();
 
+                user.Location ??= new List<LocationEntity>();
+
                 user.Location.AddRange(locations);
             }
 
@@ -253,6 +257,8 @@ public class UserRepository : IUserRepository
                     .AsNoTracking()
                     .Where(x => dto.Specialties.Contains(x.Id))
                     .ToListAsync();
+
+                user.Specialties ??= new List<SpecialityEntity>();
 
                 user.Specialties.AddRange(specialties);
             }
