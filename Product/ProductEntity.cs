@@ -83,6 +83,9 @@ public class ProductReadDto {
     public decimal? Price { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
     public UserReadDto? User { get; set; }
     public ProductStatus? Status { get; set; }
     public IEnumerable<LocationReadDto>? Locations { get; set; }
