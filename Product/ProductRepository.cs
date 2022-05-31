@@ -404,8 +404,9 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
     public async Task<GenericResponse> Delete(Guid id)
     {
-        GenericResponse<ProductReadDto> i = await ReadById(id);
-        _context.Set<T>().Remove(_mapper.Map<T>(i.Result));
+        T? i = await _context.Set<T>().AsNoTracking()
+            .FirstOrDefaultAsync(i => i.Id == id);
+        i.DeletedAt = DateTime.Now;
         await _context.SaveChangesAsync();
         return new GenericResponse();
     }
