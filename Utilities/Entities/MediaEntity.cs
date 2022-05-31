@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities.Entities;
+﻿using Utilities_aspnet.Notification;
+
+namespace Utilities_aspnet.Utilities.Entities;
 
 public class MediaEntity : BaseEntity {
     [Required]
@@ -54,8 +56,10 @@ public class MediaEntity : BaseEntity {
     public SpecialityEntity? Speciality { get; set; }
     public Guid? SpecialityId { get; set; }
 
+    public NotificationEntity? Notification { get; set; }
+    public Guid? NotificationId { get; set; }
+
     [NotMapped]
-    //public string Link => $"/Medias/{FileName}";
     public string Link => $"{NetworkUtil.ServerAddress}/Medias/{FileName}";
     //public string Link => $"{Server.ServerAddress}/Medias/{FileName}";
 

@@ -1,4 +1,5 @@
 ﻿using Utilities_aspnet.Conversation;
+using Utilities_aspnet.Notification;
 
 namespace Utilities_aspnet.Utilities;
 
@@ -95,6 +96,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IProductRepository<ServiceEntity>, ProductRepository<ServiceEntity>>();
         builder.Services.AddTransient<IProductRepository<DailyPriceEntity>, ProductRepository<DailyPriceEntity>>();
         builder.Services.AddTransient<IConversationRepository, ConversationRepository>();
+        builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }

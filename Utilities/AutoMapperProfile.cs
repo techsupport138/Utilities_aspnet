@@ -1,3 +1,5 @@
+using Utilities_aspnet.Notification;
+
 namespace Utilities_aspnet.Utilities;
 
 public class AutoMapperProfile : Profile {
@@ -119,6 +121,8 @@ public class AutoMapperProfile : Profile {
         CreateMap<UserEntity, UserReadDto>().ReverseMap();
         CreateMap<FormEntity, FormDto>().ReverseMap();
         CreateMap<FormFieldEntity, FormFieldDto>().ReverseMap();
+
+        CreateMap<NotificationEntity, NotificationDto>().ReverseMap();
 
         CreateMap<CreateProfileDto, UserEntity>()
             .ForMember(x => x.Colors, y => y.Ignore())
