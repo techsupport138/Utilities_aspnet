@@ -93,6 +93,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IProductRepository<MagazineEntity>, ProductRepository<MagazineEntity>>();
         builder.Services.AddTransient<IProductRepository<TenderEntity>, ProductRepository<TenderEntity>>();
         builder.Services.AddTransient<IProductRepository<ServiceEntity>, ProductRepository<ServiceEntity>>();
+        builder.Services.AddTransient<IProductRepository<DailyPriceEntity>, ProductRepository<DailyPriceEntity>>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }

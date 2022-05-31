@@ -54,6 +54,9 @@ public class AdEntity : BaseProductEntity { }
 [Table("Company")]
 public class CompanyEntity : BaseProductEntity { }
 
+[Table("DailyPrice")]
+public class DailyPriceEntity : BaseProductEntity { }
+
 [Table("Tenders")]
 public class TenderEntity : BaseProductEntity { }
 
