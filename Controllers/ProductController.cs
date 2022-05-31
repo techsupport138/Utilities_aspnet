@@ -20,7 +20,7 @@ public class ProductController : BaseApiController {
         GenericResponse<IEnumerable<ProductReadDto>> i = await _productRepository.Read(null);
         return Result(i);
     }
-    
+
     [HttpPost("Filter")]
     public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Filter(FilterProductDto? dto) {
         GenericResponse<IEnumerable<ProductReadDto>> i = await _productRepository.Read(dto);

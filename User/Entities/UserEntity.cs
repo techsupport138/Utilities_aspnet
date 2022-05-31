@@ -1,7 +1,6 @@
 ﻿namespace Utilities_aspnet.User.Entities;
 
-public class UserEntity : IdentityUser
-{
+public class UserEntity : IdentityUser {
     public bool Suspend { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

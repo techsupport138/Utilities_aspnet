@@ -1,7 +1,6 @@
 namespace Utilities_aspnet.Product;
 
-public abstract class BaseProductEntity : BaseEntity
-{
+public abstract class BaseProductEntity : BaseEntity {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
@@ -66,8 +65,7 @@ public class ServiceEntity : BaseProductEntity { }
 [Table("Magazine")]
 public class MagazineEntity : BaseProductEntity { }
 
-public class ProductReadDto
-{
+public class ProductReadDto {
     public Guid? Id { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
@@ -95,10 +93,8 @@ public class ProductReadDto
     public IEnumerable<FormDto>? Forms { get; set; }
 }
 
-public class ProductCreateUpdateDto
-{
-    public ProductCreateUpdateDto()
-    {
+public class ProductCreateUpdateDto {
+    public ProductCreateUpdateDto() {
         Locations = new List<int>();
         Favorites = new List<Guid>();
         Categories = new List<Guid>();
@@ -134,8 +130,7 @@ public class ProductCreateUpdateDto
     public List<Guid>? Reports { get; set; }
 }
 
-public class FilterProductDto
-{
+public class FilterProductDto {
     public string? Title { get; set; }
     public string? SubTitle { get; set; }
     public string? Description { get; set; }
@@ -160,8 +155,7 @@ public class FilterProductDto
     public string OrderDirection { get; set; } = "ASC";
 }
 
-public enum ProductStatus
-{
+public enum ProductStatus {
     Released,
     Expired,
     InQueue,

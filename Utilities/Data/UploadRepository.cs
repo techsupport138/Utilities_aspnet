@@ -64,7 +64,7 @@ public class UploadRepository : IUploadRepository {
                 ServiceId = model.ServiceId,
                 TutorialId = model.TutorialId,
                 TenderId = model.TenderId,
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.Now
             };
             await _context.Set<MediaEntity>().AddAsync(media);
             await _context.SaveChangesAsync();
@@ -72,7 +72,8 @@ public class UploadRepository : IUploadRepository {
             _mediaRepository.SaveMedia(file, name, folder);
         }
 
-        return new GenericResponse<List<MediaDto>?>(_mapper.Map<List<MediaDto>>(medias), UtilitiesStatusCodes.Success, "File uploaded");
+        return new GenericResponse<List<MediaDto>?>(_mapper.Map<List<MediaDto>>(medias), UtilitiesStatusCodes.Success,
+            "File uploaded");
     }
 
     public async Task<GenericResponse> UploadChunkMedia(UploadDto parameter) {
@@ -136,7 +137,7 @@ public class UploadRepository : IUploadRepository {
                 ServiceId = parameter.ServiceId,
                 TutorialId = parameter.TutorialId,
                 TenderId = parameter.TenderId,
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.Now
             };
             await _context.Set<MediaEntity>().AddAsync(media);
             await _context.SaveChangesAsync();

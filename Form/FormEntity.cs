@@ -9,7 +9,7 @@ public class FormEntity : BaseEntity {
 
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
-    
+
     public DailyPriceEntity? DailyPrice { get; set; }
     public Guid? DailyPriceId { get; set; }
 
@@ -63,6 +63,7 @@ public class FormDto {
     public string Title { get; set; }
     public FormFieldDto? FormField { get; set; }
 }
+
 public class FormFieldDto {
     public Guid? Id { get; set; }
     public string? Label { get; set; }

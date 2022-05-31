@@ -14,10 +14,10 @@ public class BookmarkEntity : BaseEntity {
 
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
-    
+
     public DailyPriceEntity? DailyPrice { get; set; }
     public Guid? DailyPriceId { get; set; }
-    
+
     public ProjectEntity? Project { get; set; }
     public Guid? ProjectId { get; set; }
 
@@ -47,13 +47,12 @@ public class BookmarkEntity : BaseEntity {
 
     public SpecialityEntity? Speciality { get; set; }
     public Guid? SpecialityId { get; set; }
-    
+
     public ColorEntity? Color { get; set; }
     public Guid? ColorId { get; set; }
 }
 
-public class BookmarkWriteDto
-{
+public class BookmarkWriteDto {
     public Guid? ProductId { get; set; }
 
     public Guid? ProjectId { get; set; }
@@ -75,6 +74,6 @@ public class BookmarkWriteDto
     public Guid? TagId { get; set; }
 
     public Guid? SpecialityId { get; set; }
-    
+
     public Guid? ColorId { get; set; }
 }

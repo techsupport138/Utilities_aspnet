@@ -8,7 +8,7 @@ public class MediaController : BaseApiController {
     public MediaController(IUploadRepository uploadRepository) {
         _uploadRepository = uploadRepository;
     }
-    
+
     [HttpPost]
     public async Task<ActionResult<GenericResponse<MediaDto>>> Upload([FromForm] UploadDto dto) {
         GenericResponse? i = await _uploadRepository.UploadMedia(dto);

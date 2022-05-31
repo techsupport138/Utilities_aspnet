@@ -1,7 +1,6 @@
 ﻿namespace Utilities_aspnet.FollowBookmark;
 
-public interface IFollowBookmarkRepository
-{
+public interface IFollowBookmarkRepository {
     Task<GenericResponse<FollowReadDto>> GetFollowers(string id);
     Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
     Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto dto);
@@ -22,21 +21,18 @@ public interface IFollowBookmarkRepository
     Task<GenericResponse> ToggleBookmark(BookmarkWriteDto parameters);
 }
 
-public class FollowBookmarkRepository : IFollowBookmarkRepository
-{
+public class FollowBookmarkRepository : IFollowBookmarkRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public FollowBookmarkRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
-    {
+    public FollowBookmarkRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _context = context;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse> ToggleBookmark(BookmarkWriteDto parameters)
-    {
+    public async Task<GenericResponse> ToggleBookmark(BookmarkWriteDto parameters) {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
                 x.ProductId == parameters.ProductId ||
@@ -51,71 +47,36 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
                 x.TagId == parameters.TagId ||
                 x.SpecialityId == parameters.SpecialityId
             ) && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
-        if (oldBookmark == null)
-        {
-            BookmarkEntity bookmark = new() { UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name! };
+        if (oldBookmark == null) {
+            BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
-            if (parameters.ProductId.HasValue)
-            {
-                bookmark.ProductId = parameters.ProductId;
-            }
+            if (parameters.ProductId.HasValue) bookmark.ProductId = parameters.ProductId;
 
-            if (parameters.ProjectId.HasValue)
-            {
-                bookmark.ProjectId = parameters.ProjectId;
-            }
+            if (parameters.ProjectId.HasValue) bookmark.ProjectId = parameters.ProjectId;
 
-            if (parameters.TutorialId.HasValue)
-            {
-                bookmark.TutorialId = parameters.TutorialId;
-            }
+            if (parameters.TutorialId.HasValue) bookmark.TutorialId = parameters.TutorialId;
 
-            if (parameters.EventId.HasValue)
-            {
-                bookmark.EventId = parameters.EventId;
-            }
+            if (parameters.EventId.HasValue) bookmark.EventId = parameters.EventId;
 
-            if (parameters.AdId.HasValue)
-            {
-                bookmark.AdId = parameters.AdId;
-            }
+            if (parameters.AdId.HasValue) bookmark.AdId = parameters.AdId;
 
-            if (parameters.CompanyId.HasValue)
-            {
-                bookmark.CompanyId = parameters.CompanyId;
-            }
+            if (parameters.CompanyId.HasValue) bookmark.CompanyId = parameters.CompanyId;
 
-            if (parameters.TenderId.HasValue)
-            {
-                bookmark.TenderId = parameters.TenderId;
-            }
+            if (parameters.TenderId.HasValue) bookmark.TenderId = parameters.TenderId;
 
-            if (parameters.ServiceId.HasValue)
-            {
-                bookmark.ServiceId = parameters.ServiceId;
-            }
+            if (parameters.ServiceId.HasValue) bookmark.ServiceId = parameters.ServiceId;
 
-            if (parameters.MagazineId.HasValue)
-            {
-                bookmark.MagazineId = parameters.MagazineId;
-            }
+            if (parameters.MagazineId.HasValue) bookmark.MagazineId = parameters.MagazineId;
 
-            if (parameters.TagId.HasValue)
-            {
-                bookmark.TagId = parameters.TagId;
-            }
+            if (parameters.TagId.HasValue) bookmark.TagId = parameters.TagId;
 
-            if (parameters.SpecialityId.HasValue)
-            {
-                bookmark.SpecialityId = parameters.SpecialityId;
-            }
+            if (parameters.SpecialityId.HasValue) bookmark.SpecialityId = parameters.SpecialityId;
 
 
             await _context.Set<BookmarkEntity>().AddAsync(bookmark);
             await _context.SaveChangesAsync();
         }
-        else
-        {
+        else {
             _context.Set<BookmarkEntity>().Remove(oldBookmark);
             await _context.SaveChangesAsync();
         }
@@ -123,9 +84,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse<IEnumerable<BookmarkEntity>>> GetBookMarks()
-    {
-        var bookmarks = await _context.Set<BookmarkEntity>()
+    public async Task<GenericResponse<IEnumerable<BookmarkEntity>>> GetBookMarks() {
+        List<BookmarkEntity>? bookmarks = await _context.Set<BookmarkEntity>()
             .AsNoTracking()
             .Include(x => x.Ad)
             .Include(x => x.Color)
@@ -142,11 +102,9 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
             .ToListAsync();
 
         return new GenericResponse<IEnumerable<BookmarkEntity>>(bookmarks);
-
     }
 
-    public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id)
-    {
+    public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
         List<UserEntity?> followers = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.SourceUserId == id)
@@ -157,11 +115,10 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
 
         IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followers);
 
-        return new GenericResponse<FollowReadDto>(new FollowReadDto { Followers = users });
+        return new GenericResponse<FollowReadDto>(new FollowReadDto {Followers = users});
     }
 
-    public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id)
-    {
+    public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id) {
         List<UserEntity?> followings = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.TargetUserId == id)
@@ -172,29 +129,24 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
 
         IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followings);
 
-        return new GenericResponse<FollowingReadDto>(new FollowingReadDto { Followings = users });
+        return new GenericResponse<FollowingReadDto>(new FollowingReadDto {Followings = users});
     }
 
-    public async Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto parameters)
-    {
+    public async Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto parameters) {
         List<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
             .Select(x => x.Id)
             .ToListAsync();
 
-        foreach (string? targetUserId in users)
-        {
-            var follow = await _context.Set<FollowEntity>()
+        foreach (string? targetUserId in users) {
+            FollowEntity? follow = await _context.Set<FollowEntity>()
                 .FirstOrDefaultAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId);
-            if (follow != null)
-            {
+            if (follow != null) {
                 _context.Set<FollowEntity>().Remove(follow);
             }
-            else
-            {
-                follow = new FollowEntity
-                {
+            else {
+                follow = new FollowEntity {
                     SourceUserId = sourceUserId,
                     TargetUserId = targetUserId
                 };
@@ -208,8 +160,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters)
-    {
+    public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters) {
         List<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))

@@ -29,7 +29,7 @@ public class LocationEntity {
 
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
-    
+
     public DailyPriceEntity? DailyPrice { get; set; }
     public Guid? DailyPriceId { get; set; }
 

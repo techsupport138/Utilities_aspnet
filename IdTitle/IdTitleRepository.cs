@@ -49,11 +49,24 @@ public class IdTitleRepository<T> : IIdTitleRepository<T> where T : BaseIdTitleE
         return new GenericResponse<IEnumerable<IdTitleReadDto>>(_mapper.Map<IEnumerable<IdTitleReadDto>>(i));
     }
 
-    public Task<GenericResponse> Delete(Guid id) {
-        throw new NotImplementedException();
+    public async Task<GenericResponse> Delete(Guid id) {
+        T? i = await _dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+        if (i != null) i.DeletedAt = DateTime.Now;
+        await _dbContext.SaveChangesAsync();
+        return new GenericResponse();
     }
 
-    public Task<GenericResponse<IdTitleReadDto>> Update(IdTitleCreateUpdateDto dto) {
-        throw new NotImplementedException();
+    public async Task<GenericResponse<IdTitleReadDto>> Update(IdTitleCreateUpdateDto dto) {
+        T? entity = await _dbContext.Set<T>().FirstOrDefaultAsync(item => item.Id == dto.Id);
+
+        if (entity == null) return new GenericResponse<IdTitleReadDto>(null, UtilitiesStatusCodes.NotFound);
+        entity.Title = dto.Title ?? entity.Title;
+        entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
+        entity.Color = dto.Color ?? entity.Color;
+        entity.Link = dto.Link ?? entity.Link;
+        entity.UpdatedAt = DateTime.Now;
+        entity.UseCase = dto.UseCase ?? entity.UseCase;
+        await _dbContext.SaveChangesAsync();
+        return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(entity));
     }
 }
