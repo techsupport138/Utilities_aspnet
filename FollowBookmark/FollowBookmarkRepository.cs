@@ -18,7 +18,7 @@ public interface IFollowBookmarkRepository {
     // void ToggleBookmarkMagazine(string userId, long id);
     // void ToggleBookmarkTag(string userId, long id);
     // void ToggleBookmarkSpeciality(string userId, long id);
-    Task<GenericResponse> ToggleBookmark(BookmarkWriteDto parameters);
+    Task<GenericResponse> ToggleBookmark(BookmarkWriteDto dto);
 }
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
@@ -32,47 +32,36 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse> ToggleBookmark(BookmarkWriteDto parameters) {
+    public async Task<GenericResponse> ToggleBookmark(BookmarkWriteDto dto) {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
-                x.ProductId == parameters.ProductId ||
-                x.ProjectId == parameters.ProductId ||
-                x.TutorialId == parameters.TutorialId ||
-                x.EventId == parameters.EventId ||
-                x.AdId == parameters.AdId ||
-                x.CompanyId == parameters.CompanyId ||
-                x.TenderId == parameters.TenderId ||
-                x.ServiceId == parameters.ServiceId ||
-                x.MagazineId == parameters.MagazineId ||
-                x.TagId == parameters.TagId ||
-                x.SpecialityId == parameters.SpecialityId
+                x.ProductId == dto.ProductId ||
+                x.ProjectId == dto.ProductId ||
+                x.TutorialId == dto.TutorialId ||
+                x.EventId == dto.EventId ||
+                x.AdId == dto.AdId ||
+                x.CompanyId == dto.CompanyId ||
+                x.TenderId == dto.TenderId ||
+                x.ServiceId == dto.ServiceId ||
+                x.MagazineId == dto.MagazineId ||
+                x.TagId == dto.TagId ||
+                x.SpecialityId == dto.SpecialityId
             ) && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
         if (oldBookmark == null) {
             BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
-            if (parameters.ProductId.HasValue) bookmark.ProductId = parameters.ProductId;
-
-            if (parameters.ProjectId.HasValue) bookmark.ProjectId = parameters.ProjectId;
-
-            if (parameters.TutorialId.HasValue) bookmark.TutorialId = parameters.TutorialId;
-
-            if (parameters.EventId.HasValue) bookmark.EventId = parameters.EventId;
-
-            if (parameters.AdId.HasValue) bookmark.AdId = parameters.AdId;
-
-            if (parameters.CompanyId.HasValue) bookmark.CompanyId = parameters.CompanyId;
-
-            if (parameters.TenderId.HasValue) bookmark.TenderId = parameters.TenderId;
-
-            if (parameters.ServiceId.HasValue) bookmark.ServiceId = parameters.ServiceId;
-
-            if (parameters.MagazineId.HasValue) bookmark.MagazineId = parameters.MagazineId;
-
-            if (parameters.TagId.HasValue) bookmark.TagId = parameters.TagId;
-
-            if (parameters.SpecialityId.HasValue) bookmark.SpecialityId = parameters.SpecialityId;
-
-
+            if (dto.ProductId.HasValue) bookmark.ProductId = dto.ProductId;
+            if (dto.ProjectId.HasValue) bookmark.ProjectId = dto.ProjectId;
+            if (dto.TutorialId.HasValue) bookmark.TutorialId = dto.TutorialId;
+            if (dto.EventId.HasValue) bookmark.EventId = dto.EventId;
+            if (dto.AdId.HasValue) bookmark.AdId = dto.AdId;
+            if (dto.CompanyId.HasValue) bookmark.CompanyId = dto.CompanyId;
+            if (dto.TenderId.HasValue) bookmark.TenderId = dto.TenderId;
+            if (dto.ServiceId.HasValue) bookmark.ServiceId = dto.ServiceId;
+            if (dto.MagazineId.HasValue) bookmark.MagazineId = dto.MagazineId;
+            if (dto.TagId.HasValue) bookmark.TagId = dto.TagId;
+            if (dto.SpecialityId.HasValue) bookmark.SpecialityId = dto.SpecialityId;
+            
             await _context.Set<BookmarkEntity>().AddAsync(bookmark);
             await _context.SaveChangesAsync();
         }
