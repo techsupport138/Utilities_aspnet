@@ -1,7 +1,7 @@
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 public class ProductController : BaseApiController
 {
     private readonly IProductRepository<ProductEntity> _productRepository;
