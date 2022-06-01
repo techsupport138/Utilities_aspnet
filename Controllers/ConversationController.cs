@@ -26,9 +26,9 @@ public class ConversationController : BaseApiController {
 
 
     [HttpPost]
-    public async Task<ActionResult<GenericResponse<IEnumerable<ConversationsDto>?>>> PostConversation(AddConversationDto model)
+    public async Task<ActionResult<GenericResponse<ConversationsDto?>>> PostConversation(AddConversationDto model)
     {
-        GenericResponse<IEnumerable<ConversationsDto>?> i = await _conversationRepository.SendConversation(model);
+        GenericResponse<ConversationsDto?> i = await _conversationRepository.SendConversation(model);
         return Result(i);
     }
 }

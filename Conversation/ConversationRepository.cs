@@ -1,7 +1,7 @@
 ﻿namespace Utilities_aspnet.Conversation; 
 
 public interface IConversationRepository {
-    Task<GenericResponse<IEnumerable<ConversationsDto>?>> SendConversation(AddConversationDto model);
+    Task<GenericResponse<ConversationsDto?>> SendConversation(AddConversationDto model);
     Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversationByUserId(string id);
     Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversatios();
 }
@@ -15,11 +15,11 @@ public class ConversationRepository : IConversationRepository {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> SendConversation(AddConversationDto model) {
+    public async Task<GenericResponse<ConversationsDto?>> SendConversation(AddConversationDto model) {
         UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == model.UserId);
         var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         UserEntity? myUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
-        if (user == null) return new GenericResponse<IEnumerable<ConversationsDto>?>(null, UtilitiesStatusCodes.BadRequest);
+        if (user == null) return new GenericResponse<ConversationsDto?>(null, UtilitiesStatusCodes.BadRequest);
         ConversationEntity? conversation = new ConversationEntity() {
             CreatedAt = DateTime.Now,
             FromUserId = userId,
@@ -28,8 +28,17 @@ public class ConversationRepository : IConversationRepository {
         };
         await _context.Set<ConversationEntity>().AddAsync(conversation);
         await _context.SaveChangesAsync();
-
-        return new GenericResponse<IEnumerable<ConversationsDto>?>(GetConversationByUserId(model.UserId).Result.Result);
+        ConversationsDto? conversations = new ConversationsDto
+        {
+            Id = conversation.Id,
+            DateTime = (DateTime)conversation.CreatedAt,
+            MessageText = conversation.MessageText,
+            FullName = user.FullName,
+            ProfileImage = "",
+            UserId = conversation.ToUserId,
+            Send = true
+        };
+        return new GenericResponse<ConversationsDto?>(conversations);
     }
 
     public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversationByUserId(string id) {
