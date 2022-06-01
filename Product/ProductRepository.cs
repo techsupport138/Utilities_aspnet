@@ -287,6 +287,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Tags)
             .Include(i => i.Brands)
             .Include(i => i.References)
+            .Include(i => i.Comments)
             .Include(i => i.User)
             .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
             .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);

@@ -1,3 +1,5 @@
+using Utilities_aspnet.Comment;
+
 namespace Utilities_aspnet.Utilities;
 
 public class AutoMapperProfile : Profile {
@@ -129,5 +131,7 @@ public class AutoMapperProfile : Profile {
             .ForMember(x => x.Location, y => y.Ignore())
             .ForMember(x => x.Media, y => y.Ignore())
             .ForMember(x => x.ContactInformation, y => y.Ignore());
+
+        CreateMap<CommentDto, CommentEntity>().ReverseMap();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Utilities_aspnet.Conversation;
+﻿using Utilities_aspnet.Comment;
+using Utilities_aspnet.Conversation;
 using Utilities_aspnet.Notification;
 
 namespace Utilities_aspnet.Utilities;
@@ -98,6 +99,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IConversationRepository, ConversationRepository>();
         builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
+        builder.Services.AddTransient<ICommentRepository, CommentRepository>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 

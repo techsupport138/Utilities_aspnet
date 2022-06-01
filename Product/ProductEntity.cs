@@ -1,3 +1,5 @@
+using Utilities_aspnet.Comment;
+
 namespace Utilities_aspnet.Product;
 
 public abstract class BaseProductEntity : BaseEntity {
@@ -35,6 +37,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<ReferenceEntity>? References { get; set; }
     public IEnumerable<ContactInformationEntity>? ContactInformations { get; set; }
     public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
+    public IEnumerable<CommentEntity>? Comments { get; set; }
 }
 
 [Table("Products")]
