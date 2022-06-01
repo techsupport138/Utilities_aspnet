@@ -11,16 +11,14 @@ public class NotificationController : BaseApiController {
     }
 
     [HttpGet]
-    public async Task<ActionResult<GenericResponse<IEnumerable<NotificationDto>>>> GetConversations()
-    {
+    public async Task<ActionResult<GenericResponse<IEnumerable<NotificationDto>>>> GetConversations() {
         GenericResponse<IEnumerable<NotificationDto>> i = await _notificationRepository.GetNotifications();
         return Result(i);
     }
 
 
     [HttpPost]
-    public async Task<ActionResult<GenericResponse>> PostConversation(CreateNotificationDto model)
-    {
+    public async Task<ActionResult<GenericResponse>> PostConversation(CreateNotificationDto model) {
         GenericResponse i = await _notificationRepository.CreateNotification(model);
         return Result(i);
     }

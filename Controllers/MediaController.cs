@@ -10,6 +10,7 @@ public class MediaController : BaseApiController {
     }
 
     [HttpPost]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<MediaDto>>> Upload([FromForm] UploadDto dto) {
         GenericResponse? i = await _uploadRepository.UploadMedia(dto);
         return Ok(i);
