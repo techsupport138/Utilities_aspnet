@@ -22,7 +22,7 @@ namespace Utilities_aspnet.Notification
 
     public class NotificationDto
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public string? Title { get; set; }
         public string? Message { get; set; }
         public string? Link { get; set; }
