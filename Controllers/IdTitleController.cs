@@ -17,6 +17,7 @@ public class IdTitleController : BaseApiController {
     }
 
     [HttpPost("Category")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<IdTitleReadDto>>> CreateCategory(IdTitleCreateUpdateDto dto) {
         GenericResponse<IdTitleReadDto> i = await _categoryRepository.Create(dto);
         return Result(i);
@@ -41,18 +42,21 @@ public class IdTitleController : BaseApiController {
     }
 
     [HttpPut("Category")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<ProductReadDto>>> UpdateCategory(IdTitleCreateUpdateDto dto) {
         GenericResponse<IdTitleReadDto> i = await _categoryRepository.Update(dto);
         return Result(i);
     }
 
     [HttpDelete("Category/{id:guid}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> DeleteCategory(Guid id) {
         await _categoryRepository.Delete(id);
         return Ok();
     }
 
     [HttpPost("Brand")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<IdTitleReadDto>>> CreateBrand(IdTitleCreateUpdateDto dto) {
         GenericResponse<IdTitleReadDto> i = await _brandRepository.Create(dto);
         return Result(i);
@@ -77,18 +81,21 @@ public class IdTitleController : BaseApiController {
     }
 
     [HttpPut("Brand")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<ProductReadDto>>> UpdateBrand(IdTitleCreateUpdateDto dto) {
         GenericResponse<IdTitleReadDto> i = await _brandRepository.Update(dto);
         return Result(i);
     }
 
     [HttpDelete("Brand/{id:guid}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> DeleteBrand(Guid id) {
         await _brandRepository.Delete(id);
         return Ok();
     }
 
     [HttpPost("Reference")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<IdTitleReadDto>>> CreateReference(IdTitleCreateUpdateDto dto) {
         GenericResponse<IdTitleReadDto> i = await _referenceRepository.Create(dto);
         return Result(i);
@@ -113,12 +120,14 @@ public class IdTitleController : BaseApiController {
     }
 
     [HttpPut("Reference")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<ProductReadDto>>> UpdateReference(IdTitleCreateUpdateDto dto) {
         GenericResponse<IdTitleReadDto> i = await _referenceRepository.Update(dto);
         return Result(i);
     }
 
     [HttpDelete("Reference/{id:guid}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> DeleteReference(Guid id) {
         await _referenceRepository.Delete(id);
         return Ok();

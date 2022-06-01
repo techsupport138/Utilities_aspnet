@@ -1,6 +1,6 @@
 ﻿namespace Utilities_aspnet.Controllers;
 
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 public class BookmarkController : BaseApiController {

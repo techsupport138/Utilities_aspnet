@@ -12,13 +12,13 @@ public class UserController : BaseApiController {
     [HttpPost("GetMobileVerificationCodeForLogin")]
     public async Task<ActionResult<GenericResponse>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
         GenericResponse i = await _userRepository.GetMobileVerificationCodeForLogin(dto);
-        return StatusCode(i.Status.value(), i);
+        return Result(i);
     }
 
     [HttpPost("VerifyMobileForLogin")]
     public async Task<ActionResult<GenericResponse>> VerifyMobileForLogin(VerifyMobileForLoginDto dto) {
         GenericResponse i = await _userRepository.VerifyMobileForLogin(dto);
-        return StatusCode(i.Status.value(), i);
+        return Result(i);
     }
 
     [HttpGet("GetProfile")]
@@ -26,7 +26,7 @@ public class UserController : BaseApiController {
     public async Task<ActionResult<GenericResponse<UserReadDto>>> ReadProfile() {
         try {
             GenericResponse i = await _userRepository.GetProfile(User.Identity!.Name!);
-            return StatusCode(i.Status.value(), i);
+            return Result(i);
         }
         catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value(),
@@ -40,7 +40,7 @@ public class UserController : BaseApiController {
         try {
             dto.Id = User.Identity.Name;
             GenericResponse i = await _userRepository.UpdateUser(dto);
-            return StatusCode(i.Status.value(), i);
+            return Result(i);
         }
         catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value());
@@ -48,11 +48,11 @@ public class UserController : BaseApiController {
     }
 
 
-    [HttpGet("GetProfiles")]
-    public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> GetProfiles() {
+    [HttpGet("GetUsers")]
+    public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> GetUsers() {
         try {
             GenericResponse i = await _userRepository.GetUsers();
-            return StatusCode(i.Status.value(), i);
+            return Result(i);
         }
         catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value());
@@ -63,7 +63,7 @@ public class UserController : BaseApiController {
     public async Task<ActionResult<GenericResponse<UserReadDto?>>> GetProfileByUsername(string username) {
         try {
             GenericResponse i = await _userRepository.GetProfileByUserName(username);
-            return StatusCode(i.Status.value(), i);
+            return Result(i);
         }
         catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value());
@@ -74,7 +74,7 @@ public class UserController : BaseApiController {
     public async Task<ActionResult<GenericResponse<UserReadDto?>>> GetProfileById(string id) {
         try {
             GenericResponse i = await _userRepository.GetProfileById(id);
-            return StatusCode(i.Status.value(), i);
+            return Result(i);
         }
         catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value());
@@ -82,10 +82,11 @@ public class UserController : BaseApiController {
     }
 
     [HttpPost("CreateUser")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse>> CreateUser(CreateProfileDto dto) {
         try {
             GenericResponse i = await _userRepository.CreateUser(dto);
-            return StatusCode(i.Status.value(), i);
+            return Result(i);
         }
         catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value());
@@ -93,10 +94,11 @@ public class UserController : BaseApiController {
     }
 
     [HttpPut("UpdateUser")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse>> UpdateUser(UpdateProfileDto dto) {
         try {
             GenericResponse i = await _userRepository.UpdateUser(dto);
-            return StatusCode(i.Status.value(), i);
+            return Result(i);
         }
         catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value());
@@ -104,10 +106,11 @@ public class UserController : BaseApiController {
     }
 
     [HttpDelete("DeleteUser")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse>> DeleteUser(string userId) {
         try {
             GenericResponse i = await _userRepository.DeleteUser(userId);
-            return StatusCode(i.Status.value(), i);
+            return Result(i);
         }
         catch (Exception) {
             return StatusCode(UtilitiesStatusCodes.Unhandled.value());
