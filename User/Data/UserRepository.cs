@@ -143,6 +143,9 @@ public class UserRepository : IUserRepository
         if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
 
+        if (user.Suspend)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
+
         JwtSecurityToken token = await CreateToken(user);
         if (dto.VerificationCode == "9999")
             return new GenericResponse<UserReadDto?>(
@@ -214,6 +217,9 @@ public class UserRepository : IUserRepository
 
             if (!string.IsNullOrEmpty(dto.AppUserName))
                 user.UserName = dto.AppUserName;
+
+            if(dto.Suspend.HasValue)
+                user.Suspend = dto.Suspend.Value;
 
             if (!string.IsNullOrEmpty(dto.Headline))
                 user.Headline = dto.Headline;
