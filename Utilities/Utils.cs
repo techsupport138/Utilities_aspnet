@@ -1,5 +1,5 @@
-﻿using Utilities_aspnet.Comment;
-using Utilities_aspnet.Conversation;
+﻿using Utilities_aspnet.Chat;
+using Utilities_aspnet.Comment;
 using Utilities_aspnet.Notification;
 
 namespace Utilities_aspnet.Utilities;
@@ -96,7 +96,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IProductRepository<TenderEntity>, ProductRepository<TenderEntity>>();
         builder.Services.AddTransient<IProductRepository<ServiceEntity>, ProductRepository<ServiceEntity>>();
         builder.Services.AddTransient<IProductRepository<DailyPriceEntity>, ProductRepository<DailyPriceEntity>>();
-        builder.Services.AddTransient<IConversationRepository, ConversationRepository>();
+        builder.Services.AddTransient<IChatRepository, ChatRepository>();
         builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
         builder.Services.AddTransient<ICommentRepository, CommentRepository>();

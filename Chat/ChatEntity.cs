@@ -1,24 +1,22 @@
-﻿namespace Utilities_aspnet.Conversation;
+﻿namespace Utilities_aspnet.Chat;
 
-public class ConversationEntity : BaseEntity
-{
+public class ChatEntity : BaseEntity {
     [StringLength(450)]
     [ForeignKey(nameof(FromUser))]
     public string FromUserId { get; set; } = null!;
+
+    public virtual UserEntity FromUser { get; set; } = null!;
 
     [StringLength(450)]
     [ForeignKey(nameof(ToUser))]
     public string ToUserId { get; set; } = null!;
 
-    [StringLength(500)]
-    public string MessageText { get; set; } = null!;
-
-    public virtual UserEntity FromUser { get; set; } = null!;
     public virtual UserEntity ToUser { get; set; } = null!;
+
+    public string MessageText { get; set; } = null!;
 }
 
-public class ConversationsDto
-{
+public class ChatReadDto {
     public Guid Id { get; set; }
     public string UserId { get; set; } = null!;
     public string? MessageText { get; set; }
@@ -28,8 +26,8 @@ public class ConversationsDto
     public bool Send { get; set; }
 }
 
-public class AddConversationDto
-{
+public class ChatCreateUpdateDto {
     public string UserId { get; set; } = null!;
+    public string? MessageId { get; set; } = null!;
     public string MessageText { get; set; } = null!;
 }
