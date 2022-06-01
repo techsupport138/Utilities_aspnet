@@ -163,19 +163,25 @@ public class UserRepository : IUserRepository
         );
     }
 
-    public Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null)
+    public async Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null)
     {
-        UserEntity? model = _context.Set<UserEntity>()
+        UserEntity? model = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
             .Include(u => u.Colors)
             .Include(u => u.Favorites)
-            .FirstOrDefault(u => u.Id == id);
-        UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (model == null)
+            return new GenericResponse<UserReadDto?>(new UserReadDto(), UtilitiesStatusCodes.NotFound,
+                $"User: {id} Not Found");
+
+        var userReadDto = _mapper.Map<UserReadDto>(model);
+
+        userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
+
         userReadDto.Token = token;
-        return Task.FromResult(model == null
-            ? new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.NotFound, $"User: {id} Not Found")
-            : new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success"));
+        return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
     }
 
     public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id)

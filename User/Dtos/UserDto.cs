@@ -49,6 +49,7 @@ public class UserReadDto {
     public string? AppPhoneNumber { get; set; }
     public DateTime? BirthDate { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
+    public bool IsAdmin { get; set; }
 
     public List<IdTitleReadDto>? Colors { get; set; }
     public List<IdTitleReadDto>? Specialties { get; set; }
