@@ -11,13 +11,6 @@ public class UserController : BaseApiController
         _userRepository = userRepository;
     }
 
-    [HttpPost("LoginFormWithEmail")]
-    public async Task<ActionResult<GenericResponse>> LoginFormWithEmail(LoginWithEmailDto dto)
-    {
-        GenericResponse i = await _userRepository.LoginFormWithEmail(dto);
-        return Result(i);
-    }
-
     [HttpPost("LoginWithEmail")]
     public async Task<ActionResult<GenericResponse>> LoginWithEmail(LoginWithEmailDto dto)
     {
