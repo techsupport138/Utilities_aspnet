@@ -132,6 +132,6 @@ public class AutoMapperProfile : Profile {
             .ForMember(x => x.Media, y => y.Ignore())
             .ForMember(x => x.ContactInformation, y => y.Ignore());
 
-        CreateMap<CommentDto, CommentEntity>().ReverseMap();
+        CreateMap<CommentCreateUpdateDto, CommentEntity>().ReverseMap();
     }
 }

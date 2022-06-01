@@ -1,27 +1,23 @@
 ﻿namespace Utilities_aspnet.Comment;
 
-public interface ICommentRepository
-{
-    Task<GenericResponse<CommentEntity?>> ShowComment(Guid id);
-    Task<GenericResponse> AddComment(CommentDto entity);
-    Task<GenericResponse> UpdateComment(Guid id, CommentDto entity);
-    Task<GenericResponse> DeleteComment(Guid id);
+public interface ICommentRepository {
+    Task<GenericResponse> Create(CommentCreateUpdateDto entity);
+    Task<GenericResponse<CommentEntity?>> Read(Guid id);
+    Task<GenericResponse> Update(Guid id, CommentCreateUpdateDto entity);
+    Task<GenericResponse> Delete(Guid id);
 }
 
-public class CommentRepository : ICommentRepository
-{
+public class CommentRepository : ICommentRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
 
-    public CommentRepository(DbContext context, IMapper mapper)
-    {
+    public CommentRepository(DbContext context, IMapper mapper) {
         _context = context;
         _mapper = mapper;
     }
 
-    public async Task<GenericResponse<CommentEntity?>> ShowComment(Guid id)
-    {
-        var comment = await _context.Set<CommentEntity>()
+    public async Task<GenericResponse<CommentEntity?>> Read(Guid id) {
+        CommentEntity? comment = await _context.Set<CommentEntity>()
             .AsNoTracking()
             .Include(x => x.User)
             .Include(x => x.Comment)
@@ -40,9 +36,8 @@ public class CommentRepository : ICommentRepository
         return new GenericResponse<CommentEntity?>(comment);
     }
 
-    public async Task<GenericResponse> AddComment(CommentDto entity)
-    {
-        var comment = _mapper.Map<CommentEntity>(entity);
+    public async Task<GenericResponse> Create(CommentCreateUpdateDto entity) {
+        CommentEntity? comment = _mapper.Map<CommentEntity>(entity);
 
         await _context.AddAsync(comment);
         await _context.SaveChangesAsync();
@@ -50,9 +45,8 @@ public class CommentRepository : ICommentRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse> UpdateComment(Guid id, CommentDto entity)
-    {
-        var comment = await _context.Set<CommentEntity>()
+    public async Task<GenericResponse> Update(Guid id, CommentCreateUpdateDto entity) {
+        CommentEntity? comment = await _context.Set<CommentEntity>()
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -101,9 +95,8 @@ public class CommentRepository : ICommentRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse> DeleteComment(Guid id)
-    {
-        var comment = await _context.Set<CommentEntity>()
+    public async Task<GenericResponse> Delete(Guid id) {
+        CommentEntity? comment = await _context.Set<CommentEntity>()
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 

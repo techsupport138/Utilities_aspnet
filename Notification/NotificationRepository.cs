@@ -22,7 +22,7 @@ namespace Utilities_aspnet.Notification
 
         public async Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications()
         {
-            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             IEnumerable<NotificationEntity> model = await _context.Set<NotificationEntity>().Include(x => x.Media).Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt).ToListAsync();
 
             IEnumerable<NotificationDto> notificationDtos = _mapper.Map<IEnumerable<NotificationDto>>(model);
@@ -48,7 +48,7 @@ namespace Utilities_aspnet.Notification
             await _context.SaveChangesAsync();
             if(model.Media != null)
             {
-                var type = FileTypes.Image;
+                FileTypes type = FileTypes.Image;
                 if (model.Media.EndsWith("svg"))
                 {
                     type = FileTypes.Svg;

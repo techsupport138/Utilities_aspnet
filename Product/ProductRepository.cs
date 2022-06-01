@@ -142,7 +142,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
     public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? parameters)
     {
-        var queryable = await _context.Set<T>()
+        List<T>? queryable = await _context.Set<T>()
             .AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)

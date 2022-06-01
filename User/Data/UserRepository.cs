@@ -176,7 +176,7 @@ public class UserRepository : IUserRepository
             return new GenericResponse<UserReadDto?>(new UserReadDto(), UtilitiesStatusCodes.NotFound,
                 $"User: {id} Not Found");
 
-        var userReadDto = _mapper.Map<UserReadDto>(model);
+        UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
 
         userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
 
@@ -362,21 +362,21 @@ public class UserRepository : IUserRepository
 
     public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers()
     {
-        var users = await _context.Set<UserEntity>()
+        List<UserEntity> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
             .Include(u => u.Colors)
             .Include(u => u.Favorites)
             .ToListAsync();
 
-        var result = _mapper.Map<IEnumerable<UserReadDto>>(users);
+        IEnumerable<UserReadDto>? result = _mapper.Map<IEnumerable<UserReadDto>>(users);
 
         return new GenericResponse<IEnumerable<UserReadDto>>(result);
     }
 
     public async Task<GenericResponse> DeleteUser(string id)
     {
-        var user = await _context.Set<UserEntity>()
+        UserEntity? user = await _context.Set<UserEntity>()
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -393,7 +393,7 @@ public class UserRepository : IUserRepository
 
     public async Task<GenericResponse<UserReadDto?>> CreateUser(CreateProfileDto parameter)
     {
-        var user = _mapper.Map<UserEntity>(parameter);
+        UserEntity? user = _mapper.Map<UserEntity>(parameter);
 
         if (parameter.Colors.Any())
         {

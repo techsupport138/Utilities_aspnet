@@ -17,7 +17,7 @@ public class ConversationRepository : IConversationRepository {
 
     public async Task<GenericResponse<ConversationsDto?>> SendConversation(AddConversationDto model) {
         UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == model.UserId);
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         UserEntity? myUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
         if (user == null) return new GenericResponse<ConversationsDto?>(null, UtilitiesStatusCodes.BadRequest);
         ConversationEntity? conversation = new ConversationEntity() {
@@ -42,7 +42,7 @@ public class ConversationRepository : IConversationRepository {
     }
 
     public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversationByUserId(string id) {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         UserEntity? user = await _context.Set<UserEntity>().Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
         if (user == null) return new GenericResponse<IEnumerable<ConversationsDto>?>(null, UtilitiesStatusCodes.BadRequest);
         List<ConversationEntity>? conversation = await _context.Set<ConversationEntity>()
@@ -68,7 +68,7 @@ public class ConversationRepository : IConversationRepository {
     }
 
     public async Task<GenericResponse<IEnumerable<ConversationsDto>?>> GetConversatios() {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         List<string>? ToUserId = await _context.Set<ConversationEntity>().Where(x => x.FromUserId == userId)
             .Select(x => x.ToUserId).ToListAsync();
         List<string>? FromUserId = await _context.Set<ConversationEntity>().Where(x => x.ToUserId == userId)
