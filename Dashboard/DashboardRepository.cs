@@ -24,6 +24,7 @@ namespace Utilities_aspnet.Dashboard
         {
             DashboardDto dashboardDto = new DashboardDto();
             dashboardDto.CountTenders = await _context.Set<TenderEntity>().Where(x=>x.CreatedAt>=model.StardDate && x.CreatedAt <= model.EndDate).CountAsync();
+            dashboardDto.CountProducts = await _context.Set<ProductEntity>().Where(x=>x.CreatedAt>=model.StardDate && x.CreatedAt <= model.EndDate).CountAsync();
             dashboardDto.CountMagazine = await _context.Set<MagazineEntity>().Where(x=>x.CreatedAt>=model.StardDate && x.CreatedAt <= model.EndDate).CountAsync();
             dashboardDto.CountReports = await _context.Set<ReportEntity>().Where(x=>x.CreatedAt>=model.StardDate && x.CreatedAt <= model.EndDate).CountAsync();
             dashboardDto.CountAds = await _context.Set<AdEntity>().Where(x=>x.CreatedAt>=model.StardDate && x.CreatedAt <= model.EndDate).CountAsync();

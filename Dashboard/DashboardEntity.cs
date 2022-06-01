@@ -4,6 +4,7 @@ namespace Utilities_aspnet.Dashboard
     public class DashboardDto
     {
         public int CountUsers { get; set; }
+        public int CountProducts { get; set; }
         public int CountAds { get; set; }
         public int CountProjects { get; set; }
         public int CountTutorials { get; set; }
