@@ -51,3 +51,5 @@ global using Swashbuckle.AspNetCore.SwaggerUI;
 global using System.Security.Principal;
 global using Utilities_aspnet.FollowBookmark;
 global using Microsoft.AspNetCore.Authorization;
+global using Utilities_aspnet.Conversation;
+global using Utilities_aspnet.Notification;

@@ -11,7 +11,7 @@ public interface IUserRepository
     Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null);
     Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
     Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
-    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string id);
+    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto);
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers();
@@ -191,7 +191,7 @@ public class UserRepository : IUserRepository
         return new GenericResponse<UserReadDto?>(dto);
     }
 
-    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto, string id)
+    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto)
     {
         UserEntity? user = _context.Set<UserEntity>()
             .Include(x => x.Colors)
@@ -199,7 +199,7 @@ public class UserRepository : IUserRepository
             .Include(x => x.Media)
             .Include(x => x.Specialties)
             .Include(x => x.ContactInformation)
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefault(x => x.Id == dto.Id);
 
         if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");

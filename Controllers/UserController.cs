@@ -38,7 +38,75 @@ public class UserController : BaseApiController {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse>> UpdateProfile(UpdateProfileDto dto) {
         try {
-            GenericResponse i = await _userRepository.UpdateUser(dto, User.Identity.Name);
+            dto.Id = User.Identity.Name;
+            GenericResponse i = await _userRepository.UpdateUser(dto);
+            return StatusCode(i.Status.value(), i);
+        }
+        catch (Exception) {
+            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+        }
+    }
+
+
+    [HttpGet("GetProfiles")]
+    public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> GetProfiles() {
+        try {
+            GenericResponse i = await _userRepository.GetUsers();
+            return StatusCode(i.Status.value(), i);
+        }
+        catch (Exception) {
+            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+        }
+    }
+
+    [HttpGet("GetProfileByUsername/{username}")]
+    public async Task<ActionResult<GenericResponse<UserReadDto?>>> GetProfileByUsername(string username) {
+        try {
+            GenericResponse i = await _userRepository.GetProfileByUserName(username);
+            return StatusCode(i.Status.value(), i);
+        }
+        catch (Exception) {
+            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+        }
+    }
+
+    [HttpGet("GetProfileById/{id}")]
+    public async Task<ActionResult<GenericResponse<UserReadDto?>>> GetProfileById(string id) {
+        try {
+            GenericResponse i = await _userRepository.GetProfileById(id);
+            return StatusCode(i.Status.value(), i);
+        }
+        catch (Exception) {
+            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+        }
+    }
+
+    [HttpPost("CreateUser")]
+    public async Task<ActionResult<GenericResponse>> CreateUser(CreateProfileDto dto) {
+        try {
+            GenericResponse i = await _userRepository.CreateUser(dto);
+            return StatusCode(i.Status.value(), i);
+        }
+        catch (Exception) {
+            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+        }
+    }
+
+    [HttpPut("UpdateUser")]
+    public async Task<ActionResult<GenericResponse>> UpdateUser(UpdateProfileDto dto) {
+        try {
+            GenericResponse i = await _userRepository.UpdateUser(dto);
+            return StatusCode(i.Status.value(), i);
+        }
+        catch (Exception) {
+            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+        }
+    }
+
+    [HttpDelete("DeleteUser")]
+    public async Task<ActionResult<GenericResponse>> DeleteUser(string userId) {
+        try {
+            GenericResponse i = await _userRepository.DeleteUser(userId);
             return StatusCode(i.Status.value(), i);
         }
         catch (Exception) {
