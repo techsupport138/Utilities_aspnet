@@ -1,5 +1,6 @@
 ﻿using Utilities_aspnet.Chat;
 using Utilities_aspnet.Comment;
+using Utilities_aspnet.Dashboard;
 using Utilities_aspnet.Notification;
 
 namespace Utilities_aspnet.Utilities;
@@ -100,6 +101,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
         builder.Services.AddTransient<ICommentRepository, CommentRepository>();
+        builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 
