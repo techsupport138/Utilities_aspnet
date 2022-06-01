@@ -24,7 +24,6 @@ public class ChatController : BaseApiController {
         return Result(i);
     }
 
-
     [HttpPost]
     public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Create(ChatCreateUpdateDto model) {
         GenericResponse<ChatReadDto?> i = await _chatRepository.Create(model);
