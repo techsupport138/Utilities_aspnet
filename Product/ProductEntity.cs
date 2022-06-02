@@ -11,7 +11,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public string? Author { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Link { get; set; }
-    public string? Wbsite { get; set; }
+    public string? Website { get; set; }
     public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
@@ -82,7 +82,7 @@ public class ProductReadDto {
     public string? Author { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Link { get; set; }
-    public string? Wbsite { get; set; }
+    public string? Website { get; set; }
     public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
@@ -132,7 +132,7 @@ public class ProductCreateUpdateDto {
     public string? Author { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Link { get; set; }
-    public string? Wbsite { get; set; }
+    public string? Website { get; set; }
     public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
@@ -165,7 +165,7 @@ public class FilterProductDto {
     public bool? Enabled { get; set; }
     public bool? IsForSale { get; set; }
     public string? Link { get; set; }
-    public string? Wbsite { get; set; }
+    public string? Website { get; set; }
     public bool? IsBookmarked { get; set; }
     public int? VisitsCount { get; set; }
     public string? Address { get; set; }
