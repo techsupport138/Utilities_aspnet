@@ -10,10 +10,12 @@ public interface ICommentRepository {
 public class CommentRepository : ICommentRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CommentRepository(DbContext context, IMapper mapper) {
+    public CommentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _context = context;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
@@ -29,6 +31,7 @@ public class CommentRepository : ICommentRepository {
 
     public async Task<GenericResponse> Create(CommentCreateUpdateDto entity) {
         CommentEntity? comment = _mapper.Map<CommentEntity>(entity);
+        comment.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
 
         await _context.AddAsync(comment);
         await _context.SaveChangesAsync();
