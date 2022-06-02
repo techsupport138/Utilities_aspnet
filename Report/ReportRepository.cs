@@ -18,7 +18,7 @@ public class ReportRepository : IReportRepository {
     }
 
     public async Task<GenericResponse<ReportReadDto?>> ReadById(Guid id) {
-        var report = await _dbContext.Set<ReportEntity>()
+        ReportReadDto? report = await _dbContext.Set<ReportEntity>()
             .AsNoTracking()
             .Include(x => x.User)
             .Include(x => x.Product)
@@ -80,7 +80,7 @@ public class ReportRepository : IReportRepository {
     }
 
     public async Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto) {
-        var entities = _dbContext.Set<ReportEntity>().AsNoTracking();
+        IQueryable<ReportEntity>? entities = _dbContext.Set<ReportEntity>().AsNoTracking();
 
         if (dto.Company == true)
             entities = entities.Include(x => x.Company);
@@ -115,7 +115,7 @@ public class ReportRepository : IReportRepository {
         if (dto.Magazine == true)
             entities = entities.Include(x => x.Magazine);
 
-        var result = await entities.Select(x => new ReportReadDto() {
+        List<ReportReadDto>? result = await entities.Select(x => new ReportReadDto() {
             Ad = x.Ad,
             Company = x.Company,
             CreatedAt = x.CreatedAt,
@@ -139,7 +139,7 @@ public class ReportRepository : IReportRepository {
     }
 
     public async Task<GenericResponse> Delete(Guid id) {
-        var report = await _dbContext.Set<ReportEntity>()
+        ReportEntity? report = await _dbContext.Set<ReportEntity>()
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
