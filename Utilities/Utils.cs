@@ -74,6 +74,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<AppSettings>();
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
+        builder.Services.AddTransient<IReportRepository, ReportRepository>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
         builder.Services.AddTransient<IMediaRepository, MediaRepository>();
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
