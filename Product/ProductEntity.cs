@@ -10,6 +10,8 @@ public abstract class BaseProductEntity : BaseEntity {
     public string? Address { get; set; }
     public string? Author { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? Link { get; set; }
+    public string? Wbsite { get; set; }
     public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
@@ -79,6 +81,8 @@ public class ProductReadDto {
     public string? Address { get; set; }
     public string? Author { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? Link { get; set; }
+    public string? Wbsite { get; set; }
     public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
@@ -127,6 +131,8 @@ public class ProductCreateUpdateDto {
     public string? Address { get; set; }
     public string? Author { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? Link { get; set; }
+    public string? Wbsite { get; set; }
     public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
@@ -158,6 +164,8 @@ public class FilterProductDto {
     public decimal? EndPriceRange { get; set; }
     public bool? Enabled { get; set; }
     public bool? IsForSale { get; set; }
+    public string? Link { get; set; }
+    public string? Wbsite { get; set; }
     public bool? IsBookmarked { get; set; }
     public int? VisitsCount { get; set; }
     public string? Address { get; set; }
