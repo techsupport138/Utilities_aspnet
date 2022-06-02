@@ -1,27 +1,23 @@
 namespace Utilities_aspnet.Report;
 
-public interface IReportRepository
-{
+public interface IReportRepository {
     Task<GenericResponse<ReportReadDto?>> Create(ReportCreateDto dto);
     Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto);
     Task<GenericResponse> Delete(Guid id);
 }
 
-public class ReportRepository : IReportRepository
-{
+public class ReportRepository : IReportRepository {
     private readonly DbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ReportRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
-    {
+    public ReportRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _dbContext = context;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ReportReadDto?>> ReadById(Guid id)
-    {
+    public async Task<GenericResponse<ReportReadDto?>> ReadById(Guid id) {
         var report = await _dbContext.Set<ReportEntity>()
             .AsNoTracking()
             .Include(x => x.User)
@@ -35,8 +31,7 @@ public class ReportRepository : IReportRepository
             .Include(x => x.Service)
             .Include(x => x.Magazine)
             .Include(x => x.Ad)
-            .Select(x => new ReportReadDto()
-            {
+            .Select(x => new ReportReadDto() {
                 Ad = x.Ad,
                 Company = x.Company,
                 CreatedAt = x.CreatedAt,
@@ -60,10 +55,8 @@ public class ReportRepository : IReportRepository
         return new GenericResponse<ReportReadDto?>(report);
     }
 
-    public async Task<GenericResponse<ReportReadDto?>> Create(ReportCreateDto dto)
-    {
-        ReportEntity entity = new()
-        {
+    public async Task<GenericResponse<ReportReadDto?>> Create(ReportCreateDto dto) {
+        ReportEntity entity = new() {
             UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!,
             Title = dto.Title,
             Description = dto.Description
@@ -86,8 +79,7 @@ public class ReportRepository : IReportRepository
         return await ReadById(entity.Id);
     }
 
-    public async Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto)
-    {
+    public async Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto) {
         var entities = _dbContext.Set<ReportEntity>().AsNoTracking();
 
         if (dto.Company == true)
@@ -123,8 +115,7 @@ public class ReportRepository : IReportRepository
         if (dto.Magazine == true)
             entities = entities.Include(x => x.Magazine);
 
-        var result = await entities.Select(x => new ReportReadDto()
-        {
+        var result = await entities.Select(x => new ReportReadDto() {
             Ad = x.Ad,
             Company = x.Company,
             CreatedAt = x.CreatedAt,
@@ -147,8 +138,7 @@ public class ReportRepository : IReportRepository
         return new GenericResponse<IEnumerable<ReportReadDto>>(result);
     }
 
-    public async Task<GenericResponse> Delete(Guid id)
-    {
+    public async Task<GenericResponse> Delete(Guid id) {
         var report = await _dbContext.Set<ReportEntity>()
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);

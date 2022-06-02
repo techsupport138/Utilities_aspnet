@@ -53,8 +53,8 @@ public class IdTitleRepository<T> : IIdTitleRepository<T> where T : BaseIdTitleE
         T? i = await _dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         _dbContext.Remove(i);
         await _dbContext.SaveChangesAsync();
-        
-        
+
+
         return new GenericResponse();
     }
 

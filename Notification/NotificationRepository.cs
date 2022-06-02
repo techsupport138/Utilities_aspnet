@@ -1,29 +1,26 @@
-﻿
-namespace Utilities_aspnet.Notification
-{
-    public interface INotificationRepository
-    {
+﻿namespace Utilities_aspnet.Notification {
+    public interface INotificationRepository {
         Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications();
-        Task<GenericResponse> CreateNotification(CreateNotificationDto model);
+        Task<GenericResponse> CreateNotification(NotificationCreateUpdateDto model);
     }
-    public class NotificationRepository : INotificationRepository
-    {
+
+    public class NotificationRepository : INotificationRepository {
         private readonly DbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
-        public NotificationRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
-        {
+
+        public NotificationRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
             _context = context;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
         }
 
 
-
-        public async Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications()
-        {
+        public async Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications() {
             string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            IEnumerable<NotificationEntity> model = await _context.Set<NotificationEntity>().Include(x => x.Media).Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt).ToListAsync();
+            IEnumerable<NotificationEntity> model = await _context.Set<NotificationEntity>().Include(x => x.Media)
+                .Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt)
+                .ToListAsync();
 
             IEnumerable<NotificationDto> notificationDtos = _mapper.Map<IEnumerable<NotificationDto>>(model);
 
@@ -31,10 +28,8 @@ namespace Utilities_aspnet.Notification
         }
 
 
-        public async Task<GenericResponse> CreateNotification(CreateNotificationDto model)
-        {
-            NotificationEntity notification = new NotificationEntity
-            {
+        public async Task<GenericResponse> CreateNotification(NotificationCreateUpdateDto model) {
+            NotificationEntity notification = new NotificationEntity {
                 UseCase = model.UseCase,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
@@ -46,22 +41,18 @@ namespace Utilities_aspnet.Notification
             };
             await _context.Set<NotificationEntity>().AddAsync(notification);
             await _context.SaveChangesAsync();
-            if(model.Media != null)
-            {
+            if (model.Media != null) {
                 FileTypes type = FileTypes.Image;
-                if (model.Media.EndsWith("svg"))
-                {
+                if (model.Media.EndsWith("svg")) {
                     type = FileTypes.Svg;
                 }
-                await _context.Set<MediaEntity>().AddAsync(new MediaEntity { NotificationId = notification.Id, CreatedAt = DateTime.Now, FileType = type, FileName = model.Media });
+
+                await _context.Set<MediaEntity>().AddAsync(new MediaEntity
+                    {NotificationId = notification.Id, CreatedAt = DateTime.Now, FileType = type, FileName = model.Media});
                 await _context.SaveChangesAsync();
             }
 
             return new GenericResponse(UtilitiesStatusCodes.Success);
         }
-
-
-
-
     }
 }

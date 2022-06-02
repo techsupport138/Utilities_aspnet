@@ -1,8 +1,5 @@
-﻿
-namespace Utilities_aspnet.Dashboard
-{
-    public class DashboardDto
-    {
+﻿namespace Utilities_aspnet.Dashboard {
+    public class DashboardDto {
         public int CountUsers { get; set; }
         public int CountProducts { get; set; }
         public int CountAds { get; set; }
@@ -23,8 +20,7 @@ namespace Utilities_aspnet.Dashboard
         public int CountSpecialities { get; set; }
     }
 
-    public class FilterDashboardDto
-    {
+    public class FilterDashboardDto {
         public DateTime StardDate { get; set; } = DateTime.Now.AddYears(-1);
         public DateTime EndDate { get; set; } = DateTime.Now;
     }

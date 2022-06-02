@@ -14,8 +14,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     private readonly IMapper _mapper;
     private readonly IIdentity? _user;
 
-    public ProductRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
-    {
+    public ProductRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _context = context;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
@@ -161,7 +160,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
             if (!string.IsNullOrEmpty(parameters.Details))
                 queryable = queryable.Where(x => !string.IsNullOrWhiteSpace(x.Details) && x.Details.Contains(parameters.Details))
-                      .ToList();
+                    .ToList();
 
             if (!string.IsNullOrEmpty(parameters.Description))
                 queryable = queryable.Where(x =>
@@ -200,11 +199,11 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 queryable = queryable
                     .Where(x => !string.IsNullOrEmpty(x.Author) && x.Author.Contains(parameters.Author)).ToList();
 
-            if(!string.IsNullOrEmpty(parameters.Email))
+            if (!string.IsNullOrEmpty(parameters.Email))
                 queryable = queryable
                     .Where(x => !string.IsNullOrEmpty(x.Email) && x.Email.Contains(parameters.Email)).ToList();
 
-            if(!string.IsNullOrEmpty(parameters.PhoneNumber))
+            if (!string.IsNullOrEmpty(parameters.PhoneNumber))
                 queryable = queryable
                     .Where(x => !string.IsNullOrEmpty(x.PhoneNumber) && x.PhoneNumber.Contains(parameters.PhoneNumber)).ToList();
 
@@ -234,8 +233,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                     .ToList();
 
             if (parameters.FilterOrder.HasValue) {
-                queryable = parameters.FilterOrder switch
-                {
+                queryable = parameters.FilterOrder switch {
                     ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
                     ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
                     ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title).ToList(),
@@ -259,18 +257,17 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 .ToList();
 
             foreach (ProductReadDto productReadDto in dto)
-                foreach (BookmarkEntity bookmarkEntity in bookmark)
-                {
-                    if (bookmarkEntity.AdId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                    if (bookmarkEntity.ProductId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                    if (bookmarkEntity.ProjectId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                    if (bookmarkEntity.CompanyId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                    if (bookmarkEntity.EventId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                    if (bookmarkEntity.MagazineId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                    if (bookmarkEntity.TenderId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                    if (bookmarkEntity.TutorialId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                    if (bookmarkEntity.ServiceId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                }
+            foreach (BookmarkEntity bookmarkEntity in bookmark) {
+                if (bookmarkEntity.AdId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                if (bookmarkEntity.ProductId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                if (bookmarkEntity.ProjectId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                if (bookmarkEntity.CompanyId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                if (bookmarkEntity.EventId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                if (bookmarkEntity.MagazineId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                if (bookmarkEntity.TenderId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                if (bookmarkEntity.TutorialId == productReadDto.Id) productReadDto.IsBookmarked = true;
+                if (bookmarkEntity.ServiceId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            }
         }
 
 

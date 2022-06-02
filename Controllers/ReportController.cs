@@ -10,7 +10,7 @@ public class ReportController : BaseApiController {
     }
 
     [HttpPost]
-    public async Task<ActionResult<GenericResponse<IEnumerable<ReportReadDto>>>> Read(ReportFilterDto parameters) { 
+    public async Task<ActionResult<GenericResponse<IEnumerable<ReportReadDto>>>> Read(ReportFilterDto parameters) {
         var result = await _repository.Read(parameters);
 
         return Result(result);

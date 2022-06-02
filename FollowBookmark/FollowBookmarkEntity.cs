@@ -1,5 +1,6 @@
 ﻿namespace Utilities_aspnet.FollowBookmark;
 
+[Table("Follows")]
 public class FollowEntity : BaseEntity {
     public string? SourceUserId { get; set; }
     public UserEntity? SourceUser { get; set; }
@@ -8,6 +9,7 @@ public class FollowEntity : BaseEntity {
     public UserEntity? TargetUser { get; set; }
 }
 
+[Table("Bookmarks")]
 public class BookmarkEntity : BaseEntity {
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }

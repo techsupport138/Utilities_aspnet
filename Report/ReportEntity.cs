@@ -1,5 +1,6 @@
 namespace Utilities_aspnet.Report;
 
+[Table("Reports")]
 public class ReportEntity : BaseEntity {
     public string? Title { get; set; }
     public string? Description { get; set; }
@@ -12,7 +13,7 @@ public class ReportEntity : BaseEntity {
 
     public Guid? ProjectId { get; set; }
     public ProjectEntity? Project { get; set; }
-    
+
     public Guid? DailyPriceId { get; set; }
     public DailyPriceEntity? DailyPrice { get; set; }
 
@@ -72,7 +73,7 @@ public class ReportReadDto : BaseReadDto {
 }
 
 public class ReportFilterDto : BaseReadDto {
-    public bool?  User { get; set; }
+    public bool? User { get; set; }
     public bool? Product { get; set; }
     public bool? Project { get; set; }
     public bool? DailyPrice { get; set; }

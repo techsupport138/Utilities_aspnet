@@ -1,5 +1,6 @@
 namespace Utilities_aspnet.Utilities.Entities;
 
+[Table("ContactInformations")]
 public class ContactInformationEntity : BaseEntity {
     [Required]
     public string Value { get; set; }

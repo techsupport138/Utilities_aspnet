@@ -86,7 +86,8 @@ public class CommentRepository : ICommentRepository {
         _context.Set<CommentEntity>().Update(comment);
         await _context.SaveChangesAsync();
 
-        return await Read(comment.Id);;
+        return await Read(comment.Id);
+        ;
     }
 
     public async Task<GenericResponse> Delete(Guid id) {

@@ -61,7 +61,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             if (dto.MagazineId.HasValue) bookmark.MagazineId = dto.MagazineId;
             if (dto.TagId.HasValue) bookmark.TagId = dto.TagId;
             if (dto.SpecialityId.HasValue) bookmark.SpecialityId = dto.SpecialityId;
-            
+
             await _context.Set<BookmarkEntity>().AddAsync(bookmark);
             await _context.SaveChangesAsync();
         }

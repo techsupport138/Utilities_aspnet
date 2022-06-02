@@ -164,7 +164,7 @@ public class FilterProductDto {
     public string? Author { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
-    public ProductStatus? Status { get; set; }  
+    public ProductStatus? Status { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public IEnumerable<int>? Locations { get; set; }
@@ -180,8 +180,7 @@ public class FilterProductDto {
     public int PageNumber { get; set; }
 }
 
-public enum ProductFilterOrder
-{
+public enum ProductFilterOrder {
     LowPrice,
     HighPrice,
     AToZ,

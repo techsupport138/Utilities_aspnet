@@ -1,7 +1,6 @@
-﻿using Utilities_aspnet.Notification;
+﻿namespace Utilities_aspnet.Utilities.Entities;
 
-namespace Utilities_aspnet.Utilities.Entities;
-
+[Table("Media")]
 public class MediaEntity : BaseEntity {
     [Required]
     public string FileName { get; set; }
@@ -25,7 +24,7 @@ public class MediaEntity : BaseEntity {
 
     public ProjectEntity? Project { get; set; }
     public Guid? ProjectId { get; set; }
-    
+
     public DailyPriceEntity? DailyPrice { get; set; }
     public Guid? DailyPriceId { get; set; }
 

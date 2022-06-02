@@ -1,5 +1,6 @@
 ﻿namespace Utilities_aspnet.Comment;
 
+[Table("Comment")]
 public class CommentEntity : BaseEntity {
     public double? Score { get; set; } = 0;
     public string? Comment { get; set; }

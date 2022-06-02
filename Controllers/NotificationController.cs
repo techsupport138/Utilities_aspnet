@@ -17,7 +17,7 @@ public class NotificationController : BaseApiController {
     }
 
     [HttpPost]
-    public async Task<ActionResult<GenericResponse>> Create(CreateNotificationDto model) {
+    public async Task<ActionResult<GenericResponse>> Create(NotificationCreateUpdateDto model) {
         GenericResponse i = await _notificationRepository.CreateNotification(model);
         return Result(i);
     }

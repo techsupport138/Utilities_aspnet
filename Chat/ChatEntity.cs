@@ -1,5 +1,6 @@
 ﻿namespace Utilities_aspnet.Chat;
 
+[Table("Chats")]
 public class ChatEntity : BaseEntity {
     [StringLength(450)]
     [ForeignKey(nameof(FromUser))]
