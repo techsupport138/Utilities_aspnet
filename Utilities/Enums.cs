@@ -63,7 +63,8 @@ public enum FileTypes {
     Video = 3,
     Voice = 4,
     Pdf = 5,
-    Txt = 6
+    Txt = 6,
+    Link = 7
 }
 
 public enum LocationType {

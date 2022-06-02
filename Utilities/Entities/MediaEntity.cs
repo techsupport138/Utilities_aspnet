@@ -2,13 +2,10 @@
 
 [Table("Media")]
 public class MediaEntity : BaseEntity {
-    [Required]
-    public string FileName { get; set; }
-
-    [Required]
-    public FileTypes FileType { get; set; }
-
-    public string UseCase { get; set; } = "--";
+    public string? FileName { get; set; }
+    public FileTypes? FileType { get; set; }
+    public MediaUseCase? UseCase { get; set; }
+    public string? Link { get; set; }
 
     public ContentEntity? Content { get; set; }
     public Guid? ContentId { get; set; }
@@ -57,24 +54,33 @@ public class MediaEntity : BaseEntity {
 
     public NotificationEntity? Notification { get; set; }
     public Guid? NotificationId { get; set; }
+}
 
-    [NotMapped]
-    public string Link => $"{NetworkUtil.ServerAddress}/Medias/{FileName}";
-    //public string Link => $"{Server.ServerAddress}/Medias/{FileName}";
+public class MediaDto {
+    public string Id { get; set; }
+    public FileTypes Type { get; set; }
+    public MediaUseCase UseCase { get; set; }
+    public string? Link { get; set; }
+}
 
-    public static MediaDto MapMediaDto(MediaEntity e) {
-        MediaDto dto = new() {
-            Id = e.Id.ToString(),
-            Link = e.Link,
-            Type = e.FileType,
-            UseCase = e.UseCase
-        };
+public class UploadDto {
+    public string? UserId { get; set; }
+    public List<IFormFile>? Files { get; set; }
+    public List<string>? Links { get; set; }
+    public Guid? AdsId { get; set; }
+    public Guid? JobId { get; set; }
+    public Guid? LearnId { get; set; }
+    public Guid? PostId { get; set; }
+    public Guid? ProductId { get; set; }
+    public Guid? ProjectId { get; set; }
+    public Guid? TenderId { get; set; }
+    public Guid? TutorialId { get; set; }
+    public Guid? EventId { get; set; }
+    public Guid? CompanyId { get; set; }
+    public Guid? MagazineId { get; set; }
+    public Guid? ServiceId { get; set; }
+}
 
-        return dto;
-    }
-
-    public static IEnumerable<MediaDto> MapEnumarableDto(IEnumerable<MediaEntity>? e) {
-        IEnumerable<MediaDto> dto = new List<MediaDto>(e?.Select(MapMediaDto) ?? Array.Empty<MediaDto>());
-        return dto;
-    }
+public enum MediaUseCase {
+    Product,
 }

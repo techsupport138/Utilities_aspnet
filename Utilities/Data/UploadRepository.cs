@@ -26,8 +26,6 @@ public class UploadRepository : IUploadRepository {
     }
 
     public async Task<GenericResponse<List<MediaDto>?>> UploadMedia(UploadDto model) {
-        if (model.Files.Count < 1)
-            return new GenericResponse<List<MediaDto>?>(null, UtilitiesStatusCodes.BadRequest, "File not uploaded");
         List<MediaEntity> medias = new();
         foreach (IFormFile file in model.Files) {
             FileTypes fileType = FileTypes.Image;
@@ -50,9 +48,8 @@ public class UploadRepository : IUploadRepository {
             }
 
             string name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(file.FileName));
-            string url = _mediaRepository.GetFileUrl(name, folder);
             MediaEntity media = new() {
-                FileName = url,
+                FileName = _mediaRepository.GetFileUrl(name, folder),
                 FileType = fileType,
                 UserId = model.UserId,
                 ProductId = model.ProductId,
@@ -72,8 +69,31 @@ public class UploadRepository : IUploadRepository {
             _mediaRepository.SaveMedia(file, name, folder);
         }
 
-        return new GenericResponse<List<MediaDto>?>(_mapper.Map<List<MediaDto>>(medias), UtilitiesStatusCodes.Success,
-            "File uploaded");
+        foreach (MediaEntity media in model.Links.Select(link => new MediaEntity {
+                     FileType = FileTypes.Link,
+                     Link = link,
+                     UserId = model.UserId,
+                     ProductId = model.ProductId,
+                     AdId = model.AdsId,
+                     CompanyId = model.CompanyId,
+                     EventId = model.EventId,
+                     MagazineId = model.MagazineId,
+                     ProjectId = model.ProjectId,
+                     ServiceId = model.ServiceId,
+                     TutorialId = model.TutorialId,
+                     TenderId = model.TenderId,
+                     CreatedAt = DateTime.Now
+                 })) {
+            await _context.Set<MediaEntity>().AddAsync(media);
+            await _context.SaveChangesAsync();
+            medias.Add(media);
+        }
+
+        return new GenericResponse<List<MediaDto>?>(
+            _mapper.Map<List<MediaDto>>(medias),
+            UtilitiesStatusCodes.Success,
+            "File uploaded"
+        );
     }
 
     public async Task<GenericResponse> UploadChunkMedia(UploadDto parameter) {
