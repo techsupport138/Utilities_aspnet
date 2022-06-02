@@ -12,8 +12,8 @@ public class CommentController : BaseApiController {
     }
 
     [HttpGet]
-    public async Task<ActionResult<GenericResponse<CommentEntity>>> Read(Guid id) {
-        GenericResponse<CommentEntity?> result = await _repository.Read(id);
+    public async Task<ActionResult<GenericResponse<CommentReadDto>>> Read(Guid id) {
+        GenericResponse<CommentReadDto?> result = await _repository.Read(id);
         return Result(result);
     }
 
