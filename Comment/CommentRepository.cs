@@ -1,19 +1,21 @@
 ﻿namespace Utilities_aspnet.Comment;
 
 public interface ICommentRepository {
-    Task<GenericResponse> Create(CommentCreateUpdateDto entity);
+    Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto entity);
     Task<GenericResponse<CommentReadDto?>> Read(Guid id);
-    Task<GenericResponse> Update(Guid id, CommentCreateUpdateDto entity);
+    Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity);
     Task<GenericResponse> Delete(Guid id);
 }
 
 public class CommentRepository : ICommentRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CommentRepository(DbContext context, IMapper mapper) {
+    public CommentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _context = context;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
@@ -27,22 +29,23 @@ public class CommentRepository : ICommentRepository {
         return new GenericResponse<CommentReadDto?>(result);
     }
 
-    public async Task<GenericResponse> Create(CommentCreateUpdateDto entity) {
+    public async Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto entity) {
         CommentEntity? comment = _mapper.Map<CommentEntity>(entity);
+        comment.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
 
         await _context.AddAsync(comment);
         await _context.SaveChangesAsync();
 
-        return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+        return await Read(comment.Id);
     }
 
-    public async Task<GenericResponse> Update(Guid id, CommentCreateUpdateDto entity) {
+    public async Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity) {
         CommentEntity? comment = await _context.Set<CommentEntity>()
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (comment == null)
-            return new GenericResponse(UtilitiesStatusCodes.NotFound, "Comment notfound");
+            return new GenericResponse<CommentReadDto?>(null);
 
         if (!string.IsNullOrEmpty(entity.Comment))
             comment.Comment = entity.Comment;
@@ -83,7 +86,7 @@ public class CommentRepository : ICommentRepository {
         _context.Set<CommentEntity>().Update(comment);
         await _context.SaveChangesAsync();
 
-        return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+        return await Read(comment.Id);;
     }
 
     public async Task<GenericResponse> Delete(Guid id) {
