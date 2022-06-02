@@ -224,7 +224,7 @@ public class UserRepository : IUserRepository
             if (!string.IsNullOrEmpty(dto.AppUserName))
                 user.UserName = dto.AppUserName;
 
-            if(dto.Suspend.HasValue)
+            if (dto.Suspend.HasValue)
                 user.Suspend = dto.Suspend.Value;
 
             if (!string.IsNullOrEmpty(dto.Headline))
