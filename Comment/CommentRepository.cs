@@ -2,7 +2,7 @@
 
 public interface ICommentRepository {
     Task<GenericResponse> Create(CommentCreateUpdateDto entity);
-    Task<GenericResponse<CommentEntity?>> Read(Guid id);
+    Task<GenericResponse<CommentReadDto?>> Read(Guid id);
     Task<GenericResponse> Update(Guid id, CommentCreateUpdateDto entity);
     Task<GenericResponse> Delete(Guid id);
 }
@@ -16,24 +16,15 @@ public class CommentRepository : ICommentRepository {
         _mapper = mapper;
     }
 
-    public async Task<GenericResponse<CommentEntity?>> Read(Guid id) {
+    public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
         CommentEntity? comment = await _context.Set<CommentEntity>()
             .AsNoTracking()
-            .Include(x => x.User)
-            .Include(x => x.Comment)
-            .Include(x => x.Product)
-            .Include(x => x.Project)
-            .Include(x => x.Tutorial)
-            .Include(x => x.Event)
-            .Include(x => x.Ad)
-            .Include(x => x.Tender)
-            .Include(x => x.Company)
-            .Include(x => x.Service)
-            .Include(x => x.MagazineId)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
 
-        return new GenericResponse<CommentEntity?>(comment);
+        CommentReadDto? result = _mapper.Map<CommentReadDto>(comment);
+
+        return new GenericResponse<CommentReadDto?>(result);
     }
 
     public async Task<GenericResponse> Create(CommentCreateUpdateDto entity) {
