@@ -114,7 +114,7 @@ public class UserRepository : IUserRepository
                 PhoneNumberConfirmed = false,
                 FullName = "",
                 Wallet = 0,
-                Suspend = true
+                Suspend = false
             };
 
             IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
