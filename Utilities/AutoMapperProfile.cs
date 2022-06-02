@@ -2,8 +2,10 @@ using Utilities_aspnet.Comment;
 
 namespace Utilities_aspnet.Utilities;
 
-public class AutoMapperProfile : Profile {
-    public AutoMapperProfile() {
+public class AutoMapperProfile : Profile
+{
+    public AutoMapperProfile()
+    {
         // IdTitle
         CreateMap<TagEntity, IdTitleReadDto>().ReverseMap();
         CreateMap<TagEntity, IdTitleCreateUpdateDto>().ReverseMap();
@@ -125,6 +127,7 @@ public class AutoMapperProfile : Profile {
         CreateMap<NotificationEntity, NotificationDto>().ReverseMap();
 
         CreateMap<CreateProfileDto, UserEntity>()
+            .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
             .ForMember(x => x.Colors, y => y.Ignore())
             .ForMember(x => x.Specialties, y => y.Ignore())
             .ForMember(x => x.Favorites, y => y.Ignore())

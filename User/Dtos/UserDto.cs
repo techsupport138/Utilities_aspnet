@@ -80,6 +80,7 @@ public class CreateProfileDto {
     public string? Bio { get; set; }
     public string? Headline { get; set; }
     public string? Website { get; set; }
+    public string? Password { get; set; }
     public string? AppUserName { get; set; }
     public string? AppPhoneNumber { get; set; }
     public string? AppEmail { get; set; }
