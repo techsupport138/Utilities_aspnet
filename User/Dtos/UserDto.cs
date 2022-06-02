@@ -75,7 +75,7 @@ public class UpdateProfileDto {
     public List<IdTitleCreateUpdateDto>? ContactInformation { get; set; }
 }
 
-public class CreateProfileDto {
+public class CreateUserDto {
     public string? FullName { get; set; }
     public string? Bio { get; set; }
     public string? Headline { get; set; }

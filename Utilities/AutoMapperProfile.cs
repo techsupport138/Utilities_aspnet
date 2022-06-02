@@ -2,11 +2,8 @@ using Utilities_aspnet.Comment;
 
 namespace Utilities_aspnet.Utilities;
 
-public class AutoMapperProfile : Profile
-{
-    public AutoMapperProfile()
-    {
-        // IdTitle
+public class AutoMapperProfile : Profile {
+    public AutoMapperProfile() {
         CreateMap<TagEntity, IdTitleReadDto>().ReverseMap();
         CreateMap<TagEntity, IdTitleCreateUpdateDto>().ReverseMap();
         CreateMap<CategoryEntity, IdTitleReadDto>().ReverseMap();
@@ -24,7 +21,6 @@ public class AutoMapperProfile : Profile
         CreateMap<ReferenceEntity, IdTitleReadDto>().ReverseMap();
         CreateMap<ReferenceEntity, IdTitleCreateUpdateDto>().ReverseMap();
 
-        // Product
         CreateMap<BaseProductEntity, ProductReadDto>().ReverseMap();
         CreateMap<BaseProductEntity, ProductCreateUpdateDto>().ReverseMap()
             .ForMember(x => x.Locations, y => y.Ignore())
@@ -123,10 +119,11 @@ public class AutoMapperProfile : Profile
         CreateMap<UserEntity, UserReadDto>().ReverseMap();
         CreateMap<FormEntity, FormDto>().ReverseMap();
         CreateMap<FormFieldEntity, FormFieldDto>().ReverseMap();
-
         CreateMap<NotificationEntity, NotificationDto>().ReverseMap();
+        CreateMap<CommentEntity, CommentCreateUpdateDto>().ReverseMap();
+        CreateMap<CommentEntity, CommentReadDto>().ReverseMap();
 
-        CreateMap<CreateProfileDto, UserEntity>()
+        CreateMap<CreateUserDto, UserEntity>()
             .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
             .ForMember(x => x.Colors, y => y.Ignore())
             .ForMember(x => x.Specialties, y => y.Ignore())
@@ -134,8 +131,5 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.Location, y => y.Ignore())
             .ForMember(x => x.Media, y => y.Ignore())
             .ForMember(x => x.ContactInformation, y => y.Ignore());
-
-        CreateMap<CommentCreateUpdateDto, CommentEntity>().ReverseMap();
-        CreateMap<CommentReadDto, CommentEntity>().ReverseMap();
     }
 }

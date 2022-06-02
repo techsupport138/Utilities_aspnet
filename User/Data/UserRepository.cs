@@ -15,7 +15,7 @@ public interface IUserRepository
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers();
-    Task<GenericResponse<UserReadDto?>> CreateUser(CreateProfileDto parameter);
+    Task<GenericResponse<UserReadDto?>> CreateUser(CreateUserDto parameter);
     Task<GenericResponse> DeleteUser(string id);
 }
 
@@ -391,7 +391,7 @@ public class UserRepository : IUserRepository
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse<UserReadDto?>> CreateUser(CreateProfileDto parameter)
+    public async Task<GenericResponse<UserReadDto?>> CreateUser(CreateUserDto parameter)
     {
         UserEntity? user = _mapper.Map<UserEntity>(parameter);
 

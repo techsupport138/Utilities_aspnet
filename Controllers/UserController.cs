@@ -66,7 +66,7 @@ public class UserController : BaseApiController {
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<GenericResponse>> Create(CreateProfileDto dto) {
+    public async Task<ActionResult<GenericResponse>> Create(CreateUserDto dto) {
         try {
             GenericResponse i = await _userRepository.CreateUser(dto);
             return Result(i);
