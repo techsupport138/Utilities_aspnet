@@ -161,14 +161,18 @@ public class FilterProductDto {
     public bool? IsBookmarked { get; set; }
     public int? VisitsCount { get; set; }
     public string? Address { get; set; }
+    public string? Author { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public ProductStatus? Status { get; set; }  
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public string? Location { get; set; }
-    public string? Category { get; set; }
-    public string? Brand { get; set; }
-    public string? Reference { get; set; }
-    public string? Tag { get; set; }
-    public string? Speciality { get; set; }
+    public IEnumerable<int>? Locations { get; set; }
+    public IEnumerable<Guid>? Categories { get; set; }
+    public IEnumerable<Guid>? Brands { get; set; }
+    public IEnumerable<Guid>? References { get; set; }
+    public IEnumerable<Guid>? Tags { get; set; }
+    public IEnumerable<Guid>? Specialities { get; set; }
 
     public ProductFilterOrder? FilterOrder { get; set; }
 

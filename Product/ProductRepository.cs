@@ -1,3 +1,5 @@
+using EnvironmentName = Microsoft.AspNetCore.Hosting.EnvironmentName;
+
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository<T> where T : BaseProductEntity
@@ -156,7 +158,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Bookmarks)
             .Include(i => i.Forms)!
             .ThenInclude(x => x.FormField)
-            .Where(x=>x.DeletedAt == null)
+            .Where(x => x.DeletedAt == null)
             .ToListAsync();
 
 
@@ -166,10 +168,13 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 queryable = queryable.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(parameters.Title))
                     .ToList();
 
-
             if (!string.IsNullOrEmpty(parameters.SubTitle))
                 queryable = queryable
                     .Where(x => !string.IsNullOrEmpty(x.Subtitle) && x.Subtitle.Contains(parameters.SubTitle)).ToList();
+
+            if (!string.IsNullOrEmpty(parameters.Details))
+                queryable = queryable.Where(x => !string.IsNullOrWhiteSpace(x.Details) && x.Details.Contains(parameters.Details))
+                      .ToList();
 
             if (!string.IsNullOrEmpty(parameters.Description))
                 queryable = queryable.Where(x =>
@@ -201,33 +206,44 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (parameters.StartDate.HasValue)
                 queryable = queryable.Where(x => x.StartDate >= parameters.StartDate).ToList();
 
-
             if (parameters.EndPriceRange.HasValue)
                 queryable = queryable.Where(x => x.EndDate <= parameters.EndDate).ToList();
 
-            if (!string.IsNullOrEmpty(parameters.Location))
+            if (!string.IsNullOrEmpty(parameters.Author))
+                queryable = queryable
+                    .Where(x => !string.IsNullOrEmpty(x.Author) && x.Author.Contains(parameters.Author)).ToList();
+
+            if(!string.IsNullOrEmpty(parameters.Email))
+                queryable = queryable
+                    .Where(x => !string.IsNullOrEmpty(x.Email) && x.Email.Contains(parameters.Email)).ToList();
+
+            if(!string.IsNullOrEmpty(parameters.PhoneNumber))
+                queryable = queryable
+                    .Where(x => !string.IsNullOrEmpty(x.PhoneNumber) && x.PhoneNumber.Contains(parameters.PhoneNumber)).ToList();
+
+            if (parameters.Locations != null && parameters.Locations.Any())
                 queryable = queryable.Where(x => x.Locations != null &&
-                                                 x.Locations.Any(x => x.Title.Contains(parameters.Location))).ToList();
+                                                 x.Locations.Any(y => parameters.Locations.Contains(y.Id))).ToList();
 
-            if (!string.IsNullOrEmpty(parameters.Brand))
+            if (parameters.Brands != null && parameters.Brands.Any())
                 queryable = queryable.Where(x => x.Brands != null &&
-                                                 x.Brands.Any(y => y.Title.Contains(parameters.Brand))).ToList();
+                                                 x.Brands.Any(y => parameters.Brands.Contains(y.Id))).ToList();
 
-            if (!string.IsNullOrEmpty(parameters.Category))
-                queryable = queryable.Where(x =>
-                    x.Categories != null && x.Categories.Any(y => y.Title.Contains(parameters.Category))).ToList();
+            if (parameters.Categories != null && parameters.Categories.Any())
+                queryable = queryable.Where(x => x.Categories != null &&
+                                                 x.Categories.Any(y => parameters.Categories.Contains(y.Id))).ToList();
 
-            if (!string.IsNullOrEmpty(parameters.Reference))
-                queryable = queryable.Where(x =>
-                    x.References != null && x.References.Any(y => y.Title.Contains(parameters.Reference))).ToList();
+            if (parameters.References != null && parameters.References.Any())
+                queryable = queryable.Where(x => x.References != null &&
+                                                 x.References.Any(y => parameters.References.Contains(y.Id))).ToList();
 
-            if (!string.IsNullOrEmpty(parameters.Tag))
-                queryable = queryable.Where(x => x.Tags != null && x.Tags.Any(y => y.Title.Contains(parameters.Tag)))
-                    .ToList();
+            if (parameters.Tags != null && parameters.Tags.Any())
+                queryable = queryable.Where(x => x.Tags != null &&
+                                                 x.Tags.Any(y => parameters.Tags.Contains(y.Id))).ToList();
 
-            if (!string.IsNullOrEmpty(parameters.Speciality))
-                queryable = queryable.Where(x =>
-                        x.Specialities != null && x.Specialities.Any(y => y.Title.Contains(parameters.Speciality)))
+            if (parameters.Specialities != null && parameters.Specialities.Any())
+                queryable = queryable.Where(x => x.Specialities != null &&
+                                                 x.Specialities.Any(y => parameters.Specialities.Contains(y.Id)))
                     .ToList();
 
             if (parameters.FilterOrder.HasValue)
@@ -316,35 +332,22 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         if (entity == null)
             return new GenericResponse<ProductReadDto>(new ProductReadDto());
 
-        if (!string.IsNullOrEmpty(parameters.Title))
-            entity.Title = parameters.Title;
-
-        if (!string.IsNullOrEmpty(parameters.Subtitle))
-            entity.Subtitle = parameters.Subtitle;
-
-        if (!string.IsNullOrEmpty(parameters.Description))
-            entity.Description = parameters.Description;
-
-        if (parameters.Price.HasValue)
-            entity.Price = parameters.Price.Value;
-
-        if (parameters.IsForSale.HasValue)
-            entity.IsForSale = parameters.IsForSale.Value;
-
-        if (parameters.Enabled.HasValue)
-            entity.Enabled = parameters.Enabled.Value;
-
-        if (parameters.VisitsCount.HasValue)
-            entity.VisitCount = parameters.VisitsCount.Value;
-
-        if (!string.IsNullOrEmpty(parameters.Address))
-            entity.Address = parameters.Address;
-
-        if (parameters.StartDate.HasValue)
-            entity.StartDate = parameters.StartDate.Value;
-
-        if (parameters.EndDate.HasValue)
-            entity.EndDate = parameters.EndDate.Value;
+        entity.Title ??= parameters.Title;
+        entity.Subtitle ??= parameters.Subtitle;
+        entity.Details ??= parameters.Details;
+        entity.Author ??= parameters.Author;
+        entity.PhoneNumber ??= parameters.PhoneNumber;
+        entity.Email ??= parameters.Email;
+        entity.Latitude ??= parameters.Latitude;
+        entity.Longitude ??= parameters.Longitude;
+        entity.Description ??= parameters.Description;
+        entity.Price ??= parameters.Price;
+        entity.IsForSale ??= parameters.IsForSale;
+        entity.Enabled ??= parameters.Enabled;
+        entity.VisitCount ??= parameters.VisitsCount;
+        entity.Address ??= parameters.Address;
+        entity.StartDate ??= parameters.StartDate;
+        entity.EndDate ??= parameters.EndDate;
 
         if (parameters.Locations != null && parameters.Locations.Any())
         {
