@@ -256,20 +256,6 @@ public class UserRepository : IUserRepository {
                 user.Specialties.AddRange(specialties);
             }
 
-            //if (dto.Media != null)
-            //{
-            //    MediaEntity? media = _mapper.Map<MediaEntity>(dto.Media);
-            //    user.Media.Add(media);
-            //}
-
-            dto.ContactInformation?.ForEach(x => {
-                _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity() {
-                    UserId = user.Id,
-                    Value = x.Title ?? "",
-                    Link = x.Link
-                });
-            });
-
             await _context.SaveChangesAsync();
         }
         catch {
@@ -397,15 +383,6 @@ public class UserRepository : IUserRepository {
 
             user.Specialties.AddRange(specialties);
         }
-
-
-        parameter.ContactInformation?.ForEach(x => {
-            _context.Set<ContactInformationEntity>().Add(new ContactInformationEntity() {
-                UserId = user.Id,
-                Value = x.Title ?? "",
-                Link = x.Link
-            });
-        });
 
         await _context.Set<UserEntity>().AddAsync(user);
         await _context.SaveChangesAsync();

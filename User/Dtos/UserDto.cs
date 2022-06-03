@@ -66,13 +66,11 @@ public class UpdateProfileDto {
     public string? AppUserName { get; set; }
     public string? AppPhoneNumber { get; set; }
     public string? AppEmail { get; set; }
-    public MediaDto? Media { get; set; }
     public DateTime? BirthDate { get; set; }
     public List<Guid>? Colors { get; set; }
     public List<Guid>? Specialties { get; set; }
     public List<Guid>? Favorites { get; set; }
     public List<int>? Locations { get; set; }
-    public List<IdTitleCreateUpdateDto>? ContactInformation { get; set; }
 }
 
 public class CreateUserDto {
@@ -88,7 +86,5 @@ public class CreateUserDto {
     public List<Guid>? Specialties { get; set; }
     public List<Guid>? Favorites { get; set; }
     public List<int>? Locations { get; set; }
-    public MediaDto? Media { get; set; }
     public DateTime? BirthDate { get; set; }
-    public List<IdTitleCreateUpdateDto>? ContactInformation { get; set; }
 }

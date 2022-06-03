@@ -232,19 +232,19 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                                                  x.Specialities.Any(y => parameters.Specialities.Contains(y.Id)))
                     .ToList();
 
-            if (parameters.FilterOrder.HasValue) {
-                queryable = parameters.FilterOrder switch {
-                    ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
-                    ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
-                    ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title).ToList(),
-                    ProductFilterOrder.ZToA => queryable.OrderByDescending(x => x.Title).ToList(),
-                    _ => queryable.OrderBy(x => x.CreatedAt).ToList()
-                };
-            }
+            // if (parameters.FilterOrder.HasValue) {
+            //     queryable = parameters.FilterOrder switch {
+            //         ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
+            //         ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
+            //         ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title).ToList(),
+            //         ProductFilterOrder.ZToA => queryable.OrderByDescending(x => x.Title).ToList(),
+            //         _ => queryable.OrderBy(x => x.CreatedAt).ToList()
+            //     };
+            // }
 
-            queryable = queryable.Skip((parameters.PageSize - 1) * parameters.PageNumber)
-                .Take(parameters.PageNumber)
-                .ToList();
+            // queryable = queryable.Skip((parameters.PageSize - 1) * parameters.PageNumber)
+            //     .Take(parameters.PageNumber)
+            //     .ToList();
         }
 
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
