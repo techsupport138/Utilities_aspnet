@@ -23,7 +23,7 @@ public class MagazineController : BaseApiController {
         return Result(i);
     }
     
-    [HttpGet("ReadMine")]
+    [HttpGet("Mine")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> ReadMine() {
         GenericResponse<IEnumerable<ProductReadDto>> i = await _repository.ReadMine();
