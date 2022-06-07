@@ -2,6 +2,7 @@
 using Utilities_aspnet.Comment;
 using Utilities_aspnet.Dashboard;
 using Utilities_aspnet.Notification;
+using Utilities_aspnet.ShoppingCart;
 using Utilities_aspnet.Utilities.Seeder;
 
 namespace Utilities_aspnet.Utilities;
@@ -75,6 +76,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<AppSettings>();
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
+        builder.Services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
         builder.Services.AddTransient<IReportRepository, ReportRepository>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
         builder.Services.AddTransient<IMediaRepository, MediaRepository>();
