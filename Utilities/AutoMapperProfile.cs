@@ -1,9 +1,12 @@
 using Utilities_aspnet.Comment;
+using Utilities_aspnet.ShoppingCart;
 
 namespace Utilities_aspnet.Utilities;
 
-public class AutoMapperProfile : Profile {
-    public AutoMapperProfile() {
+public class AutoMapperProfile : Profile
+{
+    public AutoMapperProfile()
+    {
         CreateMap<TagEntity, IdTitleReadDto>().ReverseMap();
         CreateMap<TagEntity, IdTitleCreateUpdateDto>().ReverseMap();
         CreateMap<CategoryEntity, IdTitleReadDto>().ReverseMap();
@@ -135,5 +138,11 @@ public class AutoMapperProfile : Profile {
             .ForMember(x => x.Location, y => y.Ignore())
             .ForMember(x => x.Media, y => y.Ignore())
             .ForMember(x => x.ContactInformation, y => y.Ignore());
+
+        CreateMap<ShoppingCartEntity, ShoppingCartReadDto>()
+            .ForMember(x => x.ShoppingCartItems, y => y.MapFrom(x => x.ShoppingCartItems))
+            .ReverseMap();
+        CreateMap<ShoppingCartItemEntity, ShoppingCartItemReadDto>().ReverseMap();
+        CreateMap<ShoppingCartItemEntity, ShoppingCartItemCreateDto>().ReverseMap();
     }
 }
