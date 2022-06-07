@@ -194,7 +194,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (parameters.StartDate.HasValue)
                 queryable = queryable.Where(x => x.StartDate >= parameters.StartDate).ToList();
 
-            if (parameters.EndPriceRange.HasValue)
+            if (parameters.EndDate.HasValue)
                 queryable = queryable.Where(x => x.EndDate <= parameters.EndDate).ToList();
 
             if (!string.IsNullOrEmpty(parameters.Author))

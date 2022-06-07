@@ -63,6 +63,7 @@ public class IdTitleRepository<T> : IIdTitleRepository<T> where T : BaseIdTitleE
 
         if (entity == null) return new GenericResponse<IdTitleReadDto>(null, UtilitiesStatusCodes.NotFound);
         entity.Title = dto.Title ?? entity.Title;
+        entity.TitleTr1 ??= dto.TitleTr1;
         entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
         entity.Color = dto.Color ?? entity.Color;
         entity.Link = dto.Link ?? entity.Link;
