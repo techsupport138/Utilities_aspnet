@@ -9,29 +9,41 @@ public interface IContentRepository<T> where T : BaseContentEntity {
 }
 
 public class ContentRepository<T> : IContentRepository<T> where T : BaseContentEntity {
-    private readonly DbContext _dbContext;
+    private readonly DbContext _context;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ContentRepository(DbContext dbContext, IMapper mapper) {
-        _dbContext = dbContext;
+    public ContentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+        _context = context;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GenericResponse<ContentReadDto>> Create(ContentCreateUpdateDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
-        EntityEntry<T> i = await _dbContext.Set<T>().AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+        entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        EntityEntry<T> i = await _context.Set<T>().AddAsync(entity);
+        await _context.SaveChangesAsync();
+        if (dto.ContactInformations != null)
+        {
+            foreach (ContactInformationCreateUpdateDto item in dto.ContactInformations)
+            {
+                ContactInformationEntity? e = new ContactInformationEntity { ContactInfoItemId = item.ContactInfoItemId, Link = item.Link, Value = item.Value, Visibility = item.Visibility, ContentId = i.Entity.Id};
+                await _context.Set<ContactInformationEntity>().AddAsync(e);
+                await _context.SaveChangesAsync();
+            }
+        }
         return new GenericResponse<ContentReadDto>(_mapper.Map<ContentReadDto>(i.Entity));
     }
 
     public async Task<GenericResponse<IEnumerable<ContentReadDto>>> Read() {
-        IEnumerable<T> i = await _dbContext.Set<T>().AsNoTracking().ToListAsync();
+        IEnumerable<T> i = await _context.Set<T>().Include(x=>x.Media).Include(x=>x.ContactInformation).ThenInclude(x=>x.ContactInfoItem).AsNoTracking().ToListAsync();
         return new GenericResponse<IEnumerable<ContentReadDto>>(_mapper.Map<IEnumerable<ContentReadDto>>(i));
     }
 
     public async Task<GenericResponse<ContentReadDto>> ReadById(Guid id) {
-        T? i = await _dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+        T? i = await _context.Set<T>().AsNoTracking().Include(x => x.Media).Include(x => x.ContactInformation).ThenInclude(x => x.ContactInfoItem).FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<ContentReadDto>(_mapper.Map<ContentReadDto>(i));
     }
 
@@ -41,8 +53,8 @@ public class ContentRepository<T> : IContentRepository<T> where T : BaseContentE
 
     public async Task<GenericResponse> Delete(Guid id) {
         GenericResponse<ContentReadDto> i = await ReadById(id);
-        _dbContext.Set<T>().Remove(_mapper.Map<T>(i.Result));
-        await _dbContext.SaveChangesAsync();
+        _context.Set<T>().Remove(_mapper.Map<T>(i.Result));
+        await _context.SaveChangesAsync();
         return new GenericResponse();
     }
 }

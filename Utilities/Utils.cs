@@ -103,6 +103,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IFormRepository, FormRepository>();
         builder.Services.AddTransient<ICommentRepository, CommentRepository>();
         builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
+        builder.Services.AddTransient<IContentRepository<ContentEntity>, ContentRepository<ContentEntity>>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 

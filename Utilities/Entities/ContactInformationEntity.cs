@@ -43,6 +43,8 @@ public class ContactInformationEntity : BaseEntity {
 
     public MagazineEntity? Magazine { get; set; }
     public Guid? MagazineId { get; set; }
+    public ContentEntity? Content { get; set; }
+    public Guid? ContentId { get; set; }
 }
 
 public class ContactInformationReadDto
