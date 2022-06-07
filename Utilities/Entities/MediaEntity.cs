@@ -4,7 +4,7 @@
 public class MediaEntity : BaseEntity {
     public string? FileName { get; set; }
     public FileTypes? FileType { get; set; }
-    public MediaUseCase? UseCase { get; set; } = MediaUseCase.Main;
+    public string? UseCase { get; set; }
     public string? Link { get; set; }
 
     public ContentEntity? Content { get; set; }
@@ -59,12 +59,12 @@ public class MediaEntity : BaseEntity {
 public class MediaDto {
     public string Id { get; set; }
     public FileTypes Type { get; set; }
-    public MediaUseCase UseCase { get; set; } = MediaUseCase.Main;
+    public string? UseCase { get; set; }
     public string? Link { get; set; }
 }
 
 public class UploadDto {
-    public MediaUseCase UseCase { get; set; } = MediaUseCase.Main;
+    public string? UseCase { get; set; }
     public string? UserId { get; set; }
     public List<IFormFile>? Files { get; set; }
     public List<string>? Links { get; set; }
@@ -81,10 +81,4 @@ public class UploadDto {
     public Guid? MagazineId { get; set; }
     public Guid? ServiceId { get; set; }
     public Guid? ContentId { get; set; }
-}
-
-public enum MediaUseCase {
-    Main = 100,
-    Slider = 101,
-    Media = 102
 }
