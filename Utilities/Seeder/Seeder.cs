@@ -15,7 +15,7 @@ public class SeedRepository : ISeedRepository
 
     public async Task<bool> SeedLocations()
     {
-        var path = Directory.GetCurrentDirectory() + "\\Utilities" + "\\AllLocationNew.json";
+        var path = Directory.GetCurrentDirectory() + "\\AllLocationNew.json";
         var data = File.ReadAllText(path);
         var cities = JsonConvert.DeserializeObject<List<LocationCreateDto>>(data);
 
