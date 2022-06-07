@@ -42,7 +42,7 @@ public class ShoppingCartController : BaseApiController
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpPost]
+    [HttpPut]
     public async Task<ActionResult<GenericResponse<ShoppingCartReadDto>>> Update(ShoppingCartUpdateDto dto)
     {
         var result = await _repository.Update(dto);
