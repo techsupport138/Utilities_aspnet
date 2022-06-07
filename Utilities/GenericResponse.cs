@@ -23,6 +23,9 @@ public class GenericResponse {
     }
 
     public UtilitiesStatusCodes Status { get; set; }
+    public int? PageSize { get; set; }
+    public int? PageCount { get; set; }
+    public int? TotalCount { get; set; }
     public string Message { get; set; }
     public List<Guid>? Ids { get; set; }
     public Guid? Id { get; set; }

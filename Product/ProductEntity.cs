@@ -86,7 +86,7 @@ public class ProductReadDto {
     public string? Email { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
-    public bool? IsBookmarked { get; set; }
+    public bool IsBookmarked { get; set; }
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public int? VisitsCount { get; set; }
@@ -182,10 +182,10 @@ public class FilterProductDto {
     public IEnumerable<Guid>? Tags { get; set; }
     public IEnumerable<Guid>? Specialities { get; set; }
 
-    public ProductFilterOrder? FilterOrder { get; set; }
+    public ProductFilterOrder? FilterOrder { get; set; } = ProductFilterOrder.AToZ;
 
-    public int PageSize { get; set; }
-    public int PageNumber { get; set; }
+    public int PageSize { get; set; } = 1000;
+    public int PageNumber { get; set; } = 1;
 }
 
 public enum ProductFilterOrder {

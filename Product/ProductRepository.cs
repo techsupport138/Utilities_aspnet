@@ -149,6 +149,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .ToListAsync();
 
 
+        var totalCount = queryable.Count();
+
         if (parameters != null) {
             if (!string.IsNullOrEmpty(parameters.Title))
                 queryable = queryable.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(parameters.Title))
@@ -232,19 +234,23 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                                                  x.Specialities.Any(y => parameters.Specialities.Contains(y.Id)))
                     .ToList();
 
-            // if (parameters.FilterOrder.HasValue) {
-            //     queryable = parameters.FilterOrder switch {
-            //         ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
-            //         ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
-            //         ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title).ToList(),
-            //         ProductFilterOrder.ZToA => queryable.OrderByDescending(x => x.Title).ToList(),
-            //         _ => queryable.OrderBy(x => x.CreatedAt).ToList()
-            //     };
-            // }
+            totalCount = queryable.Count();
 
-            // queryable = queryable.Skip((parameters.PageSize - 1) * parameters.PageNumber)
-            //     .Take(parameters.PageNumber)
-            //     .ToList();
+            if (parameters.FilterOrder.HasValue)
+            {
+                queryable = parameters.FilterOrder switch
+                {
+                    ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
+                    ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
+                    ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title).ToList(),
+                    ProductFilterOrder.ZToA => queryable.OrderByDescending(x => x.Title).ToList(),
+                    _ => queryable.OrderBy(x => x.CreatedAt).ToList()
+                };
+            }
+
+            queryable = queryable.Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToList();
         }
 
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
@@ -270,8 +276,12 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             }
         }
 
-
-        return new GenericResponse<IEnumerable<ProductReadDto>>(dto);
+        return new GenericResponse<IEnumerable<ProductReadDto>>(dto)
+        {
+            TotalCount = totalCount,
+            PageCount = totalCount % parameters?.PageSize == 0 ? totalCount / parameters?.PageSize : totalCount / parameters?.PageSize + 1,
+            PageSize = parameters?.PageSize
+        };
     }
 
     public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
