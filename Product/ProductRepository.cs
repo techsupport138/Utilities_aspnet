@@ -286,7 +286,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
     public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine() {
         GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null);
-        IEnumerable<ProductReadDto> i = e.Result.Where(i => i.User.Id == _httpContextAccessor.HttpContext.User.Identity.Name);
+        IEnumerable<ProductReadDto> i = e.Result.Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name);
         return new GenericResponse<IEnumerable<ProductReadDto>>(i);
     }
 
