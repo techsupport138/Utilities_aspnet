@@ -68,3 +68,12 @@ public class LocationReadDto {
     public IEnumerable<MediaDto>? Media { get; set; }
     public LocationType Type { get; set; }
 }
+
+
+public class LocationCreateDto
+{
+    public string city { get; set; }
+    public string lat { get; set; }
+    public string lng { get; set; }
+    public string country { get; set; }
+}

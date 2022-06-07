@@ -2,6 +2,7 @@
 using Utilities_aspnet.Comment;
 using Utilities_aspnet.Dashboard;
 using Utilities_aspnet.Notification;
+using Utilities_aspnet.Utilities.Seeder;
 
 namespace Utilities_aspnet.Utilities;
 
@@ -103,6 +104,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IFormRepository, FormRepository>();
         builder.Services.AddTransient<ICommentRepository, CommentRepository>();
         builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
+        builder.Services.AddTransient<ISeedRepository, SeedRepository>();
         builder.Services.AddTransient<IContentRepository<ContentEntity>, ContentRepository<ContentEntity>>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
