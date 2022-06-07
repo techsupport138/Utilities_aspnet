@@ -149,8 +149,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Where(x => x.DeletedAt == null)
             .ToListAsync();
 
-
-        var totalCount = queryable.Count();
+        int totalCount = queryable.Count;
 
         if (parameters != null) {
             if (!string.IsNullOrEmpty(parameters.Title))
@@ -235,7 +234,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                                                  x.Specialities.Any(y => parameters.Specialities.Contains(y.Id)))
                     .ToList();
 
-            totalCount = queryable.Count();
+            totalCount = queryable.Count;
 
             if (parameters.FilterOrder.HasValue) {
                 queryable = parameters.FilterOrder switch {
@@ -254,25 +253,31 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
 
-        // ReSharper disable once InvertIf
-        if (_user != null) {
-            IEnumerable<BookmarkEntity> bookmark = _context.Set<BookmarkEntity>()
-                .AsNoTracking()
-                .Where(x => x.UserId == _user.Name)
-                .ToList();
+        if (_user == null)
+            return new GenericResponse<IEnumerable<ProductReadDto>>(dto) {
+                TotalCount = totalCount,
+                PageCount = totalCount % parameters?.PageSize == 0
+                    ? totalCount / parameters?.PageSize
+                    : totalCount / parameters?.PageSize + 1,
+                PageSize = parameters?.PageSize
+            };
 
-            foreach (ProductReadDto productReadDto in dto)
-            foreach (BookmarkEntity bookmarkEntity in bookmark) {
-                if (bookmarkEntity.AdId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                if (bookmarkEntity.ProductId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                if (bookmarkEntity.ProjectId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                if (bookmarkEntity.CompanyId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                if (bookmarkEntity.EventId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                if (bookmarkEntity.MagazineId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                if (bookmarkEntity.TenderId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                if (bookmarkEntity.TutorialId == productReadDto.Id) productReadDto.IsBookmarked = true;
-                if (bookmarkEntity.ServiceId == productReadDto.Id) productReadDto.IsBookmarked = true;
-            }
+        IEnumerable<BookmarkEntity> bookmark = _context.Set<BookmarkEntity>()
+            .AsNoTracking()
+            .Where(x => x.UserId == _user.Name)
+            .ToList();
+
+        foreach (ProductReadDto productReadDto in dto)
+        foreach (BookmarkEntity bookmarkEntity in bookmark) {
+            if (bookmarkEntity.AdId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            if (bookmarkEntity.ProductId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            if (bookmarkEntity.ProjectId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            if (bookmarkEntity.CompanyId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            if (bookmarkEntity.EventId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            if (bookmarkEntity.MagazineId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            if (bookmarkEntity.TenderId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            if (bookmarkEntity.TutorialId == productReadDto.Id) productReadDto.IsBookmarked = true;
+            if (bookmarkEntity.ServiceId == productReadDto.Id) productReadDto.IsBookmarked = true;
         }
 
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto) {
