@@ -15,7 +15,7 @@ public class AppSettingsController : BaseApiController {
         return Ok(i);
     }
     
-    [HttpGet]
+    [HttpGet("ReadLocation")]
     public async Task<ActionResult<GenericResponse<IEnumerable<LocationReadDto?>>>> ReadLocation() {
         GenericResponse? i = await _appSettingRepository.ReadLocation();
         return Ok(i);
