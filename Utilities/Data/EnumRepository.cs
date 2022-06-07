@@ -2,6 +2,7 @@
 
 public interface IAppSettingRepository {
     Task<GenericResponse<EnumDto?>> Read();
+    Task<GenericResponse<IEnumerable<LocationReadDto?>>> ReadLocation();
 }
 
 public class AppSettingRepository : IAppSettingRepository {
@@ -49,5 +50,12 @@ public class AppSettingRepository : IAppSettingRepository {
                 }).ToList();
 
         return Task.FromResult(new GenericResponse<EnumDto?>(model, UtilitiesStatusCodes.Success, "Success"));
+    }
+    
+    public Task<GenericResponse<IEnumerable<LocationReadDto?>>> ReadLocation() {
+
+        IEnumerable<LocationEntity> model = _context.Set<LocationEntity>().Include(x=>x.Media);
+
+        return Task.FromResult(new GenericResponse<IEnumerable<LocationReadDto?>>(_mapper.Map<IEnumerable<LocationReadDto>>(model)));
     }
 }
