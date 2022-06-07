@@ -80,6 +80,7 @@ public class UploadDto {
     public Guid? CompanyId { get; set; }
     public Guid? MagazineId { get; set; }
     public Guid? ServiceId { get; set; }
+    public Guid? ContentId { get; set; }
 }
 
 public enum MediaUseCase {

@@ -69,6 +69,7 @@ public class UploadRepository : IUploadRepository
                 ServiceId = model.ServiceId,
                 TutorialId = model.TutorialId,
                 TenderId = model.TenderId,
+                ContentId = model.ContentId,
                 CreatedAt = DateTime.Now,
                 UseCase = model.UseCase
             };
