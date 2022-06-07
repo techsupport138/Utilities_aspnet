@@ -56,8 +56,6 @@ public class ShoppingCartReadDto : BaseReadDto
     }
 
     public Guid? UserId { get; set; }
-    public UserEntity? User { get; set; }
-
     public List<ShoppingCartItemReadDto> ShoppingCartItems { get; set; }
 }
 
