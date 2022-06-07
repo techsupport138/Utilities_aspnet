@@ -37,4 +37,12 @@ public class ContentController : BaseApiController {
         GenericResponse<ContentReadDto> i = await _contentRepository.Update(dto);
         return Result(i);
     }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _contentRepository.Delete(id);
+        return Ok();
+    }
 }

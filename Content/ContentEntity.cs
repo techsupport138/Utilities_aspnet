@@ -34,5 +34,6 @@ public class ContentCreateUpdateDto {
     public string? SubTitle { get; set; }
     public string? Description { get; set; }
     public ContentUseCase UseCase { get; set; }
+    public ApprovalStatus ApprovalStatus { get; set; } = ApprovalStatus.Pending;
     public List<ContactInformationCreateUpdateDto>? ContactInformations { get; set; }
 }
