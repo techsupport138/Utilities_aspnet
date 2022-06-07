@@ -33,8 +33,10 @@ public class AppSettingRepository : IAppSettingRepository {
 
         List<IdTitleReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
         List<IdTitleReadDto> idTitleUseCase = EnumExtension.GetValues<IdTitleUseCase>();
+        List<IdTitleReadDto> mediaUseCase = EnumExtension.GetValues<MediaUseCase>();
         model.FormFieldType = formFieldType;
         model.CategoryUseCase = idTitleUseCase;
+        model.MediaUseCase = mediaUseCase;
 
         model.Categories = _context.Set<CategoryEntity>()
             .Include(x => x.Media)
