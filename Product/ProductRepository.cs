@@ -312,7 +312,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto parameters) {
+    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
         T? entity = await _context.Set<T>()
             .AsNoTracking()
             .Include(x => x.Locations)
@@ -327,104 +327,104 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(x => x.Brands)
             .Include(x => x.References)
             .Include(x => x.ContactInformations)
-            .Where(x => x.Id == parameters.Id)
+            .Where(x => x.Id == dto.Id)
             .FirstOrDefaultAsync();
 
         if (entity == null)
             return new GenericResponse<ProductReadDto>(new ProductReadDto());
 
-        entity.Title ??= parameters.Title;
-        entity.Subtitle ??= parameters.Subtitle;
-        entity.Details ??= parameters.Details;
-        entity.Author ??= parameters.Author;
-        entity.PhoneNumber ??= parameters.PhoneNumber;
-        entity.Email ??= parameters.Email;
-        entity.Latitude ??= parameters.Latitude;
-        entity.Longitude ??= parameters.Longitude;
-        entity.Description ??= parameters.Description;
-        entity.Price ??= parameters.Price;
-        entity.IsForSale ??= parameters.IsForSale;
-        entity.Enabled ??= parameters.Enabled;
-        entity.VisitCount ??= parameters.VisitsCount;
-        entity.Address ??= parameters.Address;
-        entity.StartDate ??= parameters.StartDate;
-        entity.EndDate ??= parameters.EndDate;
+        entity.Title = dto.Title ?? entity.Title;
+        entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
+        entity.Details = dto.Details ?? entity.Details;
+        entity.Author = dto.Author ?? entity.Author;
+        entity.PhoneNumber = dto.PhoneNumber ?? entity.PhoneNumber;
+        entity.Email = dto.Email ?? entity.Email;
+        entity.Latitude = dto.Latitude ?? entity.Latitude;
+        entity.Longitude = dto.Longitude ?? entity.Longitude;
+        entity.Description = dto.Description ?? entity.Description;
+        entity.Price = dto.Price ?? entity.Price;
+        entity.IsForSale = dto.IsForSale ?? entity.IsForSale;
+        entity.Enabled = dto.Enabled ?? entity.Enabled;
+        entity.VisitCount = dto.VisitsCount ?? entity.VisitCount;
+        entity.Address = dto.Address ?? entity.Address;
+        entity.StartDate = dto.StartDate ?? entity.StartDate;
+        entity.EndDate = dto.EndDate ?? entity.EndDate;
 
-        if (parameters.Locations != null && parameters.Locations.Any()) {
+        if (dto.Locations != null && dto.Locations.Any()) {
             List<LocationEntity> locations = await _context.Set<LocationEntity>()
-                .Where(x => parameters.Locations.Contains(x.Id))
+                .Where(x => dto.Locations.Contains(x.Id))
                 .ToListAsync();
 
             entity.Locations = locations;
         }
 
-        if (parameters.Favorites != null && parameters.Favorites.Any()) {
+        if (dto.Favorites != null && dto.Favorites.Any()) {
             List<FavoriteEntity> favorites = await _context.Set<FavoriteEntity>()
-                .Where(x => parameters.Favorites.Contains(x.Id))
+                .Where(x => dto.Favorites.Contains(x.Id))
                 .ToListAsync();
 
             entity.Favorites = favorites;
         }
 
-        if (parameters.Categories != null && parameters.Categories.Any()) {
+        if (dto.Categories != null && dto.Categories.Any()) {
             List<CategoryEntity> categories = await _context.Set<CategoryEntity>()
-                .Where(x => parameters.Categories.Contains(x.Id))
+                .Where(x => dto.Categories.Contains(x.Id))
                 .ToListAsync();
 
             entity.Categories = categories;
         }
 
-        if (parameters.References != null && parameters.References.Any()) {
+        if (dto.References != null && dto.References.Any()) {
             List<ReferenceEntity> references = await _context.Set<ReferenceEntity>()
-                .Where(x => parameters.References.Contains(x.Id))
+                .Where(x => dto.References.Contains(x.Id))
                 .ToListAsync();
 
             entity.References = references;
         }
 
-        if (parameters.Brands != null && parameters.Brands.Any()) {
+        if (dto.Brands != null && dto.Brands.Any()) {
             List<BrandEntity> brands = await _context.Set<BrandEntity>()
-                .Where(x => parameters.Brands.Contains(x.Id))
+                .Where(x => dto.Brands.Contains(x.Id))
                 .ToListAsync();
 
             entity.Brands = brands;
         }
 
-        if (parameters.Specialties != null && parameters.Specialties.Any()) {
+        if (dto.Specialties != null && dto.Specialties.Any()) {
             List<SpecialityEntity> specialities = await _context.Set<SpecialityEntity>()
-                .Where(x => parameters.Specialties.Contains(x.Id))
+                .Where(x => dto.Specialties.Contains(x.Id))
                 .ToListAsync();
 
             entity.Specialities = specialities;
         }
 
-        if (parameters.Tags != null && parameters.Tags.Any()) {
+        if (dto.Tags != null && dto.Tags.Any()) {
             List<TagEntity> tags = await _context.Set<TagEntity>()
-                .Where(x => parameters.Tags.Contains(x.Id))
+                .Where(x => dto.Tags.Contains(x.Id))
                 .ToListAsync();
 
             entity.Tags = tags;
         }
 
-        if (parameters.Forms != null && parameters.Forms.Any()) {
+        if (dto.Forms != null && dto.Forms.Any()) {
             List<FormEntity> forms = await _context.Set<FormEntity>()
-                .Where(x => parameters.Forms.Contains(x.Id))
+                .Where(x => dto.Forms.Contains(x.Id))
                 .ToListAsync();
 
             entity.Forms = forms;
         }
 
-        if (parameters.VoteFields != null && parameters.VoteFields.Any()) {
+        if (dto.VoteFields != null && dto.VoteFields.Any()) {
             List<VoteFieldEntity> voteFields = await _context.Set<VoteFieldEntity>()
-                .Where(x => parameters.VoteFields.Contains(x.Id))
+                .Where(x => dto.VoteFields.Contains(x.Id))
                 .ToListAsync();
 
             entity.VoteFields = voteFields;
         }
 
-        if (parameters.Reports != null && parameters.Reports.Any()) {
+        if (dto.Reports != null && dto.Reports.Any()) {
             List<ReportEntity> reports = await _context.Set<ReportEntity>()
-                .Where(x => parameters.Reports.Contains(x.Id))
+                .Where(x => dto.Reports.Contains(x.Id))
                 .ToListAsync();
 
             entity.Reports = reports;
