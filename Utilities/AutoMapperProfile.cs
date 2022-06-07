@@ -113,8 +113,12 @@ public class AutoMapperProfile : Profile {
 
         CreateMap<MediaEntity, MediaDto>().ReverseMap();
         CreateMap<MediaEntity, MediaDto>().ReverseMap();
+
         CreateMap<ContentEntity, ContentReadDto>().ReverseMap();
         CreateMap<ContentEntity, ContentCreateUpdateDto>().ReverseMap();
+        CreateMap<ContactInformationEntity, ContactInformationReadDto>().ReverseMap();
+        CreateMap<ContactInformationEntity, ContactInformationCreateUpdateDto>().ReverseMap();
+
         CreateMap<LocationEntity, LocationReadDto>().ReverseMap();
         CreateMap<UserEntity, UserReadDto>().ReverseMap();
         CreateMap<FormEntity, FormDto>().ReverseMap();

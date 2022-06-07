@@ -44,3 +44,21 @@ public class ContactInformationEntity : BaseEntity {
     public MagazineEntity? Magazine { get; set; }
     public Guid? MagazineId { get; set; }
 }
+
+public class ContactInformationReadDto
+{
+    public Guid Id { get; set; }
+    public string Value { get; set; }
+    public IdTitleReadDto? ContactInfoItem { get; set; }
+    public string? Link { get; set; }
+    public VisibilityType Visibility { get; set; } = VisibilityType.UsersOnly;
+}
+
+public class ContactInformationCreateUpdateDto
+{
+    public Guid? Id { get; set; }
+    public string Value { get; set; }
+    public Guid ContactInfoItemId { get; set; }
+    public string? Link { get; set; }
+    public VisibilityType Visibility { get; set; } = VisibilityType.UsersOnly;
+}
