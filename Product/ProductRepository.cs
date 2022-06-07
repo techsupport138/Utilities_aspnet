@@ -3,6 +3,7 @@ namespace Utilities_aspnet.Product;
 public interface IProductRepository<T> where T : BaseProductEntity {
     Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? paraneters);
+    Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine();
     Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
     Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
     Task<GenericResponse> Delete(Guid id);
@@ -236,10 +237,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
             totalCount = queryable.Count();
 
-            if (parameters.FilterOrder.HasValue)
-            {
-                queryable = parameters.FilterOrder switch
-                {
+            if (parameters.FilterOrder.HasValue) {
+                queryable = parameters.FilterOrder switch {
                     ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
                     ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
                     ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title).ToList(),
@@ -276,12 +275,19 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             }
         }
 
-        return new GenericResponse<IEnumerable<ProductReadDto>>(dto)
-        {
+        return new GenericResponse<IEnumerable<ProductReadDto>>(dto) {
             TotalCount = totalCount,
-            PageCount = totalCount % parameters?.PageSize == 0 ? totalCount / parameters?.PageSize : totalCount / parameters?.PageSize + 1,
+            PageCount = totalCount % parameters?.PageSize == 0
+                ? totalCount / parameters?.PageSize
+                : totalCount / parameters?.PageSize + 1,
             PageSize = parameters?.PageSize
         };
+    }
+
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine() {
+        GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null);
+        IEnumerable<ProductReadDto> i = e.Result.Where(i => i.User.Id == _httpContextAccessor.HttpContext.User.Identity.Name);
+        return new GenericResponse<IEnumerable<ProductReadDto>>(i);
     }
 
     public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
