@@ -4,6 +4,7 @@ public interface IFormRepository {
     Task<GenericResponse<List<FormFieldDto>>> ReadFormFields(Guid categoryId);
     Task<GenericResponse<List<FormFieldDto>?>> CreateFormFields(FormFieldDto dto);
     Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(FormCreateDto model);
+    Task<GenericResponse<List<FormFieldDto>?>> UpdateFormFields(FormFieldDto dto);
 }
 
 public class FormRepository : IFormRepository {
@@ -67,6 +68,28 @@ public class FormRepository : IFormRepository {
         try {
             FormFieldEntity entity = _mapper.Map<FormFieldEntity>(dto);
             await _dbContext.Set<FormFieldEntity>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch {
+            // ignored
+        }
+
+        return categoryId != null
+            ? new GenericResponse<List<FormFieldDto>?>(ReadFormFields((Guid) categoryId).Result.Result)
+            : new GenericResponse<List<FormFieldDto>?>(null);
+    }
+    
+    public async Task<GenericResponse<List<FormFieldDto>?>> UpdateFormFields(FormFieldDto dto) {
+        Guid? categoryId = dto.CategoryId;
+        FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().FirstOrDefaultAsync(x=>x.Id == dto.Id);
+        if (entity == null) { return new GenericResponse<List<FormFieldDto>?>(null, UtilitiesStatusCodes.NotFound); }
+        try {
+            entity.Label = dto.Label;
+            entity.OptionList = dto.OptionList;
+            entity.CategoryId = categoryId;
+            entity.IsRequired = dto.IsRequired;
+            entity.Type = dto.Type;
+            entity.UpdatedAt = DateTime.Now;
             await _dbContext.SaveChangesAsync();
         }
         catch {

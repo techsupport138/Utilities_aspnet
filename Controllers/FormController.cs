@@ -15,6 +15,12 @@ public class FormController : BaseApiController {
         GenericResponse<List<FormFieldDto>?> i = await _formRepository.CreateFormFields(dto);
         return Result(i);
     }
+    
+    [HttpPut("UpdateFormField")]
+    public async Task<ActionResult<GenericResponse<List<FormFieldDto>>>> UpdateFormField(FormFieldDto dto) {
+        GenericResponse<List<FormFieldDto>?> i = await _formRepository.UpdateFormFields(dto);
+        return Result(i);
+    }
 
     [HttpGet("{categoryId:guid}")]
     public async Task<ActionResult<GenericResponse<List<FormFieldDto>>>> ReadFormFieldById(Guid categoryId) {
