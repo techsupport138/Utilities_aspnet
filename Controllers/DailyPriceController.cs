@@ -17,6 +17,8 @@ public class DailyPriceController : BaseApiController {
     }
 
     [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Read() {
         GenericResponse<IEnumerable<ProductReadDto>> i = await _repository.Read(null);
         return Result(i);

@@ -63,6 +63,8 @@ public class ShoppingCartRepository : IShoppingCartRepository
         {
             var shoppingCartItem = _mapper.Map<ShoppingCartItemEntity>(item);
 
+            shoppingCartItem.ShoppingCartId = shoppingCart.Id;
+
             await _context.Set<ShoppingCartItemEntity>().AddAsync(shoppingCartItem);
         });
 
