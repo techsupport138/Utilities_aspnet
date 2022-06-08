@@ -33,4 +33,18 @@ public class FormController : BaseApiController {
         GenericResponse<List<FormFieldDto>> i = await _formRepository.UpdateFormBuilder(model);
         return Result(i);
     }
+
+    [HttpDelete("DeleteFormField/{id:guid}")]
+    public async Task<IActionResult> DeleteFormField(Guid id)
+    {
+        await _formRepository.DeleteFormField(id);
+        return Ok();
+    }
+    
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteFormBuilder(Guid id)
+    {
+        await _formRepository.DeleteFormBuilder(id);
+        return Ok();
+    }
 }
