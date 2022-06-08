@@ -1,7 +1,7 @@
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/{type}")]
 public class ProductController : BaseApiController {
     private readonly IProductRepository<ProductEntity> _productRepository;
     private readonly IProductRepository<AdEntity> _adRepository;
@@ -12,7 +12,7 @@ public class ProductController : BaseApiController {
     private readonly IProductRepository<ServiceEntity> _serviceRepository;
     private readonly IProductRepository<TenderEntity> _tenderRepository;
     private readonly IProductRepository<TutorialEntity> _tutorialRepository;
-    
+
     public ProductController(
         IProductRepository<ProductEntity> productRepository,
         IProductRepository<AdEntity> adRepository,
@@ -34,7 +34,7 @@ public class ProductController : BaseApiController {
         _tutorialRepository = tutorialRepository;
     }
 
-    [HttpPost("{type}")]
+    [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<ProductReadDto>>> Create(string type, ProductCreateUpdateDto dto) {
         GenericResponse<ProductReadDto> i = new(null, UtilitiesStatusCodes.BadRequest, "Type Not Found");
@@ -71,7 +71,7 @@ public class ProductController : BaseApiController {
         return Result(i);
     }
 
-    [HttpGet("{type}")]
+    [HttpGet]
     public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Read(string type) {
         GenericResponse<IEnumerable<ProductReadDto>> i = new(null, UtilitiesStatusCodes.BadRequest, "Type Not Found");
         switch (type) {
@@ -104,9 +104,43 @@ public class ProductController : BaseApiController {
         return Result(i);
     }
 
+    [HttpGet("Mine")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> ReadMine(string type) {
+        GenericResponse<IEnumerable<ProductReadDto>> i = new(null, UtilitiesStatusCodes.BadRequest, "Type Not Found");
+        switch (type) {
+            case "product":
+                i = await _productRepository.ReadMine();
+                break;
+            case "ad":
+                i = await _adRepository.ReadMine();
+                break;
+            case "dailyPrice":
+                i = await _dailyPriceRepository.ReadMine();
+                break;
+            case "magazine":
+                i = await _magazineRepository.ReadMine();
+                break;
+            case "project":
+                i = await _projectRepository.ReadMine();
+                break;
+            case "service":
+                i = await _serviceRepository.ReadMine();
+                break;
+            case "tender":
+                i = await _tenderRepository.ReadMine();
+                break;
+            case "tutorial":
+                i = await _tutorialRepository.ReadMine();
+                break;
+        }
+
+        return Result(i);
+    }
+
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
-    [HttpPost("{type}/Filter")]
+    [HttpPost("Filter")]
     public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Filter(string type, FilterProductDto? dto) {
         GenericResponse<IEnumerable<ProductReadDto>> i = new(null, UtilitiesStatusCodes.BadRequest, "Type Not Found");
         switch (type) {
@@ -139,7 +173,7 @@ public class ProductController : BaseApiController {
         return Result(i);
     }
 
-    [HttpGet("{type}/{id:guid}")]
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<GenericResponse<ProductReadDto>>> ReadById(string type, Guid id) {
         GenericResponse<ProductReadDto> i = new(null, UtilitiesStatusCodes.BadRequest, "Type Not Found");
         switch (type) {
@@ -206,7 +240,7 @@ public class ProductController : BaseApiController {
         return Result(i);
     }
 
-    [HttpDelete("{type}/{id:guid}")]
+    [HttpDelete("{id:guid}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Delete(string type, Guid id) {
         GenericResponse i = new(UtilitiesStatusCodes.BadRequest, "Type Not Found");
