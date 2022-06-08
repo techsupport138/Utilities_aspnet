@@ -104,6 +104,8 @@ public class ProductController : BaseApiController {
         return Result(i);
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     [HttpPost("{type}/Filter")]
     public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Filter(string type, FilterProductDto? dto) {
         GenericResponse<IEnumerable<ProductReadDto>> i = new(null, UtilitiesStatusCodes.BadRequest, "Type Not Found");
