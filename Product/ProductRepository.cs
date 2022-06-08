@@ -159,6 +159,10 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (!string.IsNullOrEmpty(parameters.SubTitle))
                 queryable = queryable
                     .Where(x => !string.IsNullOrEmpty(x.Subtitle) && x.Subtitle.Contains(parameters.SubTitle)).ToList();
+            
+            if (!string.IsNullOrEmpty(parameters.Type))
+                queryable = queryable
+                    .Where(x => !string.IsNullOrEmpty(x.Type) && x.Type.Contains(parameters.Type)).ToList();
 
             if (!string.IsNullOrEmpty(parameters.Details))
                 queryable = queryable.Where(x => !string.IsNullOrWhiteSpace(x.Details) && x.Details.Contains(parameters.Details))
