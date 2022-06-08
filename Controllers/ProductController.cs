@@ -22,6 +22,8 @@ public class ProductController : BaseApiController {
         return Result(i);
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     [HttpPost("Filter")]
     public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Filter(FilterProductDto? dto) {
         GenericResponse<IEnumerable<ProductReadDto>> i = await _productRepository.Read(dto);
