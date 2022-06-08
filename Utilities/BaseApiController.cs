@@ -5,7 +5,7 @@ public abstract class BaseApiController : ControllerBase {
     [NonAction]
     public ObjectResult Result(GenericResponse response) {
         return new ObjectResult(response) {
-            StatusCode = response.Status.value()
+            StatusCode = response.Status.Value()
         };
     }
 }

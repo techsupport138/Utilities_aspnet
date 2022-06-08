@@ -13,6 +13,7 @@ public abstract class BaseProductEntity : BaseEntity {
     public string? Link { get; set; }
     public string? Website { get; set; }
     public string? Email { get; set; }
+    public string? Type { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
     public double? Latitude { get; set; }
@@ -85,6 +86,7 @@ public class ProductReadDto {
     public string? Link { get; set; }
     public string? Website { get; set; }
     public string? Email { get; set; }
+    public string? Type { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
     public bool IsBookmarked { get; set; }
@@ -135,6 +137,7 @@ public class ProductCreateUpdateDto {
     public string? Link { get; set; }
     public string? Website { get; set; }
     public string? Email { get; set; }
+    public string? Type { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
     public double? Latitude { get; set; }
@@ -161,18 +164,19 @@ public class FilterProductDto {
     public string? SubTitle { get; set; }
     public string? Description { get; set; }
     public string? Details { get; set; }
-    public decimal? StartPriceRange { get; set; }
-    public decimal? EndPriceRange { get; set; }
-    public bool? Enabled { get; set; }
-    public bool? IsForSale { get; set; }
     public string? Link { get; set; }
     public string? Website { get; set; }
-    public bool? IsBookmarked { get; set; }
-    public int? VisitsCount { get; set; }
     public string? Address { get; set; }
     public string? Author { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
+    public string? Type { get; set; }
+    public decimal? StartPriceRange { get; set; }
+    public decimal? EndPriceRange { get; set; }
+    public bool? Enabled { get; set; }
+    public bool? IsForSale { get; set; }
+    public bool? IsBookmarked { get; set; }
+    public int? VisitsCount { get; set; }
     public ProductStatus? Status { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }

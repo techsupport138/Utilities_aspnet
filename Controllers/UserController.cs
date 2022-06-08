@@ -35,7 +35,7 @@ public class UserController : BaseApiController {
             return Result(i);
         }
         catch (Exception) {
-            return StatusCode(UtilitiesStatusCodes.Unhandled.value(),
+            return StatusCode(UtilitiesStatusCodes.Unhandled.Value(),
                 new GenericResponse<UserReadDto>(null, UtilitiesStatusCodes.Unhandled, "یه مشکلی پیش اومده"));
         }
     }
@@ -49,7 +49,7 @@ public class UserController : BaseApiController {
             return Result(i);
         }
         catch (Exception) {
-            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+            return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
         }
     }
 
@@ -60,7 +60,7 @@ public class UserController : BaseApiController {
             return Result(i);
         }
         catch (Exception) {
-            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+            return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
         }
     }
 
@@ -72,7 +72,7 @@ public class UserController : BaseApiController {
             return Result(i);
         }
         catch (Exception) {
-            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+            return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
         }
     }
 
@@ -83,7 +83,7 @@ public class UserController : BaseApiController {
             return Result(i);
         }
         catch (Exception) {
-            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+            return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
         }
     }
 
@@ -94,7 +94,7 @@ public class UserController : BaseApiController {
             return Result(i);
         }
         catch (Exception) {
-            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+            return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
         }
     }
 
@@ -106,7 +106,7 @@ public class UserController : BaseApiController {
             return Result(i);
         }
         catch (Exception) {
-            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+            return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
         }
     }
 
@@ -118,7 +118,7 @@ public class UserController : BaseApiController {
             return Result(i);
         }
         catch (Exception) {
-            return StatusCode(UtilitiesStatusCodes.Unhandled.value());
+            return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
         }
     }
 }

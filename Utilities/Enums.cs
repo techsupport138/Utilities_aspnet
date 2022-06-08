@@ -12,23 +12,23 @@ public enum UtilitiesStatusCodes {
 }
 
 public static class UtilitiesStatusCodesExtension {
-    public static bool isSuccessful(this UtilitiesStatusCodes statusCode) {
+    public static bool IsSuccessful(this UtilitiesStatusCodes statusCode) {
         return statusCode == UtilitiesStatusCodes.Success;
     }
 
-    public static bool isBadRequest(this UtilitiesStatusCodes statusCode) {
+    public static bool IsBadRequest(this UtilitiesStatusCodes statusCode) {
         return statusCode == UtilitiesStatusCodes.BadRequest;
     }
 
-    public static bool isForbidden(this UtilitiesStatusCodes statusCode) {
+    public static bool IsForbidden(this UtilitiesStatusCodes statusCode) {
         return statusCode == UtilitiesStatusCodes.Forbidden;
     }
 
-    public static bool isNotFound(this UtilitiesStatusCodes statusCode) {
+    public static bool IsNotFound(this UtilitiesStatusCodes statusCode) {
         return statusCode == UtilitiesStatusCodes.NotFound;
     }
 
-    public static int value(this UtilitiesStatusCodes statusCode) {
+    public static int Value(this UtilitiesStatusCodes statusCode) {
         return (int) statusCode;
     }
 }

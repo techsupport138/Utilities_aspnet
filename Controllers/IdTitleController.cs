@@ -30,7 +30,7 @@ public class IdTitleController : BaseApiController {
             case "brand":
                 i = await _brandRepository.Create(dto);
                 break;
-            case "refernce":
+            case "reference":
                 i = await _referenceRepository.Create(dto);
                 break;
             case "speciality":
