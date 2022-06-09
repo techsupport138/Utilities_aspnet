@@ -3,7 +3,7 @@
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 public class CommentController : BaseApiController {
     private readonly ICommentRepository _repository;
 

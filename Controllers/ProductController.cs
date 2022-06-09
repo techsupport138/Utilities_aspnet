@@ -99,6 +99,9 @@ public class ProductController : BaseApiController {
             case "tutorial":
                 i = await _tutorialRepository.Read(null);
                 break;
+            case "company":
+                i = await _companyRepository.Read(null);
+                break;
         }
 
         return Result(i);
@@ -132,6 +135,9 @@ public class ProductController : BaseApiController {
                 break;
             case "tutorial":
                 i = await _tutorialRepository.ReadMine();
+                break;
+            case "company":
+                i = await _companyRepository.ReadMine();
                 break;
         }
 
@@ -168,6 +174,9 @@ public class ProductController : BaseApiController {
             case "tutorial":
                 i = await _tutorialRepository.Read(dto);
                 break;
+            case "company":
+                i = await _companyRepository.Read(dto);
+                break;
         }
 
         return Result(i);
@@ -200,6 +209,9 @@ public class ProductController : BaseApiController {
                 break;
             case "tutorial":
                 i = await _tutorialRepository.ReadById(id);
+                break;
+            case "company":
+                i = await _companyRepository.ReadById(id);
                 break;
         }
 
@@ -235,6 +247,9 @@ public class ProductController : BaseApiController {
             case "tutorial":
                 i = await _tutorialRepository.Update(dto);
                 break;
+            case "company":
+                i = await _companyRepository.Update(dto);
+                break;
         }
 
         return Result(i);
@@ -268,6 +283,9 @@ public class ProductController : BaseApiController {
                 break;
             case "tutorial":
                 i = await _tutorialRepository.Delete(id);
+                break;
+            case "company":
+                i = await _companyRepository.Delete(id);
                 break;
         }
 
