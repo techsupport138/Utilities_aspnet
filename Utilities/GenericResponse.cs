@@ -18,8 +18,6 @@ public class GenericResponse {
         Guid? id = null) {
         Status = status;
         Message = message;
-        Ids = ids;
-        Id = id;
     }
 
     public UtilitiesStatusCodes Status { get; set; }
@@ -27,6 +25,4 @@ public class GenericResponse {
     public int? PageCount { get; set; }
     public int? TotalCount { get; set; }
     public string Message { get; set; }
-    public List<Guid>? Ids { get; set; }
-    public Guid? Id { get; set; }
 }
