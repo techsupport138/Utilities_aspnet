@@ -4,12 +4,12 @@ namespace Utilities_aspnet.Controllers;
 [Route("api/[controller]/{type}")]
 public class IdTitleController : BaseApiController {
     private readonly IIdTitleRepository<BrandEntity> _brandRepository;
-    private readonly IIdTitleRepository<CategoryEntity> _categoryRepository;
+    private readonly CategoryRepository _categoryRepository;
     private readonly IIdTitleRepository<ReferenceEntity> _referenceRepository;
     private readonly IIdTitleRepository<SpecialityEntity> _specialityRepository;
-
+    
     public IdTitleController(
-        IIdTitleRepository<CategoryEntity> categoryRepository,
+        CategoryRepository categoryRepository,
         IIdTitleRepository<BrandEntity> brandRepository,
         IIdTitleRepository<ReferenceEntity> referenceRepository,
         IIdTitleRepository<SpecialityEntity> specialityRepository) {

@@ -103,6 +103,7 @@ public class IdTitleReadDto {
 
 public class IdTitleCreateUpdateDto {
     public Guid? Id { get; set; }
+    public Guid? ParentId { get; set; }
     public string? Title { get; set; }
     public string? TitleTr1 { get; set; }
     public string? Subtitle { get; set; }
