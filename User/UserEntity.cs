@@ -93,8 +93,14 @@ public class UserReadDto {
     public string? AppPhoneNumber { get; set; }
     public string? AppEmail { get; set; }
     public DateTime? BirthDate { get; set; }
-    public IEnumerable<MediaDto>? Media { get; set; }
     public bool IsAdmin { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Headline { get; set; }
+    public string? Website { get; set; }
+    public bool? Suspend { get; set; }
+    public double? Wallet { get; set; }
+    public IEnumerable<MediaDto>? Media { get; set; }
 
     public List<IdTitleReadDto>? Colors { get; set; }
     public List<IdTitleReadDto>? Specialties { get; set; }
@@ -130,6 +136,11 @@ public class CreateUserDto {
     public string? AppUserName { get; set; }
     public string? AppPhoneNumber { get; set; }
     public string? AppEmail { get; set; }
+    public string? Id { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public bool? Suspend { get; set; }
+    public double? Wallet { get; set; }
     public List<Guid>? Colors { get; set; }
     public List<Guid>? Specialties { get; set; }
     public List<Guid>? Favorites { get; set; }
