@@ -5,34 +5,53 @@ public interface IFollowBookmarkRepository {
     Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
     Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto dto);
     Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto dto);
-    Task<GenericResponse<IEnumerable<BookmarkEntity>>> GetBookMarks();
+    Task<GenericResponse<BookmarkReadDto>> ReadBookmarks();
 
-    // void ToggleBookmarkProduct(string userId, long id);
-    // void ToggleBookmarkProject(string userId, long id);
-    // void ToggleBookmarkTutorial(string userId, long id);
-    // void ToggleBookmarkEvent(string userId, long id);
-    // void ToggleBookmarkAd(string userId, long id);
-    // void ToggleBookmarkCompany(string userId, long id);
-    // void ToggleBookmarkTender(string userId, long id);
-    // void ToggleBookmarkService(string userId, long id);
-    // void ToggleBookmarkMagazine(string userId, long id);
-    // void ToggleBookmarkTag(string userId, long id);
-    // void ToggleBookmarkSpeciality(string userId, long id);
-    Task<GenericResponse> ToggleBookmark(BookmarkWriteDto dto);
+    Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto);
 }
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IProductRepository<ProductEntity> _productRepository;
+    private readonly IProductRepository<AdEntity> _adRepository;
+    private readonly IProductRepository<DailyPriceEntity> _dailyPriceRepository;
+    private readonly IProductRepository<CompanyEntity> _companyRepository;
+    private readonly IProductRepository<MagazineEntity> _magazineRepository;
+    private readonly IProductRepository<ProjectEntity> _projectRepository;
+    private readonly IProductRepository<ServiceEntity> _serviceRepository;
+    private readonly IProductRepository<TenderEntity> _tenderRepository;
+    private readonly IProductRepository<TutorialEntity> _tutorialRepository;
 
-    public FollowBookmarkRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+    public FollowBookmarkRepository(
+        DbContext context,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        IProductRepository<ProductEntity> productRepository,
+        IProductRepository<AdEntity> adRepository,
+        IProductRepository<DailyPriceEntity> dailyPriceRepository,
+        IProductRepository<CompanyEntity> companyRepository,
+        IProductRepository<MagazineEntity> magazineRepository,
+        IProductRepository<ProjectEntity> projectRepository,
+        IProductRepository<ServiceEntity> serviceRepository,
+        IProductRepository<TenderEntity> tenderRepository,
+        IProductRepository<TutorialEntity> tutorialRepository) {
         _context = context;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
+        _productRepository = productRepository;
+        _adRepository = adRepository;
+        _dailyPriceRepository = dailyPriceRepository;
+        _companyRepository = companyRepository;
+        _magazineRepository = magazineRepository;
+        _projectRepository = projectRepository;
+        _serviceRepository = serviceRepository;
+        _tenderRepository = tenderRepository;
+        _tutorialRepository = tutorialRepository;
     }
 
-    public async Task<GenericResponse> ToggleBookmark(BookmarkWriteDto dto) {
+    public async Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto) {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
                 x.ProductId == dto.ProductId ||
@@ -73,24 +92,39 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse<IEnumerable<BookmarkEntity>>> GetBookMarks() {
-        List<BookmarkEntity>? bookmarks = await _context.Set<BookmarkEntity>()
-            .AsNoTracking()
-            .Include(x => x.Ad)
-            .Include(x => x.Color)
-            .Include(x => x.Company)
-            .Include(x => x.Event)
-            .Include(x => x.Magazine)
-            .Include(x => x.Product)
-            .Include(x => x.Project)
-            .Include(x => x.Service)
-            .Include(x => x.Speciality)
-            .Include(x => x.Tag)
-            .Include(x => x.Tutorial)
-            .Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
-            .ToListAsync();
+    public async Task<GenericResponse<BookmarkReadDto>> ReadBookmarks() {
+        GenericResponse<IEnumerable<ProductReadDto>> ads =
+            await _adRepository.Read(new FilterProductDto {IsBookmarked = true});
+        GenericResponse<IEnumerable<ProductReadDto>> products =
+            await _productRepository.Read(new FilterProductDto {IsBookmarked = true});
+        GenericResponse<IEnumerable<ProductReadDto>> dailyPrices =
+            await _dailyPriceRepository.Read(new FilterProductDto {IsBookmarked = true});
+        GenericResponse<IEnumerable<ProductReadDto>> companies =
+            await _companyRepository.Read(new FilterProductDto {IsBookmarked = true});
+        GenericResponse<IEnumerable<ProductReadDto>> magazines =
+            await _magazineRepository.Read(new FilterProductDto {IsBookmarked = true});
+        GenericResponse<IEnumerable<ProductReadDto>> projects =
+            await _projectRepository.Read(new FilterProductDto {IsBookmarked = true});
+        GenericResponse<IEnumerable<ProductReadDto>> services =
+            await _serviceRepository.Read(new FilterProductDto {IsBookmarked = true});
+        GenericResponse<IEnumerable<ProductReadDto>> tenders =
+            await _tenderRepository.Read(new FilterProductDto {IsBookmarked = true});
+        GenericResponse<IEnumerable<ProductReadDto>> tutorials =
+            await _tutorialRepository.Read(new FilterProductDto {IsBookmarked = true});
 
-        return new GenericResponse<IEnumerable<BookmarkEntity>>(bookmarks);
+        BookmarkReadDto dto = new BookmarkReadDto {
+            Ads = ads.Result,
+            Products = products.Result,
+            DailyPrices = dailyPrices.Result,
+            Companies = companies.Result,
+            Magazines = magazines.Result,
+            Projects = projects.Result,
+            Services = services.Result,
+            Tenders = tenders.Result,
+            Tutorials = tutorials.Result
+        };
+
+        return new GenericResponse<BookmarkReadDto>(_mapper.Map<BookmarkReadDto>(dto));
     }
 
     public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {

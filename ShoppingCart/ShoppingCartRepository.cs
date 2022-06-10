@@ -22,31 +22,31 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public async Task<GenericResponse<ShoppingCartReadDto?>> Read(Guid userId)
     {
-        var shoppingCarts = await _context.Set<ShoppingCartEntity>()
+        ShoppingCartEntity? shoppingCarts = await _context.Set<ShoppingCartEntity>()
             .Include(x => x.User)
             .Include(x => x.ShoppingCartItems)
             .FirstOrDefaultAsync(x => x.UserId == userId);
 
-        var result = _mapper.Map<ShoppingCartReadDto?>(shoppingCarts);
+        ShoppingCartReadDto? result = _mapper.Map<ShoppingCartReadDto?>(shoppingCarts);
 
         return new GenericResponse<ShoppingCartReadDto?>(result);
     }
 
     public async Task<GenericResponse<ShoppingCartReadDto?>> ReadById(Guid shoppingCartId)
     {
-        var shoppingCart = await _context.Set<ShoppingCartEntity>()
+        ShoppingCartEntity? shoppingCart = await _context.Set<ShoppingCartEntity>()
             .Include(x => x.User)
             .Include(x => x.ShoppingCartItems)
             .FirstOrDefaultAsync(x => x.Id == shoppingCartId);
 
-        var result = _mapper.Map<ShoppingCartReadDto?>(shoppingCart);
+        ShoppingCartReadDto? result = _mapper.Map<ShoppingCartReadDto?>(shoppingCart);
 
         return new GenericResponse<ShoppingCartReadDto?>(result);
     }
 
     public async Task<GenericResponse<ShoppingCartReadDto?>> Create(ShoppingCartCreateDto dto)
     {
-        var shoppingCart = await _context.Set<ShoppingCartEntity>()
+        ShoppingCartEntity? shoppingCart = await _context.Set<ShoppingCartEntity>()
             .FirstOrDefaultAsync(x => x.UserId == dto.UserId);
 
         if (shoppingCart == null)
@@ -61,7 +61,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
         dto.ShoppingCartItems.ForEach(async item =>
         {
-            var shoppingCartItem = _mapper.Map<ShoppingCartItemEntity>(item);
+            ShoppingCartItemEntity? shoppingCartItem = _mapper.Map<ShoppingCartItemEntity>(item);
 
             shoppingCartItem.ShoppingCartId = shoppingCart.Id;
 
@@ -75,14 +75,14 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public async Task<GenericResponse<ShoppingCartReadDto?>> Update(ShoppingCartUpdateDto dto)
     {
-        var shoppingCart = await _context.Set<ShoppingCartEntity>()
+        ShoppingCartEntity? shoppingCart = await _context.Set<ShoppingCartEntity>()
             .Include(x => x.ShoppingCartItems)
             .FirstOrDefaultAsync(x => x.Id == dto.ShoppingCartId);
 
         if (shoppingCart == null)
             return new GenericResponse<ShoppingCartReadDto?>(null);
 
-        var item = shoppingCart.ShoppingCartItems?.FirstOrDefault(x => x.Id == dto.ShoppingCartItemId);
+        ShoppingCartItemEntity? item = shoppingCart.ShoppingCartItems?.FirstOrDefault(x => x.Id == dto.ShoppingCartItemId);
 
         if(item == null)
             return await ReadById(shoppingCart.Id);
@@ -97,14 +97,14 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public async Task<GenericResponse<ShoppingCartReadDto?>> Delete(Guid shoppingCartId, Guid shoppingCartItemId)
     {
-        var shoppingCart = await _context.Set<ShoppingCartEntity>()
+        ShoppingCartEntity? shoppingCart = await _context.Set<ShoppingCartEntity>()
             .Include(x => x.ShoppingCartItems)
             .FirstOrDefaultAsync(x => x.Id == shoppingCartId);
 
         if (shoppingCart == null)
             return new GenericResponse<ShoppingCartReadDto?>(null);
 
-        var item = shoppingCart.ShoppingCartItems?.FirstOrDefault(x => x.Id == shoppingCartItemId);
+        ShoppingCartItemEntity? item = shoppingCart.ShoppingCartItems?.FirstOrDefault(x => x.Id == shoppingCartItemId);
 
         if(item == null)
             return await ReadById(shoppingCart.Id);

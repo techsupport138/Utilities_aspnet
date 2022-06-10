@@ -54,28 +54,34 @@ public class BookmarkEntity : BaseEntity {
     public Guid? ColorId { get; set; }
 }
 
-public class BookmarkWriteDto {
+public class BookmarkCreateDto {
     public Guid? ProductId { get; set; }
-
     public Guid? ProjectId { get; set; }
-
     public Guid? TutorialId { get; set; }
-
     public Guid? EventId { get; set; }
-
     public Guid? AdId { get; set; }
-
     public Guid? CompanyId { get; set; }
-
     public Guid? TenderId { get; set; }
-
     public Guid? ServiceId { get; set; }
-
     public Guid? MagazineId { get; set; }
-
     public Guid? TagId { get; set; }
-
     public Guid? SpecialityId { get; set; }
-
     public Guid? ColorId { get; set; }
+}
+
+public class BookmarkReadDto {
+    public IEnumerable<UserReadDto>? Users { get; set; }
+    public IEnumerable<ProductReadDto>? Products { get; set; }
+    public IEnumerable<ProductReadDto>? DailyPrices { get; set; }
+    public IEnumerable<ProductReadDto>? Projects { get; set; }
+    public IEnumerable<ProductReadDto>? Tutorials { get; set; }
+    public IEnumerable<ProductReadDto>? Events { get; set; }
+    public IEnumerable<ProductReadDto>? Ads { get; set; }
+    public IEnumerable<ProductReadDto>? Companies { get; set; }
+    public IEnumerable<ProductReadDto>? Tenders { get; set; }
+    public IEnumerable<ProductReadDto>? Services { get; set; }
+    public IEnumerable<ProductReadDto>? Magazines { get; set; }
+    public IEnumerable<IdTitleReadDto>? Tags { get; set; }
+    public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
+    public IEnumerable<IdTitleReadDto>? Colors { get; set; }
 }

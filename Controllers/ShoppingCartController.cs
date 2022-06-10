@@ -17,7 +17,7 @@ public class ShoppingCartController : BaseApiController
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<ShoppingCartReadDto>>> Read()
     {
-        var result = await _repository.Read(Guid.Parse(User?.Identity?.Name!));
+        GenericResponse<ShoppingCartReadDto?>? result = await _repository.Read(Guid.Parse(User?.Identity?.Name!));
 
         return Result(result);
     }
@@ -25,7 +25,7 @@ public class ShoppingCartController : BaseApiController
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<GenericResponse<ShoppingCartReadDto>>> ReadById(Guid id)
     {
-        var result = await _repository.ReadById(id);
+        GenericResponse<ShoppingCartReadDto?>? result = await _repository.ReadById(id);
 
         return Result(result);
     }
@@ -36,7 +36,7 @@ public class ShoppingCartController : BaseApiController
     {
         dto.UserId = Guid.Parse(User?.Identity?.Name!);
 
-        var result = await _repository.Create(dto);
+        GenericResponse<ShoppingCartReadDto?>? result = await _repository.Create(dto);
 
         return Result(result);
     }
@@ -45,7 +45,7 @@ public class ShoppingCartController : BaseApiController
     [HttpPut]
     public async Task<ActionResult<GenericResponse<ShoppingCartReadDto>>> Update(ShoppingCartUpdateDto dto)
     {
-        var result = await _repository.Update(dto);
+        GenericResponse<ShoppingCartReadDto?>? result = await _repository.Update(dto);
 
         return Result(result);
     }
@@ -54,7 +54,7 @@ public class ShoppingCartController : BaseApiController
     [HttpDelete("{id:guid}/{itemId:guid}")]
     public async Task<ActionResult<GenericResponse<ShoppingCartReadDto>>> Delete(Guid id, Guid itemId)
     {
-        var result = await _repository.Delete(id, itemId);
+        GenericResponse<ShoppingCartReadDto?>? result = await _repository.Delete(id, itemId);
 
         return Result(result);
     }
