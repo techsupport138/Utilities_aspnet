@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.FollowBookmark;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.FollowBookmark;
 
 [Table("Follows")]
 public class FollowEntity : BaseEntity {

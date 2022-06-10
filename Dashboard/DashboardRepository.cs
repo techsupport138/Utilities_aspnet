@@ -1,4 +1,5 @@
 ﻿using Utilities_aspnet.Comment;
+using Utilities_aspnet.User;
 
 namespace Utilities_aspnet.Dashboard {
     public interface IDashboardRepository {

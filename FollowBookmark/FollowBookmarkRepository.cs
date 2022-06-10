@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.FollowBookmark;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.FollowBookmark;
 
 public interface IFollowBookmarkRepository {
     Task<GenericResponse<FollowReadDto>> GetFollowers(string id);

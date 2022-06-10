@@ -1,6 +1,6 @@
 ﻿using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
-namespace Utilities_aspnet.User.Data;
+namespace Utilities_aspnet.User;
 
 public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto dto);
@@ -187,83 +187,25 @@ public class UserRepository : IUserRepository {
     }
 
     public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto) {
-        UserEntity? user = _context.Set<UserEntity>()
-            .Include(x => x.Colors)
-            .Include(x => x.Location)
-            .Include(x => x.Media)
-            .Include(x => x.Specialties)
-            .Include(x => x.ContactInformation)
-            .FirstOrDefault(x => x.Id == dto.Id);
+        UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == dto.Id);
 
         if (user == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
-        try {
-            if (!string.IsNullOrEmpty(dto.FullName))
-                user.FullName = dto.FullName;
+        user.FirstName = dto.FirstName ?? user.FirstName;
+        user.LastName = dto.LastName ?? user.LastName;
+        user.FullName = dto.FullName ?? user.FullName;
+        user.Bio = dto.Bio ?? user.Bio;
+        user.AppUserName = dto.AppUserName ?? user.AppUserName;
+        user.AppEmail = dto.AppEmail ?? user.AppEmail;
+        user.Suspend = dto.Suspend ?? user.Suspend;
+        user.Headline = dto.Headline ?? user.Headline;
+        user.AppPhoneNumber = dto.AppPhoneNumber ?? user.AppPhoneNumber;
+        user.Birthdate = dto.BirthDate ?? user.Birthdate;
+        user.Wallet = dto.Wallet ?? user.Wallet;
+        await _context.SaveChangesAsync();
 
-            if (!string.IsNullOrEmpty(dto.Bio))
-                user.Bio = dto.Bio;
-
-            if (!string.IsNullOrEmpty(dto.AppUserName))
-                user.UserName = dto.AppUserName;
-
-            if (dto.Suspend.HasValue)
-                user.Suspend = dto.Suspend.Value;
-
-            if (!string.IsNullOrEmpty(dto.Headline))
-                user.Headline = dto.Headline;
-
-            if (!string.IsNullOrEmpty(dto.AppPhoneNumber))
-                user.PhoneNumber = dto.AppPhoneNumber;
-
-            if (dto.BirthDate.HasValue)
-                user.Birthdate = dto.BirthDate.GetValueOrDefault();
-
-            if (!string.IsNullOrEmpty(dto.AppEmail))
-                user.Email = dto.AppEmail;
-
-            if (dto.Colors.Any()) {
-                List<ColorEntity> colors = await _context.Set<ColorEntity>()
-                    .AsNoTracking()
-                    .Where(x => dto.Colors.Contains(x.Id))
-                    .ToListAsync();
-
-                user.Colors ??= new List<ColorEntity>();
-
-                user.Colors.AddRange(colors);
-            }
-
-            if (dto.Locations.Any()) {
-                List<LocationEntity> locations = await _context.Set<LocationEntity>()
-                    .AsNoTracking()
-                    .Where(x => dto.Locations.Contains(x.Id))
-                    .ToListAsync();
-
-                user.Location ??= new List<LocationEntity>();
-
-                user.Location.AddRange(locations);
-            }
-
-            if (dto.Specialties.Any()) {
-                List<SpecialityEntity> specialties = await _context.Set<SpecialityEntity>()
-                    .AsNoTracking()
-                    .Where(x => dto.Specialties.Contains(x.Id))
-                    .ToListAsync();
-
-                user.Specialties ??= new List<SpecialityEntity>();
-
-                user.Specialties.AddRange(specialties);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-        catch {
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Bad Request");
-        }
-
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, "").Result.Result, UtilitiesStatusCodes.Success,
-            "Success");
+        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, "").Result.Result);
     }
 
     public async Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto model) {

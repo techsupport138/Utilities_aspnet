@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Comment;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.Comment;
 
 [Table("Comment")]
 public class CommentEntity : BaseEntity {

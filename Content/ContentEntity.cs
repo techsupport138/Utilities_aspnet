@@ -1,3 +1,5 @@
+using Utilities_aspnet.User;
+
 namespace Utilities_aspnet.Content;
 
 public class BaseContentEntity : BaseEntity {

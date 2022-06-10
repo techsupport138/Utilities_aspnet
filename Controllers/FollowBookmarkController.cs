@@ -10,13 +10,13 @@ public class FollowBookmarkController : BaseApiController {
         _repository = repository;
     }
 
-    [HttpGet("ReadFollowers")]
+    [HttpPost("ReadFollowers")]
     public async Task<ActionResult<GenericResponse<FollowReadDto>>> ReadFollowers() {
         GenericResponse<FollowReadDto> result = await _repository.GetFollowers(User.Identity?.Name!);
         return Result(result);
     }
 
-    [HttpGet("ReadFollowings")]
+    [HttpPost("ReadFollowings")]
     public async Task<ActionResult<GenericResponse<FollowReadDto>>> ReadFollowings() {
         GenericResponse<FollowingReadDto> result = await _repository.GetFollowing(User.Identity?.Name!);
         return Result(result);

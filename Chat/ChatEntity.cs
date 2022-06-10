@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Chat;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.Chat;
 
 [Table("Chats")]
 public class ChatEntity : BaseEntity {

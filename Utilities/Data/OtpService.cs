@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities.Data;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.Utilities.Data;
 
 public enum OtpResult {
     Ok = 1,

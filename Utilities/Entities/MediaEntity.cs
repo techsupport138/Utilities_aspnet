@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities.Entities;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.Utilities.Entities;
 
 [Table("Media")]
 public class MediaEntity : BaseEntity {

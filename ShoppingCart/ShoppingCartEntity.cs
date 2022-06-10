@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.ShoppingCart;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.ShoppingCart;
 
 [Table("ShoppingCart")]
 public class ShoppingCartEntity : BaseEntity

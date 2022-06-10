@@ -1,3 +1,5 @@
+using Utilities_aspnet.User;
+
 namespace Utilities_aspnet.Vote.Entities;
 
 [Table("Votes")]

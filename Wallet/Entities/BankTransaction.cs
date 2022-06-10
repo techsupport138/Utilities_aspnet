@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Wallet.Entities;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.Wallet.Entities;
 
 public class BankTransaction {
     [Key]

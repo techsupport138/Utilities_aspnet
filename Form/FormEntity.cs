@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Form;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.Form;
 
 [Table("Forms")]
 public class FormEntity : BaseEntity {

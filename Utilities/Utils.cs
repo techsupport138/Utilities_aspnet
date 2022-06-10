@@ -3,6 +3,7 @@ using Utilities_aspnet.Comment;
 using Utilities_aspnet.Dashboard;
 using Utilities_aspnet.Notification;
 using Utilities_aspnet.ShoppingCart;
+using Utilities_aspnet.User;
 using Utilities_aspnet.Utilities.Seeder;
 
 namespace Utilities_aspnet.Utilities;
