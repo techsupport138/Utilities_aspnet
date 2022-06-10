@@ -84,7 +84,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IUploadRepository, UploadRepository>();
         builder.Services.AddTransient<IFollowBookmarkRepository, FollowBookmarkRepository>();
         builder.Services.AddTransient<IAppSettingRepository, AppSettingRepository>();
-        builder.Services.AddTransient<IIdTitleRepository<CategoryEntity>, IdTitleRepository<CategoryEntity>>();
+        builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IIdTitleRepository<TagEntity>, IdTitleRepository<TagEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<ColorEntity>, IdTitleRepository<ColorEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<FavoriteEntity>, IdTitleRepository<FavoriteEntity>>();
