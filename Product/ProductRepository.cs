@@ -26,7 +26,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
 
-        entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        entity.UserId = _httpContextAccessor.HttpContext?.User.Identity.Name;
         List<ReferenceEntity> references = new();
         List<BrandEntity> brands = new();
         List<CategoryEntity> categories = new();
@@ -159,7 +159,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             if (!string.IsNullOrEmpty(parameters.SubTitle))
                 queryable = queryable
                     .Where(x => !string.IsNullOrEmpty(x.Subtitle) && x.Subtitle.Contains(parameters.SubTitle)).ToList();
-            
+
             if (!string.IsNullOrEmpty(parameters.Type))
                 queryable = queryable
                     .Where(x => !string.IsNullOrEmpty(x.Type) && x.Type.Contains(parameters.Type)).ToList();
