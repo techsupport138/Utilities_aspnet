@@ -17,6 +17,10 @@ public class UserEntity : IdentityUser {
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
+    public IdentityType IdentityType { get; set; }
+    public LicenceType LicenceType { get; set; }
+    public bool IsBusinessAccount { get; set; }
+
 
     public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<FormEntity>? FormBuilders { get; set; }
@@ -36,6 +40,20 @@ public class UserEntity : IdentityUser {
     public IEnumerable<ServiceEntity>? Services { get; set; }
     public IEnumerable<MagazineEntity>? Magazines { get; set; }
     public IEnumerable<SpecialityEntity>? Specialties { get; set; }
+}
+
+public enum IdentityType
+{
+    Man ,
+    Female ,
+    Team ,
+    Other 
+}
+
+public enum LicenceType
+{
+    Artist , 
+    TeamOrCompany
 }
 
 [Table("Otps")]
@@ -108,6 +126,9 @@ public class UserReadDto {
     public IEnumerable<IdTitleReadDto>? Colors { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
     public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
+    public IdentityType? IdentityType { get; set; }
+    public LicenceType? LicenceType { get; set; }
+    public bool? IsBusinessAccount { get; set; }
 }
 
 public class UserCreateUpdateDto {
@@ -131,4 +152,9 @@ public class UserCreateUpdateDto {
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Favorites { get; set; }
     public IEnumerable<int>? Locations { get; set; }
+    public IEnumerable<UploadDto>? Media { get; set; }
+    public IdentityType? IdentityType { get; set; }
+    public LicenceType? LicenceType { get; set; }
+    public bool? IsBusinessAccount { get; set; }
+
 }
