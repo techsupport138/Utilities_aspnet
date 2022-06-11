@@ -13,66 +13,18 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     private readonly DbContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
-    private readonly IIdentity? _user;
 
     public ProductRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _context = context;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
-        _user = _httpContextAccessor?.HttpContext?.User.Identity;
     }
 
     public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         T entity = _mapper.Map<T>(dto);
 
-        entity.UserId = _httpContextAccessor.HttpContext?.User.Identity.Name;
-        List<ReferenceEntity> references = new();
-        List<BrandEntity> brands = new();
-        List<CategoryEntity> categories = new();
-        List<LocationEntity> locations = new();
-        List<SpecialityEntity> specialities = new();
-        List<TagEntity> tags = new();
-        List<FormEntity> forms = new();
-
-        foreach (Guid item in dto.References ?? new List<Guid>()) {
-            ReferenceEntity? e = await _context.Set<ReferenceEntity>().FirstOrDefaultAsync(x => x.Id == item);
-            if (e != null) references.Add(e);
-        }
-
-        foreach (Guid item in dto.Brands ?? new List<Guid>()) {
-            BrandEntity? e = await _context.Set<BrandEntity>().FirstOrDefaultAsync(x => x.Id == item);
-            if (e != null) brands.Add(e);
-        }
-
-        foreach (Guid item in dto.Categories ?? new List<Guid>()) {
-            CategoryEntity? category = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-            if (category != null) categories.Add(category);
-        }
-
-        foreach (int item in dto.Locations ?? new List<int>()) {
-            LocationEntity? location =
-                await _context.Set<LocationEntity>().Include(x => x.Project).FirstOrDefaultAsync(x => x.Id == item);
-            if (location != null) locations.Add(location);
-        }
-
-        foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
-            SpecialityEntity? speciality = await _context.Set<SpecialityEntity>().Include(x => x.Project)
-                .FirstOrDefaultAsync(x => x.Id == item);
-            if (speciality != null) specialities.Add(speciality);
-        }
-
-        foreach (Guid item in dto.Tags ?? new List<Guid>()) {
-            TagEntity? tag = await _context.Set<TagEntity>().FirstOrDefaultAsync(x => x.Id == item);
-            if (tag != null) tags.Add(tag);
-        }
-
-        entity.Categories = categories;
-        entity.Brands = brands;
-        entity.References = references;
-        entity.Locations = locations;
-        entity.Specialities = specialities;
-        entity.Tags = tags;
+        FillProductDetail(entity, dto);
         EntityEntry<T> i = await _context.Set<T>().AddAsync(entity);
         await _context.SaveChangesAsync();
 
@@ -205,7 +157,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
 
-        if (_user == null)
+        if (_httpContextAccessor?.HttpContext?.User.Identity == null)
             return new GenericResponse<IEnumerable<ProductReadDto>>(dto) {
                 TotalCount = totalCount,
                 PageCount = totalCount % parameters?.PageSize == 0
@@ -216,7 +168,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         IEnumerable<BookmarkEntity> bookmark = _context.Set<BookmarkEntity>()
             .AsNoTracking()
-            .Where(x => x.UserId == _user.Name)
+            .Where(x => x.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
             .ToList();
 
         foreach (ProductReadDto productReadDto in dto)
@@ -265,26 +217,28 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
     }
 
     public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
-        T? entity = await _context.Set<T>()
-            .AsNoTracking()
-            .Include(x => x.Locations)
-            .Include(x => x.Favorites)
-            .Include(x => x.Media)
-            .Include(x => x.Forms)
-            .Include(x => x.Categories)
-            .Include(x => x.Tags)
-            .Include(x => x.VoteFields)
-            .Include(x => x.Reports)
-            .Include(x => x.Specialities)
-            .Include(x => x.Brands)
-            .Include(x => x.References)
-            .Include(x => x.ContactInformations)
-            .Where(x => x.Id == dto.Id)
-            .FirstOrDefaultAsync();
+        T? entity = await _context.Set<T>().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
 
         if (entity == null)
             return new GenericResponse<ProductReadDto>(new ProductReadDto());
 
+        FillProductDetail(entity, dto);
+        _context.Update(entity);
+        await _context.SaveChangesAsync();
+
+        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(entity));
+    }
+
+    public async Task<GenericResponse> Delete(Guid id) {
+        T? i = await _context.Set<T>().AsNoTracking()
+            .FirstOrDefaultAsync(i => i.Id == id);
+        i.DeletedAt = DateTime.Now;
+        await _context.SaveChangesAsync();
+        return new GenericResponse();
+    }
+
+    private async void FillProductDetail(T entity, ProductCreateUpdateDto dto) {
+        entity.UserId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
         entity.Title = dto.Title ?? entity.Title;
         entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
         entity.Details = dto.Details ?? entity.Details;
@@ -302,97 +256,94 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         entity.StartDate = dto.StartDate ?? entity.StartDate;
         entity.EndDate = dto.EndDate ?? entity.EndDate;
 
-        if (dto.Locations != null && dto.Locations.Any()) {
-            List<LocationEntity> locations = await _context.Set<LocationEntity>()
-                .Where(x => dto.Locations.Contains(x.Id))
-                .ToListAsync();
+        if (dto.Brands.IsNotNullOrEmpty()) {
+            List<BrandEntity> list = new();
+            foreach (Guid item in dto.Brands ?? new List<Guid>()) {
+                BrandEntity? e = await _context.Set<BrandEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.Locations = locations;
+            entity.Brands = list;
         }
 
-        if (dto.Favorites != null && dto.Favorites.Any()) {
-            List<FavoriteEntity> favorites = await _context.Set<FavoriteEntity>()
-                .Where(x => dto.Favorites.Contains(x.Id))
-                .ToListAsync();
+        if (dto.Categories.IsNotNullOrEmpty()) {
+            List<CategoryEntity> list = new();
+            foreach (Guid item in dto.Categories ?? new List<Guid>()) {
+                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.Favorites = favorites;
+            entity.Categories = list;
         }
 
-        if (dto.Categories != null && dto.Categories.Any()) {
-            List<CategoryEntity> categories = await _context.Set<CategoryEntity>()
-                .Where(x => dto.Categories.Contains(x.Id))
-                .ToListAsync();
+        if (dto.Favorites.IsNotNullOrEmpty()) {
+            List<FavoriteEntity> list = new();
+            foreach (Guid item in dto.Favorites ?? new List<Guid>()) {
+                FavoriteEntity? e = await _context.Set<FavoriteEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.Categories = categories;
+            entity.Favorites = list;
         }
 
-        if (dto.References != null && dto.References.Any()) {
-            List<ReferenceEntity> references = await _context.Set<ReferenceEntity>()
-                .Where(x => dto.References.Contains(x.Id))
-                .ToListAsync();
+        if (dto.Locations.IsNotNullOrEmpty()) {
+            List<LocationEntity> list = new();
+            foreach (int item in dto.Locations ?? new List<int>()) {
+                LocationEntity? e = await _context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.References = references;
+            entity.Locations = list;
         }
 
-        if (dto.Brands != null && dto.Brands.Any()) {
-            List<BrandEntity> brands = await _context.Set<BrandEntity>()
-                .Where(x => dto.Brands.Contains(x.Id))
-                .ToListAsync();
+        if (dto.References.IsNotNullOrEmpty()) {
+            List<ReferenceEntity> list = new();
+            foreach (Guid item in dto.References ?? new List<Guid>()) {
+                ReferenceEntity? e = await _context.Set<ReferenceEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.Brands = brands;
+            entity.References = list;
         }
 
-        if (dto.Specialties != null && dto.Specialties.Any()) {
-            List<SpecialityEntity> specialities = await _context.Set<SpecialityEntity>()
-                .Where(x => dto.Specialties.Contains(x.Id))
-                .ToListAsync();
+        if (dto.Specialties.IsNotNullOrEmpty()) {
+            List<SpecialityEntity> list = new();
+            foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
+                SpecialityEntity? e = await _context.Set<SpecialityEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.Specialities = specialities;
+            entity.Specialities = list;
         }
 
-        if (dto.Tags != null && dto.Tags.Any()) {
-            List<TagEntity> tags = await _context.Set<TagEntity>()
-                .Where(x => dto.Tags.Contains(x.Id))
-                .ToListAsync();
+        if (dto.Forms.IsNotNullOrEmpty()) {
+            List<FormEntity> list = new();
+            foreach (Guid item in dto.Forms ?? new List<Guid>()) {
+                FormEntity? e = await _context.Set<FormEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.Tags = tags;
+            entity.Forms = list;
         }
 
-        if (dto.Forms != null && dto.Forms.Any()) {
-            List<FormEntity> forms = await _context.Set<FormEntity>()
-                .Where(x => dto.Forms.Contains(x.Id))
-                .ToListAsync();
+        if (dto.Reports.IsNotNullOrEmpty()) {
+            List<ReportEntity> list = new();
+            foreach (Guid item in dto.Reports ?? new List<Guid>()) {
+                ReportEntity? e = await _context.Set<ReportEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.Forms = forms;
+            entity.Reports = list;
         }
 
-        if (dto.VoteFields != null && dto.VoteFields.Any()) {
-            List<VoteFieldEntity> voteFields = await _context.Set<VoteFieldEntity>()
-                .Where(x => dto.VoteFields.Contains(x.Id))
-                .ToListAsync();
+        if (dto.VoteFields.IsNotNullOrEmpty()) {
+            List<VoteFieldEntity> list = new();
+            foreach (Guid item in dto.VoteFields ?? new List<Guid>()) {
+                VoteFieldEntity? e = await _context.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
 
-            entity.VoteFields = voteFields;
+            entity.VoteFields = list;
         }
-
-        if (dto.Reports != null && dto.Reports.Any()) {
-            List<ReportEntity> reports = await _context.Set<ReportEntity>()
-                .Where(x => dto.Reports.Contains(x.Id))
-                .ToListAsync();
-
-            entity.Reports = reports;
-        }
-
-        _context.Update(entity);
-        await _context.SaveChangesAsync();
-
-        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(entity));
-    }
-
-    public async Task<GenericResponse> Delete(Guid id) {
-        T? i = await _context.Set<T>().AsNoTracking()
-            .FirstOrDefaultAsync(i => i.Id == id);
-        i.DeletedAt = DateTime.Now;
-        await _context.SaveChangesAsync();
-        return new GenericResponse();
     }
 }
