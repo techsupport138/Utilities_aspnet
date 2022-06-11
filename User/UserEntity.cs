@@ -108,6 +108,9 @@ public class UserReadDto {
 }
 
 public class CreateUpdateUserDto {
+    public string? Id { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
     public string? FullName { get; set; }
     public string? Bio { get; set; }
     public string? Headline { get; set; }
@@ -116,9 +119,6 @@ public class CreateUpdateUserDto {
     public string? AppUserName { get; set; }
     public string? AppPhoneNumber { get; set; }
     public string? AppEmail { get; set; }
-    public string? Id { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
     public bool? Suspend { get; set; }
     public double? Wallet { get; set; }
     public List<Guid>? Colors { get; set; }

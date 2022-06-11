@@ -11,6 +11,12 @@ public class UserController : BaseApiController {
         _userRepository = userRepository;
     }
 
+    [HttpPost("GetTokenForTest/{mobile}")]
+    public async Task<ActionResult<GenericResponse>> GetTokenForTest(string mobile) {
+        GenericResponse i = await _userRepository.GetTokenForTest(mobile);
+        return Result(i);
+    }
+
     [HttpPost("LoginWithEmail")]
     public async Task<ActionResult<GenericResponse>> LoginWithEmail(LoginWithEmailDto dto) {
         GenericResponse i = await _userRepository.LoginWithEmail(dto);

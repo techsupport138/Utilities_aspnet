@@ -16,6 +16,7 @@ public interface IUserRepository {
     Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers();
     Task<GenericResponse<UserReadDto?>> CreateUser(CreateUpdateUserDto parameter);
     Task<GenericResponse> DeleteUser(string id);
+    Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
 }
 
 public class UserRepository : IUserRepository {
@@ -191,7 +192,7 @@ public class UserRepository : IUserRepository {
 
         if (entity == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
-        
+
         FillUserData(dto, entity);
 
         await _context.SaveChangesAsync();
@@ -278,6 +279,25 @@ public class UserRepository : IUserRepository {
         await _context.SaveChangesAsync();
 
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+    }
+
+    public async Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile) {
+        if (!mobile.isMobileNumber())
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
+
+        UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile);
+
+        if (user == null)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
+
+        if (user.Suspend)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
+
+        JwtSecurityToken token = await CreateToken(user);
+        return new GenericResponse<UserReadDto?>(
+            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+            UtilitiesStatusCodes.Success, "Success"
+        );
     }
 
     public async Task<GenericResponse<UserReadDto?>> CreateUser(CreateUpdateUserDto dto) {
