@@ -10,11 +10,11 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null);
     Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
     Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
-    Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto);
+    Task<GenericResponse<UserReadDto?>> UpdateUser(CreateUpdateUserDto dto);
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers();
-    Task<GenericResponse<UserReadDto?>> CreateUser(CreateUserDto parameter);
+    Task<GenericResponse<UserReadDto?>> CreateUser(CreateUpdateUserDto parameter);
     Task<GenericResponse> DeleteUser(string id);
 }
 
@@ -180,32 +180,23 @@ public class UserRepository : IUserRepository {
     }
 
     public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username) {
-        UserEntity? model = await _context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
-        if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
-        UserReadDto? dto = _mapper.Map<UserReadDto>(model);
+        UserEntity? entity = await _context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
+        if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
+        UserReadDto? dto = _mapper.Map<UserReadDto>(entity);
         return new GenericResponse<UserReadDto?>(dto);
     }
 
-    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UpdateProfileDto dto) {
-        UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == dto.Id);
+    public async Task<GenericResponse<UserReadDto?>> UpdateUser(CreateUpdateUserDto dto) {
+        UserEntity? entity = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == dto.Id);
 
-        if (user == null)
+        if (entity == null)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
+        
+        FillUserData(dto, entity);
 
-        user.FirstName = dto.FirstName ?? user.FirstName;
-        user.LastName = dto.LastName ?? user.LastName;
-        user.FullName = dto.FullName ?? user.FullName;
-        user.Bio = dto.Bio ?? user.Bio;
-        user.AppUserName = dto.AppUserName ?? user.AppUserName;
-        user.AppEmail = dto.AppEmail ?? user.AppEmail;
-        user.Suspend = dto.Suspend ?? user.Suspend;
-        user.Headline = dto.Headline ?? user.Headline;
-        user.AppPhoneNumber = dto.AppPhoneNumber ?? user.AppPhoneNumber;
-        user.Birthdate = dto.BirthDate ?? user.Birthdate;
-        user.Wallet = dto.Wallet ?? user.Wallet;
         await _context.SaveChangesAsync();
-
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id, "").Result.Result);
+        GenericResponse<UserReadDto?> readDto = await GetProfile(entity.Id, "");
+        return readDto;
     }
 
     public async Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto model) {
@@ -215,10 +206,9 @@ public class UserRepository : IUserRepository {
 
         SignInResult? result =
             await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, false);
-        if (!result.Succeeded)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
-
-        return new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
+        return !result.Succeeded
+            ? new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!")
+            : new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
     public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model) {
@@ -290,45 +280,68 @@ public class UserRepository : IUserRepository {
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
 
-    public async Task<GenericResponse<UserReadDto?>> CreateUser(CreateUserDto parameter) {
-        UserEntity? user = _mapper.Map<UserEntity>(parameter);
+    public async Task<GenericResponse<UserReadDto?>> CreateUser(CreateUpdateUserDto dto) {
+        UserEntity? entity = _mapper.Map<UserEntity>(dto);
 
-        if (parameter.Colors.Any()) {
-            List<ColorEntity> colors = await _context.Set<ColorEntity>()
-                .AsNoTracking()
-                .Where(x => parameter.Colors.Contains(x.Id))
-                .ToListAsync();
+        FillUserData(dto, entity);
 
-            user.Colors ??= new List<ColorEntity>();
-
-            user.Colors.AddRange(colors);
-        }
-
-        if (parameter.Locations.Any()) {
-            List<LocationEntity> locations = await _context.Set<LocationEntity>()
-                .AsNoTracking()
-                .Where(x => parameter.Locations.Contains(x.Id))
-                .ToListAsync();
-
-            user.Location ??= new List<LocationEntity>();
-
-            user.Location.AddRange(locations);
-        }
-
-        if (parameter.Specialties.Any()) {
-            List<SpecialityEntity> specialties = await _context.Set<SpecialityEntity>()
-                .AsNoTracking()
-                .Where(x => parameter.Specialties.Contains(x.Id))
-                .ToListAsync();
-
-            user.Specialties ??= new List<SpecialityEntity>();
-
-            user.Specialties.AddRange(specialties);
-        }
-
-        await _context.Set<UserEntity>().AddAsync(user);
+        await _context.Set<UserEntity>().AddAsync(entity);
         await _context.SaveChangesAsync();
 
-        return await GetProfileById(user.Id);
+        return await GetProfileById(entity.Id);
+    }
+
+    private async void FillUserData(CreateUpdateUserDto dto, UserEntity entity) {
+        entity.FirstName = dto.FirstName ?? entity.FirstName;
+        entity.LastName = dto.LastName ?? entity.LastName;
+        entity.FullName = dto.FullName ?? entity.FullName;
+        entity.Bio = dto.Bio ?? entity.Bio;
+        entity.AppUserName = dto.AppUserName ?? entity.AppUserName;
+        entity.AppEmail = dto.AppEmail ?? entity.AppEmail;
+        entity.Suspend = dto.Suspend ?? entity.Suspend;
+        entity.Headline = dto.Headline ?? entity.Headline;
+        entity.AppPhoneNumber = dto.AppPhoneNumber ?? entity.AppPhoneNumber;
+        entity.Birthdate = dto.BirthDate ?? entity.Birthdate;
+        entity.Wallet = dto.Wallet ?? entity.Wallet;
+
+        if (dto.Colors.IsNotNullOrEmpty()) {
+            List<ColorEntity> list = new();
+            foreach (Guid item in dto.Colors ?? new List<Guid>()) {
+                ColorEntity? e = await _context.Set<ColorEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
+
+            entity.Colors = list;
+        }
+
+        if (dto.Favorites.IsNotNullOrEmpty()) {
+            List<FavoriteEntity> list = new();
+            foreach (Guid item in dto.Favorites ?? new List<Guid>()) {
+                FavoriteEntity? e = await _context.Set<FavoriteEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
+
+            entity.Favorites = list;
+        }
+
+        if (dto.Locations.IsNotNullOrEmpty()) {
+            List<LocationEntity> list = new();
+            foreach (int item in dto.Locations ?? new List<int>()) {
+                LocationEntity? e = await _context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
+
+            entity.Location = list;
+        }
+
+        if (dto.Specialties.IsNotNullOrEmpty()) {
+            List<SpecialityEntity> list = new();
+            foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
+                SpecialityEntity? e = await _context.Set<SpecialityEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
+
+            entity.Specialties = list;
+        }
     }
 }

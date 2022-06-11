@@ -107,27 +107,7 @@ public class UserReadDto {
     public List<IdTitleReadDto>? Favorites { get; set; }
 }
 
-public class UpdateProfileDto {
-    public string? Id { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? FullName { get; set; }
-    public string? Bio { get; set; }
-    public string? Headline { get; set; }
-    public string? Website { get; set; }
-    public bool? Suspend { get; set; }
-    public string? AppUserName { get; set; }
-    public string? AppPhoneNumber { get; set; }
-    public string? AppEmail { get; set; }
-    public double? Wallet { get; set; }
-    public DateTime? BirthDate { get; set; }
-    public List<Guid>? Colors { get; set; }
-    public List<Guid>? Specialties { get; set; }
-    public List<Guid>? Favorites { get; set; }
-    public List<int>? Locations { get; set; }
-}
-
-public class CreateUserDto {
+public class CreateUpdateUserDto {
     public string? FullName { get; set; }
     public string? Bio { get; set; }
     public string? Headline { get; set; }
