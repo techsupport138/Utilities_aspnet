@@ -131,7 +131,7 @@ public class AutoMapperProfile : Profile
         CreateMap<CommentEntity, CommentCreateUpdateDto>().ReverseMap();
         CreateMap<CommentEntity, CommentReadDto>().ReverseMap();
 
-        CreateMap<CreateUpdateUserDto, UserEntity>()
+        CreateMap<UserCreateUpdateDto, UserEntity>()
             .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
             .ForMember(x => x.Colors, y => y.Ignore())
             .ForMember(x => x.Specialties, y => y.Ignore())

@@ -10,11 +10,11 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null);
     Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
     Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
-    Task<GenericResponse<UserReadDto?>> UpdateUser(CreateUpdateUserDto dto);
+    Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto);
     Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
     Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
     Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers();
-    Task<GenericResponse<UserReadDto?>> CreateUser(CreateUpdateUserDto parameter);
+    Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto parameter);
     Task<GenericResponse> DeleteUser(string id);
     Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
 }
@@ -166,9 +166,7 @@ public class UserRepository : IUserRepository {
                 $"User: {id} Not Found");
 
         UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
-
         userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
-
         userReadDto.Token = token;
         return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
     }
@@ -187,7 +185,7 @@ public class UserRepository : IUserRepository {
         return new GenericResponse<UserReadDto?>(dto);
     }
 
-    public async Task<GenericResponse<UserReadDto?>> UpdateUser(CreateUpdateUserDto dto) {
+    public async Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto) {
         UserEntity? entity = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == dto.Id);
 
         if (entity == null)
@@ -300,7 +298,7 @@ public class UserRepository : IUserRepository {
         );
     }
 
-    public async Task<GenericResponse<UserReadDto?>> CreateUser(CreateUpdateUserDto dto) {
+    public async Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto dto) {
         UserEntity? entity = _mapper.Map<UserEntity>(dto);
 
         FillUserData(dto, entity);
@@ -311,7 +309,7 @@ public class UserRepository : IUserRepository {
         return await GetProfileById(entity.Id);
     }
 
-    private async void FillUserData(CreateUpdateUserDto dto, UserEntity entity) {
+    private async void FillUserData(UserCreateUpdateDto dto, UserEntity entity) {
         entity.FirstName = dto.FirstName ?? entity.FirstName;
         entity.LastName = dto.LastName ?? entity.LastName;
         entity.FullName = dto.FullName ?? entity.FullName;

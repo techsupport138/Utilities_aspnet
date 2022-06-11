@@ -50,7 +50,7 @@ public class UserController : BaseApiController {
 
     [HttpPut("UpdateProfile")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<GenericResponse>> UpdateProfile(CreateUpdateUserDto dto) {
+    public async Task<ActionResult<GenericResponse>> UpdateProfile(UserCreateUpdateDto dto) {
         try {
             dto.Id = User.Identity.Name;
             GenericResponse i = await _userRepository.UpdateUser(dto);
@@ -74,7 +74,7 @@ public class UserController : BaseApiController {
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<GenericResponse>> Create(CreateUpdateUserDto dto) {
+    public async Task<ActionResult<GenericResponse>> Create(UserCreateUpdateDto dto) {
         try {
             GenericResponse i = await _userRepository.CreateUser(dto);
             return Result(i);
@@ -108,7 +108,7 @@ public class UserController : BaseApiController {
 
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<GenericResponse>> Update(CreateUpdateUserDto dto) {
+    public async Task<ActionResult<GenericResponse>> Update(UserCreateUpdateDto dto) {
         try {
             GenericResponse i = await _userRepository.UpdateUser(dto);
             return Result(i);
