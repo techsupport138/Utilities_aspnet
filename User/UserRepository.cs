@@ -17,6 +17,9 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto parameter);
     Task<GenericResponse> DeleteUser(string id);
     Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
+    Task<GenericResponse<UserReadDto?>> RegisterByMobile(RegisterByMobileDto dto);
+    Task<GenericResponse<UserReadDto?>> LoginWithMobileOrUserName(LoginWithMobileOrUserNameDto dto);
+    Task<GenericResponse<UserReadDto?>> ActivateMobile(ActivateMobileDto dto);
 }
 
 public class UserRepository : IUserRepository {
@@ -25,6 +28,7 @@ public class UserRepository : IUserRepository {
     private readonly IOtpService _otp;
     private readonly SignInManager<UserEntity> _signInManager;
     private readonly UserManager<UserEntity> _userManager;
+    private readonly ISmsSender _smsSender;
 
     public UserRepository(
         DbContext context,
@@ -32,12 +36,15 @@ public class UserRepository : IUserRepository {
         SignInManager<UserEntity> signInManager,
         IConfiguration config,
         IMapper mapper,
-        IOtpService otp) {
+        IOtpService otp,
+        ISmsSender smsSender)
+    {
         _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
         _otp = otp;
         _mapper = mapper;
+        _smsSender = smsSender;
     }
 
     public async Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model) {
@@ -91,7 +98,7 @@ public class UserRepository : IUserRepository {
 
         if (model != null) {
             string? otp = "9999";
-            if (dto.SendSMS) otp = _otp.SendOtp(model.Id);
+            if (dto.SendSMS) otp = _otp.SendOtp(model.Id ,4);
             return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
         else {
@@ -114,7 +121,7 @@ public class UserRepository : IUserRepository {
                     "The information was not entered correctly");
 
             string? otp = "9999";
-            if (dto.SendSMS) otp = _otp.SendOtp(user.Id);
+            if (dto.SendSMS) otp = _otp.SendOtp(user.Id , 4);
             return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
     }
@@ -376,5 +383,81 @@ public class UserRepository : IUserRepository {
 
             entity.Media = list;
         }
+    }
+
+    public async Task<GenericResponse<UserReadDto?>> RegisterByMobile(RegisterByMobileDto dto)
+    {
+        string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
+        if (dto.Mobile.Length <= 9 || !mobile.isNumerical())
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده معتبر نیست");
+
+        if(dto.Password != dto.ConfirmPassword)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "کلمه عبور با تکرار آن مطابفت ندارد");
+
+        UserEntity? model = _context.Set<UserEntity>()
+            .FirstOrDefault(x => x.UserName == dto.UserName || x.PhoneNumber == dto.Mobile);
+        if (model != null)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
+                "اطلاعات وارد شده قبلا به ثبت رسیده است");
+
+        var confirmationCode = new Random().Next(10000, 99999).ToString();
+
+        UserEntity user = new()
+        {
+            UserName = dto.UserName,
+            PhoneNumber = dto.Mobile,
+            EmailConfirmed = false,
+            PhoneNumberConfirmed = false,
+            MobileConfirmationCode = confirmationCode
+        };
+
+        IdentityResult? result = await _userManager.CreateAsync(user, dto.Password);
+        if (!result.Succeeded)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
+                "اطلاعات وارد شده معتبر نیست");
+
+        JwtSecurityToken token = await CreateToken(user);
+
+        _smsSender.SendSms(dto.Mobile, $"کد فعال سازی شما : {confirmationCode}");
+
+        return new GenericResponse<UserReadDto?>(
+            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+            UtilitiesStatusCodes.Success, "Success");
+    }
+
+    public async Task<GenericResponse<UserReadDto?>> LoginWithMobileOrUserName(LoginWithMobileOrUserNameDto dto)
+    {
+        UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile || x.UserName == dto.UserName);
+
+        if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "اطلاعات وارد شده معتبر نیست");
+
+        bool result = await _userManager.CheckPasswordAsync(user, dto.Password);
+        if (!result)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "اطلاعات وارد شده معتبر نیست");
+
+        JwtSecurityToken token = await CreateToken(user);
+
+        return new GenericResponse<UserReadDto?>(
+            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+            UtilitiesStatusCodes.Success, "Success");
+    }
+
+    public async Task<GenericResponse<UserReadDto?>> ActivateMobile(ActivateMobileDto dto)
+    {
+        UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile && x.MobileConfirmationCode == dto.Code);
+
+        if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "اطلاعات وارد شده معتبر نیست");
+
+        user.PhoneNumberConfirmed = true;
+        user.MobileConfirmationCode = new Random().Next(10000, 99999).ToString();
+        _context.Update(user);
+        _context.SaveChanges();
+
+        JwtSecurityToken token = await CreateToken(user);
+
+        return new GenericResponse<UserReadDto?>(
+            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+            UtilitiesStatusCodes.Success, "Success");
+
     }
 }

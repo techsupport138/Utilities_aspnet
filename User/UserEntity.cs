@@ -20,7 +20,7 @@ public class UserEntity : IdentityUser {
     public IdentityType? IdentityType { get; set; }
     public LicenceType? LicenceType { get; set; }
     public bool? IsBusinessAccount { get; set; }
-
+    public string? MobileConfirmationCode { get; set; }
 
     public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<FormEntity>? FormBuilders { get; set; }
@@ -97,6 +97,27 @@ public class LoginWithEmailDto {
     public bool Keep { get; set; } = true;
 }
 
+public class LoginWithMobileOrUserNameDto
+{
+    public string? UserName { get; set; }
+    public string? Mobile { get; set; }
+    public string Password { get; set; }
+}
+
+public class ActivateMobileDto
+{
+    public string Code { get; set; }
+    public string Mobile { get; set; }
+}
+
+public class RegisterByMobileDto
+{
+    public string UserName { get; set; }
+    public string Mobile { get; set; }
+    public string Password { get; set; }
+    public string ConfirmPassword { get; set; }
+}
+
 public class ChangePasswordDto {
     public string OldPassword { get; set; }
     public string NewPassword { get; set; }
@@ -129,6 +150,7 @@ public class UserReadDto {
     public IdentityType? IdentityType { get; set; }
     public LicenceType? LicenceType { get; set; }
     public bool? IsBusinessAccount { get; set; }
+    public string? MobileConfirmationCode { get; set; }
 }
 
 public class UserCreateUpdateDto {
