@@ -36,86 +36,34 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         List<FormEntity> forms = new();
 
         foreach (Guid item in dto.References ?? new List<Guid>()) {
-            ReferenceEntity? e = await _context.Set<ReferenceEntity>()
-                .Include(x => x.Project)
-                .Include(x => x.Product)
-                .Include(x => x.Ad)
-                .Include(x => x.Service)
-                .Include(x => x.Company)
-                .Include(x => x.Magazine)
-                .Include(x => x.Tutorial)
-                .Include(x => x.Event)
-                .FirstOrDefaultAsync(x => x.Id == item);
+            ReferenceEntity? e = await _context.Set<ReferenceEntity>().FirstOrDefaultAsync(x => x.Id == item);
             if (e != null) references.Add(e);
         }
 
         foreach (Guid item in dto.Brands ?? new List<Guid>()) {
-            BrandEntity? e = await _context.Set<BrandEntity>()
-                .Include(x => x.Project)
-                .Include(x => x.Product)
-                .Include(x => x.Ad)
-                .Include(x => x.Service)
-                .Include(x => x.Company)
-                .Include(x => x.Magazine)
-                .Include(x => x.Tutorial)
-                .Include(x => x.Event)
-                .FirstOrDefaultAsync(x => x.Id == item);
+            BrandEntity? e = await _context.Set<BrandEntity>().FirstOrDefaultAsync(x => x.Id == item);
             if (e != null) brands.Add(e);
         }
 
         foreach (Guid item in dto.Categories ?? new List<Guid>()) {
-            CategoryEntity? category = await _context.Set<CategoryEntity>()
-                .Include(x => x.Project)
-                .Include(x => x.Product)
-                .Include(x => x.Ad)
-                .Include(x => x.Service)
-                .Include(x => x.Company)
-                .Include(x => x.Magazine)
-                .Include(x => x.Tutorial)
-                .Include(x => x.Event)
-                .FirstOrDefaultAsync(x => x.Id == item);
+            CategoryEntity? category = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
             if (category != null) categories.Add(category);
         }
 
         foreach (int item in dto.Locations ?? new List<int>()) {
-            LocationEntity? location = await _context.Set<LocationEntity>().Include(x => x.Project)
-                .Include(x => x.Project)
-                .Include(x => x.Product)
-                .Include(x => x.Ad)
-                .Include(x => x.Service)
-                .Include(x => x.Company)
-                .Include(x => x.Magazine)
-                .Include(x => x.Tutorial)
-                .Include(x => x.Event)
-                .FirstOrDefaultAsync(x => x.Id == item);
+            LocationEntity? location =
+                await _context.Set<LocationEntity>().Include(x => x.Project).FirstOrDefaultAsync(x => x.Id == item);
             if (location != null) locations.Add(location);
         }
 
         foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
             SpecialityEntity? speciality = await _context.Set<SpecialityEntity>().Include(x => x.Project)
-                .Include(x => x.Project)
-                .Include(x => x.Product)
-                .Include(x => x.Ad)
-                .Include(x => x.Service)
-                .Include(x => x.Company)
-                .Include(x => x.Magazine)
-                .Include(x => x.Tutorial)
-                .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == item);
             if (speciality != null) specialities.Add(speciality);
         }
 
         foreach (Guid item in dto.Tags ?? new List<Guid>()) {
-            TagEntity? tag = await _context.Set<TagEntity>()
-                .Include(x => x.Project)
-                .Include(x => x.Product)
-                .Include(x => x.Ad)
-                .Include(x => x.Service)
-                .Include(x => x.Company)
-                .Include(x => x.Magazine)
-                .Include(x => x.Tutorial)
-                .Include(x => x.Event)
-                .FirstOrDefaultAsync(x => x.Id == item);
+            TagEntity? tag = await _context.Set<TagEntity>().FirstOrDefaultAsync(x => x.Id == item);
             if (tag != null) tags.Add(tag);
         }
 
