@@ -17,9 +17,9 @@ public class UserEntity : IdentityUser {
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
-    public IdentityType IdentityType { get; set; }
-    public LicenceType LicenceType { get; set; }
-    public bool IsBusinessAccount { get; set; }
+    public IdentityType? IdentityType { get; set; }
+    public LicenceType? LicenceType { get; set; }
+    public bool? IsBusinessAccount { get; set; }
 
 
     public IEnumerable<LocationEntity>? Location { get; set; }
