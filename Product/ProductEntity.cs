@@ -21,6 +21,10 @@ public abstract class BaseProductEntity : BaseEntity {
     public double? Longitude { get; set; }
     public decimal? Price { get; set; }
     public int? VisitCount { get; set; }
+    public double? Length { get; set; }
+    public double? Width { get; set; }
+    public double? Height { get; set; }
+    public double? Weight { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public ProductStatus? Status { get; set; }
@@ -147,6 +151,10 @@ public class ProductCreateUpdateDto {
     public decimal? Price { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
+    public double? Length { get; set; }
+    public double? Width { get; set; }
+    public double? Height { get; set; }
+    public double? Weight { get; set; }
     public ProductStatus? Status { get; set; }
     public List<int>? Locations { get; set; }
     public List<Guid>? Favorites { get; set; }
@@ -178,6 +186,10 @@ public class FilterProductDto {
     public bool? IsForSale { get; set; }
     public bool? IsBookmarked { get; set; }
     public int? VisitsCount { get; set; }
+    public double? Length { get; set; }
+    public double? Width { get; set; }
+    public double? Height { get; set; }
+    public double? Weight { get; set; }
     public ProductStatus? Status { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }

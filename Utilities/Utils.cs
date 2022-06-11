@@ -1,7 +1,7 @@
-﻿using Utilities_aspnet.Chat;
+﻿using Microsoft.AspNetCore.SignalR;
+using Utilities_aspnet.Chat;
 using Utilities_aspnet.Comment;
 using Utilities_aspnet.Dashboard;
-using Utilities_aspnet.Notification;
 using Utilities_aspnet.ShoppingCart;
 using Utilities_aspnet.User;
 using Utilities_aspnet.Utilities.Seeder;
@@ -69,11 +69,12 @@ public static class StartupExtension {
             options.UseCamelCasing(true);
         });
 
-        builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
+        builder.Services.AddSignalR(i => i.EnableDetailedErrors = true);
+
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddMemoryCache();
         builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-
+        
         builder.Services.AddTransient<AppSettings>();
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
@@ -117,8 +118,6 @@ public static class StartupExtension {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c => {
             c.UseInlineDefinitionsForEnums();
-            c.DocumentFilter<SwaggerFilters>();
-            c.SchemaFilter<SchemaFilter>();
             c.OrderActionsBy(s => s.RelativePath);
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
                 Description =
@@ -157,14 +156,11 @@ public static class StartupExtension {
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints => {
-            endpoints.MapAreaControllerRoute("Dashboard", "Dashboard",
-                "/Dashboard/{controller=MyDashboard}/{action=Index}/{id?}",
-                new {area = "Dashboard", controller = "MyDashboard", action = "Index"});
-            endpoints.MapDefaultControllerRoute();
-            endpoints.MapRazorPages();
+        
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapHub<UtilitiesHub>("/utilitiesHub");
         });
-        app.UseSession();
     }
 
     private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
@@ -175,21 +171,9 @@ public static class StartupExtension {
         });
     }
 
-    private class SchemaFilter : ISchemaFilter {
-        public void Apply(OpenApiSchema schema, SchemaFilterContext context) {
-            if (schema.Properties == null) return;
-
-            foreach ((string _, OpenApiSchema? value) in schema.Properties)
-                if (value.Default != null && value.Example == null)
-                    value.Example = value.Default;
-        }
-    }
-
-    public class SwaggerFilters : IDocumentFilter {
-        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context) {
-            swaggerDoc.Paths.Remove("/DNTCaptchaImage/Refresh");
-            swaggerDoc.Paths.Remove("/DNTCaptchaImage/Show");
-            IEnumerable<ApiDescription>? z = context.ApiDescriptions;
+    public class UtilitiesHub : Hub{
+        public async Task NewCallReceived(CallContext newCall) {
+            await Clients.All.SendAsync("NewCallReceived", newCall);
         }
     }
 }

@@ -245,6 +245,8 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         entity.Details = dto.Details ?? entity.Details;
         entity.Author = dto.Author ?? entity.Author;
         entity.PhoneNumber = dto.PhoneNumber ?? entity.PhoneNumber;
+        entity.Link = dto.Link ?? entity.Link;
+        entity.Website = dto.Website ?? entity.Website;
         entity.Email = dto.Email ?? entity.Email;
         entity.Latitude = dto.Latitude ?? entity.Latitude;
         entity.Longitude = dto.Longitude ?? entity.Longitude;
