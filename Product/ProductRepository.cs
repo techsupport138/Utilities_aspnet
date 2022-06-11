@@ -36,6 +36,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
+            .Include(i=> i.Comments)
             .Include(i => i.Locations)
             .Include(i => i.Reports)
             .Include(i => i.Specialities)

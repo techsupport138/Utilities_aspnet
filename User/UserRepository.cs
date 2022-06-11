@@ -321,6 +321,9 @@ public class UserRepository : IUserRepository {
         entity.AppPhoneNumber = dto.AppPhoneNumber ?? entity.AppPhoneNumber;
         entity.Birthdate = dto.BirthDate ?? entity.Birthdate;
         entity.Wallet = dto.Wallet ?? entity.Wallet;
+        entity.IdentityType = dto.IdentityType ?? entity.IdentityType;
+        entity.LicenceType = dto.LicenceType ?? entity.LicenceType;
+        entity.IsBusinessAccount = dto.IsBusinessAccount ?? entity.IsBusinessAccount;
 
         if (dto.Colors.IsNotNullOrEmpty()) {
             List<ColorEntity> list = new();
@@ -360,6 +363,18 @@ public class UserRepository : IUserRepository {
             }
 
             entity.Specialties = list;
+        }
+
+        if (dto.Media != null && dto.Media.Count() != 0)
+        {
+            List<MediaEntity> list = new();
+            foreach (var item in dto.Media ?? new List<UploadDto>())
+            {
+                MediaEntity? e = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == Guid.Parse(item.UserId));
+                if (e != null) list.Add(e);
+            }
+
+            entity.Media = list;
         }
     }
 }
