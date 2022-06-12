@@ -27,7 +27,6 @@ public class ShoppingCartRepository : IShoppingCartRepository
         var shoppingCarts = _context.Set<ShoppingCartEntity>()
             .Include(x => x.User)
             .Include(x => x.ShoppingCartItems)!
-            .ToList()
             .Select(x => new ShoppingCartReadDto()
             {
                 Id = x.Id,
@@ -36,9 +35,10 @@ public class ShoppingCartRepository : IShoppingCartRepository
                 DeletedAt = x.DeletedAt,
                 UserId = x.UserId,
                 User = _mapper.Map<UserReadDto?>(x.User),
-                ShoppingCartItems = x.ShoppingCartItems?.Select(y => new ShoppingCartItemReadDto()
+                ShoppingCartItems = x.ShoppingCartItems.ToList().Select(y => new ShoppingCartItemReadDto()
                 {
                     Id = y.Id,
+                    Quantity = y.Quantity, 
                     ShoppingCartId = y.ShoppingCartId,
                     ProductId = y.ProductId,
                     Product = _mapper.Map<ProductReadDto?>(y.Product),
@@ -73,7 +73,6 @@ public class ShoppingCartRepository : IShoppingCartRepository
         var shoppingCarts = _context.Set<ShoppingCartEntity>()
             .Include(x => x.User)
             .Include(x => x.ShoppingCartItems)!
-            .ToList()
             .Select(x => new ShoppingCartReadDto()
             {
                 Id = x.Id,
@@ -82,9 +81,10 @@ public class ShoppingCartRepository : IShoppingCartRepository
                 DeletedAt = x.DeletedAt,
                 UserId = x.UserId,
                 User = _mapper.Map<UserReadDto?>(x.User),
-                ShoppingCartItems = x.ShoppingCartItems?.Select(y => new ShoppingCartItemReadDto()
+                ShoppingCartItems = x.ShoppingCartItems.ToList().Select(y => new ShoppingCartItemReadDto()
                 {
                     Id = y.Id,
+                    Quantity = y.Quantity,
                     ShoppingCartId = y.ShoppingCartId,
                     ProductId = y.ProductId,
                     Product = _mapper.Map<ProductReadDto?>(y.Product),
