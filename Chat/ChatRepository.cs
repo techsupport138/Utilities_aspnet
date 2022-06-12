@@ -79,7 +79,7 @@ public class ChatRepository : IChatRepository {
         IEnumerable<string>? userIds = ToUserId.Distinct();
 
         foreach (string? item in userIds) {
-            var user = await _context.Set<UserEntity>().Include(x => x.Media).Select(x => new {x.Id, x.FullName, x.Media})
+            var user = await _context.Set<UserEntity>().Include(x => x.Media).Select(x => new {x.Id, x.FullName})
                 .FirstOrDefaultAsync(x => x.Id == item);
             ChatEntity? conversation = await _context.Set<ChatEntity>()
                 .Where(c => c.FromUserId == item && c.ToUserId == userId || c.FromUserId == userId && c.ToUserId == item)
