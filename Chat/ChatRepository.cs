@@ -107,7 +107,7 @@ public class ChatRepository : IChatRepository {
         ChatGroupEntity? group = new ChatGroupEntity()
         {
             CreatedAt = DateTime.Now,
-            OwnerId = model.OwnerId , 
+            OwnerId = (Guid)model.OwnerId , 
             Description = model.Description ,
             Private = model.Private ,
             Title = model.Title 
@@ -142,7 +142,7 @@ public class ChatRepository : IChatRepository {
         {
             var newChatGroupMemeber = new ChatGroupMemberEntity
             {
-                ChatGroupId = dto.GroupId.ToString() ,
+                ChatGroupId = dto.GroupId ,
                 MemebrId = memebrId , 
                 CreatedAt = DateTime.Now
             };
