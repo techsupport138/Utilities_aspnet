@@ -6,8 +6,6 @@ public interface IChatRepository {
     Task<GenericResponse<ChatReadDto?>> Create(ChatCreateUpdateDto model);
     Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id);
     Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read();
-    Task<GenericResponse<ChatGroupReadDto?>> CreateGroup(ChatGroupCreateDto model);
-    Task<GenericResponse<ChatGroupReadDto?>> AddMemebrToGroup(AddMemberToGroup dto);
 }
 
 public class ChatRepository : IChatRepository {
@@ -100,71 +98,5 @@ public class ChatRepository : IChatRepository {
         if (conversations.Count < 1)
             return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.NotFound);
         return new GenericResponse<IEnumerable<ChatReadDto>?>(conversations.OrderByDescending(x => x.DateTime));
-    }
-
-    public async Task<GenericResponse<ChatGroupReadDto?>> CreateGroup(ChatGroupCreateDto model)
-    {
-        ChatGroupEntity? group = new ChatGroupEntity()
-        {
-            CreatedAt = DateTime.Now,
-            OwnerId = model.OwnerId , 
-            Description = model.Description ,
-            Private = model.Private ,
-            Title = model.Title 
-        };
-        await _context.Set<ChatGroupEntity>().AddAsync(group);
-        await _context.SaveChangesAsync();
-        ChatGroupReadDto? groupInfo = new ChatGroupReadDto
-        {
-            Id = group.Id,
-            Description = group.Description ,
-            LastMessage = null ,
-            Logo = null ,
-            OwnerId = group.OwnerId ,
-            DateTime = (DateTime)group.CreatedAt,
-            Private = group.Private ,
-            Messages = null ,
-            Title = group.Title
-        };
-
-        return new GenericResponse<ChatGroupReadDto?>(groupInfo);
-    }
-
-    public async Task<GenericResponse<ChatGroupReadDto?>> AddMemebrToGroup(AddMemberToGroup dto)
-    {
-        if (dto.MemberIds is null) return new GenericResponse<ChatGroupReadDto?>(null, UtilitiesStatusCodes.BadRequest);
-        ChatGroupEntity? group = await _context.Set<ChatGroupEntity>().Include(x=> x.ChatGroupMembers).FirstOrDefaultAsync(x => x.Id == dto.GroupId);
-        if (group == null) return new GenericResponse<ChatGroupReadDto?>(null, UtilitiesStatusCodes.BadRequest);
-
-        var oldMemberIds = group.ChatGroupMembers?.Select(x => x.MemebrId).ToList();
-
-        foreach (var memebrId in dto.MemberIds.Where(x => !oldMemberIds.Contains(x)))
-        {
-            var newChatGroupMemeber = new ChatGroupMemberEntity
-            {
-                ChatGroupId = dto.GroupId ,
-                MemebrId = memebrId , 
-                CreatedAt = DateTime.Now
-            };
-
-            await _context.Set<ChatGroupMemberEntity>().AddAsync(newChatGroupMemeber);
-        }
-
-        await _context.SaveChangesAsync();
-
-        ChatGroupReadDto? groupInfo = new ChatGroupReadDto
-        {
-            Id = group.Id,
-            Description = group.Description,
-            LastMessage = null,
-            Logo = null,
-            OwnerId = group.OwnerId,
-            DateTime = (DateTime)group.CreatedAt,
-            Private = group.Private,
-            Messages = null,
-            Title = group.Title
-        };
-
-        return new GenericResponse<ChatGroupReadDto?>(groupInfo);
     }
 }

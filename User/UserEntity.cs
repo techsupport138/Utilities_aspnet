@@ -21,7 +21,6 @@ public class UserEntity : IdentityUser {
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
-    public IdentityType? IdentityType { get; set; }
 
     public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<FormEntity>? FormBuilders { get; set; }
@@ -40,15 +39,6 @@ public class UserEntity : IdentityUser {
     public IEnumerable<ServiceEntity>? Services { get; set; }
     public IEnumerable<MagazineEntity>? Magazines { get; set; }
     public IEnumerable<SpecialityEntity>? Specialties { get; set; }
-    public IEnumerable<ChatGroupMemberEntity>? ChatGroupMembers { get; set; }
-}
-
-public enum IdentityType
-{
-    Man ,
-    Female ,
-    Team ,
-    Other 
 }
 
 [Table("Otps")]
@@ -92,27 +82,6 @@ public class LoginWithEmailDto {
     public bool Keep { get; set; } = true;
 }
 
-public class LoginWithMobileOrUserNameDto
-{
-    public string? UserName { get; set; }
-    public string? Mobile { get; set; }
-    public string Password { get; set; }
-}
-
-public class ActivateMobileDto
-{
-    public string Code { get; set; }
-    public string Mobile { get; set; }
-}
-
-public class RegisterByMobileDto
-{
-    public string UserName { get; set; }
-    public string Mobile { get; set; }
-    public string Password { get; set; }
-    public string ConfirmPassword { get; set; }
-}
-
 public class ChangePasswordDto {
     public string OldPassword { get; set; }
     public string NewPassword { get; set; }
@@ -144,8 +113,6 @@ public class UserReadDto {
     public IEnumerable<IdTitleReadDto>? Colors { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
     public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
-    public IdentityType? IdentityType { get; set; }
-    public IEnumerable<ChatGroupMemberEntity>? ChatGroupMembers { get; set; }
 }
 
 public class UserCreateUpdateDto {
@@ -172,5 +139,4 @@ public class UserCreateUpdateDto {
     public IEnumerable<Guid>? Favorites { get; set; }
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<UploadDto>? Media { get; set; }
-    public IdentityType? IdentityType { get; set; }
 }

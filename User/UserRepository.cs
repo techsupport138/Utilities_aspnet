@@ -17,8 +17,6 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto parameter);
     Task<GenericResponse> DeleteUser(string id);
     Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
-    Task<GenericResponse<UserReadDto?>> RegisterByMobile(RegisterByMobileDto dto);
-    Task<GenericResponse<UserReadDto?>> LoginWithMobileOrUserName(LoginWithMobileOrUserNameDto dto);
 }
 
 public class UserRepository : IUserRepository {
@@ -36,8 +34,7 @@ public class UserRepository : IUserRepository {
         IConfiguration config,
         IMapper mapper,
         IOtpService otp,
-        ISmsSender smsSender)
-    {
+        ISmsSender smsSender) {
         _context = context;
         _userManager = userManager;
         _signInManager = signInManager;
@@ -97,7 +94,7 @@ public class UserRepository : IUserRepository {
 
         if (model != null) {
             string? otp = "9999";
-            if (dto.SendSMS) otp = _otp.SendOtp(model.Id ,4);
+            if (dto.SendSMS) otp = _otp.SendOtp(model.Id, 4);
             return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
         else {
@@ -120,7 +117,7 @@ public class UserRepository : IUserRepository {
                     "The information was not entered correctly");
 
             string? otp = "9999";
-            if (dto.SendSMS) otp = _otp.SendOtp(user.Id , 4);
+            if (dto.SendSMS) otp = _otp.SendOtp(user.Id, 4);
             return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
     }
@@ -327,7 +324,6 @@ public class UserRepository : IUserRepository {
         entity.AppPhoneNumber = dto.AppPhoneNumber ?? entity.AppPhoneNumber;
         entity.Birthdate = dto.BirthDate ?? entity.Birthdate;
         entity.Wallet = dto.Wallet ?? entity.Wallet;
-        entity.IdentityType = dto.IdentityType ?? entity.IdentityType;
 
         if (dto.Colors.IsNotNullOrEmpty()) {
             List<ColorEntity> list = new();
@@ -338,7 +334,7 @@ public class UserRepository : IUserRepository {
 
             entity.Colors = list;
         }
-        
+
         if (dto.Locations.IsNotNullOrEmpty()) {
             List<LocationEntity> list = new();
             foreach (int item in dto.Locations ?? new List<int>()) {
@@ -358,77 +354,5 @@ public class UserRepository : IUserRepository {
 
             entity.Specialties = list;
         }
-
-        #region TODO - Refactor
-
-        //if (dto.Media != null && dto.Media.Count() != 0)
-        //{
-        //    List<MediaEntity> list = new();
-        //    foreach (var item in dto.Media ?? new List<UploadDto>())
-        //    {
-        //        MediaEntity? e = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == Guid.Parse(item.UserId));
-        //        if (e != null) list.Add(e);
-        //    }
-
-        //    entity.Media = list;
-        //}
-
-        #endregion
-    }
-
-    public async Task<GenericResponse<UserReadDto?>> RegisterByMobile(RegisterByMobileDto dto)
-    {
-        string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
-        if (dto.Mobile.Length <= 9 || !mobile.isNumerical())
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده معتبر نیست");
-
-        if(dto.Password != dto.ConfirmPassword)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "کلمه عبور با تکرار آن مطابفت ندارد");
-
-        UserEntity? model = _context.Set<UserEntity>()
-            .FirstOrDefault(x => x.UserName == dto.UserName || x.PhoneNumber == dto.Mobile);
-        if (model != null)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
-                "اطلاعات وارد شده قبلا به ثبت رسیده است");
-
-        var confirmationCode = new Random().Next(10000, 99999).ToString();
-
-        UserEntity user = new()
-        {
-            UserName = dto.UserName,
-            PhoneNumber = dto.Mobile,
-            EmailConfirmed = false,
-            PhoneNumberConfirmed = false,
-        };
-
-        IdentityResult? result = await _userManager.CreateAsync(user, dto.Password);
-        if (!result.Succeeded)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
-                "اطلاعات وارد شده معتبر نیست");
-
-        JwtSecurityToken token = await CreateToken(user);
-
-        _smsSender.SendSms(dto.Mobile, $"کد فعال سازی شما : {confirmationCode}");
-
-        return new GenericResponse<UserReadDto?>(
-            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-            UtilitiesStatusCodes.Success, "Success");
-    }
-
-    public async Task<GenericResponse<UserReadDto?>> LoginWithMobileOrUserName(LoginWithMobileOrUserNameDto dto)
-    {
-        UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile || x.UserName == dto.UserName);
-
-        if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "اطلاعات وارد شده معتبر نیست");
-
-        bool result = await _userManager.CheckPasswordAsync(user, dto.Password);
-        if (!result)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "اطلاعات وارد شده معتبر نیست");
-
-        JwtSecurityToken token = await CreateToken(user);
-
-        return new GenericResponse<UserReadDto?>(
-            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-            UtilitiesStatusCodes.Success, "Success");
     }
 }
