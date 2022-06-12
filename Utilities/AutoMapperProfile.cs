@@ -112,8 +112,7 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.Tags, y => y.Ignore());
 
 
-        CreateMap<MediaEntity, MediaDto>().ReverseMap();
-        CreateMap<MediaEntity, MediaDto>().ReverseMap();
+        CreateMap<MediaEntity, MediaDto>().ForMember(x=>x.Link, c=>c.MapFrom(v=>v.Link == null? $"{NetworkUtil.ServerAddress}/Medias/{v.FileName}" : v.Link)).ReverseMap();
 
         CreateMap<ContentEntity, ContentReadDto>().ReverseMap();
         CreateMap<ContentEntity, ContentCreateUpdateDto>().ReverseMap();
