@@ -58,6 +58,10 @@ public class MediaEntity : BaseEntity {
 
     public NotificationEntity? Notification { get; set; }
     public Guid? NotificationId { get; set; }
+    public CategoryEntity? Category { get; set; }
+    public Guid? CategoryId { get; set; }
+    public BrandEntity? Brand { get; set; }
+    public Guid? BrandId { get; set; }
 }
 
 public class MediaDto {
@@ -88,4 +92,6 @@ public class UploadDto {
     public Guid? MagazineId { get; set; }
     public Guid? ServiceId { get; set; }
     public Guid? ContentId { get; set; }
+    public Guid? CategoryId { get; set; }
+    public Guid? BrandId { get; set; }
 }
