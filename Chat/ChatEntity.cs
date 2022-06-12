@@ -35,7 +35,7 @@ public class ChatGroupEntity : BaseEntity
     public bool Private { get; set; }
     [StringLength(450)]
     [ForeignKey(nameof(Owner))]
-    public string OwnerId { get; set; } = null!;    
+    public Guid OwnerId { get; set; } = default!;    
     public virtual UserEntity Owner { get; set; } = null!;
     public virtual IEnumerable<ChatGroupMemberEntity>? ChatGroupMembers { get; set; }
     public virtual IEnumerable<ChatEntity>? Messages { get; set; }
@@ -46,10 +46,10 @@ public class ChatGroupMemberEntity : BaseEntity
 {
     [StringLength(450)]
     [ForeignKey(nameof(ChatGroup))]
-    public string ChatGroupId { get; set; }
+    public Guid ChatGroupId { get; set; }
     [StringLength(450)]
     [ForeignKey(nameof(Memeber))]
-    public string MemebrId { get; set; }
+    public Guid MemebrId { get; set; }
 
     public virtual ChatGroupEntity ChatGroup { get; set; }
     public virtual UserEntity Memeber { get; set; }
@@ -78,7 +78,7 @@ public class ChatGroupReadDto
     public string? Description { get; set; }
     public string? Logo { get; set; }
     public bool Private { get; set; }
-    public string? OwnerId { get; set; }
+    public Guid? OwnerId { get; set; }
     public DateTime DateTime { get; set; }
     public ChatReadDto? LastMessage { get; set; }
     public virtual IEnumerable<ChatReadDto>? Messages { get; set; }
@@ -90,12 +90,12 @@ public class ChatGroupCreateDto
     public string? Description { get; set; }
     public string? Logo { get; set; }
     public bool Private { get; set; }
-    public string? OwnerId { get; set; }
+    public Guid? OwnerId { get; set; }
 }
 
 public class AddMemberToGroup
 {
     public Guid GroupId { get; set; }
-    public IEnumerable<string>? MemberIds { get; set; }
+    public IEnumerable<Guid>? MemberIds { get; set; }
 
 }
