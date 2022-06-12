@@ -15,4 +15,11 @@ public class MediaController : BaseApiController {
         GenericResponse? i = await _uploadRepository.UploadMedia(dto);
         return Ok(i);
     }
+    
+    [HttpDelete("{id:guid}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<ActionResult<GenericResponse>> Delete(Guid id) {
+        GenericResponse? i = await _uploadRepository.DeleteMedia(id);
+        return Ok(i);
+    }
 }
