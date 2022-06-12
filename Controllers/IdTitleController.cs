@@ -48,6 +48,9 @@ public class IdTitleController : BaseApiController {
             case "category":
                 i = await _categoryRepository.Read();
                 break;
+            case "categoryV2":
+                i = await _categoryRepository.ReadV2();
+                break;
             case "brand":
                 i = await _brandRepository.Read();
                 break;

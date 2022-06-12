@@ -3,6 +3,7 @@
 public interface ICategoryRepository {
     public Task<GenericResponse<IdTitleReadDto>> Create(IdTitleCreateUpdateDto dto);
     public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> Read();
+    public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadV2();
     public Task<GenericResponse<IdTitleReadDto>> ReadById(Guid id);
     public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCase(IdTitleUseCase useCase);
     public Task<GenericResponse<IdTitleReadDto>> Update(IdTitleCreateUpdateDto dto);
@@ -31,6 +32,15 @@ public class CategoryRepository : ICategoryRepository {
         IEnumerable<CategoryEntity> i = await _dbContext.Set<CategoryEntity>()
             .Include(i => i.Media)
             .Include(i => i.Parent).ThenInclude(i => i.Media)
+            .AsNoTracking()
+            .ToListAsync();
+        return new GenericResponse<IEnumerable<IdTitleReadDto>>(_mapper.Map<IEnumerable<IdTitleReadDto>>(i));
+    }
+    
+    public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadV2() {
+        IEnumerable<CategoryEntity> i = await _dbContext.Set<CategoryEntity>()
+            .Include(i => i.Media)
+            .Include(i => i.Child).ThenInclude(i=>i.Media)
             .AsNoTracking()
             .ToListAsync();
         return new GenericResponse<IEnumerable<IdTitleReadDto>>(_mapper.Map<IEnumerable<IdTitleReadDto>>(i));
