@@ -372,17 +372,21 @@ public class UserRepository : IUserRepository {
             entity.Specialties = list;
         }
 
-        if (dto.Media != null && dto.Media.Count() != 0)
-        {
-            List<MediaEntity> list = new();
-            foreach (var item in dto.Media ?? new List<UploadDto>())
-            {
-                MediaEntity? e = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == Guid.Parse(item.UserId));
-                if (e != null) list.Add(e);
-            }
+        #region TODO - Refactor
 
-            entity.Media = list;
-        }
+        //if (dto.Media != null && dto.Media.Count() != 0)
+        //{
+        //    List<MediaEntity> list = new();
+        //    foreach (var item in dto.Media ?? new List<UploadDto>())
+        //    {
+        //        MediaEntity? e = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == Guid.Parse(item.UserId));
+        //        if (e != null) list.Add(e);
+        //    }
+
+        //    entity.Media = list;
+        //}
+
+        #endregion
     }
 
     public async Task<GenericResponse<UserReadDto?>> RegisterByMobile(RegisterByMobileDto dto)
@@ -447,6 +451,9 @@ public class UserRepository : IUserRepository {
         UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile && x.MobileConfirmationCode == dto.Code);
 
         if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "اطلاعات وارد شده معتبر نیست");
+
+        if (user.PhoneNumberConfirmed)
+            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "شماره موبایل قبلا تایید شده است");
 
         user.PhoneNumberConfirmed = true;
         user.MobileConfirmationCode = new Random().Next(10000, 99999).ToString();
