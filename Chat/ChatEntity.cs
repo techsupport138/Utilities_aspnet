@@ -18,11 +18,6 @@ public class ChatEntity : BaseEntity {
 
     public string MessageText { get; set; } = null!;
     public bool? IsRead { get; set; }
-
-    [StringLength(450)]
-    [ForeignKey(nameof(ChatGroup))]
-    public Guid? ChatGroupId { get; set; }
-    public virtual ChatGroupEntity? ChatGroup { get; set; }
 }
 
 [Table("ChatGroups")]
@@ -90,12 +85,12 @@ public class ChatGroupCreateDto
     public string? Description { get; set; }
     public string? Logo { get; set; }
     public bool Private { get; set; }
-    public Guid? OwnerId { get; set; }
+    public string? OwnerId { get; set; }
 }
 
 public class AddMemberToGroup
 {
     public Guid GroupId { get; set; }
-    public IEnumerable<Guid>? MemberIds { get; set; }
+    public IEnumerable<string>? MemberIds { get; set; }
 
 }
