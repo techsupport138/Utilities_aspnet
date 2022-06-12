@@ -18,9 +18,6 @@ public class UserEntity : IdentityUser {
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
     public IdentityType? IdentityType { get; set; }
-    public LicenceType? LicenceType { get; set; }
-    public bool? IsBusinessAccount { get; set; }
-    public string? MobileConfirmationCode { get; set; }
 
     public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<FormEntity>? FormBuilders { get; set; }
@@ -48,12 +45,6 @@ public enum IdentityType
     Female ,
     Team ,
     Other 
-}
-
-public enum LicenceType
-{
-    Artist , 
-    TeamOrCompany
 }
 
 [Table("Otps")]
@@ -148,9 +139,6 @@ public class UserReadDto {
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
     public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
     public IdentityType? IdentityType { get; set; }
-    public LicenceType? LicenceType { get; set; }
-    public bool? IsBusinessAccount { get; set; }
-    public string? MobileConfirmationCode { get; set; }
 }
 
 public class UserCreateUpdateDto {
@@ -176,7 +164,4 @@ public class UserCreateUpdateDto {
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<UploadDto>? Media { get; set; }
     public IdentityType? IdentityType { get; set; }
-    public LicenceType? LicenceType { get; set; }
-    public bool? IsBusinessAccount { get; set; }
-
 }

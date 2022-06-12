@@ -19,7 +19,6 @@ public interface IUserRepository {
     Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
     Task<GenericResponse<UserReadDto?>> RegisterByMobile(RegisterByMobileDto dto);
     Task<GenericResponse<UserReadDto?>> LoginWithMobileOrUserName(LoginWithMobileOrUserNameDto dto);
-    Task<GenericResponse<UserReadDto?>> ActivateMobile(ActivateMobileDto dto);
 }
 
 public class UserRepository : IUserRepository {
@@ -329,8 +328,6 @@ public class UserRepository : IUserRepository {
         entity.Birthdate = dto.BirthDate ?? entity.Birthdate;
         entity.Wallet = dto.Wallet ?? entity.Wallet;
         entity.IdentityType = dto.IdentityType ?? entity.IdentityType;
-        entity.LicenceType = dto.LicenceType ?? entity.LicenceType;
-        entity.IsBusinessAccount = dto.IsBusinessAccount ?? entity.IsBusinessAccount;
 
         if (dto.Colors.IsNotNullOrEmpty()) {
             List<ColorEntity> list = new();
@@ -412,7 +409,6 @@ public class UserRepository : IUserRepository {
             PhoneNumber = dto.Mobile,
             EmailConfirmed = false,
             PhoneNumberConfirmed = false,
-            MobileConfirmationCode = confirmationCode
         };
 
         IdentityResult? result = await _userManager.CreateAsync(user, dto.Password);
@@ -444,27 +440,5 @@ public class UserRepository : IUserRepository {
         return new GenericResponse<UserReadDto?>(
             GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
             UtilitiesStatusCodes.Success, "Success");
-    }
-
-    public async Task<GenericResponse<UserReadDto?>> ActivateMobile(ActivateMobileDto dto)
-    {
-        UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile && x.MobileConfirmationCode == dto.Code);
-
-        if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "اطلاعات وارد شده معتبر نیست");
-
-        if (user.PhoneNumberConfirmed)
-            return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "شماره موبایل قبلا تایید شده است");
-
-        user.PhoneNumberConfirmed = true;
-        user.MobileConfirmationCode = new Random().Next(10000, 99999).ToString();
-        _context.Update(user);
-        _context.SaveChanges();
-
-        JwtSecurityToken token = await CreateToken(user);
-
-        return new GenericResponse<UserReadDto?>(
-            GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-            UtilitiesStatusCodes.Success, "Success");
-
     }
 }
