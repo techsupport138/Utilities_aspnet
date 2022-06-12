@@ -28,56 +28,38 @@ public abstract class BaseIdTitleEntity : BaseEntity {
 }
 
 [Table("Tags")]
-public class TagEntity : BaseIdTitleEntity {
-    public Guid? ParentId { get; set; }
-    public TagEntity? Parent { get; set; }
-}
+public class TagEntity : BaseIdTitleEntity { }
 
 [Table("Brands")]
-public class BrandEntity : BaseIdTitleEntity {
-    public Guid? ParentId { get; set; }
-    public BrandEntity? Parent { get; set; }
-}
+public class BrandEntity : BaseIdTitleEntity { }
 
 [Table("References")]
-public class ReferenceEntity : BaseIdTitleEntity {
-    public Guid? ParentId { get; set; }
-    public ReferenceEntity? Parent { get; set; }
-}
+public class ReferenceEntity : BaseIdTitleEntity { }
 
 [Table("Categories")]
 public class CategoryEntity : BaseIdTitleEntity {
     public Guid? ParentId { get; set; }
+
     [InverseProperty("Children")]
     public CategoryEntity? Parent { get; set; }
-    public ICollection<FormEntity>? FormBuilderFieldLists { get; set; }
+
+    public IEnumerable<FormEntity>? FormBuilderFieldLists { get; set; }
+
     [InverseProperty("Parent")]
-    public ICollection<CategoryEntity>? Children { get; set; }
+    public IEnumerable<CategoryEntity>? Children { get; set; }
 }
 
 [Table("Specialities")]
-public class SpecialityEntity : BaseIdTitleEntity {
-    public Guid? ParentId { get; set; }
-    public SpecialityEntity? Parent { get; set; }
-}
+public class SpecialityEntity : BaseIdTitleEntity { }
 
 [Table("Favorites")]
-public class FavoriteEntity : BaseIdTitleEntity {
-    public Guid? ParentId { get; set; }
-    public FavoriteEntity? Parent { get; set; }
-}
+public class FavoriteEntity : BaseIdTitleEntity { }
 
 [Table("Colors")]
-public class ColorEntity : BaseIdTitleEntity {
-    public Guid? ParentId { get; set; }
-    public ColorEntity? Parent { get; set; }
-}
+public class ColorEntity : BaseIdTitleEntity { }
 
 [Table("ContactInfoItems")]
-public class ContactInfoItemEntity : BaseIdTitleEntity {
-    public Guid? ParentId { get; set; }
-    public ContactInfoItemEntity? Parent { get; set; }
-}
+public class ContactInfoItemEntity : BaseIdTitleEntity { }
 
 public enum IdTitleUseCase {
     Null = 100,
