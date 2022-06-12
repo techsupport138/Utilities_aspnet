@@ -31,85 +31,93 @@ public class UploadRepository : IUploadRepository
     public async Task<GenericResponse<List<MediaDto>?>> UploadMedia(UploadDto model)
     {
         List<MediaEntity> medias = new();
-        foreach (IFormFile file in model.Files)
+        if(model.Files != null)
         {
-            FileTypes fileType = FileTypes.Image;
-
-            if (file.ContentType.ToLower().Contains("svg")) fileType = FileTypes.Svg;
-            if (file.ContentType.ToLower().Contains("video")) fileType = FileTypes.Video;
-            if (file.ContentType.ToLower().Contains("pdf")) fileType = FileTypes.Pdf;
-            if (file.ContentType.ToLower().Contains("Voice")) fileType = FileTypes.Voice;
-            if (file.ContentType.ToLower().Contains("Gif")) fileType = FileTypes.Gif;
-
-            string folder = "";
-            if (model.UserId != null)
+            foreach (IFormFile file in model.Files)
             {
-                folder = "Users";
-                List<MediaEntity> userMedia =
-                    _context.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
-                if (userMedia.Count > 0)
+                FileTypes fileType = FileTypes.Image;
+
+                if (file.ContentType.ToLower().Contains("svg")) fileType = FileTypes.Svg;
+                if (file.ContentType.ToLower().Contains("video")) fileType = FileTypes.Video;
+                if (file.ContentType.ToLower().Contains("pdf")) fileType = FileTypes.Pdf;
+                if (file.ContentType.ToLower().Contains("Voice")) fileType = FileTypes.Voice;
+                if (file.ContentType.ToLower().Contains("Gif")) fileType = FileTypes.Gif;
+
+                string folder = "";
+                if (model.UserId != null)
                 {
-                    _context.Set<MediaEntity>().RemoveRange(userMedia);
-                    await _context.SaveChangesAsync();
+                    folder = "Users";
+                    List<MediaEntity> userMedia =
+                        _context.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
+                    if (userMedia.Count > 0)
+                    {
+                        _context.Set<MediaEntity>().RemoveRange(userMedia);
+                        await _context.SaveChangesAsync();
+                    }
                 }
+
+                string name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(file.FileName));
+                MediaEntity media = new()
+                {
+                    FileName = _mediaRepository.GetFileUrl(name, folder),
+                    FileType = fileType,
+                    UserId = model.UserId,
+                    ProductId = model.ProductId,
+                    AdId = model.AdsId,
+                    CompanyId = model.CompanyId,
+                    EventId = model.EventId,
+                    MagazineId = model.MagazineId,
+                    ProjectId = model.ProjectId,
+                    ServiceId = model.ServiceId,
+                    TutorialId = model.TutorialId,
+                    TenderId = model.TenderId,
+                    ContentId = model.ContentId,
+                    BrandId = model.BrandId,
+                    CategoryId = model.CategoryId,
+                    CreatedAt = DateTime.Now,
+                    UseCase = model.UseCase,
+                    Visibility = model.Visibility,
+                    Title = model.Title
+                };
+                await _context.Set<MediaEntity>().AddAsync(media);
+                await _context.SaveChangesAsync();
+                medias.Add(media);
+                _mediaRepository.SaveMedia(file, name, folder);
             }
-
-            string name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(file.FileName));
-            MediaEntity media = new()
+        }
+        
+        if(model.Links != null)
+        {
+            foreach (var link in model.Links)
             {
-                FileName = _mediaRepository.GetFileUrl(name, folder),
-                FileType = fileType,
-                UserId = model.UserId,
-                ProductId = model.ProductId,
-                AdId = model.AdsId,
-                CompanyId = model.CompanyId,
-                EventId = model.EventId,
-                MagazineId = model.MagazineId,
-                ProjectId = model.ProjectId,
-                ServiceId = model.ServiceId,
-                TutorialId = model.TutorialId,
-                TenderId = model.TenderId,
-                ContentId = model.ContentId,
-                BrandId = model.BrandId,
-                CategoryId = model.CategoryId,
-                CreatedAt = DateTime.Now,
-                UseCase = model.UseCase,
-                Visibility = model.Visibility,
-                Title = model.Title
-            };
-            await _context.Set<MediaEntity>().AddAsync(media);
-            await _context.SaveChangesAsync();
-            medias.Add(media);
-            _mediaRepository.SaveMedia(file, name, folder);
+                MediaEntity media = new MediaEntity
+                {
+                    FileType = FileTypes.Link,
+                    Link = link,
+                    UserId = model.UserId,
+                    ProductId = model.ProductId,
+                    AdId = model.AdsId,
+                    CompanyId = model.CompanyId,
+                    EventId = model.EventId,
+                    MagazineId = model.MagazineId,
+                    ProjectId = model.ProjectId,
+                    ServiceId = model.ServiceId,
+                    TutorialId = model.TutorialId,
+                    TenderId = model.TenderId,
+                    ContentId = model.ContentId,
+                    BrandId = model.BrandId,
+                    CategoryId = model.CategoryId,
+                    CreatedAt = DateTime.Now,
+                    UseCase = model.UseCase,
+                    Visibility = model.Visibility,
+                    Title = model.Title
+                };
+                await _context.Set<MediaEntity>().AddAsync(media);
+                await _context.SaveChangesAsync();
+                medias.Add(media);
+            }
         }
 
-        foreach (MediaEntity media in model.Links.Select(link => new MediaEntity
-        {
-            FileType = FileTypes.Link,
-            Link = link,
-            UserId = model.UserId,
-            ProductId = model.ProductId,
-            AdId = model.AdsId,
-            CompanyId = model.CompanyId,
-            EventId = model.EventId,
-            MagazineId = model.MagazineId,
-            ProjectId = model.ProjectId,
-            ServiceId = model.ServiceId,
-            TutorialId = model.TutorialId,
-            TenderId = model.TenderId,
-            ContentId = model.ContentId,
-            BrandId = model.BrandId,
-            CategoryId = model.CategoryId,
-            CreatedAt = DateTime.Now,
-            UseCase = model.UseCase,
-            Visibility = model.Visibility,
-            Title = model.Title
-        }))
-        {
-            await _context.Set<MediaEntity>().AddAsync(media);
-            await _context.SaveChangesAsync();
-            medias.Add(media);
-        }
 
         return new GenericResponse<List<MediaDto>?>(
             _mapper.Map<List<MediaDto>>(medias),
