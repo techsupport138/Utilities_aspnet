@@ -107,7 +107,7 @@ public class ChatRepository : IChatRepository {
         ChatGroupEntity? group = new ChatGroupEntity()
         {
             CreatedAt = DateTime.Now,
-            OwnerId = (Guid)model.OwnerId , 
+            OwnerId = model.OwnerId , 
             Description = model.Description ,
             Private = model.Private ,
             Title = model.Title 

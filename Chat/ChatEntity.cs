@@ -35,7 +35,7 @@ public class ChatGroupEntity : BaseEntity
     public bool Private { get; set; }
     [StringLength(450)]
     [ForeignKey(nameof(Owner))]
-    public Guid OwnerId { get; set; } = default!;    
+    public string OwnerId { get; set; } = default!;    
     public virtual UserEntity Owner { get; set; } = null!;
     public virtual IEnumerable<ChatGroupMemberEntity>? ChatGroupMembers { get; set; }
     public virtual IEnumerable<ChatEntity>? Messages { get; set; }
@@ -49,7 +49,7 @@ public class ChatGroupMemberEntity : BaseEntity
     public Guid ChatGroupId { get; set; }
     [StringLength(450)]
     [ForeignKey(nameof(Memeber))]
-    public Guid MemebrId { get; set; }
+    public string MemebrId { get; set; }
 
     public virtual ChatGroupEntity ChatGroup { get; set; }
     public virtual UserEntity Memeber { get; set; }
@@ -78,7 +78,7 @@ public class ChatGroupReadDto
     public string? Description { get; set; }
     public string? Logo { get; set; }
     public bool Private { get; set; }
-    public Guid? OwnerId { get; set; }
+    public string? OwnerId { get; set; }
     public DateTime DateTime { get; set; }
     public ChatReadDto? LastMessage { get; set; }
     public virtual IEnumerable<ChatReadDto>? Messages { get; set; }
