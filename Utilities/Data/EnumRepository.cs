@@ -16,10 +16,6 @@ public class AppSettingRepository : IAppSettingRepository {
 
     public Task<GenericResponse<EnumDto?>> Read() {
         EnumDto model = new() {
-            Favorites = _context.Set<FavoriteEntity>().Select(x => new IdTitleReadDto {
-                Id = x.Id,
-                Title = x.Title
-            }).ToList(),
             Colors = _context.Set<ColorEntity>().Select(x => new IdTitleReadDto {
                 Id = x.Id,
                 Title = x.Title,

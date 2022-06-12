@@ -88,7 +88,6 @@ public static class StartupExtension {
         builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
         builder.Services.AddTransient<IIdTitleRepository<TagEntity>, IdTitleRepository<TagEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<ColorEntity>, IdTitleRepository<ColorEntity>>();
-        builder.Services.AddTransient<IIdTitleRepository<FavoriteEntity>, IdTitleRepository<FavoriteEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<ContactInfoItemEntity>, IdTitleRepository<ContactInfoItemEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<SpecialityEntity>, IdTitleRepository<SpecialityEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<BrandEntity>, IdTitleRepository<BrandEntity>>();
