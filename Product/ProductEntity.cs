@@ -25,6 +25,9 @@ public abstract class BaseProductEntity : BaseEntity {
     public double? Width { get; set; }
     public double? Height { get; set; }
     public double? Weight { get; set; }
+    public double? MinOrder { get; set; }
+    public double? MaxOrder { get; set; }
+    public string? Unit { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public ProductStatus? Status { get; set; }
@@ -97,6 +100,9 @@ public class ProductReadDto {
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public int? VisitsCount { get; set; }
+    public double? MinOrder { get; set; }
+    public double? MaxOrder { get; set; }
+    public string? Unit { get; set; }
     public decimal? Price { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
@@ -155,6 +161,9 @@ public class ProductCreateUpdateDto {
     public double? Width { get; set; }
     public double? Height { get; set; }
     public double? Weight { get; set; }
+    public double? MinOrder { get; set; }
+    public double? MaxOrder { get; set; }
+    public string? Unit { get; set; }
     public ProductStatus? Status { get; set; }
     public List<int>? Locations { get; set; }
     public List<Guid>? Favorites { get; set; }
@@ -190,6 +199,9 @@ public class FilterProductDto {
     public double? Width { get; set; }
     public double? Height { get; set; }
     public double? Weight { get; set; }
+    public double? MinOrder { get; set; }
+    public double? MaxOrder { get; set; }
+    public string? Unit { get; set; }
     public ProductStatus? Status { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }

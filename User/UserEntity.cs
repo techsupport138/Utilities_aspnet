@@ -12,8 +12,10 @@ public class UserEntity : IdentityUser {
     public string? AppUserName { get; set; }
     public string? AppPhoneNumber { get; set; }
     public string? AppEmail { get; set; }
-    public double? Wallet { get; set; } = 0;
     public string? Type { get; set; }
+    public string? Region { get; set; }
+    public string? Activity { get; set; }
+    public double? Wallet { get; set; } = 0;
     public bool? ShowContactInfo { get; set; }
     public DateTime? Birthdate { get; set; }
     public DateTime? CreatedAt { get; set; }
@@ -131,6 +133,8 @@ public class UserReadDto {
     public string? LastName { get; set; }
     public string? Headline { get; set; }
     public string? Website { get; set; }
+    public string? Region { get; set; }
+    public string? Activity { get; set; }
     public double? Wallet { get; set; }
     public bool? ShowContactInfo { get; set; }
     public bool IsAdmin { get; set; }
@@ -156,9 +160,11 @@ public class UserCreateUpdateDto {
     public string? AppUserName { get; set; }
     public string? AppPhoneNumber { get; set; }
     public string? AppEmail { get; set; }
+    public string? Type { get; set; }
+    public string? Region { get; set; }
+    public string? Activity { get; set; }
     public bool? Suspend { get; set; }
     public double? Wallet { get; set; }
-    public string? Type { get; set; }
     public bool? ShowContactInfo { get; set; }
     public DateTime? BirthDate { get; set; }
     public IEnumerable<Guid>? Colors { get; set; }

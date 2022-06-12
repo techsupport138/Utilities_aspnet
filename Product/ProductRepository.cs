@@ -91,6 +91,27 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
             if (parameters.VisitsCount.HasValue)
                 queryable = queryable.Where(x => x.VisitCount == parameters.VisitsCount).ToList();
+            
+            if (parameters.Length.HasValue)
+                queryable = queryable.Where(x => x.Length == parameters.Length).ToList();
+            
+            if (parameters.Width.HasValue)
+                queryable = queryable.Where(x => x.Width == parameters.Width).ToList();
+            
+            if (parameters.Height.HasValue)
+                queryable = queryable.Where(x => x.Height == parameters.Height).ToList();
+            
+            if (parameters.Weight.HasValue)
+                queryable = queryable.Where(x => x.Weight == parameters.Weight).ToList();     
+            
+            if (parameters.MinOrder.HasValue)
+                queryable = queryable.Where(x => x.MinOrder >= parameters.MinOrder).ToList();
+            
+            if (parameters.MaxOrder.HasValue)
+                queryable = queryable.Where(x => x.MaxOrder <= parameters.MaxOrder).ToList();        
+            
+            if (parameters.Unit.IsNotNullOrEmpty())
+                queryable = queryable.Where(x => x.Unit == parameters.Unit).ToList();
 
             if (!string.IsNullOrEmpty(parameters.Address))
                 queryable = queryable
@@ -255,6 +276,13 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         entity.IsForSale = dto.IsForSale ?? entity.IsForSale;
         entity.Enabled = dto.Enabled ?? entity.Enabled;
         entity.VisitCount = dto.VisitsCount ?? entity.VisitCount;
+        entity.Length = dto.Length ?? entity.Length;
+        entity.Width = dto.Width ?? entity.Width;
+        entity.Height = dto.Height ?? entity.Height;
+        entity.Weight = dto.Weight ?? entity.Weight;
+        entity.MinOrder = dto.MinOrder ?? entity.MinOrder;
+        entity.MaxOrder = dto.MaxOrder ?? entity.MaxOrder;
+        entity.Unit = dto.Unit ?? entity.Unit;
         entity.Address = dto.Address ?? entity.Address;
         entity.StartDate = dto.StartDate ?? entity.StartDate;
         entity.EndDate = dto.EndDate ?? entity.EndDate;

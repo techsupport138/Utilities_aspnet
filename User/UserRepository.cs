@@ -320,6 +320,8 @@ public class UserRepository : IUserRepository {
         entity.Bio = dto.Bio ?? entity.Bio;
         entity.AppUserName = dto.AppUserName ?? entity.AppUserName;
         entity.AppEmail = dto.AppEmail ?? entity.AppEmail;
+        entity.Region = dto.Region ?? entity.Region;
+        entity.Activity = dto.Activity ?? entity.Activity;
         entity.Suspend = dto.Suspend ?? entity.Suspend;
         entity.Headline = dto.Headline ?? entity.Headline;
         entity.AppPhoneNumber = dto.AppPhoneNumber ?? entity.AppPhoneNumber;
