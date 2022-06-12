@@ -10,7 +10,7 @@ public class NotificationEntity : BaseEntity {
 
     public bool? Visited { get; set; }
     public NotificationUseCase? UseCase { get; set; }
-    public ICollection<MediaEntity>? Media { get; set; }
+    public IEnumerable<MediaEntity>? Media { get; set; }
 
     public string? UserId { get; set; }
     public virtual UserEntity? User { get; set; }

@@ -14,7 +14,7 @@ public class BaseContentEntity : BaseEntity {
     [Required]
     public ApprovalStatus ApprovalStatus { get; set; } = ApprovalStatus.Pending;
     public IEnumerable<MediaEntity>? Media { get; set; }
-    public ICollection<ContactInformationEntity>? ContactInformation { get; set; }
+    public IEnumerable<ContactInformationEntity>? ContactInformation { get; set; }
 }
 
 [Table("Contents")]
