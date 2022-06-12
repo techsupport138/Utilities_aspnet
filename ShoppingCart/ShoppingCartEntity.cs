@@ -58,7 +58,8 @@ public class ShoppingCartReadDto : BaseReadDto
     }
 
     public Guid? UserId { get; set; }
-    public List<ShoppingCartItemReadDto> ShoppingCartItems { get; set; }
+    public UserReadDto? User { get; set; }
+    public List<ShoppingCartItemReadDto>? ShoppingCartItems { get; set; }
 }
 
 public class ShoppingCartItemReadDto : BaseReadDto
@@ -68,24 +69,34 @@ public class ShoppingCartItemReadDto : BaseReadDto
     public Guid? ShoppingCartId { get; set; }
 
     public Guid? ProductId { get; set; }
+    public ProductReadDto? Product { get; set; }
 
     public Guid? ProjectId { get; set; }
+    public ProductReadDto? Project { get; set; }
 
     public Guid? DailyPriceId { get; set; }
+    public ProductReadDto? DailyPrice { get; set; }
 
     public Guid? TutorialId { get; set; }
+    public ProductReadDto? Tutorial { get; set; }
 
     public Guid? EventId { get; set; }
+    public ProductReadDto? Event { get; set; }
 
     public Guid? AdId { get; set; }
+    public ProductReadDto? Ad { get; set; }
 
     public Guid? CompanyId { get; set; }
+    public ProductReadDto? Company { get; set; }
 
     public Guid? TenderId { get; set; }
+    public ProductReadDto? Tender { get; set; }
 
     public Guid? ServiceId { get; set; }
+    public ProductReadDto? Service { get; set; }
 
     public Guid? MagazineId { get; set; }
+    public ProductReadDto? Magazine { get; set; }
 }
 
 public class ShoppingCartCreateDto

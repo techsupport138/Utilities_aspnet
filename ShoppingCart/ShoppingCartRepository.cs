@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.ShoppingCart;
+﻿using Utilities_aspnet.User;
+
+namespace Utilities_aspnet.ShoppingCart;
 
 public interface IShoppingCartRepository
 {
@@ -22,25 +24,92 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
     public async Task<GenericResponse<ShoppingCartReadDto?>> Read(Guid userId)
     {
-        ShoppingCartEntity? shoppingCarts = await _context.Set<ShoppingCartEntity>()
+        var shoppingCarts = _context.Set<ShoppingCartEntity>()
             .Include(x => x.User)
-            .Include(x => x.ShoppingCartItems)
-            .FirstOrDefaultAsync(x => x.UserId == userId);
+            .Include(x => x.ShoppingCartItems)!
+            .ToList()
+            .Select(x => new ShoppingCartReadDto()
+            {
+                Id = x.Id,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt,
+                DeletedAt = x.DeletedAt,
+                UserId = x.UserId,
+                User = _mapper.Map<UserReadDto?>(x.User),
+                ShoppingCartItems = x.ShoppingCartItems?.Select(y => new ShoppingCartItemReadDto()
+                {
+                    Id = y.Id,
+                    ShoppingCartId = y.ShoppingCartId,
+                    ProductId = y.ProductId,
+                    Product = _mapper.Map<ProductReadDto?>(y.Product),
+                    ProjectId = y.ProjectId,
+                    Project = _mapper.Map<ProductReadDto?>(y.Project),
+                    DailyPriceId = y.DailyPriceId,
+                    DailyPrice = _mapper.Map<ProductReadDto?>(y.DailyPrice),
+                    TutorialId = y.TutorialId,
+                    Tutorial = _mapper.Map<ProductReadDto?>(y.Tutorial),
+                    EventId = y.EventId,
+                    Event = _mapper.Map<ProductReadDto?>(y.Event),
+                    AdId = y.AdId,
+                    Ad = _mapper.Map<ProductReadDto?>(y.Ad),
+                    CompanyId = y.CompanyId,
+                    Company = _mapper.Map<ProductReadDto?>(y.Company),
+                    TenderId = y.TenderId,
+                    Tender = _mapper.Map<ProductReadDto?>(y.Tender),
+                    ServiceId = y.ServiceId,
+                    Service = _mapper.Map<ProductReadDto?>(y.Service),
+                    MagazineId = y.MagazineId,
+                    Magazine = _mapper.Map<ProductReadDto?>(y.Magazine),
+                }).ToList()
+            })
+            .ToList()
+            .FirstOrDefault(x => x.UserId == userId);
 
-        ShoppingCartReadDto? result = _mapper.Map<ShoppingCartReadDto?>(shoppingCarts);
-
-        return new GenericResponse<ShoppingCartReadDto?>(result);
+        return new GenericResponse<ShoppingCartReadDto?>(shoppingCarts);
     }
 
     public async Task<GenericResponse<ShoppingCartReadDto?>> ReadById(Guid shoppingCartId)
     {
-        ShoppingCartEntity? shoppingCart = await _context.Set<ShoppingCartEntity>()
+        var shoppingCarts = _context.Set<ShoppingCartEntity>()
             .Include(x => x.User)
-            .Include(x => x.ShoppingCartItems)
-            .FirstOrDefaultAsync(x => x.Id == shoppingCartId);
-
-        ShoppingCartReadDto? result = _mapper.Map<ShoppingCartReadDto?>(shoppingCart);
-
+            .Include(x => x.ShoppingCartItems)!
+            .ToList()
+            .Select(x => new ShoppingCartReadDto()
+            {
+                Id = x.Id,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt,
+                DeletedAt = x.DeletedAt,
+                UserId = x.UserId,
+                User = _mapper.Map<UserReadDto?>(x.User),
+                ShoppingCartItems = x.ShoppingCartItems?.Select(y => new ShoppingCartItemReadDto()
+                {
+                    Id = y.Id,
+                    ShoppingCartId = y.ShoppingCartId,
+                    ProductId = y.ProductId,
+                    Product = _mapper.Map<ProductReadDto?>(y.Product),
+                    ProjectId = y.ProjectId,
+                    Project = _mapper.Map<ProductReadDto?>(y.Project),
+                    DailyPriceId = y.DailyPriceId,
+                    DailyPrice = _mapper.Map<ProductReadDto?>(y.DailyPrice),
+                    TutorialId = y.TutorialId,
+                    Tutorial = _mapper.Map<ProductReadDto?>(y.Tutorial),
+                    EventId = y.EventId,
+                    Event = _mapper.Map<ProductReadDto?>(y.Event),
+                    AdId = y.AdId,
+                    Ad = _mapper.Map<ProductReadDto?>(y.Ad),
+                    CompanyId = y.CompanyId,
+                    Company = _mapper.Map<ProductReadDto?>(y.Company),
+                    TenderId = y.TenderId,
+                    Tender = _mapper.Map<ProductReadDto?>(y.Tender),
+                    ServiceId = y.ServiceId,
+                    Service = _mapper.Map<ProductReadDto?>(y.Service),
+                    MagazineId = y.MagazineId,
+                    Magazine = _mapper.Map<ProductReadDto?>(y.Magazine),
+                }).ToList()
+            })
+            .ToList()
+            .FirstOrDefault(x => x.Id == shoppingCartId);
         return new GenericResponse<ShoppingCartReadDto?>(result);
     }
 
@@ -84,7 +153,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
         ShoppingCartItemEntity? item = shoppingCart.ShoppingCartItems?.FirstOrDefault(x => x.Id == dto.ShoppingCartItemId);
 
-        if(item == null)
+        if (item == null)
             return await ReadById(shoppingCart.Id);
 
         item.Quantity = dto.Quantity;
@@ -106,7 +175,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
         ShoppingCartItemEntity? item = shoppingCart.ShoppingCartItems?.FirstOrDefault(x => x.Id == shoppingCartItemId);
 
-        if(item == null)
+        if (item == null)
             return await ReadById(shoppingCart.Id);
 
         shoppingCart.ShoppingCartItems?.RemoveAll(x => x.Id == shoppingCartItemId);
