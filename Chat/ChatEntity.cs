@@ -21,7 +21,7 @@ public class ChatEntity : BaseEntity {
 
     [StringLength(450)]
     [ForeignKey(nameof(ChatGroup))]
-    public string? ChatGroupId { get; set; }
+    public Guid? ChatGroupId { get; set; }
     public virtual ChatGroupEntity? ChatGroup { get; set; }
 }
 
