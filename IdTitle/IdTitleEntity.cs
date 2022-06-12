@@ -13,7 +13,7 @@ public abstract class BaseIdTitleEntity : BaseEntity {
 
     public IdTitleUseCase UseCase { get; set; } = IdTitleUseCase.Null;
 
-    public IEnumerable<MediaEntity> Media { get; set; }
+    public ICollection<MediaEntity> Media { get; set; }
     public IEnumerable<UserEntity>? User { get; set; }
     public IEnumerable<ProductEntity>? Product { get; set; }
     public IEnumerable<DailyPriceEntity>? DailyPrice { get; set; }
@@ -44,7 +44,7 @@ public class CategoryEntity : BaseIdTitleEntity {
     public CategoryEntity? Parent { get; set; }
 
     public IEnumerable<FormEntity>? FormBuilderFieldLists { get; set; }
-    
+
     [InverseProperty("Parent")]
     public IEnumerable<CategoryEntity>? Children { get; set; }
 }
@@ -84,7 +84,7 @@ public class IdTitleReadDto {
     public string? Link { get; set; }
     public IdTitleUseCase? UseCase { get; set; }
     public IdTitleReadDto? Parent { get; set; }
-    public IEnumerable<IdTitleReadDto>? Childern { get; set; }
+    public IEnumerable<IdTitleReadDto>? Children { get; set; }
     public Guid? ParentId { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
 }
