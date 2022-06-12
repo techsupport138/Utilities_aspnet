@@ -110,7 +110,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
             })
             .ToList()
             .FirstOrDefault(x => x.Id == shoppingCartId);
-        return new GenericResponse<ShoppingCartReadDto?>(result);
+        return new GenericResponse<ShoppingCartReadDto?>(shoppingCarts);
     }
 
     public async Task<GenericResponse<ShoppingCartReadDto?>> Create(ShoppingCartCreateDto dto)
