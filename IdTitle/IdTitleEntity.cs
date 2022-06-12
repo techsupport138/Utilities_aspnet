@@ -48,11 +48,11 @@ public class ReferenceEntity : BaseIdTitleEntity {
 [Table("Categories")]
 public class CategoryEntity : BaseIdTitleEntity {
     public Guid? ParentId { get; set; }
-    [InverseProperty("Child")]
+    [InverseProperty("Childs")]
     public CategoryEntity? Parent { get; set; }
     public ICollection<FormEntity>? FormBuilderFieldLists { get; set; }
     [InverseProperty("Parent")]
-    public ICollection<CategoryEntity>? Child { get; set; }
+    public ICollection<CategoryEntity>? Childs { get; set; }
 }
 
 [Table("Specialities")]
@@ -102,7 +102,7 @@ public class IdTitleReadDto {
     public string? Link { get; set; }
     public IdTitleUseCase? UseCase { get; set; }
     public IdTitleReadDto? Parent { get; set; }
-    public IEnumerable<IdTitleReadDto>? Child { get; set; }
+    public IEnumerable<IdTitleReadDto>? Childs { get; set; }
     public Guid? ParentId { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
 }

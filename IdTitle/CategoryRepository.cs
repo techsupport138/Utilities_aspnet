@@ -5,6 +5,7 @@ public interface ICategoryRepository {
     public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> Read();
     public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadV2();
     public Task<GenericResponse<IdTitleReadDto>> ReadById(Guid id);
+    public Task<GenericResponse<IdTitleReadDto>> ReadByIdV2(Guid id);
     public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCase(IdTitleUseCase useCase);
     public Task<GenericResponse<IdTitleReadDto>> Update(IdTitleCreateUpdateDto dto);
     public Task<GenericResponse> Delete(Guid id);
@@ -40,7 +41,7 @@ public class CategoryRepository : ICategoryRepository {
     public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadV2() {
         IEnumerable<CategoryEntity> i = await _dbContext.Set<CategoryEntity>()
             .Include(i => i.Media)
-            .Include(i => i.Child).ThenInclude(i=>i.Media)
+            .Include(i => i.Childs).ThenInclude(i=>i.Media).Where(x=>x.ParentId == null)
             .AsNoTracking()
             .ToListAsync();
         return new GenericResponse<IEnumerable<IdTitleReadDto>>(_mapper.Map<IEnumerable<IdTitleReadDto>>(i));
@@ -50,6 +51,15 @@ public class CategoryRepository : ICategoryRepository {
         CategoryEntity? i = await _dbContext.Set<CategoryEntity>()
             .Include(i => i.Media)
             .Include(i => i.Parent).ThenInclude(i => i.Media)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(i => i.Id == id);
+        return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(i));
+    }
+    
+    public async Task<GenericResponse<IdTitleReadDto>> ReadByIdV2(Guid id) {
+        CategoryEntity? i = await _dbContext.Set<CategoryEntity>()
+            .Include(i => i.Media)
+            .Include(i => i.Childs).ThenInclude(i => i.Media)
             .AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id);
         return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(i));
