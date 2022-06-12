@@ -29,4 +29,19 @@ public class ChatController : BaseApiController {
         GenericResponse<ChatReadDto?> i = await _chatRepository.Create(model);
         return Result(i);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<GenericResponse<ChatGroupReadDto?>>> CreateGroup(ChatGroupCreateDto model)
+    {
+        GenericResponse<ChatGroupReadDto?> i = await _chatRepository.CreateGroup(model);
+        return Result(i);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<GenericResponse<ChatGroupReadDto?>>> AddMemberToGroup(AddMemberToGroup model)
+    {
+        GenericResponse<ChatGroupReadDto?> i = await _chatRepository.AddMemebrToGroup(model);
+        return Result(i);
+    }
+
 }
