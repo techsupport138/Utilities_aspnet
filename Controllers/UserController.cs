@@ -24,13 +24,6 @@ public class UserController : BaseApiController {
         return Result(i);
     }
 
-    [HttpPost("ActivateMobile")]
-    public async Task<ActionResult<GenericResponse>> ActivateMobile(ActivateMobileDto dto)
-    {
-        GenericResponse i = await _userRepository.ActivateMobile(dto);
-        return Result(i);
-    }
-
     [HttpPost("LoginWithMobile")]
     public async Task<ActionResult<GenericResponse>> LoginWithMobile(LoginWithMobileOrUserNameDto dto)
     {
