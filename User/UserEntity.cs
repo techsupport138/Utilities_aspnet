@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.User;
+﻿using Utilities_aspnet.Chat;
+
+namespace Utilities_aspnet.User;
 
 public class UserEntity : IdentityUser {
     public bool Suspend { get; set; } = false;
@@ -36,6 +38,7 @@ public class UserEntity : IdentityUser {
     public IEnumerable<ServiceEntity>? Services { get; set; }
     public IEnumerable<MagazineEntity>? Magazines { get; set; }
     public IEnumerable<SpecialityEntity>? Specialties { get; set; }
+    public IEnumerable<ChatGroupMemberEntity>? ChatGroupMembers { get; set; }
 }
 
 public enum IdentityType
@@ -138,6 +141,7 @@ public class UserReadDto {
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
     public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
     public IdentityType? IdentityType { get; set; }
+    public IEnumerable<ChatGroupMemberEntity>? ChatGroupMembers { get; set; }
 }
 
 public class UserCreateUpdateDto {
