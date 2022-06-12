@@ -14,8 +14,6 @@ public class AutoMapperProfile : Profile
         CreateMap<CategoryEntity, IdTitleCreateUpdateDto>().ReverseMap();
         CreateMap<SpecialityEntity, IdTitleReadDto>().ReverseMap();
         CreateMap<SpecialityEntity, IdTitleCreateUpdateDto>().ReverseMap();
-        CreateMap<FavoriteEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<FavoriteEntity, IdTitleCreateUpdateDto>().ReverseMap();
         CreateMap<ColorEntity, IdTitleReadDto>().ReverseMap();
         CreateMap<ColorEntity, IdTitleCreateUpdateDto>().ReverseMap();
         CreateMap<ContactInfoItemEntity, IdTitleReadDto>().ReverseMap();
@@ -135,7 +133,6 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
             .ForMember(x => x.Colors, y => y.Ignore())
             .ForMember(x => x.Specialties, y => y.Ignore())
-            .ForMember(x => x.Favorites, y => y.Ignore())
             .ForMember(x => x.Location, y => y.Ignore())
             .ForMember(x => x.Media, y => y.Ignore())
             .ForMember(x => x.ContactInformation, y => y.Ignore());

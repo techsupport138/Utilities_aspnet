@@ -52,9 +52,6 @@ public class CategoryEntity : BaseIdTitleEntity {
 [Table("Specialities")]
 public class SpecialityEntity : BaseIdTitleEntity { }
 
-[Table("Favorites")]
-public class FavoriteEntity : BaseIdTitleEntity { }
-
 [Table("Colors")]
 public class ColorEntity : BaseIdTitleEntity { }
 

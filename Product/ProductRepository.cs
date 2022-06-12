@@ -279,16 +279,6 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             entity.Categories = list;
         }
 
-        if (dto.Favorites.IsNotNullOrEmpty()) {
-            List<FavoriteEntity> list = new();
-            foreach (Guid item in dto.Favorites ?? new List<Guid>()) {
-                FavoriteEntity? e = await _context.Set<FavoriteEntity>().FirstOrDefaultAsync(x => x.Id == item);
-                if (e != null) list.Add(e);
-            }
-
-            entity.Favorites = list;
-        }
-
         if (dto.Locations.IsNotNullOrEmpty()) {
             List<LocationEntity> list = new();
             foreach (int item in dto.Locations ?? new List<int>()) {

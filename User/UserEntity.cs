@@ -23,7 +23,6 @@ public class UserEntity : IdentityUser {
     public IEnumerable<FormEntity>? FormBuilders { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<ColorEntity>? Colors { get; set; }
-    public IEnumerable<FavoriteEntity>? Favorites { get; set; }
     public IEnumerable<ContactInformationEntity>? ContactInformation { get; set; }
     public IEnumerable<ReportEntity>? Reports { get; set; }
     public IEnumerable<ProductEntity>? Products { get; set; }

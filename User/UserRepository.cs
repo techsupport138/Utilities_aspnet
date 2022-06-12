@@ -164,7 +164,6 @@ public class UserRepository : IUserRepository {
             .AsNoTracking()
             .Include(u => u.Media)
             .Include(u => u.Colors)
-            .Include(u => u.Favorites)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (model == null)
@@ -261,7 +260,6 @@ public class UserRepository : IUserRepository {
             .AsNoTracking()
             .Include(u => u.Media)
             .Include(u => u.Colors)
-            .Include(u => u.Favorites)
             .ToListAsync();
 
         IEnumerable<UserReadDto>? result = _mapper.Map<IEnumerable<UserReadDto>>(users);
@@ -338,17 +336,7 @@ public class UserRepository : IUserRepository {
 
             entity.Colors = list;
         }
-
-        if (dto.Favorites.IsNotNullOrEmpty()) {
-            List<FavoriteEntity> list = new();
-            foreach (Guid item in dto.Favorites ?? new List<Guid>()) {
-                FavoriteEntity? e = await _context.Set<FavoriteEntity>().FirstOrDefaultAsync(x => x.Id == item);
-                if (e != null) list.Add(e);
-            }
-
-            entity.Favorites = list;
-        }
-
+        
         if (dto.Locations.IsNotNullOrEmpty()) {
             List<LocationEntity> list = new();
             foreach (int item in dto.Locations ?? new List<int>()) {

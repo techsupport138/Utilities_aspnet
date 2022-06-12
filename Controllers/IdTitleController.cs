@@ -54,7 +54,7 @@ public class IdTitleController : BaseApiController {
             case "brand":
                 i = await _brandRepository.Read();
                 break;
-            case "refernce":
+            case "reference":
                 i = await _referenceRepository.Read();
                 break;
             case "speciality":
@@ -78,7 +78,7 @@ public class IdTitleController : BaseApiController {
             case "brand":
                 i = await _brandRepository.ReadById(id);
                 break;
-            case "refernce":
+            case "reference":
                 i = await _referenceRepository.ReadById(id);
                 break;
             case "speciality":
@@ -104,7 +104,7 @@ public class IdTitleController : BaseApiController {
             case "brand":
                 i = await _brandRepository.ReadByUseCase(useCase);
                 break;
-            case "refernce":
+            case "reference":
                 i = await _referenceRepository.ReadByUseCase(useCase);
                 break;
             case "speciality":
@@ -126,7 +126,7 @@ public class IdTitleController : BaseApiController {
             case "brand":
                 i = await _brandRepository.Update(dto);
                 break;
-            case "refernce":
+            case "reference":
                 i = await _referenceRepository.Update(dto);
                 break;
             case "speciality":
@@ -148,7 +148,7 @@ public class IdTitleController : BaseApiController {
             case "brand":
                 i = await _brandRepository.Delete(id);
                 break;
-            case "refernce":
+            case "reference":
                 i = await _referenceRepository.Delete(id);
                 break;
             case "speciality":
