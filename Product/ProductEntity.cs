@@ -115,6 +115,7 @@ public class ProductReadDto {
     public IEnumerable<VoteReadDto>? VoteFields { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
     public IEnumerable<FormDto>? Forms { get; set; }
+    public IEnumerable<CommentReadDto>? Comments { get; set; }
 }
 
 public class ProductCreateUpdateDto {
