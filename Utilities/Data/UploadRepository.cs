@@ -71,7 +71,9 @@ public class UploadRepository : IUploadRepository
                 TenderId = model.TenderId,
                 ContentId = model.ContentId,
                 CreatedAt = DateTime.Now,
-                UseCase = model.UseCase
+                UseCase = model.UseCase,
+                Visibility = model.Visibility,
+                Title = model.Title
             };
             await _context.Set<MediaEntity>().AddAsync(media);
             await _context.SaveChangesAsync();
@@ -94,7 +96,9 @@ public class UploadRepository : IUploadRepository
             TutorialId = model.TutorialId,
             TenderId = model.TenderId,
             CreatedAt = DateTime.Now,
-            UseCase = model.UseCase
+            UseCase = model.UseCase,
+            Visibility = model.Visibility,
+            Title = model.Title
         }))
         {
             await _context.Set<MediaEntity>().AddAsync(media);

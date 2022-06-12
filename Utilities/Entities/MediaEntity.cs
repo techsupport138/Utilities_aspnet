@@ -8,6 +8,8 @@ public class MediaEntity : BaseEntity {
     public FileTypes? FileType { get; set; }
     public string? UseCase { get; set; }
     public string? Link { get; set; }
+    public string? Title { get; set; }
+    public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
 
     public ContentEntity? Content { get; set; }
     public Guid? ContentId { get; set; }
@@ -63,6 +65,7 @@ public class MediaDto {
     public FileTypes Type { get; set; }
     public string? UseCase { get; set; }
     public string? Link { get; set; }
+    public string? Title { get; set; }
 }
 
 public class UploadDto {
@@ -70,6 +73,8 @@ public class UploadDto {
     public string? UserId { get; set; }
     public List<IFormFile>? Files { get; set; }
     public List<string>? Links { get; set; }
+    public string? Title { get; set; }
+    public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
     public Guid? AdsId { get; set; }
     public Guid? JobId { get; set; }
     public Guid? LearnId { get; set; }
