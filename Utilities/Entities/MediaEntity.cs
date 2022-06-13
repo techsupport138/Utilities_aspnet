@@ -80,6 +80,7 @@ public class UploadDto {
     public string? Title { get; set; }
     public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
     public Guid? AdsId { get; set; }
+    public Guid? DailyPriceId { get; set; }
     public Guid? JobId { get; set; }
     public Guid? LearnId { get; set; }
     public Guid? PostId { get; set; }
@@ -94,4 +95,5 @@ public class UploadDto {
     public Guid? ContentId { get; set; }
     public Guid? CategoryId { get; set; }
     public Guid? BrandId { get; set; }
+    public Guid? NotificationId { get; set; }
 }
