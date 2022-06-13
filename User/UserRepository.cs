@@ -161,6 +161,7 @@ public class UserRepository : IUserRepository {
             .AsNoTracking()
             .Include(u => u.Media)
             .Include(u => u.Colors)
+            .Include(u=>u.Favorites)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (model == null)
@@ -353,6 +354,15 @@ public class UserRepository : IUserRepository {
             }
 
             entity.Specialties = list;
+        }
+        if (dto.Favorites.IsNotNullOrEmpty()) {
+            List<CategoryEntity> list = new();
+            foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
+                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) list.Add(e);
+            }
+
+            entity.Favorites = list;
         }
     }
 }

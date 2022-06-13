@@ -39,6 +39,7 @@ public class UserEntity : IdentityUser {
     public IEnumerable<ServiceEntity>? Services { get; set; }
     public IEnumerable<MagazineEntity>? Magazines { get; set; }
     public IEnumerable<SpecialityEntity>? Specialties { get; set; }
+    public IEnumerable<CategoryEntity>? Favorites { get; set; }
 }
 
 [Table("Otps")]
@@ -112,7 +113,7 @@ public class UserReadDto {
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleReadDto>? Colors { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
-    public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
+    public IEnumerable<CategoryEntity>? Favorites { get; set; }
 }
 
 public class UserCreateUpdateDto {
