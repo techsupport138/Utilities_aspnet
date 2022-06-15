@@ -398,9 +398,10 @@ public class UserRepository : IUserRepository {
                     };
                     await _context.Set<ContactInformationEntity>().AddAsync(c);
                     await _context.SaveChangesAsync();
+                    list.Add(c);
                 }
+                
             }
-
             entity.ContactInformation = list;
         }
     }
