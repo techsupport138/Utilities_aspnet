@@ -95,5 +95,4 @@ public class IdTitleCreateUpdateDto {
     public string? Link { get; set; }
     public string? Color { get; set; }
     public IdTitleUseCase? UseCase { get; set; }
-    public FormFieldDto? FormField { get; set; }
 }
