@@ -164,6 +164,7 @@ public class UserRepository : IUserRepository {
             .Include(u=>u.Favorites)
             .Include(u => u.ContactInformation)
             .Include(u => u.Specialties)
+            .Include(u => u.Location)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (model == null)

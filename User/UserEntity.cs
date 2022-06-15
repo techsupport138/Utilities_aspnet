@@ -114,6 +114,7 @@ public class UserReadDto {
     public DateTime? BirthDate { get; set; }
     public GenderEntity? Gender { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
+    public IEnumerable<LocationReadDto>? Locations { get; set; }
     public IEnumerable<IdTitleReadDto>? Colors { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
     public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
