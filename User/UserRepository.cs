@@ -162,6 +162,8 @@ public class UserRepository : IUserRepository {
             .Include(u => u.Media)
             .Include(u => u.Colors)
             .Include(u=>u.Favorites)
+            .Include(u => u.ContactInformation)
+            .Include(u => u.Specialties)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (model == null)
@@ -175,14 +177,26 @@ public class UserRepository : IUserRepository {
     }
 
     public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id) {
-        UserEntity? model = await _context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+        UserEntity? model = await _context.Set<UserEntity>()
+            .Include(u => u.Media)
+            .Include(u => u.Colors)
+            .Include(u => u.Favorites)
+            .Include(u => u.ContactInformation)
+            .Include(u => u.Specialties)
+            .AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
         UserReadDto? dto = _mapper.Map<UserReadDto>(model);
         return new GenericResponse<UserReadDto?>(dto);
     }
 
     public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username) {
-        UserEntity? entity = await _context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
+        UserEntity? entity = await _context.Set<UserEntity>()
+            .Include(u => u.Media)
+            .Include(u => u.Colors)
+            .Include(u => u.Favorites)
+            .Include(u => u.ContactInformation)
+            .Include(u => u.Specialties)
+            .AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
         if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
         UserReadDto? dto = _mapper.Map<UserReadDto>(entity);
         return new GenericResponse<UserReadDto?>(dto);
@@ -258,6 +272,9 @@ public class UserRepository : IUserRepository {
             .AsNoTracking()
             .Include(u => u.Media)
             .Include(u => u.Colors)
+            .Include(u => u.ContactInformation)
+            .Include(u => u.Specialties)
+            .Include(u => u.Favorites)
             .ToListAsync();
 
         IEnumerable<UserReadDto>? result = _mapper.Map<IEnumerable<UserReadDto>>(users);
