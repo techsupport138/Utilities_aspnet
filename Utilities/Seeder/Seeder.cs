@@ -74,11 +74,9 @@ public class SeedRepository : ISeedRepository
         GenderEntity? genderEntity = await _context.Set<GenderEntity>().FirstOrDefaultAsync();
         if (genderEntity == null)
         {
-            int i = 0;
             foreach (var item in genders)
             {
-                i++;
-                await _context.Set<GenderEntity>().AddAsync(new GenderEntity { Title = item, Id = i});
+                await _context.Set<GenderEntity>().AddAsync(new GenderEntity { Title = item});
                 await _context.SaveChangesAsync();
             }
         }

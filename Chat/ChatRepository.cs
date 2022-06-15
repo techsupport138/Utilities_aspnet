@@ -95,8 +95,8 @@ public class ChatRepository : IChatRepository {
             });
         }
 
-        if (conversations.Count < 1)
-            return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.NotFound);
+        //if (conversations.Count < 1)
+        //    return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.NotFound);
         return new GenericResponse<IEnumerable<ChatReadDto>?>(conversations.OrderByDescending(x => x.DateTime));
     }
 }
