@@ -24,10 +24,10 @@ public class FormRepository : IFormRepository {
         foreach (IdTitleCreateUpdateDto item in model.Form)
             try {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
-                    (x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
-                     x.CompanyId == model.CompanyId || x.UserId == model.UserId ||
-                     x.EventId == model.EventId || x.MagazineId == model.MagazineId || x.ServiceId == model.ServiceId ||
-                     x.TenderId == model.TenderId || x.TutorialId == model.TutorialId
+                    ((x.ProductId == model.ProductId && model.ProductId != null) || (x.ProjectId == model.ProjectId && model.ProjectId != null) || (x.AdId == model.AdId && model.AdId != null) ||
+            (x.CompanyId == model.CompanyId && model.CompanyId != null) || (x.UserId == model.UserId && model.UserId != null) ||
+            (x.EventId == model.EventId && model.EventId != null) || (x.MagazineId == model.MagazineId && model.MagazineId != null) || (x.ServiceId == model.ServiceId && model.ServiceId != null) ||
+            (x.TenderId == model.TenderId && model.TenderId != null) || (x.TutorialId == model.TutorialId && model.TutorialId != null)
                     ) && x.FormFieldId == item.Id);
                 if (up != null) {
                     up.Title = item.Title;
@@ -57,10 +57,10 @@ public class FormRepository : IFormRepository {
             }
 
         List<FormEntity> entity = await _dbContext.Set<FormEntity>().Where(x =>
-            x.ProductId == model.ProductId || x.ProjectId == model.ProjectId || x.AdId == model.AdId ||
-            x.CompanyId == model.CompanyId || x.UserId == model.UserId ||
-            x.EventId == model.EventId || x.MagazineId == model.MagazineId || x.ServiceId == model.ServiceId ||
-            x.TenderId == model.TenderId || x.TutorialId == model.TutorialId).ToListAsync();
+            (x.ProductId == model.ProductId && model.ProductId != null) || (x.ProjectId == model.ProjectId && model.ProjectId != null) || (x.AdId == model.AdId && model.AdId != null) ||
+            (x.CompanyId == model.CompanyId && model.CompanyId != null) || (x.UserId == model.UserId && model.UserId != null) ||
+            (x.EventId == model.EventId && model.EventId != null) || (x.MagazineId == model.MagazineId && model.MagazineId != null) || (x.ServiceId == model.ServiceId && model.ServiceId != null) ||
+            (x.TenderId == model.TenderId && model.TenderId != null) || (x.TutorialId == model.TutorialId && model.TutorialId != null)).ToListAsync();
 
         return new GenericResponse<List<FormFieldDto>>(_mapper.Map<List<FormFieldDto>>(entity));
     }

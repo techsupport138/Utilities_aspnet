@@ -22,6 +22,7 @@ public class FormController : BaseApiController {
         return Result(i);
     }
 
+    [AllowAnonymous]
     [HttpGet("{categoryId:guid}")]
     public async Task<ActionResult<GenericResponse<List<FormFieldDto>>>> ReadFormFieldById(Guid categoryId) {
         GenericResponse<List<FormFieldDto>> i = await _formRepository.ReadFormFields(categoryId);
