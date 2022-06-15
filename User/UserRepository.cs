@@ -364,5 +364,27 @@ public class UserRepository : IUserRepository {
 
             entity.Favorites = list;
         }
+        if (dto.ContactInformations.IsNotNullOrEmpty()) {
+            List<ContactInformationEntity> list = new();
+            foreach (ContactInformationCreateUpdateDto item in dto.ContactInformations) {
+                ContactInfoItemEntity? e = await _context.Set<ContactInfoItemEntity>().FirstOrDefaultAsync(x => x.Id == item.ContactInfoItemId);
+                if (e != null)
+                {
+                    ContactInformationEntity c = new ContactInformationEntity
+                    {
+                        ContactInfoItemId = item.ContactInfoItemId,
+                        CreatedAt = DateTime.Now,
+                        Link = item.Link,
+                        UserId = entity.Id,
+                        Value = item.Value,
+                        Visibility = item.Visibility
+                    };
+                    await _context.Set<ContactInformationEntity>().AddAsync(c);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            entity.ContactInformation = list;
+        }
     }
 }

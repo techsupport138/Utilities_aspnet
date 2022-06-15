@@ -113,7 +113,8 @@ public class UserReadDto {
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleReadDto>? Colors { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
-    public IEnumerable<CategoryEntity>? Favorites { get; set; }
+    public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
+    public IEnumerable<ContactInformationReadDto>? ContactInformations { get; set; }
 }
 
 public class UserCreateUpdateDto {
@@ -138,6 +139,7 @@ public class UserCreateUpdateDto {
     public IEnumerable<Guid>? Colors { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Favorites { get; set; }
+    public IEnumerable<ContactInformationCreateUpdateDto>? ContactInformations { get; set; }
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<UploadDto>? Media { get; set; }
 }
