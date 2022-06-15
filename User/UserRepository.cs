@@ -342,6 +342,7 @@ public class UserRepository : IUserRepository {
         entity.AppPhoneNumber = dto.AppPhoneNumber ?? entity.AppPhoneNumber;
         entity.Birthdate = dto.BirthDate ?? entity.Birthdate;
         entity.Wallet = dto.Wallet ?? entity.Wallet;
+        entity.GenderId = dto.GenderId ?? entity.GenderId;
 
         if (dto.Colors.IsNotNullOrEmpty()) {
             List<ColorEntity> list = new();

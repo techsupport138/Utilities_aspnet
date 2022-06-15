@@ -7,4 +7,5 @@ public class EnumDto {
     public List<IdTitleReadDto>? Categories { get; set; }
     public List<IdTitleReadDto>? FormFieldType { get; set; }
     public List<IdTitleReadDto>? CategoryUseCase { get; set; }
+    public List<GenderEntity>? Genders { get; set; }
 }

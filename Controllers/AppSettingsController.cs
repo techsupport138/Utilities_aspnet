@@ -31,4 +31,10 @@ public class AppSettingsController : BaseApiController {
         await _seedRepository.SeedLocations();
         return Ok();
     }
+    
+    [HttpGet("SeedGenders")]
+    public async Task<ActionResult> SeedGenders() {
+        await _seedRepository.SeedGenders();
+        return Ok();
+    }
 }

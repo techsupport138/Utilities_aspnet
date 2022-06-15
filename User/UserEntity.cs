@@ -22,6 +22,8 @@ public class UserEntity : IdentityUser {
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
 
+    public int? GenderId { get; set; }
+    public GenderEntity? Gender { get; set; }
     public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<FormEntity>? FormBuilders { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
@@ -110,6 +112,7 @@ public class UserReadDto {
     public bool IsAdmin { get; set; }
     public bool? Suspend { get; set; }
     public DateTime? BirthDate { get; set; }
+    public GenderEntity? Gender { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<IdTitleReadDto>? Colors { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
@@ -136,6 +139,7 @@ public class UserCreateUpdateDto {
     public double? Wallet { get; set; }
     public bool? ShowContactInfo { get; set; }
     public DateTime? BirthDate { get; set; }
+    public int? GenderId { get; set; }
     public IEnumerable<Guid>? Colors { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Favorites { get; set; }

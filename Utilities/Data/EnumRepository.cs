@@ -44,6 +44,7 @@ public class AppSettingRepository : IAppSettingRepository {
                     UseCase = w.UseCase,
                     ParentId = w.ParentId
                 }).ToList();
+        model.Genders = _context.Set<GenderEntity>().ToList();
 
         return Task.FromResult(new GenericResponse<EnumDto?>(model, UtilitiesStatusCodes.Success, "Success"));
     }

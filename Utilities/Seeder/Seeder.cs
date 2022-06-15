@@ -1,11 +1,14 @@
-namespace Utilities_aspnet.Utilities.Seeder;
+﻿namespace Utilities_aspnet.Utilities.Seeder;
 public interface ISeedRepository
 {
     Task<bool> SeedLocations();
+    Task<bool> SeedGenders();
 }
 
 public class SeedRepository : ISeedRepository
 {
+    public static string[] genders =
+{ "مرد", "زن", "تیم", "شرکت", "موسسه فرهنگی هنری", "اتحادیه(مشاغل آزاد)", "سازمان های مردم نهاد"};
     private readonly DbContext _context;
 
     public SeedRepository(DbContext context)
@@ -61,6 +64,22 @@ public class SeedRepository : ISeedRepository
                         await _context.SaveChangesAsync();
                     }
                 }
+            }
+        }
+        return true;
+    }
+    
+    public async Task<bool> SeedGenders()
+    {
+        GenderEntity? genderEntity = await _context.Set<GenderEntity>().FirstOrDefaultAsync();
+        if (genderEntity == null)
+        {
+            int i = 0;
+            foreach (var item in genders)
+            {
+                i++;
+                await _context.Set<GenderEntity>().AddAsync(new GenderEntity { Title = item, Id = i});
+                await _context.SaveChangesAsync();
             }
         }
         return true;
