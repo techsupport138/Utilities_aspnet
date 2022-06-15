@@ -122,6 +122,7 @@ public class AutoMapperProfile : Profile
         CreateMap<LocationEntity, LocationReadDto>().ReverseMap();
         CreateMap<UserEntity, UserReadDto>().ReverseMap();
         CreateMap<FormEntity, FormDto>().ReverseMap();
+        CreateMap<FormEntity, FormFieldDto>().ReverseMap();
         CreateMap<FormFieldEntity, FormFieldDto>().ReverseMap();
         CreateMap<NotificationEntity, NotificationDto>().ReverseMap();
         CreateMap<CommentEntity, CommentCreateUpdateDto>().ReverseMap();
