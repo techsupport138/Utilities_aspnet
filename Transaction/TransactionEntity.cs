@@ -39,6 +39,19 @@ namespace Utilities_aspnet.Transaction
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
     }
+    
+    public class TransactionCreateDto
+    {
+        public decimal? Amount { get; set; }
+        public string? UserId { get; set; }
+        public string? Descriptions { get; set; }
+        public TransactionStatus? StatusId { get; set; } = TransactionStatus.Pending;
+        public string? PaymentId { get; set; }
+        public Guid? AdId { get; set; }
+        public Guid? ProductId { get; set; }
+        public Guid? TutorialId { get; set; }
+        public Guid? TenderId { get; set; }
+    }
 
 
 

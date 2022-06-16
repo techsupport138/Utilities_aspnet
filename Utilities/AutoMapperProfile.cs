@@ -1,4 +1,5 @@
 using Utilities_aspnet.Comment;
+using Utilities_aspnet.Transaction;
 using Utilities_aspnet.User;
 
 namespace Utilities_aspnet.Utilities;
@@ -127,6 +128,9 @@ public class AutoMapperProfile : Profile
         CreateMap<NotificationEntity, NotificationDto>().ReverseMap();
         CreateMap<CommentEntity, CommentCreateUpdateDto>().ReverseMap();
         CreateMap<CommentEntity, CommentReadDto>().ReverseMap();
+
+        CreateMap<TransactionEntity, TransactionReadDto>().ReverseMap();
+        CreateMap<TransactionEntity, TransactionCreateDto>().ReverseMap();
 
         CreateMap<UserCreateUpdateDto, UserEntity>()
             .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
