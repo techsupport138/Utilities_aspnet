@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities.Data;
+﻿using System.Transactions;
+
+namespace Utilities_aspnet.Utilities.Data;
 
 public interface IAppSettingRepository {
     Task<GenericResponse<EnumDto?>> Read();
@@ -30,8 +32,10 @@ public class AppSettingRepository : IAppSettingRepository {
 
         List<IdTitleReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
         List<IdTitleReadDto> idTitleUseCase = EnumExtension.GetValues<IdTitleUseCase>();
+        List<IdTitleReadDto> transactionStatus = EnumExtension.GetValues<TransactionStatus>();
         model.FormFieldType = formFieldType;
         model.CategoryUseCase = idTitleUseCase;
+        model.TransactionStatuses = transactionStatus;
 
         model.Categories = _context.Set<CategoryEntity>()
             .Include(x => x.Media)
