@@ -119,6 +119,7 @@ public class UserReadDto {
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
     public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
     public IEnumerable<ContactInformationReadDto>? ContactInformations { get; set; }
+    public IEnumerable<ProductReadDto>? Products { get; set; }
 }
 
 public class UserCreateUpdateDto {

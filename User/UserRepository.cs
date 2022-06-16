@@ -165,6 +165,7 @@ public class UserRepository : IUserRepository {
             .Include(u => u.ContactInformation)
             .Include(u => u.Specialties)
             .Include(u => u.Location)
+            .Include(u => u.Products)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (model == null)
@@ -184,6 +185,7 @@ public class UserRepository : IUserRepository {
             .Include(u => u.Favorites)
             .Include(u => u.ContactInformation)
             .Include(u => u.Specialties)
+            .Include(u => u.Products)
             .AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
         UserReadDto? dto = _mapper.Map<UserReadDto>(model);
@@ -197,6 +199,7 @@ public class UserRepository : IUserRepository {
             .Include(u => u.Favorites)
             .Include(u => u.ContactInformation)
             .Include(u => u.Specialties)
+            .Include(u => u.Products)
             .AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
         if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
         UserReadDto? dto = _mapper.Map<UserReadDto>(entity);
@@ -276,6 +279,7 @@ public class UserRepository : IUserRepository {
             .Include(u => u.ContactInformation)
             .Include(u => u.Specialties)
             .Include(u => u.Favorites)
+            .Include(u => u.Products)
             .ToListAsync();
 
         IEnumerable<UserReadDto>? result = _mapper.Map<IEnumerable<UserReadDto>>(users);
