@@ -1,4 +1,5 @@
 ﻿using Utilities_aspnet.Chat;
+using Utilities_aspnet.Transaction;
 
 namespace Utilities_aspnet.User;
 
@@ -42,6 +43,7 @@ public class UserEntity : IdentityUser {
     public IEnumerable<MagazineEntity>? Magazines { get; set; }
     public IEnumerable<SpecialityEntity>? Specialties { get; set; }
     public IEnumerable<CategoryEntity>? Favorites { get; set; }
+    public IEnumerable<TransactionEntity>? Transactions { get; set; }
 }
 
 [Table("Otps")]
