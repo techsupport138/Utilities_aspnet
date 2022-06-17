@@ -27,8 +27,8 @@ public class ProductRepository : IProductRepository {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         ProductEntity entity = _mapper.Map<ProductEntity>(dto);
 
-        FillProductDetail(entity, dto);
-        EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(entity);
+        ProductEntity e = await entity.FillData(dto, _httpContextAccessor, _context);
+        EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e);
         await _context.SaveChangesAsync();
 
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
@@ -220,11 +220,11 @@ public class ProductRepository : IProductRepository {
         if (entity == null)
             return new GenericResponse<ProductReadDto>(new ProductReadDto());
 
-        FillProductDetail(entity, dto);
-        _context.Update(entity);
+        ProductEntity e = await entity.FillData(dto, _httpContextAccessor, _context);
+        _context.Update(e);
         await _context.SaveChangesAsync();
 
-        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(entity));
+        return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(e));
     }
 
     public async Task<GenericResponse> Delete(Guid id) {
@@ -234,9 +234,15 @@ public class ProductRepository : IProductRepository {
         await _context.SaveChangesAsync();
         return new GenericResponse();
     }
+}
 
-    private async void FillProductDetail(ProductEntity entity, ProductCreateUpdateDto dto) {
-        entity.UserId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
+public static class ProductEntityExtension {
+    public static async Task<ProductEntity> FillData(
+        this ProductEntity entity,
+        ProductCreateUpdateDto dto,
+        IHttpContextAccessor httpContextAccessor,
+        DbContext context) {
+        entity.UserId = httpContextAccessor.HttpContext?.User.Identity?.Name;
         entity.Title = dto.Title ?? entity.Title;
         entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
         entity.Details = dto.Details ?? entity.Details;
@@ -267,7 +273,7 @@ public class ProductRepository : IProductRepository {
         if (dto.Categories.IsNotNullOrEmpty()) {
             List<CategoryEntity> list = new();
             foreach (Guid item in dto.Categories ?? new List<Guid>()) {
-                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
@@ -277,7 +283,7 @@ public class ProductRepository : IProductRepository {
         if (dto.Locations.IsNotNullOrEmpty()) {
             List<LocationEntity> list = new();
             foreach (int item in dto.Locations ?? new List<int>()) {
-                LocationEntity? e = await _context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
@@ -287,7 +293,7 @@ public class ProductRepository : IProductRepository {
         if (dto.Forms.IsNotNullOrEmpty()) {
             List<FormEntity> list = new();
             foreach (Guid item in dto.Forms ?? new List<Guid>()) {
-                FormEntity? e = await _context.Set<FormEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                FormEntity? e = await context.Set<FormEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
@@ -297,7 +303,7 @@ public class ProductRepository : IProductRepository {
         if (dto.Reports.IsNotNullOrEmpty()) {
             List<ReportEntity> list = new();
             foreach (Guid item in dto.Reports ?? new List<Guid>()) {
-                ReportEntity? e = await _context.Set<ReportEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                ReportEntity? e = await context.Set<ReportEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
@@ -307,11 +313,13 @@ public class ProductRepository : IProductRepository {
         if (dto.VoteFields.IsNotNullOrEmpty()) {
             List<VoteFieldEntity> list = new();
             foreach (Guid item in dto.VoteFields ?? new List<Guid>()) {
-                VoteFieldEntity? e = await _context.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                VoteFieldEntity? e = await context.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
             entity.VoteFields = list;
         }
+
+        return entity;
     }
 }

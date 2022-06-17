@@ -4,10 +4,10 @@ namespace Utilities_aspnet.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class IdTitleController : BaseApiController {
+public class CatgeoryController : BaseApiController {
     private readonly ICategoryRepository _categoryRepository;
 
-    public IdTitleController(ICategoryRepository categoryRepository) {
+    public CatgeoryController(ICategoryRepository categoryRepository) {
         _categoryRepository = categoryRepository;
     }
 
