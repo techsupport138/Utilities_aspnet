@@ -2,13 +2,13 @@
 
 [Table("Gender")]
 public class GenderEntity {
-    [Key]
-    public int Id { get; set; }
+	[Key]
+	public int Id { get; set; }
 
-    [Required]
-    [StringLength(200)]
-    public string Title { get; set; } = null!;
+	[Required]
+	[StringLength(200)]
+	public string Title { get; set; } = null!;
 
-    [StringLength(200)]
-    public string? TitleTr1 { get; set; }
+	[StringLength(200)]
+	public string? TitleTr1 { get; set; }
 }
