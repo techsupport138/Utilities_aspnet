@@ -1,6 +1,6 @@
 using Utilities_aspnet.User;
 
-namespace Utilities_aspnet.Vote.Entities;
+namespace Utilities_aspnet.Vote;
 
 [Table("Votes")]
 public class VoteEntity : BaseEntity {

@@ -16,9 +16,9 @@ public class SmsSender : ISmsSender {
     }
 
     public long SendSms(string mobileNumber, string message) {
-        AppSettings? appSettings = new();
+        AppSettings appSettings = new();
         _config.GetSection("AppSettings").Bind(appSettings);
-        SMSPanelSettings? smsSetting = appSettings.SMSPanelSettings;
+        SMSPanelSettings smsSetting = appSettings.SMSPanelSettings;
         switch (smsSetting.Sender) {
             case Sender.SMS_Ir:
                 // string? token = new Token()

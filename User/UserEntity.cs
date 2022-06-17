@@ -1,4 +1,5 @@
-﻿using Utilities_aspnet.Chat;
+﻿using Utilities_aspnet.Category;
+using Utilities_aspnet.Chat;
 using Utilities_aspnet.Transaction;
 
 namespace Utilities_aspnet.User;
@@ -30,7 +31,7 @@ public class UserEntity : IdentityUser {
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<ReportEntity>? Reports { get; set; }
     public IEnumerable<ProductEntity>? Products { get; set; }
-    public IEnumerable<CategoryEntity>? Favorites { get; set; }
+    public IEnumerable<CategoryEntity>? Categories { get; set; }
     public IEnumerable<TransactionEntity>? Transactions { get; set; }
 }
 
@@ -105,9 +106,7 @@ public class UserReadDto {
     public GenderEntity? Gender { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
     public IEnumerable<LocationReadDto>? Locations { get; set; }
-    public IEnumerable<IdTitleReadDto>? Colors { get; set; }
-    public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
-    public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
+    public IEnumerable<CategoryReadDto>? Categories { get; set; }
     public IEnumerable<ProductReadDto>? Products { get; set; }
 }
 
@@ -131,9 +130,7 @@ public class UserCreateUpdateDto {
     public bool? ShowContactInfo { get; set; }
     public DateTime? BirthDate { get; set; }
     public int? GenderId { get; set; }
-    public IEnumerable<Guid>? Colors { get; set; }
-    public IEnumerable<Guid>? Specialties { get; set; }
-    public IEnumerable<Guid>? Favorites { get; set; }
+    public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<UploadDto>? Media { get; set; }
 }

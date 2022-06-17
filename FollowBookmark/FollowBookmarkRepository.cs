@@ -33,15 +33,11 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
                 x.ProductId == dto.ProductId ||
-                x.CategoryId == dto.TagId ||
-                x.CategoryId == dto.SpecialityId
-            ) && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
+                x.CategoryId == dto.CategoryId) && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
         if (oldBookmark == null) {
             BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
             if (dto.ProductId.HasValue) bookmark.ProductId = dto.ProductId;
-            if (dto.TagId.HasValue) bookmark.CategoryId = dto.TagId;
-            if (dto.SpecialityId.HasValue) bookmark.CategoryId = dto.SpecialityId;
 
             await _context.Set<BookmarkEntity>().AddAsync(bookmark);
             await _context.SaveChangesAsync();

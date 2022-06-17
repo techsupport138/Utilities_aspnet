@@ -1,3 +1,4 @@
+using Utilities_aspnet.Category;
 using Utilities_aspnet.Comment;
 using Utilities_aspnet.Transaction;
 using Utilities_aspnet.User;
@@ -6,8 +7,8 @@ namespace Utilities_aspnet.Utilities;
 
 public class AutoMapperProfile : Profile {
     public AutoMapperProfile() {
-        CreateMap<CategoryEntity, IdTitleReadDto>().ReverseMap();
-        CreateMap<CategoryEntity, IdTitleCreateUpdateDto>().ReverseMap();
+        CreateMap<CategoryEntity, CategoryReadDto>().ReverseMap();
+        CreateMap<CategoryEntity, CategoryCreateUpdateDto>().ReverseMap();
 
         CreateMap<ProductEntity, ProductReadDto>().ReverseMap();
         CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap()

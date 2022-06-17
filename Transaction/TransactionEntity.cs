@@ -36,10 +36,7 @@ namespace Utilities_aspnet.Transaction {
         public string? Descriptions { get; set; }
         public TransactionStatus? StatusId { get; set; } = TransactionStatus.Pending;
         public string? PaymentId { get; set; }
-        public Guid? AdId { get; set; }
         public Guid? ProductId { get; set; }
-        public Guid? TutorialId { get; set; }
-        public Guid? TenderId { get; set; }
     }
 
 

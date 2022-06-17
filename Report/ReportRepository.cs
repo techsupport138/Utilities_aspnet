@@ -8,12 +8,10 @@ public interface IReportRepository {
 
 public class ReportRepository : IReportRepository {
     private readonly DbContext _dbContext;
-    private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ReportRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+    public ReportRepository(DbContext context, IHttpContextAccessor httpContextAccessor) {
         _dbContext = context;
-        _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -53,7 +51,7 @@ public class ReportRepository : IReportRepository {
     }
 
     public async Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto) {
-        IQueryable<ReportEntity>? entities = _dbContext.Set<ReportEntity>().AsNoTracking();
+        IQueryable<ReportEntity> entities = _dbContext.Set<ReportEntity>().AsNoTracking();
 
         if (dto.User == true)
             entities = entities.Include(x => x.User);
@@ -61,7 +59,7 @@ public class ReportRepository : IReportRepository {
         if (dto.Product == true)
             entities = entities.Include(x => x.Product);
 
-        List<ReportReadDto>? result = await entities.Select(x => new ReportReadDto() {
+        List<ReportReadDto> result = await entities.Select(x => new ReportReadDto() {
             CreatedAt = x.CreatedAt,
             DeletedAt = x.DeletedAt,
             Description = x.Description,

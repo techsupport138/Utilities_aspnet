@@ -1,5 +1,7 @@
+using Utilities_aspnet.Category;
 using Utilities_aspnet.Comment;
 using Utilities_aspnet.User;
+using Utilities_aspnet.Vote;
 
 namespace Utilities_aspnet.Product;
 
@@ -81,12 +83,8 @@ public class ProductReadDto {
     public ProductStatus? Status { get; set; }
     public IEnumerable<LocationReadDto>? Locations { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
-    public IEnumerable<IdTitleReadDto>? Categories { get; set; }
-    public IEnumerable<IdTitleReadDto>? Brands { get; set; }
-    public IEnumerable<IdTitleReadDto>? References { get; set; }
-    public IEnumerable<IdTitleReadDto>? Tags { get; set; }
+    public IEnumerable<CategoryReadDto>? Categories { get; set; }
     public IEnumerable<VoteReadDto>? VoteFields { get; set; }
-    public IEnumerable<IdTitleReadDto>? Specialities { get; set; }
     public IEnumerable<FormDto>? Forms { get; set; }
     public IEnumerable<CommentReadDto>? Comments { get; set; }
 }
@@ -94,12 +92,7 @@ public class ProductReadDto {
 public class ProductCreateUpdateDto {
     public ProductCreateUpdateDto() {
         Locations = new List<int>();
-        Favorites = new List<Guid>();
         Categories = new List<Guid>();
-        References = new List<Guid>();
-        Brands = new List<Guid>();
-        Specialties = new List<Guid>();
-        Tags = new List<Guid>();
         Forms = new List<Guid>();
         VoteFields = new List<Guid>();
         Reports = new List<Guid>();
@@ -135,12 +128,7 @@ public class ProductCreateUpdateDto {
     public double? MaxOrder { get; set; }
     public ProductStatus? Status { get; set; }
     public List<int>? Locations { get; set; }
-    public List<Guid>? Favorites { get; set; }
     public List<Guid>? Categories { get; set; }
-    public List<Guid>? References { get; set; }
-    public List<Guid>? Brands { get; set; }
-    public List<Guid>? Specialties { get; set; }
-    public List<Guid>? Tags { get; set; }
     public List<Guid>? Forms { get; set; }
     public List<Guid>? VoteFields { get; set; }
     public List<Guid>? Reports { get; set; }

@@ -1,4 +1,5 @@
-﻿using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+﻿using Utilities_aspnet.Category;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Utilities_aspnet.User;
 
@@ -160,7 +161,7 @@ public class UserRepository : IUserRepository {
         UserEntity? model = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
-            .Include(u=>u.Favorites)
+            .Include(u=>u.Categories)
             .Include(u => u.Location)
             .Include(u => u.Products)
             .FirstOrDefaultAsync(u => u.Id == id);
@@ -178,7 +179,7 @@ public class UserRepository : IUserRepository {
     public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id) {
         UserEntity? model = await _context.Set<UserEntity>()
             .Include(u => u.Media)
-            .Include(u => u.Favorites)
+            .Include(u => u.Categories)
             .Include(u => u.Products)
             .AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
@@ -189,7 +190,7 @@ public class UserRepository : IUserRepository {
     public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username) {
         UserEntity? entity = await _context.Set<UserEntity>()
             .Include(u => u.Media)
-            .Include(u => u.Favorites)
+            .Include(u => u.Categories)
             .Include(u => u.Products)
             .AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
         if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
@@ -245,7 +246,7 @@ public class UserRepository : IUserRepository {
 
     private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
         IList<string>? roles = await _userManager.GetRolesAsync(user);
-        List<Claim>? claims = new() {
+        List<Claim> claims = new() {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Name, user.Id),
@@ -266,7 +267,7 @@ public class UserRepository : IUserRepository {
         List<UserEntity> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
-            .Include(u => u.Favorites)
+            .Include(u => u.Categories)
             .Include(u => u.Products)
             .ToListAsync();
 
@@ -337,16 +338,6 @@ public class UserRepository : IUserRepository {
         entity.Wallet = dto.Wallet ?? entity.Wallet;
         entity.GenderId = dto.GenderId ?? entity.GenderId;
 
-        if (dto.Colors.IsNotNullOrEmpty()) {
-            List<CategoryEntity> list = new();
-            foreach (Guid item in dto.Colors ?? new List<Guid>()) {
-                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-                if (e != null) list.Add(e);
-            }
-
-            entity.Favorites = list;
-        }
-
         if (dto.Locations.IsNotNullOrEmpty()) {
             List<LocationEntity> list = new();
             foreach (int item in dto.Locations ?? new List<int>()) {
@@ -357,23 +348,14 @@ public class UserRepository : IUserRepository {
             entity.Location = list;
         }
 
-        if (dto.Specialties.IsNotNullOrEmpty()) {
+        if (dto.Categories.IsNotNullOrEmpty()) {
             List<CategoryEntity> list = new();
-            foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
+            foreach (Guid item in dto.Categories ?? new List<Guid>()) {
                 CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
-            entity.Favorites = list;
-        }
-        if (dto.Favorites.IsNotNullOrEmpty()) {
-            List<CategoryEntity> list = new();
-            foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
-                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-                if (e != null) list.Add(e);
-            }
-
-            entity.Favorites = list;
+            entity.Categories = list;
         }
     }
 }

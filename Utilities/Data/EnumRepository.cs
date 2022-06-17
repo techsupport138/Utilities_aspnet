@@ -1,4 +1,5 @@
 ﻿using System.Transactions;
+using Utilities_aspnet.Category;
 
 namespace Utilities_aspnet.Utilities.Data;
 
@@ -18,20 +19,20 @@ public class AppSettingRepository : IAppSettingRepository {
 
     public Task<GenericResponse<EnumDto?>> Read() {
         EnumDto model = new() {
-            Colors = _context.Set<CategoryEntity>().Select(x => new IdTitleReadDto {
+            Colors = _context.Set<CategoryEntity>().Select(x => new CategoryReadDto {
                 Id = x.Id,
                 Title = x.Title,
                 Subtitle = x.Color
             }).ToList(),
-            Specialties = _context.Set<CategoryEntity>().Select(x => new IdTitleReadDto {
+            Specialties = _context.Set<CategoryEntity>().Select(x => new CategoryReadDto {
                 Id = x.Id,
                 Title = x.Title,
                 Subtitle = x.Color
             }).ToList()
         };
 
-        List<IdTitleReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
-        List<IdTitleReadDto> transactionStatus = EnumExtension.GetValues<TransactionStatus>();
+        List<CategoryReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
+        List<CategoryReadDto> transactionStatus = EnumExtension.GetValues<TransactionStatus>();
         model.FormFieldType = formFieldType;
         model.TransactionStatuses = transactionStatus;
 
@@ -40,7 +41,7 @@ public class AppSettingRepository : IAppSettingRepository {
             .Include(x => x.Parent)
             .OrderBy(x => x.UseCase)
             .Select(w =>
-                new IdTitleReadDto {
+                new CategoryReadDto {
                     Id = w.Id,
                     Title = w.Title,
                     UseCase = w.UseCase,

@@ -1,9 +1,11 @@
+using Utilities_aspnet.Category;
+
 namespace Utilities_aspnet.Utilities;
 
 public static class EnumExtension {
-    public static List<IdTitleReadDto> GetValues<T>() {
+    public static List<CategoryReadDto> GetValues<T>() {
         return (from int itemType in Enum.GetValues(typeof(T))
-            select new IdTitleReadDto {Title = Enum.GetName(typeof(T), itemType), SecondaryId = itemType}).ToList();
+            select new CategoryReadDto {Title = Enum.GetName(typeof(T), itemType), SecondaryId = itemType}).ToList();
     }
 }
 
@@ -38,17 +40,6 @@ public static class UtilitiesStatusCodesExtension {
     public static int Value(this UtilitiesStatusCodes statusCode) {
         return (int) statusCode;
     }
-}
-
-public enum ContentUseCase {
-    AboutUs = 0,
-    Terms = 1,
-    OnBoarding = 2,
-    HomeSlider = 3,
-    SplashScreen = 100,
-    Learn = 101,
-    Monthly = 102,
-    Newsletters = 103
 }
 
 public enum VisibilityType {

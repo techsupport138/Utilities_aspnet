@@ -1,3 +1,5 @@
+using Utilities_aspnet.Category;
+
 namespace Utilities_aspnet.Form;
 
 public interface IFormRepository {
@@ -11,17 +13,15 @@ public interface IFormRepository {
 
 public class FormRepository : IFormRepository {
     private readonly DbContext _dbContext;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
 
-    public FormRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+    public FormRepository(DbContext dbContext, IMapper mapper) {
         _dbContext = dbContext;
         _mapper = mapper;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GenericResponse<List<FormFieldDto>>> UpdateFormBuilder(FormCreateDto model) {
-        foreach (IdTitleCreateUpdateDto item in model.Form)
+        foreach (CategoryCreateUpdateDto item in model.Form)
             try {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
                     (x.ProductId == model.ProductId && model.ProductId != null ||

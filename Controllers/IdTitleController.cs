@@ -1,3 +1,5 @@
+using Utilities_aspnet.Category;
+
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]
@@ -11,28 +13,28 @@ public class IdTitleController : BaseApiController {
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<GenericResponse<IdTitleReadDto>>> Create(IdTitleCreateUpdateDto dto) {
-        GenericResponse<IdTitleReadDto> i = await _categoryRepository.Create(dto);
+    public async Task<ActionResult<GenericResponse<CategoryReadDto>>> Create(CategoryCreateUpdateDto dto) {
+        GenericResponse<CategoryReadDto> i = await _categoryRepository.Create(dto);
         return Result(i);
     }
     
     [HttpGet]
-    public async Task<ActionResult<GenericResponse<IEnumerable<IdTitleReadDto>>>> Read() {
-        GenericResponse<IEnumerable<IdTitleReadDto>> i = await _categoryRepository.Read();
+    public async Task<ActionResult<GenericResponse<IEnumerable<CategoryReadDto>>>> Read() {
+        GenericResponse<IEnumerable<CategoryReadDto>> i = await _categoryRepository.Read();
         return Result(i);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<GenericResponse<IdTitleReadDto>>> ReadById(Guid id) {
-        GenericResponse<IdTitleReadDto> i = await _categoryRepository.ReadById(id);
+    public async Task<ActionResult<GenericResponse<CategoryReadDto>>> ReadById(Guid id) {
+        GenericResponse<CategoryReadDto> i = await _categoryRepository.ReadById(id);
         i = await _categoryRepository.ReadById(id);
         return Result(i);
     }
 
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(IdTitleCreateUpdateDto dto) {
-        GenericResponse<IdTitleReadDto> i = await _categoryRepository.Update(dto);
+    public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(CategoryCreateUpdateDto dto) {
+        GenericResponse<CategoryReadDto> i = await _categoryRepository.Update(dto);
         return Result(i);
     }
     

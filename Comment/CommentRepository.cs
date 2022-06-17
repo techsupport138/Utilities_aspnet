@@ -56,38 +56,10 @@ public class CommentRepository : ICommentRepository {
         if (entity.ProductId.HasValue)
             comment.ProductId = entity.ProductId;
 
-        // if (entity.CompanyId.HasValue)
-        //     comment.CompanyId = entity.CompanyId;
-        //
-        // if (entity.AdId.HasValue)
-        //     comment.AdId = entity.AdId;
-        //
-        // if (entity.DailyPriceId.HasValue)
-        //     comment.DailyPriceId = entity.DailyPriceId;
-        //
-        // if (entity.ProjectId.HasValue)
-        //     comment.ProjectId = entity.ProjectId;
-        //
-        // if (entity.TutorialId.HasValue)
-        //     comment.TutorialId = entity.TutorialId;
-        //
-        // if (entity.EventId.HasValue)
-        //     comment.EventId = entity.EventId;
-        //
-        // if (entity.TenderId.HasValue)
-        //     comment.TenderId = entity.TenderId;
-        //
-        // if (entity.ServiceId.HasValue)
-        //     comment.ServiceId = entity.ServiceId;
-        //
-        // if (entity.MagazineId.HasValue)
-        //     comment.MagazineId = entity.MagazineId;
-
         _context.Set<CommentEntity>().Update(comment);
         await _context.SaveChangesAsync();
 
         return await Read(comment.Id);
-        ;
     }
 
     public async Task<GenericResponse> Delete(Guid id) {

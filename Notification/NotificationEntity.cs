@@ -7,9 +7,8 @@ public class NotificationEntity : BaseEntity {
     public string? Title { get; set; } = null!;
     public string? Message { get; set; }
     public string? Link { get; set; }
-
+    public string? UseCase { get; set; }
     public bool? Visited { get; set; }
-    public NotificationUseCase? UseCase { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
 
     public string? UserId { get; set; }
@@ -23,8 +22,8 @@ public class NotificationDto {
     public string? Link { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool Visited { get; set; }
-    public NotificationUseCase UseCase { get; set; }
-    public List<MediaDto>? Media { get; set; }
+    public string? UseCase { get; set; }
+    public IEnumerable<MediaDto>? Media { get; set; }
 }
 
 public class NotificationCreateUpdateDto {
@@ -34,11 +33,5 @@ public class NotificationCreateUpdateDto {
     public string? Message { get; set; }
     public string? Link { get; set; }
     public string? Media { get; set; }
-    public NotificationUseCase UseCase { get; set; }
-}
-
-public enum NotificationUseCase {
-    Message = 100,
-    News = 101,
-    Notification = 102
+    public string? UseCase { get; set; }
 }

@@ -1,3 +1,6 @@
+using Utilities_aspnet.Category;
+using Utilities_aspnet.Vote;
+
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository {
@@ -178,7 +181,7 @@ public class ProductRepository : IProductRepository {
                 .ToList();
         }
 
-        IEnumerable<ProductReadDto>? dto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
+        IEnumerable<ProductReadDto> dto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
 
         if (_httpContextAccessor?.HttpContext?.User.Identity == null)
             return new GenericResponse<IEnumerable<ProductReadDto>>(dto) {
@@ -278,16 +281,6 @@ public class ProductRepository : IProductRepository {
         entity.StartDate = dto.StartDate ?? entity.StartDate;
         entity.EndDate = dto.EndDate ?? entity.EndDate;
 
-        if (dto.Brands.IsNotNullOrEmpty()) {
-            List<CategoryEntity> list = new();
-            foreach (Guid item in dto.Brands ?? new List<Guid>()) {
-                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-                if (e != null) list.Add(e);
-            }
-
-            entity.Categories = list;
-        }
-
         if (dto.Categories.IsNotNullOrEmpty()) {
             List<CategoryEntity> list = new();
             foreach (Guid item in dto.Categories ?? new List<Guid>()) {
@@ -306,26 +299,6 @@ public class ProductRepository : IProductRepository {
             }
 
             entity.Locations = list;
-        }
-
-        if (dto.References.IsNotNullOrEmpty()) {
-            List<CategoryEntity> list = new();
-            foreach (Guid item in dto.References ?? new List<Guid>()) {
-                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-                if (e != null) list.Add(e);
-            }
-
-            entity.Categories = list;
-        }
-
-        if (dto.Specialties.IsNotNullOrEmpty()) {
-            List<CategoryEntity> list = new();
-            foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
-                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-                if (e != null) list.Add(e);
-            }
-
-            entity.Categories = list;
         }
 
         if (dto.Forms.IsNotNullOrEmpty()) {

@@ -1,6 +1,6 @@
 using Utilities_aspnet.User;
 
-namespace Utilities_aspnet.IdTitle;
+namespace Utilities_aspnet.Category;
 
 [Table("Categories")]
 public abstract class CategoryEntity : BaseEntity {
@@ -28,7 +28,7 @@ public abstract class CategoryEntity : BaseEntity {
     public IEnumerable<CategoryEntity>? Children { get; set; }
 }
 
-public class IdTitleReadDto {
+public class CategoryReadDto {
     public Guid? Id { get; set; }
     public int? SecondaryId { get; set; }
     public string? Title { get; set; }
@@ -38,13 +38,13 @@ public class IdTitleReadDto {
     public string? Link { get; set; }
     public string? UseCase { get; set; }
     public string? Type { get; set; }
-    public IdTitleReadDto? Parent { get; set; }
-    public IEnumerable<IdTitleReadDto>? Children { get; set; }
+    public CategoryReadDto? Parent { get; set; }
+    public IEnumerable<CategoryReadDto>? Children { get; set; }
     public Guid? ParentId { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
 }
 
-public class IdTitleCreateUpdateDto {
+public class CategoryCreateUpdateDto {
     public Guid? Id { get; set; }
     public Guid? ParentId { get; set; }
     public string? Title { get; set; }

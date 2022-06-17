@@ -15,13 +15,13 @@ public class AppSettingsController : BaseApiController {
 
     [HttpGet]
     public async Task<ActionResult<GenericResponse<EnumDto>>> Read() {
-        GenericResponse? i = await _appSettingRepository.Read();
+        GenericResponse i = await _appSettingRepository.Read();
         return Ok(i);
     }
     
     [HttpGet("ReadLocation")]
     public async Task<ActionResult<GenericResponse<IEnumerable<LocationReadDto?>>>> ReadLocation() {
-        GenericResponse? i = await _appSettingRepository.ReadLocation();
+        GenericResponse i = await _appSettingRepository.ReadLocation();
         return Ok(i);
     }
 

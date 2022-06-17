@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Utilities_aspnet.Category;
 using Utilities_aspnet.Chat;
 using Utilities_aspnet.Comment;
-using Utilities_aspnet.Dashboard;
 using Utilities_aspnet.Transaction;
 using Utilities_aspnet.User;
 using Utilities_aspnet.Utilities.Seeder;
@@ -90,10 +90,9 @@ public static class StartupExtension {
         builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();
         builder.Services.AddTransient<ICommentRepository, CommentRepository>();
-        builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
         builder.Services.AddTransient<ISeedRepository, SeedRepository>();
         builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
-        builder.Services.AddTransient<IContentRepository<ContentEntity>, ContentRepository<ContentEntity>>();
+        builder.Services.AddTransient<IContentRepository, ContentRepository>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 

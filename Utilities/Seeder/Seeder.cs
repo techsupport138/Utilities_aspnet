@@ -18,8 +18,8 @@ public class SeedRepository : ISeedRepository
 
     public async Task<bool> SeedLocations()
     {
-        string? path = Directory.GetCurrentDirectory() + "\\AllLocationNew.json";
-        string? data = File.ReadAllText(path);
+        string path = Directory.GetCurrentDirectory() + "\\AllLocationNew.json";
+        string data = File.ReadAllText(path);
         List<LocationCreateDto>? cities = JsonConvert.DeserializeObject<List<LocationCreateDto>>(data);
 
         if (cities != null)
@@ -28,7 +28,7 @@ public class SeedRepository : ISeedRepository
             {
                 if (!await _context.Set<LocationEntity>().AnyAsync(s => s.Title == country.country))
                 {
-                    LocationEntity? countryLocation = new LocationEntity()
+                    LocationEntity countryLocation = new LocationEntity()
                     {
                         Type = LocationType.Country,
                         Title = country.country,
@@ -36,7 +36,7 @@ public class SeedRepository : ISeedRepository
 
                     await _context.AddAsync(countryLocation);
                     await _context.SaveChangesAsync();
-                    LocationEntity? cityLocation = new LocationEntity()
+                    LocationEntity cityLocation = new LocationEntity()
                     {
                         Type = LocationType.City,
                         Title = country.city,
@@ -52,7 +52,7 @@ public class SeedRepository : ISeedRepository
                     LocationEntity? parentId = await _context.Set<LocationEntity>().FirstOrDefaultAsync(s => s.Title == country.country);
                     if (parentId != null)
                     {
-                        LocationEntity? cityLocation = new LocationEntity()
+                        LocationEntity cityLocation = new LocationEntity()
                         {
                             Type = LocationType.City,
                             Title = country.city,

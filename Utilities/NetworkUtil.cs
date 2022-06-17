@@ -12,10 +12,10 @@ public class NetworkUtil {
     public static string ServerAddress {
         get {
             if (_ServerAddress == null) {
-                HttpRequest? request = _httpContextAccessor.HttpContext.Request;
-                string? scheme = request.Scheme;
-                string? host = request.Host.ToUriComponent();
-                string? pathBase = request.PathBase.ToUriComponent();
+                HttpRequest request = _httpContextAccessor.HttpContext.Request;
+                string scheme = request.Scheme;
+                string host = request.Host.ToUriComponent();
+                string pathBase = request.PathBase.ToUriComponent();
 
                 _ServerAddress = $"{scheme}://{host}{pathBase}";
             }

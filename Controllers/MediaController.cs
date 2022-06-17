@@ -12,14 +12,14 @@ public class MediaController : BaseApiController {
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse<MediaDto>>> Upload([FromForm] UploadDto dto) {
-        GenericResponse? i = await _uploadRepository.Upload(dto);
+        GenericResponse i = await _uploadRepository.Upload(dto);
         return Result(i);
     }
     
     [HttpDelete("{id:guid}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<GenericResponse>> Delete(Guid id) {
-        GenericResponse? i = await _uploadRepository.Delete(id);
+        GenericResponse i = await _uploadRepository.Delete(id);
         return Result(i);
     }
 }

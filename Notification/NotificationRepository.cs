@@ -15,7 +15,6 @@
             _httpContextAccessor = httpContextAccessor;
         }
 
-
         public async Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications() {
             string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             IEnumerable<NotificationEntity> model = await _context.Set<NotificationEntity>().Include(x => x.Media)
@@ -27,9 +26,8 @@
             return new GenericResponse<IEnumerable<NotificationDto>>(notificationDtos);
         }
 
-
         public async Task<GenericResponse> CreateNotification(NotificationCreateUpdateDto model) {
-            NotificationEntity notification = new NotificationEntity {
+            NotificationEntity notification = new() {
                 UseCase = model.UseCase,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
@@ -52,7 +50,7 @@
                 await _context.SaveChangesAsync();
             }
 
-            return new GenericResponse(UtilitiesStatusCodes.Success);
+            return new GenericResponse();
         }
     }
 }
