@@ -2,8 +2,11 @@ using Utilities_aspnet.User;
 
 namespace Utilities_aspnet.Category;
 
+/// <summary>
+/// TODO
+/// </summary>
 [Table("Categories")]
-public abstract class CategoryEntity : BaseEntity {
+public class CategoryEntity : BaseEntity {
     public string? Title { get; set; }
     public string? TitleTr1 { get; set; }
     public string? Subtitle { get; set; }
@@ -17,13 +20,13 @@ public abstract class CategoryEntity : BaseEntity {
     public IEnumerable<ProductEntity>? Product { get; set; }
     public IEnumerable<FormEntity>? FormBuilderFieldLists { get; set; }
 
-    public Guid? ParentId { get; set; }
-
-    [InverseProperty("Children")]
-    public CategoryEntity? Parent { get; set; }
-    
-    [InverseProperty("Parent")]
-    public IEnumerable<CategoryEntity>? Children { get; set; }
+    // public Guid? ParentId { get; set; }
+    //
+    // [InverseProperty("Children")]
+    // public CategoryEntity? Parent { get; set; }
+    //
+    // [InverseProperty("Parent")]
+    // public IEnumerable<CategoryEntity>? Children { get; set; }
 }
 
 public class CategoryReadDto {
