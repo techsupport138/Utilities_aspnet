@@ -14,7 +14,6 @@ public class BaseContentEntity : BaseEntity {
     [Required]
     public ApprovalStatus ApprovalStatus { get; set; } = ApprovalStatus.Pending;
     public IEnumerable<MediaEntity>? Media { get; set; }
-    public IEnumerable<ContactInformationEntity>? ContactInformation { get; set; }
 }
 
 [Table("Contents")]
@@ -26,7 +25,6 @@ public class ContentReadDto : BaseReadDto {
     public string? SubTitle { get; set; }
     public string? Description { get; set; }
     public ContentUseCase UseCase { get; set; }
-    public IEnumerable<ContactInformationReadDto>? ContactInformation { get; set; }
     public IEnumerable<MediaDto>? Media { get; set; }
 }
 
@@ -37,5 +35,4 @@ public class ContentCreateUpdateDto {
     public string? Description { get; set; }
     public ContentUseCase UseCase { get; set; }
     public ApprovalStatus ApprovalStatus { get; set; } = ApprovalStatus.Pending;
-    public List<ContactInformationCreateUpdateDto>? ContactInformations { get; set; }
 }

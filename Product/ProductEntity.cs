@@ -41,13 +41,8 @@ public abstract class ProductEntity : BaseEntity {
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<FormEntity>? Forms { get; set; }
     public IEnumerable<CategoryEntity>? Categories { get; set; }
-    public IEnumerable<TagEntity>? Tags { get; set; }
     public IEnumerable<VoteFieldEntity>? VoteFields { get; set; }
     public IEnumerable<ReportEntity>? Reports { get; set; }
-    public IEnumerable<SpecialityEntity>? Specialities { get; set; }
-    public IEnumerable<BrandEntity>? Brands { get; set; }
-    public IEnumerable<ReferenceEntity>? References { get; set; }
-    public IEnumerable<ContactInformationEntity>? ContactInformations { get; set; }
     public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
     public IEnumerable<CommentEntity>? Comments { get; set; }
 }

@@ -26,15 +26,9 @@ namespace Utilities_aspnet.Dashboard {
                     .Where(x => x.CreatedAt >= model.StardDate && x.CreatedAt <= model.EndDate).CountAsync(),
                 CountBookmarks = await _context.Set<BookmarkEntity>()
                     .Where(x => x.CreatedAt >= model.StardDate && x.CreatedAt <= model.EndDate).CountAsync(),
-                CountBrands = await _context.Set<BrandEntity>()
-                    .Where(x => x.CreatedAt >= model.StardDate && x.CreatedAt <= model.EndDate).CountAsync(),
                 CountCategories = await _context.Set<CategoryEntity>()
                     .Where(x => x.CreatedAt >= model.StardDate && x.CreatedAt <= model.EndDate).CountAsync(),
                 CountComments = await _context.Set<CommentEntity>()
-                    .Where(x => x.CreatedAt >= model.StardDate && x.CreatedAt <= model.EndDate).CountAsync(),
-                CountSpecialities = await _context.Set<SpecialityEntity>()
-                    .Where(x => x.CreatedAt >= model.StardDate && x.CreatedAt <= model.EndDate).CountAsync(),
-                CountTags = await _context.Set<TagEntity>()
                     .Where(x => x.CreatedAt >= model.StardDate && x.CreatedAt <= model.EndDate).CountAsync(),
                 CountUsers = await _context.Set<UserEntity>()
                     .Where(x => x.CreatedAt >= model.StardDate && x.CreatedAt <= model.EndDate).CountAsync()

@@ -39,10 +39,6 @@ public class ProductRepository : IProductRepository {
             .Include(i => i.Comments)
             .Include(i => i.Locations)
             .Include(i => i.Reports)
-            .Include(i => i.Specialities)
-            .Include(i => i.Tags)
-            .Include(i => i.Brands)
-            .Include(i => i.References)
             .Include(i => i.User)
             .Include(i => i.Bookmarks)
             .Include(i => i.Forms)!
@@ -145,24 +141,24 @@ public class ProductRepository : IProductRepository {
                                                  x.Locations.Any(y => parameters.Locations.Contains(y.Id))).ToList();
 
             if (parameters.Brands != null && parameters.Brands.Any())
-                queryable = queryable.Where(x => x.Brands != null &&
-                                                 x.Brands.Any(y => parameters.Brands.Contains(y.Id))).ToList();
+                queryable = queryable.Where(x => x.Categories != null &&
+                                                 x.Categories.Any(y => parameters.Brands.Contains(y.Id))).ToList();
 
             if (parameters.Categories != null && parameters.Categories.Any())
                 queryable = queryable.Where(x => x.Categories != null &&
                                                  x.Categories.Any(y => parameters.Categories.Contains(y.Id))).ToList();
 
             if (parameters.References != null && parameters.References.Any())
-                queryable = queryable.Where(x => x.References != null &&
-                                                 x.References.Any(y => parameters.References.Contains(y.Id))).ToList();
+                queryable = queryable.Where(x => x.Categories != null &&
+                                                 x.Categories.Any(y => parameters.References.Contains(y.Id))).ToList();
 
             if (parameters.Tags != null && parameters.Tags.Any())
-                queryable = queryable.Where(x => x.Tags != null &&
-                                                 x.Tags.Any(y => parameters.Tags.Contains(y.Id))).ToList();
+                queryable = queryable.Where(x => x.Categories != null &&
+                                                 x.Categories.Any(y => parameters.Tags.Contains(y.Id))).ToList();
 
             if (parameters.Specialities != null && parameters.Specialities.Any())
-                queryable = queryable.Where(x => x.Specialities != null &&
-                                                 x.Specialities.Any(y => parameters.Specialities.Contains(y.Id)))
+                queryable = queryable.Where(x => x.Categories != null &&
+                                                 x.Categories.Any(y => parameters.Specialities.Contains(y.Id)))
                     .ToList();
 
             totalCount = queryable.Count;
@@ -225,10 +221,6 @@ public class ProductRepository : IProductRepository {
             .Include(i => i.Categories)
             .Include(i => i.Locations)
             .Include(i => i.Reports)
-            .Include(i => i.Specialities)
-            .Include(i => i.Tags)
-            .Include(i => i.Brands)
-            .Include(i => i.References)
             .Include(i => i.Comments)
             .Include(i => i.User)
             .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
@@ -287,13 +279,13 @@ public class ProductRepository : IProductRepository {
         entity.EndDate = dto.EndDate ?? entity.EndDate;
 
         if (dto.Brands.IsNotNullOrEmpty()) {
-            List<BrandEntity> list = new();
+            List<CategoryEntity> list = new();
             foreach (Guid item in dto.Brands ?? new List<Guid>()) {
-                BrandEntity? e = await _context.Set<BrandEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
-            entity.Brands = list;
+            entity.Categories = list;
         }
 
         if (dto.Categories.IsNotNullOrEmpty()) {
@@ -317,23 +309,23 @@ public class ProductRepository : IProductRepository {
         }
 
         if (dto.References.IsNotNullOrEmpty()) {
-            List<ReferenceEntity> list = new();
+            List<CategoryEntity> list = new();
             foreach (Guid item in dto.References ?? new List<Guid>()) {
-                ReferenceEntity? e = await _context.Set<ReferenceEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
-            entity.References = list;
+            entity.Categories = list;
         }
 
         if (dto.Specialties.IsNotNullOrEmpty()) {
-            List<SpecialityEntity> list = new();
+            List<CategoryEntity> list = new();
             foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
-                SpecialityEntity? e = await _context.Set<SpecialityEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
-            entity.Specialities = list;
+            entity.Categories = list;
         }
 
         if (dto.Forms.IsNotNullOrEmpty()) {

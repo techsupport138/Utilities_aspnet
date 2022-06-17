@@ -14,27 +14,16 @@ public class MediaEntity : BaseEntity {
     public ContentEntity? Content { get; set; }
     public Guid? ContentId { get; set; }
 
-    public ContactInfoItemEntity? ContactInfoItem { get; set; }
-    public Guid? ContactInfoItemId { get; set; }
-
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }
 
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
 
-    public TagEntity? Tag { get; set; }
-    public Guid? TagId { get; set; }
-
-    public SpecialityEntity? Speciality { get; set; }
-    public Guid? SpecialityId { get; set; }
-
     public NotificationEntity? Notification { get; set; }
     public Guid? NotificationId { get; set; }
     public CategoryEntity? Category { get; set; }
     public Guid? CategoryId { get; set; }
-    public BrandEntity? Brand { get; set; }
-    public Guid? BrandId { get; set; }
 }
 
 public class MediaDto {

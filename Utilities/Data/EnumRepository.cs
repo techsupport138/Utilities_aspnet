@@ -18,12 +18,12 @@ public class AppSettingRepository : IAppSettingRepository {
 
     public Task<GenericResponse<EnumDto?>> Read() {
         EnumDto model = new() {
-            Colors = _context.Set<ColorEntity>().Select(x => new IdTitleReadDto {
+            Colors = _context.Set<CategoryEntity>().Select(x => new IdTitleReadDto {
                 Id = x.Id,
                 Title = x.Title,
                 Subtitle = x.Color
             }).ToList(),
-            Specialties = _context.Set<SpecialityEntity>().Select(x => new IdTitleReadDto {
+            Specialties = _context.Set<CategoryEntity>().Select(x => new IdTitleReadDto {
                 Id = x.Id,
                 Title = x.Title,
                 Subtitle = x.Color
@@ -31,10 +31,8 @@ public class AppSettingRepository : IAppSettingRepository {
         };
 
         List<IdTitleReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
-        List<IdTitleReadDto> idTitleUseCase = EnumExtension.GetValues<IdTitleUseCase>();
         List<IdTitleReadDto> transactionStatus = EnumExtension.GetValues<TransactionStatus>();
         model.FormFieldType = formFieldType;
-        model.CategoryUseCase = idTitleUseCase;
         model.TransactionStatuses = transactionStatus;
 
         model.Categories = _context.Set<CategoryEntity>()

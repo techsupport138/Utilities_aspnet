@@ -6,8 +6,8 @@ public interface ICategoryRepository {
     public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadV2();
     public Task<GenericResponse<IdTitleReadDto>> ReadById(Guid id);
     public Task<GenericResponse<IdTitleReadDto>> ReadByIdV2(Guid id);
-    public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCase(IdTitleUseCase useCase);
-    public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCaseV2(IdTitleUseCase useCase);
+    public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCase(string useCase);
+    public Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCaseV2(string useCase);
     public Task<GenericResponse<IdTitleReadDto>> Update(IdTitleCreateUpdateDto dto);
     public Task<GenericResponse> Delete(Guid id);
 }
@@ -66,14 +66,14 @@ public class CategoryRepository : ICategoryRepository {
         return new GenericResponse<IdTitleReadDto>(_mapper.Map<IdTitleReadDto>(i));
     }
 
-    public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCase(IdTitleUseCase useCase) {
+    public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCase(string useCase) {
         IEnumerable<CategoryEntity> i = await _dbContext.Set<CategoryEntity>()
             .Include(i => i.Media)
             .Where(i => i.UseCase == useCase).AsNoTracking()
             .ToListAsync();
         return new GenericResponse<IEnumerable<IdTitleReadDto>>(_mapper.Map<IEnumerable<IdTitleReadDto>>(i));
     }
-    public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCaseV2(IdTitleUseCase useCase) {
+    public async Task<GenericResponse<IEnumerable<IdTitleReadDto>>> ReadByUseCaseV2(string useCase) {
         IEnumerable<CategoryEntity> i = await _dbContext.Set<CategoryEntity>()
             .Include(i => i.Media).Include(i => i.Children).ThenInclude(i => i.Media)
             .Where(i => i.UseCase == useCase && i.ParentId == null).AsNoTracking()

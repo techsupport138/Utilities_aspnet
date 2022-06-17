@@ -160,10 +160,7 @@ public class UserRepository : IUserRepository {
         UserEntity? model = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
-            .Include(u => u.Colors)
             .Include(u=>u.Favorites)
-            .Include(u => u.ContactInformation)
-            .Include(u => u.Specialties)
             .Include(u => u.Location)
             .Include(u => u.Products)
             .FirstOrDefaultAsync(u => u.Id == id);
@@ -181,10 +178,7 @@ public class UserRepository : IUserRepository {
     public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id) {
         UserEntity? model = await _context.Set<UserEntity>()
             .Include(u => u.Media)
-            .Include(u => u.Colors)
             .Include(u => u.Favorites)
-            .Include(u => u.ContactInformation)
-            .Include(u => u.Specialties)
             .Include(u => u.Products)
             .AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
@@ -195,10 +189,7 @@ public class UserRepository : IUserRepository {
     public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username) {
         UserEntity? entity = await _context.Set<UserEntity>()
             .Include(u => u.Media)
-            .Include(u => u.Colors)
             .Include(u => u.Favorites)
-            .Include(u => u.ContactInformation)
-            .Include(u => u.Specialties)
             .Include(u => u.Products)
             .AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
         if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
@@ -275,9 +266,6 @@ public class UserRepository : IUserRepository {
         List<UserEntity> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
-            .Include(u => u.Colors)
-            .Include(u => u.ContactInformation)
-            .Include(u => u.Specialties)
             .Include(u => u.Favorites)
             .Include(u => u.Products)
             .ToListAsync();
@@ -350,13 +338,13 @@ public class UserRepository : IUserRepository {
         entity.GenderId = dto.GenderId ?? entity.GenderId;
 
         if (dto.Colors.IsNotNullOrEmpty()) {
-            List<ColorEntity> list = new();
+            List<CategoryEntity> list = new();
             foreach (Guid item in dto.Colors ?? new List<Guid>()) {
-                ColorEntity? e = await _context.Set<ColorEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
-            entity.Colors = list;
+            entity.Favorites = list;
         }
 
         if (dto.Locations.IsNotNullOrEmpty()) {
@@ -370,13 +358,13 @@ public class UserRepository : IUserRepository {
         }
 
         if (dto.Specialties.IsNotNullOrEmpty()) {
-            List<SpecialityEntity> list = new();
+            List<CategoryEntity> list = new();
             foreach (Guid item in dto.Specialties ?? new List<Guid>()) {
-                SpecialityEntity? e = await _context.Set<SpecialityEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) list.Add(e);
             }
 
-            entity.Specialties = list;
+            entity.Favorites = list;
         }
         if (dto.Favorites.IsNotNullOrEmpty()) {
             List<CategoryEntity> list = new();
@@ -386,29 +374,6 @@ public class UserRepository : IUserRepository {
             }
 
             entity.Favorites = list;
-        }
-        if (dto.ContactInformations.IsNotNullOrEmpty()) {
-            List<ContactInformationEntity> list = new();
-            foreach (ContactInformationCreateUpdateDto item in dto.ContactInformations) {
-                ContactInfoItemEntity? e = await _context.Set<ContactInfoItemEntity>().FirstOrDefaultAsync(x => x.Id == item.ContactInfoItemId);
-                if (e != null)
-                {
-                    ContactInformationEntity c = new ContactInformationEntity
-                    {
-                        ContactInfoItemId = item.ContactInfoItemId,
-                        CreatedAt = DateTime.Now,
-                        Link = item.Link,
-                        UserId = entity.Id,
-                        Value = item.Value,
-                        Visibility = item.Visibility
-                    };
-                    await _context.Set<ContactInformationEntity>().AddAsync(c);
-                    await _context.SaveChangesAsync();
-                    list.Add(c);
-                }
-                
-            }
-            entity.ContactInformation = list;
         }
     }
 }

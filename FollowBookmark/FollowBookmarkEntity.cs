@@ -19,14 +19,8 @@ public class BookmarkEntity : BaseEntity {
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
 
-    public TagEntity? Tag { get; set; }
-    public Guid? TagId { get; set; }
-
-    public SpecialityEntity? Speciality { get; set; }
-    public Guid? SpecialityId { get; set; }
-
-    public ColorEntity? Color { get; set; }
-    public Guid? ColorId { get; set; }
+    public CategoryEntity? Tag { get; set; }
+    public Guid? CategoryId { get; set; }
 }
 
 public class BookmarkCreateDto {

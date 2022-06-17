@@ -28,11 +28,8 @@ public class UserEntity : IdentityUser {
     public IEnumerable<LocationEntity>? Location { get; set; }
     public IEnumerable<FormEntity>? FormBuilders { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
-    public IEnumerable<ColorEntity>? Colors { get; set; }
-    public IEnumerable<ContactInformationEntity>? ContactInformation { get; set; }
     public IEnumerable<ReportEntity>? Reports { get; set; }
     public IEnumerable<ProductEntity>? Products { get; set; }
-    public IEnumerable<SpecialityEntity>? Specialties { get; set; }
     public IEnumerable<CategoryEntity>? Favorites { get; set; }
     public IEnumerable<TransactionEntity>? Transactions { get; set; }
 }
@@ -111,7 +108,6 @@ public class UserReadDto {
     public IEnumerable<IdTitleReadDto>? Colors { get; set; }
     public IEnumerable<IdTitleReadDto>? Specialties { get; set; }
     public IEnumerable<IdTitleReadDto>? Favorites { get; set; }
-    public IEnumerable<ContactInformationReadDto>? ContactInformations { get; set; }
     public IEnumerable<ProductReadDto>? Products { get; set; }
 }
 
@@ -138,7 +134,6 @@ public class UserCreateUpdateDto {
     public IEnumerable<Guid>? Colors { get; set; }
     public IEnumerable<Guid>? Specialties { get; set; }
     public IEnumerable<Guid>? Favorites { get; set; }
-    public IEnumerable<ContactInformationCreateUpdateDto>? ContactInformations { get; set; }
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<UploadDto>? Media { get; set; }
 }
