@@ -4,12 +4,12 @@ using Utilities_aspnet.Vote;
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository {
-    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string useCase);
+    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? paraneters, string useCase);
     Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine(string useCase);
-    Task<GenericResponse<ProductReadDto>> ReadById(Guid id, string useCase);
-    Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto, string useCase);
-    Task<GenericResponse> Delete(Guid id, string useCase);
+    Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
+    Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
+    Task<GenericResponse> Delete(Guid id);
 }
 
 public class ProductRepository : IProductRepository {
@@ -23,11 +23,11 @@ public class ProductRepository : IProductRepository {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string useCase) {
+    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
         ProductEntity entity = _mapper.Map<ProductEntity>(dto);
 
-        FillProductDetail(entity, dto, useCase);
+        FillProductDetail(entity, dto);
         EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(entity);
         await _context.SaveChangesAsync();
 
@@ -201,7 +201,7 @@ public class ProductRepository : IProductRepository {
         return new GenericResponse<IEnumerable<ProductReadDto>>(i);
     }
 
-    public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id, string useCase) {
+    public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
         ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
@@ -214,20 +214,20 @@ public class ProductRepository : IProductRepository {
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto, string useCase) {
+    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
         ProductEntity? entity = await _context.Set<ProductEntity>().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
 
         if (entity == null)
             return new GenericResponse<ProductReadDto>(new ProductReadDto());
 
-        FillProductDetail(entity, dto, useCase);
+        FillProductDetail(entity, dto);
         _context.Update(entity);
         await _context.SaveChangesAsync();
 
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(entity));
     }
 
-    public async Task<GenericResponse> Delete(Guid id, string useCase) {
+    public async Task<GenericResponse> Delete(Guid id) {
         ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id);
         i.DeletedAt = DateTime.Now;
@@ -235,7 +235,7 @@ public class ProductRepository : IProductRepository {
         return new GenericResponse();
     }
 
-    private async void FillProductDetail(ProductEntity entity, ProductCreateUpdateDto dto, string useCase) {
+    private async void FillProductDetail(ProductEntity entity, ProductCreateUpdateDto dto) {
         entity.UserId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
         entity.Title = dto.Title ?? entity.Title;
         entity.Subtitle = dto.Subtitle ?? entity.Subtitle;

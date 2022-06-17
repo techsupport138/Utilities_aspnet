@@ -1,7 +1,7 @@
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]
-[Route("api/[controller]/{useCase}")]
+[Route("api/[controller]")]
 public class ProductController : BaseApiController {
     private readonly IProductRepository _productRepository;
 
@@ -11,8 +11,8 @@ public class ProductController : BaseApiController {
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<GenericResponse<ProductReadDto>>> Create(string useCase, ProductCreateUpdateDto dto) {
-        GenericResponse<ProductReadDto> i = await _productRepository.Create(dto, useCase);
+    public async Task<ActionResult<GenericResponse<ProductReadDto>>> Create(ProductCreateUpdateDto dto) {
+        GenericResponse<ProductReadDto> i = await _productRepository.Create(dto);
         return Result(i);
     }
 
@@ -32,28 +32,28 @@ public class ProductController : BaseApiController {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     [HttpPost("Filter")]
-    public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Filter(string useCase, FilterProductDto? dto) {
-        GenericResponse<IEnumerable<ProductReadDto>> i = await _productRepository.Read(dto, useCase);
+    public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Filter(FilterProductDto? dto) {
+        GenericResponse<IEnumerable<ProductReadDto>> i = await _productRepository.Read(dto, dto.UseCase);
         return Result(i);
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<GenericResponse<ProductReadDto>>> ReadById(string useCase, Guid id) {
-        GenericResponse<ProductReadDto> i = await _productRepository.ReadById(id, useCase);
+    public async Task<ActionResult<GenericResponse<ProductReadDto>>> ReadById(Guid id) {
+        GenericResponse<ProductReadDto> i = await _productRepository.ReadById(id);
         return Result(i);
     }
 
     [HttpPut]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(string useCase, ProductCreateUpdateDto dto) {
-        GenericResponse<ProductReadDto> i = await _productRepository.Update(dto, useCase);
+    public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(ProductCreateUpdateDto dto) {
+        GenericResponse<ProductReadDto> i = await _productRepository.Update(dto);
         return Result(i);
     }
 
     [HttpDelete("{id:guid}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> Delete(string useCase, Guid id) {
-        GenericResponse i = await _productRepository.Delete(id, useCase);
+    public async Task<IActionResult> Delete(Guid id) {
+        GenericResponse i = await _productRepository.Delete(id);
         return Result(i);
     }
 }
