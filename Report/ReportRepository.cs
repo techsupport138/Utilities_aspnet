@@ -59,7 +59,7 @@ public class ReportRepository : IReportRepository {
         if (dto.Product == true)
             entities = entities.Include(x => x.Product);
 
-        List<ReportReadDto> result = await entities.Select(x => new ReportReadDto() {
+        IEnumerable<ReportReadDto> result = await entities.Select(x => new ReportReadDto() {
             CreatedAt = x.CreatedAt,
             DeletedAt = x.DeletedAt,
             Description = x.Description,

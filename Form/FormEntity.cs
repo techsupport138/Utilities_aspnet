@@ -54,7 +54,7 @@ public class FormCreateDto {
     public string? UserId { get; set; }
     public Guid? ProductId { get; set; }
 
-    public List<CategoryCreateUpdateDto> Form { get; set; }
+    public IEnumerable<CategoryCreateUpdateDto> Form { get; set; }
 }
 
 public enum FormFieldType {

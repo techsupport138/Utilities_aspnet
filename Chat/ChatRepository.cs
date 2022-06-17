@@ -47,7 +47,7 @@ public class ChatRepository : IChatRepository {
         if (user == null) return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.BadRequest);
         List<ChatEntity> conversation = await _context.Set<ChatEntity>()
             .Where(c => c.ToUserId == userId && c.FromUserId == id).ToListAsync();
-        List<ChatEntity> conversationToUser = await _context.Set<ChatEntity>()
+        IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>()
             .Where(x => x.FromUserId == userId && x.ToUserId == id).ToListAsync();
 
         conversation.AddRange(conversationToUser);

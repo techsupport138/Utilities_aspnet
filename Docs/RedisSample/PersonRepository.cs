@@ -25,7 +25,7 @@
 //
 //     public IEnumerable<PersonEntity> Get() {
 //         HashEntry[]? data = _db.HashGetAll("hashPlatform");
-//         List<PersonEntity> obj = Array.ConvertAll(data, val => JsonSerializer.Deserialize<PersonEntity>(val.Value)).ToList()!;
+//         IEnumerable<PersonEntity> obj = Array.ConvertAll(data, val => JsonSerializer.Deserialize<PersonEntity>(val.Value)).ToList()!;
 //         return obj;
 //     }
 //

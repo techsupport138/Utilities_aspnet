@@ -90,14 +90,6 @@ public class ProductReadDto {
 }
 
 public class ProductCreateUpdateDto {
-    public ProductCreateUpdateDto() {
-        Locations = new List<int>();
-        Categories = new List<Guid>();
-        Forms = new List<Guid>();
-        VoteFields = new List<Guid>();
-        Reports = new List<Guid>();
-    }
-
     public Guid? Id { get; set; }
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
@@ -127,11 +119,11 @@ public class ProductCreateUpdateDto {
     public double? MinOrder { get; set; }
     public double? MaxOrder { get; set; }
     public ProductStatus? Status { get; set; }
-    public List<int>? Locations { get; set; }
-    public List<Guid>? Categories { get; set; }
-    public List<Guid>? Forms { get; set; }
-    public List<Guid>? VoteFields { get; set; }
-    public List<Guid>? Reports { get; set; }
+    public IEnumerable<int>? Locations { get; set; }
+    public IEnumerable<Guid>? Categories { get; set; }
+    public IEnumerable<Guid>? Forms { get; set; }
+    public IEnumerable<Guid>? VoteFields { get; set; }
+    public IEnumerable<Guid>? Reports { get; set; }
 }
 
 public class FilterProductDto {

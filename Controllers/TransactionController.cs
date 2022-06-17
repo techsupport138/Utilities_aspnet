@@ -19,13 +19,13 @@ public class TransactionController : BaseApiController {
     }
 
     [HttpGet]
-    public async Task<ActionResult<GenericResponse<List<TransactionReadDto>>>> Read() {
-        GenericResponse<List<TransactionReadDto>> i = await _transactionRepository.Read();
+    public async Task<ActionResult<GenericResponse<IEnumerable<TransactionReadDto>>>> Read() {
+        GenericResponse<IEnumerable<TransactionReadDto>> i = await _transactionRepository.Read();
         return Result(i);
     }
     [HttpGet("Mine")]
-    public async Task<ActionResult<GenericResponse<List<TransactionReadDto>>>> ReadMine() {
-        GenericResponse<List<TransactionReadDto>> i = await _transactionRepository.ReadMine();
+    public async Task<ActionResult<GenericResponse<IEnumerable<TransactionReadDto>>>> ReadMine() {
+        GenericResponse<IEnumerable<TransactionReadDto>> i = await _transactionRepository.ReadMine();
         return Result(i);
     }
 

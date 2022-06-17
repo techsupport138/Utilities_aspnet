@@ -62,7 +62,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
     }
 
     public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
-        List<UserEntity?> followers = await _context.Set<FollowEntity>()
+        IEnumerable<UserEntity?> followers = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.SourceUserId == id)
             .Include(x => x.TargetUser)
@@ -76,7 +76,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
     }
 
     public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id) {
-        List<UserEntity?> followings = await _context.Set<FollowEntity>()
+        IEnumerable<UserEntity?> followings = await _context.Set<FollowEntity>()
             .AsNoTracking()
             .Where(x => x.TargetUserId == id)
             .Include(x => x.SourceUser)
@@ -90,7 +90,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
     }
 
     public async Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto parameters) {
-        List<string> users = await _context.Set<UserEntity>()
+        IEnumerable<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
             .Select(x => x.Id)
@@ -118,13 +118,13 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
     }
 
     public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters) {
-        List<string> users = await _context.Set<UserEntity>()
+        IEnumerable<string> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Where(x => parameters.Followers.Contains(x.Id))
             .Select(x => x.Id)
             .ToListAsync();
 
-        List<FollowEntity> followings = await _context.Set<FollowEntity>()
+        IEnumerable<FollowEntity> followings = await _context.Set<FollowEntity>()
             .Where(x => parameters.Followers.Contains(x.SourceUserId) && x.TargetUserId == targetUserId)
             .ToListAsync();
 

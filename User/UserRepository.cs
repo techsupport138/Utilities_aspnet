@@ -245,7 +245,7 @@ public class UserRepository : IUserRepository {
     }
 
     private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
-        IList<string>? roles = await _userManager.GetRolesAsync(user);
+        IEnumerable<string>? roles = await _userManager.GetRolesAsync(user);
         List<Claim> claims = new() {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -264,7 +264,7 @@ public class UserRepository : IUserRepository {
     }
 
     public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers() {
-        List<UserEntity> users = await _context.Set<UserEntity>()
+        IEnumerable<UserEntity> users = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
             .Include(u => u.Categories)

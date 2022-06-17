@@ -11,27 +11,27 @@ public class FormController : BaseApiController {
     }
 
     [HttpPost("CreateFormField")]
-    public async Task<ActionResult<GenericResponse<List<FormFieldDto>>>> CreateFormField(FormFieldDto dto) {
-        GenericResponse<List<FormFieldDto>?> i = await _formRepository.CreateFormFields(dto);
+    public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> CreateFormField(FormFieldDto dto) {
+        GenericResponse<IEnumerable<FormFieldDto>?> i = await _formRepository.CreateFormFields(dto);
         return Result(i);
     }
     
     [HttpPut("UpdateFormField")]
-    public async Task<ActionResult<GenericResponse<List<FormFieldDto>>>> UpdateFormField(FormFieldDto dto) {
-        GenericResponse<List<FormFieldDto>?> i = await _formRepository.UpdateFormFields(dto);
+    public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> UpdateFormField(FormFieldDto dto) {
+        GenericResponse<IEnumerable<FormFieldDto>?> i = await _formRepository.UpdateFormFields(dto);
         return Result(i);
     }
 
     [AllowAnonymous]
     [HttpGet("{categoryId:guid}")]
-    public async Task<ActionResult<GenericResponse<List<FormFieldDto>>>> ReadFormFieldById(Guid categoryId) {
-        GenericResponse<List<FormFieldDto>> i = await _formRepository.ReadFormFields(categoryId);
+    public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> ReadFormFieldById(Guid categoryId) {
+        GenericResponse<IEnumerable<FormFieldDto>> i = await _formRepository.ReadFormFields(categoryId);
         return Result(i);
     }
 
     [HttpPost]
-    public async Task<ActionResult<GenericResponse<List<FormFieldDto>>>> CreateForm(FormCreateDto model) {
-        GenericResponse<List<FormFieldDto>> i = await _formRepository.UpdateFormBuilder(model);
+    public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> CreateForm(FormCreateDto model) {
+        GenericResponse<IEnumerable<FormFieldDto>> i = await _formRepository.UpdateFormBuilder(model);
         return Result(i);
     }
 

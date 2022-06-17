@@ -20,7 +20,7 @@ public class SeedRepository : ISeedRepository
     {
         string path = Directory.GetCurrentDirectory() + "\\AllLocationNew.json";
         string data = File.ReadAllText(path);
-        List<LocationCreateDto>? cities = JsonConvert.DeserializeObject<List<LocationCreateDto>>(data);
+        IEnumerable<LocationCreateDto>? cities = JsonConvert.DeserializeObject<IEnumerable<LocationCreateDto>>(data);
 
         if (cities != null)
         {

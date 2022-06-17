@@ -38,8 +38,8 @@ public class MediaDto {
 public class UploadDto {
     public string? UseCase { get; set; }
     public string? UserId { get; set; }
-    public List<IFormFile>? Files { get; set; }
-    public List<string>? Links { get; set; }
+    public IEnumerable<IFormFile>? Files { get; set; }
+    public IEnumerable<string>? Links { get; set; }
     public string? Title { get; set; }
     public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
     public Guid? AdsId { get; set; }

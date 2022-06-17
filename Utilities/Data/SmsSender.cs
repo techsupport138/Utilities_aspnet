@@ -24,8 +24,8 @@ public class SmsSender : ISmsSender {
                 // string? token = new Token()
                 //     .GetToken(smsSetting.SmsApiKey, smsSetting.SmsSecret);
                 // MessageSendObject? messageSendObject = new() {
-                //     Messages = new List<string> {message}.ToArray(),
-                //     MobileNumbers = new List<string> {mobileNumber}.ToArray(),
+                //     Messages = new IEnumerable<string> {message}.ToArray(),
+                //     MobileNumbers = new IEnumerable<string> {mobileNumber}.ToArray(),
                 //     LineNumber = smsSetting.LineNumber,
                 //     SendDateTime = null,
                 //     CanContinueInCaseOfError = true

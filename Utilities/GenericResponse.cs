@@ -14,7 +14,7 @@ public class GenericResponse {
     public GenericResponse(
         UtilitiesStatusCodes status = UtilitiesStatusCodes.Success,
         string message = "",
-        List<Guid>? ids = null,
+        IEnumerable<Guid>? ids = null,
         Guid? id = null) {
         Status = status;
         Message = message;

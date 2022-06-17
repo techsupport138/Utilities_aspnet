@@ -31,8 +31,8 @@ public class AppSettingRepository : IAppSettingRepository {
             }).ToList()
         };
 
-        List<CategoryReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
-        List<CategoryReadDto> transactionStatus = EnumExtension.GetValues<TransactionStatus>();
+        IEnumerable<CategoryReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
+        IEnumerable<CategoryReadDto> transactionStatus = EnumExtension.GetValues<TransactionStatus>();
         model.FormFieldType = formFieldType;
         model.TransactionStatuses = transactionStatus;
 

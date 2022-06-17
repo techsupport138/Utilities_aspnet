@@ -2,7 +2,7 @@
 
 public interface IUploadRepository
 {
-    Task<GenericResponse<List<MediaDto>?>> Upload(UploadDto model);
+    Task<GenericResponse<IEnumerable<MediaDto>?>> Upload(UploadDto model);
     Task<GenericResponse> Delete(Guid id);
 }
 
@@ -22,7 +22,7 @@ public class UploadRepository : IUploadRepository
         _context = context;
     }
 
-    public async Task<GenericResponse<List<MediaDto>?>> Upload(UploadDto model)
+    public async Task<GenericResponse<IEnumerable<MediaDto>?>> Upload(UploadDto model)
     {
         List<MediaEntity> medias = new();
         if (model.Files != null)
@@ -92,8 +92,8 @@ public class UploadRepository : IUploadRepository
                 medias.Add(media);
             }
 
-        return new GenericResponse<List<MediaDto>?>(
-            _mapper.Map<List<MediaDto>>(medias),
+        return new GenericResponse<IEnumerable<MediaDto>?>(
+            _mapper.Map<IEnumerable<MediaDto>>(medias),
             UtilitiesStatusCodes.Success,
             "File uploaded"
         );
