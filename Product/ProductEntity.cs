@@ -6,7 +6,7 @@ using Utilities_aspnet.Vote;
 namespace Utilities_aspnet.Product;
 
 [Table("Products")]
-public abstract class ProductEntity : BaseEntity {
+public class ProductEntity : BaseEntity {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
