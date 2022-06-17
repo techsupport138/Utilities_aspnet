@@ -13,9 +13,9 @@ public class CategoryEntity : BaseEntity {
     public string? Type { get; set; }
 
     public IEnumerable<MediaEntity> Media { get; set; }
-    public IEnumerable<UserEntity>? User { get; set; }
-    public IEnumerable<ProductEntity>? Product { get; set; }
-    public IEnumerable<FormEntity>? FormBuilderFieldLists { get; set; }
+    public IEnumerable<UserEntity>? Users { get; set; }
+    public IEnumerable<ProductEntity>? Products { get; set; }
+    public IEnumerable<FormEntity>? FormFields { get; set; }
 
     public Guid? ParentId { get; set; }
     public CategoryEntity? Parent { get; set; }

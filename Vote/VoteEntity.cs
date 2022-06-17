@@ -20,7 +20,7 @@ public class VoteEntity : BaseEntity {
 public class VoteFieldEntity : BaseEntity {
     public string? Title { get; set; }
 
-    public IEnumerable<VoteEntity>? Vote { get; set; }
+    public IEnumerable<VoteEntity>? Votes { get; set; }
 
     public ProductEntity? Product { get; set; }
     public Guid? ProductId { get; set; }
