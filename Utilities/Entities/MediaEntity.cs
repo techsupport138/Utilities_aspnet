@@ -42,21 +42,8 @@ public class UploadDto {
     public IEnumerable<string>? Links { get; set; }
     public string? Title { get; set; }
     public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
-    public Guid? AdsId { get; set; }
-    public Guid? DailyPriceId { get; set; }
-    public Guid? JobId { get; set; }
-    public Guid? LearnId { get; set; }
-    public Guid? PostId { get; set; }
     public Guid? ProductId { get; set; }
-    public Guid? ProjectId { get; set; }
-    public Guid? TenderId { get; set; }
-    public Guid? TutorialId { get; set; }
-    public Guid? EventId { get; set; }
-    public Guid? CompanyId { get; set; }
-    public Guid? MagazineId { get; set; }
-    public Guid? ServiceId { get; set; }
     public Guid? ContentId { get; set; }
     public Guid? CategoryId { get; set; }
-    public Guid? BrandId { get; set; }
     public Guid? NotificationId { get; set; }
 }

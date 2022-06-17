@@ -18,18 +18,7 @@ public class AppSettingRepository : IAppSettingRepository {
     }
 
     public Task<GenericResponse<EnumDto?>> Read() {
-        EnumDto model = new() {
-            Colors = _context.Set<CategoryEntity>().Select(x => new CategoryReadDto {
-                Id = x.Id,
-                Title = x.Title,
-                Subtitle = x.Color
-            }).ToList(),
-            Specialties = _context.Set<CategoryEntity>().Select(x => new CategoryReadDto {
-                Id = x.Id,
-                Title = x.Title,
-                Subtitle = x.Color
-            }).ToList()
-        };
+        EnumDto model = new();
 
         IEnumerable<CategoryReadDto> formFieldType = EnumExtension.GetValues<FormFieldType>();
         IEnumerable<CategoryReadDto> transactionStatus = EnumExtension.GetValues<TransactionStatus>();

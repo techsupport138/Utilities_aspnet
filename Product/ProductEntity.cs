@@ -157,10 +157,6 @@ public class FilterProductDto {
     public DateTime? EndDate { get; set; }
     public IEnumerable<int>? Locations { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
-    public IEnumerable<Guid>? Brands { get; set; }
-    public IEnumerable<Guid>? References { get; set; }
-    public IEnumerable<Guid>? Tags { get; set; }
-    public IEnumerable<Guid>? Specialities { get; set; }
 
     public ProductFilterOrder? FilterOrder { get; set; } = ProductFilterOrder.AToZ;
 

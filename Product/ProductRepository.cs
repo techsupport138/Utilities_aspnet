@@ -143,26 +143,9 @@ public class ProductRepository : IProductRepository {
                 queryable = queryable.Where(x => x.Locations != null &&
                                                  x.Locations.Any(y => parameters.Locations.Contains(y.Id))).ToList();
 
-            if (parameters.Brands != null && parameters.Brands.Any())
-                queryable = queryable.Where(x => x.Categories != null &&
-                                                 x.Categories.Any(y => parameters.Brands.Contains(y.Id))).ToList();
-
             if (parameters.Categories != null && parameters.Categories.Any())
                 queryable = queryable.Where(x => x.Categories != null &&
                                                  x.Categories.Any(y => parameters.Categories.Contains(y.Id))).ToList();
-
-            if (parameters.References != null && parameters.References.Any())
-                queryable = queryable.Where(x => x.Categories != null &&
-                                                 x.Categories.Any(y => parameters.References.Contains(y.Id))).ToList();
-
-            if (parameters.Tags != null && parameters.Tags.Any())
-                queryable = queryable.Where(x => x.Categories != null &&
-                                                 x.Categories.Any(y => parameters.Tags.Contains(y.Id))).ToList();
-
-            if (parameters.Specialities != null && parameters.Specialities.Any())
-                queryable = queryable.Where(x => x.Categories != null &&
-                                                 x.Categories.Any(y => parameters.Specialities.Contains(y.Id)))
-                    .ToList();
 
             totalCount = queryable.Count;
 
