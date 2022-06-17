@@ -56,14 +56,6 @@ public class UploadRepository : IUploadRepository
                     FileType = fileType,
                     UserId = model.UserId,
                     ProductId = model.ProductId,
-                    AdId = model.AdsId,
-                    CompanyId = model.CompanyId,
-                    EventId = model.EventId,
-                    MagazineId = model.MagazineId,
-                    ProjectId = model.ProjectId,
-                    ServiceId = model.ServiceId,
-                    TutorialId = model.TutorialId,
-                    TenderId = model.TenderId,
                     ContentId = model.ContentId,
                     BrandId = model.BrandId,
                     CategoryId = model.CategoryId,
@@ -72,7 +64,6 @@ public class UploadRepository : IUploadRepository
                     Visibility = model.Visibility,
                     Title = model.Title,
                     NotificationId = model.NotificationId,
-                    DailyPriceId = model.DailyPriceId
                 };
                 await _context.Set<MediaEntity>().AddAsync(media);
                 await _context.SaveChangesAsync();
@@ -88,14 +79,6 @@ public class UploadRepository : IUploadRepository
                 Link = link,
                 UserId = model.UserId,
                 ProductId = model.ProductId,
-                AdId = model.AdsId,
-                CompanyId = model.CompanyId,
-                EventId = model.EventId,
-                MagazineId = model.MagazineId,
-                ProjectId = model.ProjectId,
-                ServiceId = model.ServiceId,
-                TutorialId = model.TutorialId,
-                TenderId = model.TenderId,
                 ContentId = model.ContentId,
                 BrandId = model.BrandId,
                 CategoryId = model.CategoryId,
@@ -104,7 +87,6 @@ public class UploadRepository : IUploadRepository
                 Visibility = model.Visibility,
                 Title = model.Title,
                 NotificationId = model.NotificationId,
-                DailyPriceId = model.DailyPriceId
             }))
             {
                 await _context.Set<MediaEntity>().AddAsync(media);

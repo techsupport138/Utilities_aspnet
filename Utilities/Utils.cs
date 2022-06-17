@@ -91,16 +91,7 @@ public static class StartupExtension {
         builder.Services.AddTransient<IIdTitleRepository<SpecialityEntity>, IdTitleRepository<SpecialityEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<BrandEntity>, IdTitleRepository<BrandEntity>>();
         builder.Services.AddTransient<IIdTitleRepository<ReferenceEntity>, IdTitleRepository<ReferenceEntity>>();
-        builder.Services.AddTransient<IProductRepository<ProductEntity>, ProductRepository<ProductEntity>>();
-        builder.Services.AddTransient<IProductRepository<ProjectEntity>, ProductRepository<ProjectEntity>>();
-        builder.Services.AddTransient<IProductRepository<EventEntity>, ProductRepository<EventEntity>>();
-        builder.Services.AddTransient<IProductRepository<TutorialEntity>, ProductRepository<TutorialEntity>>();
-        builder.Services.AddTransient<IProductRepository<AdEntity>, ProductRepository<AdEntity>>();
-        builder.Services.AddTransient<IProductRepository<CompanyEntity>, ProductRepository<CompanyEntity>>();
-        builder.Services.AddTransient<IProductRepository<MagazineEntity>, ProductRepository<MagazineEntity>>();
-        builder.Services.AddTransient<IProductRepository<TenderEntity>, ProductRepository<TenderEntity>>();
-        builder.Services.AddTransient<IProductRepository<ServiceEntity>, ProductRepository<ServiceEntity>>();
-        builder.Services.AddTransient<IProductRepository<DailyPriceEntity>, ProductRepository<DailyPriceEntity>>();
+        builder.Services.AddTransient<IProductRepository, ProductRepository>();
         builder.Services.AddTransient<IChatRepository, ChatRepository>();
         builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
         builder.Services.AddTransient<IFormRepository, FormRepository>();

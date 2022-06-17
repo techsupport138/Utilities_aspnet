@@ -32,15 +32,6 @@ public class UserEntity : IdentityUser {
     public IEnumerable<ContactInformationEntity>? ContactInformation { get; set; }
     public IEnumerable<ReportEntity>? Reports { get; set; }
     public IEnumerable<ProductEntity>? Products { get; set; }
-    public IEnumerable<DailyPriceEntity>? DailyPrices { get; set; }
-    public IEnumerable<ProjectEntity>? Projects { get; set; }
-    public IEnumerable<TutorialEntity>? Tutorials { get; set; }
-    public IEnumerable<EventEntity>? Events { get; set; }
-    public IEnumerable<AdEntity>? Ads { get; set; }
-    public IEnumerable<CompanyEntity>? Companies { get; set; }
-    public IEnumerable<TenderEntity>? Tenders { get; set; }
-    public IEnumerable<ServiceEntity>? Services { get; set; }
-    public IEnumerable<MagazineEntity>? Magazines { get; set; }
     public IEnumerable<SpecialityEntity>? Specialties { get; set; }
     public IEnumerable<CategoryEntity>? Favorites { get; set; }
     public IEnumerable<TransactionEntity>? Transactions { get; set; }

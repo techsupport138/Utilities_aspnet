@@ -3,7 +3,8 @@ using Utilities_aspnet.User;
 
 namespace Utilities_aspnet.Product;
 
-public abstract class BaseProductEntity : BaseEntity {
+[Table("Products")]
+public abstract class ProductEntity : BaseEntity {
     public string? Title { get; set; }
     public string? Subtitle { get; set; }
     public string? Description { get; set; }
@@ -15,12 +16,13 @@ public abstract class BaseProductEntity : BaseEntity {
     public string? Website { get; set; }
     public string? Email { get; set; }
     public string? Type { get; set; }
+    public string? UseCase { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
-    public double? Latitude { get; set; }
-    public double? Longitude { get; set; }
     public decimal? Price { get; set; }
     public int? VisitCount { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
     public double? Length { get; set; }
     public double? Width { get; set; }
     public double? Height { get; set; }
@@ -50,36 +52,6 @@ public abstract class BaseProductEntity : BaseEntity {
     public IEnumerable<CommentEntity>? Comments { get; set; }
 }
 
-[Table("Products")]
-public class ProductEntity : BaseProductEntity { }
-
-[Table("Projects")]
-public class ProjectEntity : BaseProductEntity { }
-
-[Table("Tutorials")]
-public class TutorialEntity : BaseProductEntity { }
-
-[Table("Events")]
-public class EventEntity : BaseProductEntity { }
-
-[Table("Ads")]
-public class AdEntity : BaseProductEntity { }
-
-[Table("Company")]
-public class CompanyEntity : BaseProductEntity { }
-
-[Table("DailyPrice")]
-public class DailyPriceEntity : BaseProductEntity { }
-
-[Table("Tenders")]
-public class TenderEntity : BaseProductEntity { }
-
-[Table("Services")]
-public class ServiceEntity : BaseProductEntity { }
-
-[Table("Magazine")]
-public class MagazineEntity : BaseProductEntity { }
-
 public class ProductReadDto {
     public Guid? Id { get; set; }
     public string? UserId { get; set; }
@@ -94,6 +66,8 @@ public class ProductReadDto {
     public string? Website { get; set; }
     public string? Email { get; set; }
     public string? Type { get; set; }
+    public string? Unit { get; set; }
+    public string? UseCase { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
     public bool IsBookmarked { get; set; }
@@ -102,7 +76,6 @@ public class ProductReadDto {
     public int? VisitsCount { get; set; }
     public double? MinOrder { get; set; }
     public double? MaxOrder { get; set; }
-    public string? Unit { get; set; }
     public decimal? Price { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
@@ -149,6 +122,8 @@ public class ProductCreateUpdateDto {
     public string? Website { get; set; }
     public string? Email { get; set; }
     public string? Type { get; set; }
+    public string? Unit { get; set; }
+    public string? UseCase { get; set; }
     public bool? IsForSale { get; set; }
     public bool? Enabled { get; set; }
     public double? Latitude { get; set; }
@@ -163,7 +138,6 @@ public class ProductCreateUpdateDto {
     public double? Weight { get; set; }
     public double? MinOrder { get; set; }
     public double? MaxOrder { get; set; }
-    public string? Unit { get; set; }
     public ProductStatus? Status { get; set; }
     public List<int>? Locations { get; set; }
     public List<Guid>? Favorites { get; set; }
@@ -189,6 +163,8 @@ public class FilterProductDto {
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
     public string? Type { get; set; }
+    public string? Unit { get; set; }
+    public string? UseCase { get; set; }
     public decimal? StartPriceRange { get; set; }
     public decimal? EndPriceRange { get; set; }
     public bool? Enabled { get; set; }
@@ -201,7 +177,6 @@ public class FilterProductDto {
     public double? Weight { get; set; }
     public double? MinOrder { get; set; }
     public double? MaxOrder { get; set; }
-    public string? Unit { get; set; }
     public ProductStatus? Status { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }

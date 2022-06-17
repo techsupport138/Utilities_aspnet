@@ -24,10 +24,8 @@ public class FormRepository : IFormRepository {
         foreach (IdTitleCreateUpdateDto item in model.Form)
             try {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
-                    ((x.ProductId == model.ProductId && model.ProductId != null) || (x.ProjectId == model.ProjectId && model.ProjectId != null) || (x.AdId == model.AdId && model.AdId != null) ||
-            (x.CompanyId == model.CompanyId && model.CompanyId != null) || (x.UserId == model.UserId && model.UserId != null) ||
-            (x.EventId == model.EventId && model.EventId != null) || (x.MagazineId == model.MagazineId && model.MagazineId != null) || (x.ServiceId == model.ServiceId && model.ServiceId != null) ||
-            (x.TenderId == model.TenderId && model.TenderId != null) || (x.TutorialId == model.TutorialId && model.TutorialId != null)
+                    (x.ProductId == model.ProductId && model.ProductId != null ||
+                     (x.UserId == model.UserId && model.UserId != null)
                     ) && x.FormFieldId == item.Id);
                 if (up != null) {
                     up.Title = item.Title;
@@ -36,15 +34,7 @@ public class FormRepository : IFormRepository {
                 else {
                     _dbContext.Set<FormEntity>().Add(new FormEntity {
                         ProductId = model.ProductId,
-                        AdId = model.AdId,
-                        CompanyId = model.CompanyId,
                         UserId = model.UserId,
-                        EventId = model.EventId,
-                        ProjectId = model.ProjectId,
-                        MagazineId = model.MagazineId,
-                        TutorialId = model.TutorialId,
-                        TenderId = model.TenderId,
-                        ServiceId = model.ServiceId,
                         FormFieldId = item.Id,
                         Title = item.Title
                     });
@@ -57,10 +47,8 @@ public class FormRepository : IFormRepository {
             }
 
         List<FormEntity> entity = await _dbContext.Set<FormEntity>().Where(x =>
-            (x.ProductId == model.ProductId && model.ProductId != null) || (x.ProjectId == model.ProjectId && model.ProjectId != null) || (x.AdId == model.AdId && model.AdId != null) ||
-            (x.CompanyId == model.CompanyId && model.CompanyId != null) || (x.UserId == model.UserId && model.UserId != null) ||
-            (x.EventId == model.EventId && model.EventId != null) || (x.MagazineId == model.MagazineId && model.MagazineId != null) || (x.ServiceId == model.ServiceId && model.ServiceId != null) ||
-            (x.TenderId == model.TenderId && model.TenderId != null) || (x.TutorialId == model.TutorialId && model.TutorialId != null)).ToListAsync();
+            x.ProductId == model.ProductId && model.ProductId != null ||
+            x.UserId == model.UserId && model.UserId != null).ToListAsync();
 
         return new GenericResponse<List<FormFieldDto>>(_mapper.Map<List<FormFieldDto>>(entity));
     }
@@ -80,11 +68,14 @@ public class FormRepository : IFormRepository {
             ? new GenericResponse<List<FormFieldDto>?>(ReadFormFields((Guid) categoryId).Result.Result)
             : new GenericResponse<List<FormFieldDto>?>(null);
     }
-    
+
     public async Task<GenericResponse<List<FormFieldDto>?>> UpdateFormFields(FormFieldDto dto) {
         Guid? categoryId = dto.CategoryId;
-        FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().FirstOrDefaultAsync(x=>x.Id == dto.Id);
-        if (entity == null) { return new GenericResponse<List<FormFieldDto>?>(null, UtilitiesStatusCodes.NotFound); }
+        FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
+        if (entity == null) {
+            return new GenericResponse<List<FormFieldDto>?>(null, UtilitiesStatusCodes.NotFound);
+        }
+
         try {
             entity.Label = dto.Label;
             entity.OptionList = dto.OptionList;
@@ -109,22 +100,26 @@ public class FormRepository : IFormRepository {
         return new GenericResponse<List<FormFieldDto>>(_mapper.Map<List<FormFieldDto>>(model));
     }
 
-    public async Task<GenericResponse> DeleteFormField(Guid id)
-    {
-        FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().Include(x=>x.Forms).AsNoTracking()
+    public async Task<GenericResponse> DeleteFormField(Guid id) {
+        FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().Include(x => x.Forms).AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id);
-        if (entity == null) { return new GenericResponse(UtilitiesStatusCodes.NotFound); }
+        if (entity == null) {
+            return new GenericResponse(UtilitiesStatusCodes.NotFound);
+        }
+
         _dbContext.Remove(entity);
         await _dbContext.SaveChangesAsync();
         return new GenericResponse();
     }
-    
-    public async Task<GenericResponse> DeleteFormBuilder(Guid id)
-    {
-        FormEntity? entity = await _dbContext.Set<FormEntity>().Include(x=>x.Product).Include(x=>x.Project).Include(x=>x.Ad).Include(x=>x.Company).Include(x=>x.DailyPrice)
-            .Include(x=>x.Event).Include(x=>x.Magazine).Include(x=>x.Service).Include(x=>x.Tender).Include(x=>x.Tutorial).Include(x=>x.User).AsNoTracking()
+
+    public async Task<GenericResponse> DeleteFormBuilder(Guid id) {
+        FormEntity? entity = await _dbContext.Set<FormEntity>().Include(x => x.Product)
+            .Include(x => x.User).AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id);
-        if (entity == null) { return new GenericResponse(UtilitiesStatusCodes.NotFound); }
+        if (entity == null) {
+            return new GenericResponse(UtilitiesStatusCodes.NotFound);
+        }
+
         _dbContext.Remove(entity);
         await _dbContext.SaveChangesAsync();
         return new GenericResponse();

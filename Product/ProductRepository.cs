@@ -1,15 +1,15 @@
 namespace Utilities_aspnet.Product;
 
-public interface IProductRepository<T> where T : BaseProductEntity {
-    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
-    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? paraneters);
-    Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine();
-    Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
-    Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
-    Task<GenericResponse> Delete(Guid id);
+public interface IProductRepository {
+    Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string useCase);
+    Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? paraneters, string useCase);
+    Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine(string useCase);
+    Task<GenericResponse<ProductReadDto>> ReadById(Guid id, string useCase);
+    Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto, string useCase);
+    Task<GenericResponse> Delete(Guid id, string useCase);
 }
 
-public class ProductRepository<T> : IProductRepository<T> where T : BaseProductEntity, new() {
+public class ProductRepository : IProductRepository {
     private readonly DbContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
@@ -20,23 +20,23 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
+    public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto, string useCase) {
         if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
-        T entity = _mapper.Map<T>(dto);
+        ProductEntity entity = _mapper.Map<ProductEntity>(dto);
 
-        FillProductDetail(entity, dto);
-        EntityEntry<T> i = await _context.Set<T>().AddAsync(entity);
+        FillProductDetail(entity, dto, useCase);
+        EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(entity);
         await _context.SaveChangesAsync();
 
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? parameters) {
-        List<T>? queryable = await _context.Set<T>()
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? parameters, string useCase) {
+        List<ProductEntity> queryable = await _context.Set<ProductEntity>()
             .AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
-            .Include(i=> i.Comments)
+            .Include(i => i.Comments)
             .Include(i => i.Locations)
             .Include(i => i.Reports)
             .Include(i => i.Specialities)
@@ -48,6 +48,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
             .Include(i => i.Forms)!
             .ThenInclude(x => x.FormField)
             .Where(x => x.DeletedAt == null)
+            .Where(x => x.UseCase == useCase)
             .ToListAsync();
 
         int totalCount = queryable.Count;
@@ -73,6 +74,10 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
                 queryable = queryable.Where(x =>
                     !string.IsNullOrEmpty(x.Description) && x.Description.Contains(parameters.Description)).ToList();
 
+            if (!string.IsNullOrEmpty(parameters.UseCase))
+                queryable = queryable.Where(x =>
+                    !string.IsNullOrEmpty(x.UseCase) && x.UseCase.Contains(parameters.UseCase)).ToList();
+
             if (parameters.StartPriceRange.HasValue)
                 queryable = queryable.Where(x => x.Price >= parameters.StartPriceRange.Value).ToList();
 
@@ -91,25 +96,25 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
             if (parameters.VisitsCount.HasValue)
                 queryable = queryable.Where(x => x.VisitCount == parameters.VisitsCount).ToList();
-            
+
             if (parameters.Length.HasValue)
                 queryable = queryable.Where(x => x.Length == parameters.Length).ToList();
-            
+
             if (parameters.Width.HasValue)
                 queryable = queryable.Where(x => x.Width == parameters.Width).ToList();
-            
+
             if (parameters.Height.HasValue)
                 queryable = queryable.Where(x => x.Height == parameters.Height).ToList();
-            
+
             if (parameters.Weight.HasValue)
-                queryable = queryable.Where(x => x.Weight == parameters.Weight).ToList();     
-            
+                queryable = queryable.Where(x => x.Weight == parameters.Weight).ToList();
+
             if (parameters.MinOrder.HasValue)
                 queryable = queryable.Where(x => x.MinOrder >= parameters.MinOrder).ToList();
-            
+
             if (parameters.MaxOrder.HasValue)
-                queryable = queryable.Where(x => x.MaxOrder <= parameters.MaxOrder).ToList();        
-            
+                queryable = queryable.Where(x => x.MaxOrder <= parameters.MaxOrder).ToList();
+
             if (parameters.Unit.IsNotNullOrEmpty())
                 queryable = queryable.Where(x => x.Unit == parameters.Unit).ToList();
 
@@ -195,15 +200,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
 
         foreach (ProductReadDto productReadDto in dto)
         foreach (BookmarkEntity bookmarkEntity in bookmark) {
-            if (bookmarkEntity.AdId == productReadDto.Id) productReadDto.IsBookmarked = true;
             if (bookmarkEntity.ProductId == productReadDto.Id) productReadDto.IsBookmarked = true;
-            if (bookmarkEntity.ProjectId == productReadDto.Id) productReadDto.IsBookmarked = true;
-            if (bookmarkEntity.CompanyId == productReadDto.Id) productReadDto.IsBookmarked = true;
-            if (bookmarkEntity.EventId == productReadDto.Id) productReadDto.IsBookmarked = true;
-            if (bookmarkEntity.MagazineId == productReadDto.Id) productReadDto.IsBookmarked = true;
-            if (bookmarkEntity.TenderId == productReadDto.Id) productReadDto.IsBookmarked = true;
-            if (bookmarkEntity.TutorialId == productReadDto.Id) productReadDto.IsBookmarked = true;
-            if (bookmarkEntity.ServiceId == productReadDto.Id) productReadDto.IsBookmarked = true;
         }
 
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto) {
@@ -215,14 +212,15 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         };
     }
 
-    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine() {
-        GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null);
-        IEnumerable<ProductReadDto> i = e.Result.Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name);
+    public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine(string useCase) {
+        GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null, useCase);
+        IEnumerable<ProductReadDto> i = e.Result.Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
+            .Where(x => x.UseCase == useCase);
         return new GenericResponse<IEnumerable<ProductReadDto>>(i);
     }
 
-    public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
-        T? i = await _context.Set<T>().AsNoTracking()
+    public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id, string useCase) {
+        ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
             .Include(i => i.Media)
             .Include(i => i.Categories)
             .Include(i => i.Locations)
@@ -238,28 +236,28 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
     }
 
-    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
-        T? entity = await _context.Set<T>().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
+    public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto, string useCase) {
+        ProductEntity? entity = await _context.Set<ProductEntity>().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
 
         if (entity == null)
             return new GenericResponse<ProductReadDto>(new ProductReadDto());
 
-        FillProductDetail(entity, dto);
+        FillProductDetail(entity, dto, useCase);
         _context.Update(entity);
         await _context.SaveChangesAsync();
 
         return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(entity));
     }
 
-    public async Task<GenericResponse> Delete(Guid id) {
-        T? i = await _context.Set<T>().AsNoTracking()
+    public async Task<GenericResponse> Delete(Guid id, string useCase) {
+        ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id);
         i.DeletedAt = DateTime.Now;
         await _context.SaveChangesAsync();
         return new GenericResponse();
     }
 
-    private async void FillProductDetail(T entity, ProductCreateUpdateDto dto) {
+    private async void FillProductDetail(ProductEntity entity, ProductCreateUpdateDto dto, string useCase) {
         entity.UserId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
         entity.Title = dto.Title ?? entity.Title;
         entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
@@ -272,6 +270,7 @@ public class ProductRepository<T> : IProductRepository<T> where T : BaseProductE
         entity.Latitude = dto.Latitude ?? entity.Latitude;
         entity.Longitude = dto.Longitude ?? entity.Longitude;
         entity.Description = dto.Description ?? entity.Description;
+        entity.UseCase = dto.UseCase ?? entity.UseCase;
         entity.Price = dto.Price ?? entity.Price;
         entity.IsForSale = dto.IsForSale ?? entity.IsForSale;
         entity.Enabled = dto.Enabled ?? entity.Enabled;

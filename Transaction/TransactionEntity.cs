@@ -1,29 +1,19 @@
-﻿
-using Utilities_aspnet.User;
+﻿using Utilities_aspnet.User;
 
-namespace Utilities_aspnet.Transaction
-{
+namespace Utilities_aspnet.Transaction {
     [Table("Transactions")]
-    public class TransactionEntity : BaseEntity
-    {
+    public class TransactionEntity : BaseEntity {
         public decimal? Amount { get; set; }
         public string? Descriptions { get; set; }
         public TransactionStatus? StatusId { get; set; } = TransactionStatus.Pending;
         public string? PaymentId { get; set; }
         public UserEntity? User { get; set; }
         public string? UserId { get; set; }
-        public AdEntity? Ad { get; set; }
-        public Guid? AdId { get; set; }
         public ProductEntity? Product { get; set; }
         public Guid? ProductId { get; set; }
-        public TutorialEntity? Tutorial { get; set; }
-        public Guid? TutorialId { get; set; }
-        public TenderEntity? Tender { get; set; }
-        public Guid? TenderId { get; set; }
     }
 
-    public class TransactionReadDto
-    {
+    public class TransactionReadDto {
         public Guid? Id { get; set; }
         public string? UserId { get; set; }
         public decimal? Amount { get; set; }
@@ -39,9 +29,8 @@ namespace Utilities_aspnet.Transaction
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
     }
-    
-    public class TransactionCreateDto
-    {
+
+    public class TransactionCreateDto {
         public decimal? Amount { get; set; }
         public string? UserId { get; set; }
         public string? Descriptions { get; set; }
@@ -54,12 +43,9 @@ namespace Utilities_aspnet.Transaction
     }
 
 
-
-    public enum TransactionStatus
-    {
+    public enum TransactionStatus {
         Fail = -1,
         Pending = 0,
         Success = 100,
     }
-
 }

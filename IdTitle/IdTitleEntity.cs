@@ -16,15 +16,6 @@ public abstract class BaseIdTitleEntity : BaseEntity {
     public ICollection<MediaEntity> Media { get; set; }
     public IEnumerable<UserEntity>? User { get; set; }
     public IEnumerable<ProductEntity>? Product { get; set; }
-    public IEnumerable<DailyPriceEntity>? DailyPrice { get; set; }
-    public IEnumerable<ProjectEntity>? Project { get; set; }
-    public IEnumerable<TutorialEntity>? Tutorial { get; set; }
-    public IEnumerable<EventEntity>? Event { get; set; }
-    public IEnumerable<AdEntity>? Ad { get; set; }
-    public IEnumerable<CompanyEntity>? Company { get; set; }
-    public IEnumerable<TenderEntity>? Tender { get; set; }
-    public IEnumerable<ServiceEntity>? Service { get; set; }
-    public IEnumerable<MagazineEntity>? Magazine { get; set; }
 }
 
 [Table("Tags")]

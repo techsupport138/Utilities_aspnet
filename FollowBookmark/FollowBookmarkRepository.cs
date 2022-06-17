@@ -16,55 +16,23 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IProductRepository<ProductEntity> _productRepository;
-    private readonly IProductRepository<AdEntity> _adRepository;
-    private readonly IProductRepository<DailyPriceEntity> _dailyPriceRepository;
-    private readonly IProductRepository<CompanyEntity> _companyRepository;
-    private readonly IProductRepository<MagazineEntity> _magazineRepository;
-    private readonly IProductRepository<ProjectEntity> _projectRepository;
-    private readonly IProductRepository<ServiceEntity> _serviceRepository;
-    private readonly IProductRepository<TenderEntity> _tenderRepository;
-    private readonly IProductRepository<TutorialEntity> _tutorialRepository;
+    private readonly IProductRepository _productRepository;
 
     public FollowBookmarkRepository(
         DbContext context,
         IMapper mapper,
         IHttpContextAccessor httpContextAccessor,
-        IProductRepository<ProductEntity> productRepository,
-        IProductRepository<AdEntity> adRepository,
-        IProductRepository<DailyPriceEntity> dailyPriceRepository,
-        IProductRepository<CompanyEntity> companyRepository,
-        IProductRepository<MagazineEntity> magazineRepository,
-        IProductRepository<ProjectEntity> projectRepository,
-        IProductRepository<ServiceEntity> serviceRepository,
-        IProductRepository<TenderEntity> tenderRepository,
-        IProductRepository<TutorialEntity> tutorialRepository) {
+        IProductRepository productRepository) {
         _context = context;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
         _productRepository = productRepository;
-        _adRepository = adRepository;
-        _dailyPriceRepository = dailyPriceRepository;
-        _companyRepository = companyRepository;
-        _magazineRepository = magazineRepository;
-        _projectRepository = projectRepository;
-        _serviceRepository = serviceRepository;
-        _tenderRepository = tenderRepository;
-        _tutorialRepository = tutorialRepository;
     }
 
     public async Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto) {
         BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
             .FirstOrDefault(x => (
                 x.ProductId == dto.ProductId ||
-                x.ProjectId == dto.ProductId ||
-                x.TutorialId == dto.TutorialId ||
-                x.EventId == dto.EventId ||
-                x.AdId == dto.AdId ||
-                x.CompanyId == dto.CompanyId ||
-                x.TenderId == dto.TenderId ||
-                x.ServiceId == dto.ServiceId ||
-                x.MagazineId == dto.MagazineId ||
                 x.TagId == dto.TagId ||
                 x.SpecialityId == dto.SpecialityId
             ) && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
@@ -72,14 +40,6 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
             if (dto.ProductId.HasValue) bookmark.ProductId = dto.ProductId;
-            if (dto.ProjectId.HasValue) bookmark.ProjectId = dto.ProjectId;
-            if (dto.TutorialId.HasValue) bookmark.TutorialId = dto.TutorialId;
-            if (dto.EventId.HasValue) bookmark.EventId = dto.EventId;
-            if (dto.AdId.HasValue) bookmark.AdId = dto.AdId;
-            if (dto.CompanyId.HasValue) bookmark.CompanyId = dto.CompanyId;
-            if (dto.TenderId.HasValue) bookmark.TenderId = dto.TenderId;
-            if (dto.ServiceId.HasValue) bookmark.ServiceId = dto.ServiceId;
-            if (dto.MagazineId.HasValue) bookmark.MagazineId = dto.MagazineId;
             if (dto.TagId.HasValue) bookmark.TagId = dto.TagId;
             if (dto.SpecialityId.HasValue) bookmark.SpecialityId = dto.SpecialityId;
 
@@ -95,35 +55,11 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
     }
 
     public async Task<GenericResponse<BookmarkReadDto>> ReadBookmarks() {
-        GenericResponse<IEnumerable<ProductReadDto>> ads =
-            await _adRepository.Read(new FilterProductDto {IsBookmarked = true});
         GenericResponse<IEnumerable<ProductReadDto>> products =
-            await _productRepository.Read(new FilterProductDto {IsBookmarked = true});
-        GenericResponse<IEnumerable<ProductReadDto>> dailyPrices =
-            await _dailyPriceRepository.Read(new FilterProductDto {IsBookmarked = true});
-        GenericResponse<IEnumerable<ProductReadDto>> companies =
-            await _companyRepository.Read(new FilterProductDto {IsBookmarked = true});
-        GenericResponse<IEnumerable<ProductReadDto>> magazines =
-            await _magazineRepository.Read(new FilterProductDto {IsBookmarked = true});
-        GenericResponse<IEnumerable<ProductReadDto>> projects =
-            await _projectRepository.Read(new FilterProductDto {IsBookmarked = true});
-        GenericResponse<IEnumerable<ProductReadDto>> services =
-            await _serviceRepository.Read(new FilterProductDto {IsBookmarked = true});
-        GenericResponse<IEnumerable<ProductReadDto>> tenders =
-            await _tenderRepository.Read(new FilterProductDto {IsBookmarked = true});
-        GenericResponse<IEnumerable<ProductReadDto>> tutorials =
-            await _tutorialRepository.Read(new FilterProductDto {IsBookmarked = true});
+            await _productRepository.Read(new FilterProductDto {IsBookmarked = true}, "allProducts");
 
-        BookmarkReadDto dto = new BookmarkReadDto {
-            Ads = ads.Result,
+        BookmarkReadDto dto = new() {
             Products = products.Result,
-            DailyPrices = dailyPrices.Result,
-            Companies = companies.Result,
-            Magazines = magazines.Result,
-            Projects = projects.Result,
-            Services = services.Result,
-            Tenders = tenders.Result,
-            Tutorials = tutorials.Result
         };
 
         return new GenericResponse<BookmarkReadDto>(_mapper.Map<BookmarkReadDto>(dto));
