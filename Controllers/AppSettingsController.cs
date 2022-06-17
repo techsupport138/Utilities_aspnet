@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Utilities.Seeder;
-
-namespace Utilities_aspnet.Controllers;
+﻿namespace Utilities_aspnet.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -18,7 +16,7 @@ public class AppSettingsController : BaseApiController {
         GenericResponse i = await _appSettingRepository.Read();
         return Ok(i);
     }
-    
+
     [HttpGet("ReadLocation")]
     public async Task<ActionResult<GenericResponse<IEnumerable<LocationReadDto?>>>> ReadLocation() {
         GenericResponse i = await _appSettingRepository.ReadLocation();
@@ -31,7 +29,7 @@ public class AppSettingsController : BaseApiController {
         await _seedRepository.SeedLocations();
         return Ok();
     }
-    
+
     [HttpGet("SeedGenders")]
     public async Task<ActionResult> SeedGenders() {
         await _seedRepository.SeedGenders();

@@ -1,48 +1,40 @@
-﻿using Utilities_aspnet.User;
+﻿namespace Utilities_aspnet.Utilities.Data;
 
-namespace Utilities_aspnet.Utilities.Data;
-
-public enum OtpResult
-{
+public enum OtpResult {
     Ok = 1,
     Incorrect = 2,
     TimeOut = 3
 }
 
-public interface IOtpService
-{
-    string? SendOtp(string userId , int codeLength);
+public interface IOtpService {
+    string? SendOtp(string userId, int codeLength);
     OtpResult Verify(string userId, string otp);
 }
 
-public class OtpService : IOtpService
-{
+public class OtpService : IOtpService {
     private readonly DbContext _context;
     private readonly ISmsSender _sms;
 
-    public OtpService(DbContext context, ISmsSender sms)
-    {
+    public OtpService(DbContext context, ISmsSender sms) {
         _context = context;
         _sms = sms;
     }
 
-    public string? SendOtp(string userId , int codeLength)
-    {
+    public string? SendOtp(string userId, int codeLength) {
         DateTime dd = DateTime.Now.AddMinutes(-3);
         bool oldOtp = _context.Set<OtpEntity>()
             .Any(x => x.UserId == userId && x.CreatedAt > dd);
         if (oldOtp) return null;
 
         string newOtp = Random(codeLength).ToString();
-        _context.Set<OtpEntity>().Add(new OtpEntity { UserId = userId, OtpCode = newOtp });
+        _context.Set<OtpEntity>().Add(new OtpEntity {UserId = userId, OtpCode = newOtp});
         UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userId);
         _sms.SendSms(user?.PhoneNumber, newOtp);
         _context.SaveChanges();
         return newOtp;
     }
 
-    public OtpResult Verify(string userId, string otp)
-    {
+    public OtpResult Verify(string userId, string otp) {
         if (otp == "1375") return OtpResult.Ok;
         bool model = _context.Set<OtpEntity>().Any(x =>
             x.UserId == userId && x.CreatedAt > DateTime.Now.AddMinutes(-3) && x.OtpCode == otp);
@@ -52,12 +44,10 @@ public class OtpService : IOtpService
         return model2?.OtpCode != otp ? OtpResult.Incorrect : OtpResult.TimeOut;
     }
 
-    private static int Random(int codeLength)
-    {
+    private static int Random(int codeLength) {
         Random rnd = new();
         int otp = 0;
-        switch (codeLength)
-        {
+        switch (codeLength) {
             case 4:
                 otp = rnd.Next(1001, 9999);
                 break;
@@ -68,6 +58,7 @@ public class OtpService : IOtpService
                 otp = rnd.Next(1001, 9999);
                 break;
         }
+
         return otp;
     }
 }

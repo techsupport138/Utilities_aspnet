@@ -15,26 +15,6 @@ public class ReportRepository : IReportRepository {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<ReportReadDto?>> ReadById(Guid id) {
-        ReportReadDto? report = await _dbContext.Set<ReportEntity>()
-            .AsNoTracking()
-            .Include(x => x.User)
-            .Include(x => x.Product)
-            .Select(x => new ReportReadDto() {
-                CreatedAt = x.CreatedAt,
-                DeletedAt = x.DeletedAt,
-                Description = x.Description,
-                Id = x.Id,
-                Product = x.Product,
-                Title = x.Title,
-                UpdatedAt = x.UpdatedAt,
-                User = x.User
-            })
-            .FirstOrDefaultAsync();
-
-        return new GenericResponse<ReportReadDto?>(report);
-    }
-
     public async Task<GenericResponse<ReportReadDto?>> Create(ReportCreateDto dto) {
         ReportEntity entity = new() {
             UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!,
@@ -59,7 +39,7 @@ public class ReportRepository : IReportRepository {
         if (dto.Product == true)
             entities = entities.Include(x => x.Product);
 
-        IEnumerable<ReportReadDto> result = await entities.Select(x => new ReportReadDto() {
+        IEnumerable<ReportReadDto> result = await entities.Select(x => new ReportReadDto {
             CreatedAt = x.CreatedAt,
             DeletedAt = x.DeletedAt,
             Description = x.Description,
@@ -85,5 +65,25 @@ public class ReportRepository : IReportRepository {
         await _dbContext.SaveChangesAsync();
 
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+    }
+
+    public async Task<GenericResponse<ReportReadDto?>> ReadById(Guid id) {
+        ReportReadDto? report = await _dbContext.Set<ReportEntity>()
+            .AsNoTracking()
+            .Include(x => x.User)
+            .Include(x => x.Product)
+            .Select(x => new ReportReadDto {
+                CreatedAt = x.CreatedAt,
+                DeletedAt = x.DeletedAt,
+                Description = x.Description,
+                Id = x.Id,
+                Product = x.Product,
+                Title = x.Title,
+                UpdatedAt = x.UpdatedAt,
+                User = x.User
+            })
+            .FirstOrDefaultAsync();
+
+        return new GenericResponse<ReportReadDto?>(report);
     }
 }

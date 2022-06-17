@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Comment;
-
-namespace Utilities_aspnet.Controllers;
+﻿namespace Utilities_aspnet.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

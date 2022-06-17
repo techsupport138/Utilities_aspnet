@@ -9,8 +9,8 @@ public interface ICommentRepository {
 
 public class CommentRepository : ICommentRepository {
     private readonly DbContext _context;
-    private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMapper _mapper;
 
     public CommentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _context = context;

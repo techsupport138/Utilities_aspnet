@@ -1,5 +1,3 @@
-namespace Utilities_aspnet.Utilities.Seeder; 
+namespace Utilities_aspnet.Utilities.Seeder;
 
-public class IdTitleSeeder {
-    
-}
+public class IdTitleSeeder { }

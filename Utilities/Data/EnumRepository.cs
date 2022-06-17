@@ -1,7 +1,4 @@
-﻿using System.Transactions;
-using Utilities_aspnet.Category;
-
-namespace Utilities_aspnet.Utilities.Data;
+﻿namespace Utilities_aspnet.Utilities.Data;
 
 public interface IAppSettingRepository {
     Task<GenericResponse<EnumDto?>> Read();

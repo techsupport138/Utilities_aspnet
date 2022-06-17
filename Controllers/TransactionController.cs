@@ -1,5 +1,3 @@
-using Utilities_aspnet.Transaction;
-
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]
@@ -23,10 +21,10 @@ public class TransactionController : BaseApiController {
         GenericResponse<IEnumerable<TransactionReadDto>> i = await _transactionRepository.Read();
         return Result(i);
     }
+
     [HttpGet("Mine")]
     public async Task<ActionResult<GenericResponse<IEnumerable<TransactionReadDto>>>> ReadMine() {
         GenericResponse<IEnumerable<TransactionReadDto>> i = await _transactionRepository.ReadMine();
         return Result(i);
     }
-
 }

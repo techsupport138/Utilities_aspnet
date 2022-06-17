@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.User;
-
-namespace Utilities_aspnet.Chat;
+﻿namespace Utilities_aspnet.Chat;
 
 public interface IChatRepository {
     Task<GenericResponse<ChatReadDto?>> Create(ChatCreateUpdateDto model);
@@ -25,7 +23,7 @@ public class ChatRepository : IChatRepository {
             CreatedAt = DateTime.Now,
             FromUserId = userId!,
             ToUserId = model.UserId,
-            MessageText = model.MessageText,
+            MessageText = model.MessageText
         };
         await _context.Set<ChatEntity>().AddAsync(conversation);
         await _context.SaveChangesAsync();

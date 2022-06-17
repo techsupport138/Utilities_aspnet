@@ -1,8 +1,3 @@
-using Utilities_aspnet.Category;
-using Utilities_aspnet.Comment;
-using Utilities_aspnet.Transaction;
-using Utilities_aspnet.User;
-
 namespace Utilities_aspnet.Utilities;
 
 public class AutoMapperProfile : Profile {

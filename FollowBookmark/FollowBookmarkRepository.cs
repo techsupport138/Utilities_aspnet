@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.User;
-
-namespace Utilities_aspnet.FollowBookmark;
+﻿namespace Utilities_aspnet.FollowBookmark;
 
 public interface IFollowBookmarkRepository {
     Task<GenericResponse<FollowReadDto>> GetFollowers(string id);
@@ -14,8 +12,8 @@ public interface IFollowBookmarkRepository {
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
     private readonly DbContext _context;
-    private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMapper _mapper;
     private readonly IProductRepository _productRepository;
 
     public FollowBookmarkRepository(
@@ -55,7 +53,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
             await _productRepository.Read(new FilterProductDto {IsBookmarked = true}, "allProducts");
 
         BookmarkReadDto dto = new() {
-            Products = products.Result,
+            Products = products.Result
         };
 
         return new GenericResponse<BookmarkReadDto>(_mapper.Map<BookmarkReadDto>(dto));

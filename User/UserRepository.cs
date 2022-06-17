@@ -1,5 +1,4 @@
-﻿using Utilities_aspnet.Category;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+﻿using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Utilities_aspnet.User;
 
@@ -25,8 +24,8 @@ public class UserRepository : IUserRepository {
     private readonly IMapper _mapper;
     private readonly IOtpService _otp;
     private readonly SignInManager<UserEntity> _signInManager;
-    private readonly UserManager<UserEntity> _userManager;
     private readonly ISmsSender _smsSender;
+    private readonly UserManager<UserEntity> _userManager;
 
     public UserRepository(
         DbContext context,
@@ -147,7 +146,6 @@ public class UserRepository : IUserRepository {
                 UtilitiesStatusCodes.Success, "Success"
             );
 
-
         if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
             return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
@@ -161,7 +159,7 @@ public class UserRepository : IUserRepository {
         UserEntity? model = await _context.Set<UserEntity>()
             .AsNoTracking()
             .Include(u => u.Media)
-            .Include(u=>u.Categories)
+            .Include(u => u.Categories)
             .Include(u => u.Location)
             .Include(u => u.Products)
             .FirstOrDefaultAsync(u => u.Id == id);
@@ -244,25 +242,6 @@ public class UserRepository : IUserRepository {
             : new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
     }
 
-    private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
-        IEnumerable<string>? roles = await _userManager.GetRolesAsync(user);
-        List<Claim> claims = new() {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Name, user.Id),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
-        if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
-        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes("https://SinaMN75.com"));
-        SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
-        JwtSecurityToken token = new("https://SinaMN75.com", "https://SinaMN75.com", claims,
-            expires: DateTime.Now.AddDays(365),
-            signingCredentials: creds);
-
-        await _userManager.UpdateAsync(user);
-        return token;
-    }
-
     public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers() {
         IEnumerable<UserEntity> users = await _context.Set<UserEntity>()
             .AsNoTracking()
@@ -320,6 +299,25 @@ public class UserRepository : IUserRepository {
         await _context.SaveChangesAsync();
 
         return await GetProfileById(entity.Id);
+    }
+
+    private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
+        IEnumerable<string>? roles = await _userManager.GetRolesAsync(user);
+        List<Claim> claims = new() {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Name, user.Id),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+        if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
+        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes("https://SinaMN75.com"));
+        SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+        JwtSecurityToken token = new("https://SinaMN75.com", "https://SinaMN75.com", claims,
+            expires: DateTime.Now.AddDays(365),
+            signingCredentials: creds);
+
+        await _userManager.UpdateAsync(user);
+        return token;
     }
 
     private async void FillUserData(UserCreateUpdateDto dto, UserEntity entity) {

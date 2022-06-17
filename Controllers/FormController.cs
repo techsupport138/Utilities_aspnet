@@ -15,7 +15,7 @@ public class FormController : BaseApiController {
         GenericResponse<IEnumerable<FormFieldDto>?> i = await _formRepository.CreateFormFields(dto);
         return Result(i);
     }
-    
+
     [HttpPut("UpdateFormField")]
     public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> UpdateFormField(FormFieldDto dto) {
         GenericResponse<IEnumerable<FormFieldDto>?> i = await _formRepository.UpdateFormFields(dto);
@@ -36,15 +36,13 @@ public class FormController : BaseApiController {
     }
 
     [HttpDelete("DeleteFormField/{id:guid}")]
-    public async Task<IActionResult> DeleteFormField(Guid id)
-    {
+    public async Task<IActionResult> DeleteFormField(Guid id) {
         await _formRepository.DeleteFormField(id);
         return Ok();
     }
-    
+
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteFormBuilder(Guid id)
-    {
+    public async Task<IActionResult> DeleteFormBuilder(Guid id) {
         await _formRepository.DeleteFormBuilder(id);
         return Ok();
     }

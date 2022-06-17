@@ -1,6 +1,3 @@
-using Utilities_aspnet.Category;
-using Utilities_aspnet.Vote;
-
 namespace Utilities_aspnet.Product;
 
 public interface IProductRepository {
@@ -149,7 +146,7 @@ public class ProductRepository : IProductRepository {
 
             totalCount = queryable.Count;
 
-            if (parameters.FilterOrder.HasValue) {
+            if (parameters.FilterOrder.HasValue)
                 queryable = parameters.FilterOrder switch {
                     ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
                     ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
@@ -157,7 +154,6 @@ public class ProductRepository : IProductRepository {
                     ProductFilterOrder.ZToA => queryable.OrderByDescending(x => x.Title).ToList(),
                     _ => queryable.OrderBy(x => x.CreatedAt).ToList()
                 };
-            }
 
             queryable = queryable.Skip((parameters.PageNumber - 1) * parameters.PageSize)
                 .Take(parameters.PageSize)
@@ -181,9 +177,9 @@ public class ProductRepository : IProductRepository {
             .ToList();
 
         foreach (ProductReadDto productReadDto in dto)
-        foreach (BookmarkEntity bookmarkEntity in bookmark) {
-            if (bookmarkEntity.ProductId == productReadDto.Id) productReadDto.IsBookmarked = true;
-        }
+        foreach (BookmarkEntity bookmarkEntity in bookmark)
+            if (bookmarkEntity.ProductId == productReadDto.Id)
+                productReadDto.IsBookmarked = true;
 
         return new GenericResponse<IEnumerable<ProductReadDto>>(dto) {
             TotalCount = totalCount,

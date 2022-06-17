@@ -1,8 +1,3 @@
-using Utilities_aspnet.Category;
-using Utilities_aspnet.Comment;
-using Utilities_aspnet.User;
-using Utilities_aspnet.Vote;
-
 namespace Utilities_aspnet.Product;
 
 [Table("Products")]

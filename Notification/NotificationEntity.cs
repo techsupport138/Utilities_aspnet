@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.User;
-
-namespace Utilities_aspnet.Notification;
+﻿namespace Utilities_aspnet.Notification;
 
 [Table("Notifications")]
 public class NotificationEntity : BaseEntity {

@@ -1,13 +1,11 @@
 ﻿namespace Utilities_aspnet.Utilities.Data;
 
-public interface IUploadRepository
-{
+public interface IUploadRepository {
     Task<GenericResponse<IEnumerable<MediaDto>?>> Upload(UploadDto model);
     Task<GenericResponse> Delete(Guid id);
 }
 
-public class UploadRepository : IUploadRepository
-{
+public class UploadRepository : IUploadRepository {
     private readonly DbContext _context;
     private readonly IMapper _mapper;
     private readonly IMediaRepository _mediaRepository;
@@ -15,20 +13,16 @@ public class UploadRepository : IUploadRepository
     public UploadRepository(
         DbContext context,
         IMediaRepository mediaRepository,
-        IMapper mapper)
-    {
+        IMapper mapper) {
         _mediaRepository = mediaRepository;
         _mapper = mapper;
         _context = context;
     }
 
-    public async Task<GenericResponse<IEnumerable<MediaDto>?>> Upload(UploadDto model)
-    {
+    public async Task<GenericResponse<IEnumerable<MediaDto>?>> Upload(UploadDto model) {
         List<MediaEntity> medias = new();
         if (model.Files != null)
-        {
-            foreach (IFormFile file in model.Files)
-            {
+            foreach (IFormFile file in model.Files) {
                 FileTypes fileType = FileTypes.Image;
 
                 if (file.ContentType.ToLower().Contains("svg")) fileType = FileTypes.Svg;
@@ -38,20 +32,17 @@ public class UploadRepository : IUploadRepository
                 if (file.ContentType.ToLower().Contains("Gif")) fileType = FileTypes.Gif;
 
                 string folder = "";
-                if (model.UserId != null)
-                {
+                if (model.UserId != null) {
                     folder = "Users";
                     List<MediaEntity> userMedia = _context.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
-                    if (userMedia.Count > 0)
-                    {
+                    if (userMedia.Count > 0) {
                         _context.Set<MediaEntity>().RemoveRange(userMedia);
                         await _context.SaveChangesAsync();
                     }
                 }
 
                 string name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(file.FileName));
-                MediaEntity media = new()
-                {
+                MediaEntity media = new() {
                     FileName = _mediaRepository.GetFileUrl(name, folder),
                     FileType = fileType,
                     UserId = model.UserId,
@@ -62,31 +53,28 @@ public class UploadRepository : IUploadRepository
                     UseCase = model.UseCase,
                     Visibility = model.Visibility,
                     Title = model.Title,
-                    NotificationId = model.NotificationId,
+                    NotificationId = model.NotificationId
                 };
                 await _context.Set<MediaEntity>().AddAsync(media);
                 await _context.SaveChangesAsync();
                 medias.Add(media);
                 _mediaRepository.SaveMedia(file, name, folder);
             }
-        }
 
         if (model.Links != null)
-            foreach (MediaEntity media in model.Links.Select(link => new MediaEntity
-            {
-                FileType = FileTypes.Link,
-                Link = link,
-                UserId = model.UserId,
-                ProductId = model.ProductId,
-                ContentId = model.ContentId,
-                CategoryId = model.CategoryId,
-                CreatedAt = DateTime.Now,
-                UseCase = model.UseCase,
-                Visibility = model.Visibility,
-                Title = model.Title,
-                NotificationId = model.NotificationId,
-            }))
-            {
+            foreach (MediaEntity media in model.Links.Select(link => new MediaEntity {
+                         FileType = FileTypes.Link,
+                         Link = link,
+                         UserId = model.UserId,
+                         ProductId = model.ProductId,
+                         ContentId = model.ContentId,
+                         CategoryId = model.CategoryId,
+                         CreatedAt = DateTime.Now,
+                         UseCase = model.UseCase,
+                         Visibility = model.Visibility,
+                         Title = model.Title,
+                         NotificationId = model.NotificationId
+                     })) {
                 await _context.Set<MediaEntity>().AddAsync(media);
                 await _context.SaveChangesAsync();
                 medias.Add(media);
@@ -99,8 +87,7 @@ public class UploadRepository : IUploadRepository
         );
     }
 
-    public async Task<GenericResponse> Delete(Guid id)
-    {
+    public async Task<GenericResponse> Delete(Guid id) {
         MediaEntity? media = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == id);
         if (media == null) return new GenericResponse(UtilitiesStatusCodes.NotFound, "File not Found");
 

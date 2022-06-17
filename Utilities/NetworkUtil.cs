@@ -3,10 +3,6 @@
 public class NetworkUtil {
     private static IHttpContextAccessor _httpContextAccessor;
 
-    public static void Configure(IHttpContextAccessor? httpContextAccessor) {
-        _httpContextAccessor = httpContextAccessor;
-    }
-
     private static string? _ServerAddress;
 
     public static string ServerAddress {
@@ -22,5 +18,9 @@ public class NetworkUtil {
 
             return _ServerAddress;
         }
+    }
+
+    public static void Configure(IHttpContextAccessor? httpContextAccessor) {
+        _httpContextAccessor = httpContextAccessor;
     }
 }

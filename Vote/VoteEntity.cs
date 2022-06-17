@@ -1,5 +1,3 @@
-using Utilities_aspnet.User;
-
 namespace Utilities_aspnet.Vote;
 
 [Table("Votes")]

@@ -10,8 +10,8 @@ public interface IContentRepository {
 
 public class ContentRepository : IContentRepository {
     private readonly DbContext _context;
-    private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMapper _mapper;
 
     public ContentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
         _context = context;

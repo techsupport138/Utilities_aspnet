@@ -1,5 +1,3 @@
-using Utilities_aspnet.Category;
-
 namespace Utilities_aspnet.Form;
 
 public interface IFormRepository {
@@ -25,7 +23,7 @@ public class FormRepository : IFormRepository {
             try {
                 FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
                     (x.ProductId == model.ProductId && model.ProductId != null ||
-                     (x.UserId == model.UserId && model.UserId != null)
+                     x.UserId == model.UserId && model.UserId != null
                     ) && x.FormFieldId == item.Id);
                 if (up != null) {
                     up.Title = item.Title;
@@ -72,9 +70,7 @@ public class FormRepository : IFormRepository {
     public async Task<GenericResponse<IEnumerable<FormFieldDto>?>> UpdateFormFields(FormFieldDto dto) {
         Guid? categoryId = dto.CategoryId;
         FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
-        if (entity == null) {
-            return new GenericResponse<IEnumerable<FormFieldDto>?>(null, UtilitiesStatusCodes.NotFound);
-        }
+        if (entity == null) return new GenericResponse<IEnumerable<FormFieldDto>?>(null, UtilitiesStatusCodes.NotFound);
 
         try {
             entity.Label = dto.Label;
@@ -103,9 +99,7 @@ public class FormRepository : IFormRepository {
     public async Task<GenericResponse> DeleteFormField(Guid id) {
         FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().Include(x => x.Forms).AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id);
-        if (entity == null) {
-            return new GenericResponse(UtilitiesStatusCodes.NotFound);
-        }
+        if (entity == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 
         _dbContext.Remove(entity);
         await _dbContext.SaveChangesAsync();
@@ -116,9 +110,7 @@ public class FormRepository : IFormRepository {
         FormEntity? entity = await _dbContext.Set<FormEntity>().Include(x => x.Product)
             .Include(x => x.User).AsNoTracking()
             .FirstOrDefaultAsync(i => i.Id == id);
-        if (entity == null) {
-            return new GenericResponse(UtilitiesStatusCodes.NotFound);
-        }
+        if (entity == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 
         _dbContext.Remove(entity);
         await _dbContext.SaveChangesAsync();

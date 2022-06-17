@@ -1,5 +1,3 @@
-using Utilities_aspnet.Chat;
-
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]
@@ -29,5 +27,4 @@ public class ChatController : BaseApiController {
         GenericResponse<ChatReadDto?> i = await _chatRepository.Create(model);
         return Result(i);
     }
-
 }

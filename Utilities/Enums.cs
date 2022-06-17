@@ -1,5 +1,3 @@
-using Utilities_aspnet.Category;
-
 namespace Utilities_aspnet.Utilities;
 
 public static class EnumExtension {
@@ -73,8 +71,7 @@ public enum LocationType {
     Region = 4
 }
 
-public enum ApprovalStatus
-{
+public enum ApprovalStatus {
     Pending = 0,
     Approved = 1,
     Rejected = 2

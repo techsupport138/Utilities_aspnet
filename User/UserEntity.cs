@@ -1,8 +1,4 @@
-﻿using Utilities_aspnet.Category;
-using Utilities_aspnet.Chat;
-using Utilities_aspnet.Transaction;
-
-namespace Utilities_aspnet.User;
+﻿namespace Utilities_aspnet.User;
 
 public class UserEntity : IdentityUser {
     public bool Suspend { get; set; } = false;

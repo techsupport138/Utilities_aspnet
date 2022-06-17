@@ -39,7 +39,7 @@ public class FollowBookmarkController : BaseApiController {
         GenericResponse i = await _repository.ToggleBookmark(dto);
         return Result(i);
     }
-    
+
     [HttpPost("ReadBookmarks")]
     public async Task<IActionResult> ReadBookmarks() {
         GenericResponse i = await _repository.ReadBookmarks();

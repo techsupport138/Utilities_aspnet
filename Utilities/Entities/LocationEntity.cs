@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.User;
-
-namespace Utilities_aspnet.Utilities.Entities;
+﻿namespace Utilities_aspnet.Utilities.Entities;
 
 [Table("Location")]
 public class LocationEntity {
@@ -44,9 +42,7 @@ public class LocationReadDto {
     public LocationType Type { get; set; }
 }
 
-
-public class LocationCreateDto
-{
+public class LocationCreateDto {
     public string city { get; set; }
     public string lat { get; set; }
     public string lng { get; set; }

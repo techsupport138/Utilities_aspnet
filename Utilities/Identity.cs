@@ -1,5 +1,3 @@
-using Utilities_aspnet.User;
-
 namespace Utilities_aspnet.Utilities;
 
 public static class IdentityExtensions {
@@ -84,7 +82,6 @@ public static class IdentityExtensions {
         //        //.AddAuthenticationTypes(JwtBearerDefaults.AuthenticationScheme)
         //        .RequireAuthenticatedUser().Build());
         //});
-
 
         //builder.Services.AddScoped<SignInManager<UserEntity>, SignInManager<UserEntity>>();
     }

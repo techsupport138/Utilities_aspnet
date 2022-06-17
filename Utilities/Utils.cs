@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Utilities_aspnet.Category;
-using Utilities_aspnet.Chat;
-using Utilities_aspnet.Comment;
-using Utilities_aspnet.Transaction;
-using Utilities_aspnet.User;
-using Utilities_aspnet.Utilities.Seeder;
-
-namespace Utilities_aspnet.Utilities;
+﻿namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
     public static void SetupUtilities<T>(
@@ -74,7 +66,7 @@ public static class StartupExtension {
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddMemoryCache();
         builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-        
+
         builder.Services.AddTransient<AppSettings>();
         builder.Services.AddTransient<ISmsSender, SmsSender>();
         builder.Services.AddTransient<IOtpService, OtpService>();
@@ -104,7 +96,7 @@ public static class StartupExtension {
             c.OrderActionsBy(s => s.RelativePath);
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
                 Description =
-                    "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    "JWT Authorization header.\r\n\r\nExample: \"Bearer 12345abcdef\"",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
@@ -139,11 +131,8 @@ public static class StartupExtension {
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();
-        
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapHub<UtilitiesHub>("/utilitiesHub");
-        });
+
+        app.UseEndpoints(endpoints => { endpoints.MapHub<UtilitiesHub>("/utilitiesHub"); });
     }
 
     private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
@@ -154,7 +143,7 @@ public static class StartupExtension {
         });
     }
 
-    public class UtilitiesHub : Hub{
+    public class UtilitiesHub : Hub {
         public async Task NewCallReceived(CallContext newCall) {
             await Clients.All.SendAsync("NewCallReceived", newCall);
         }
