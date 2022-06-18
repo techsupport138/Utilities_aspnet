@@ -258,55 +258,42 @@ public static class ProductEntityExtension {
 		entity.StartDate = dto.StartDate ?? entity.StartDate;
 		entity.EndDate = dto.EndDate ?? entity.EndDate;
 
-		if (dto.Categories.IsNotNullOrEmpty()) {
-			List<CategoryEntity> list = new();
-			foreach (Guid item in dto.Categories ?? new List<Guid>()) {
-				CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) list.Add(e);
-			}
+		List<CategoryEntity> listCategory = new();
+		List<LocationEntity> listLocation = new();
+		List<FormEntity> listForm = new();
+		List<ReportEntity> listReport = new();
+		List<VoteFieldEntity> listVoteFields = new();
 
-			entity.Categories = list;
+		foreach (Guid item in dto.Categories ?? new List<Guid>()) {
+			CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+			if (e != null) listCategory.Add(e);
+		}
+		
+		foreach (int item in dto.Locations ?? new List<int>()) {
+			LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
+			if (e != null) listLocation.Add(e);
+		}
+		
+		foreach (Guid item in dto.Forms ?? new List<Guid>()) {
+			FormEntity? e = await context.Set<FormEntity>().FirstOrDefaultAsync(x => x.Id == item);
+			if (e != null) listForm.Add(e);
 		}
 
-		if (dto.Locations.IsNotNullOrEmpty()) {
-			List<LocationEntity> list = new();
-			foreach (int item in dto.Locations ?? new List<int>()) {
-				LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) list.Add(e);
-			}
-
-			entity.Locations = list;
+		foreach (Guid item in dto.Reports ?? new List<Guid>()) {
+			ReportEntity? e = await context.Set<ReportEntity>().FirstOrDefaultAsync(x => x.Id == item);
+			if (e != null) listReport.Add(e);
 		}
 
-		if (dto.Forms.IsNotNullOrEmpty()) {
-			List<FormEntity> list = new();
-			foreach (Guid item in dto.Forms ?? new List<Guid>()) {
-				FormEntity? e = await context.Set<FormEntity>().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) list.Add(e);
-			}
-
-			entity.Forms = list;
+		foreach (Guid item in dto.VoteFields ?? new List<Guid>()) {
+			VoteFieldEntity? e = await context.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.Id == item);
+			if (e != null) listVoteFields.Add(e);
 		}
-
-		if (dto.Reports.IsNotNullOrEmpty()) {
-			List<ReportEntity> list = new();
-			foreach (Guid item in dto.Reports ?? new List<Guid>()) {
-				ReportEntity? e = await context.Set<ReportEntity>().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) list.Add(e);
-			}
-
-			entity.Reports = list;
-		}
-
-		if (dto.VoteFields.IsNotNullOrEmpty()) {
-			List<VoteFieldEntity> list = new();
-			foreach (Guid item in dto.VoteFields ?? new List<Guid>()) {
-				VoteFieldEntity? e = await context.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) list.Add(e);
-			}
-
-			entity.VoteFields = list;
-		}
+		
+		entity.Categories = listCategory;
+		entity.Locations = listLocation;
+		entity.Forms = listForm;
+		entity.Reports = listReport;
+		entity.VoteFields = listVoteFields;
 
 		return entity;
 	}
