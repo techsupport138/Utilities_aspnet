@@ -5,10 +5,10 @@ namespace Utilities_aspnet.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CatgeoryController : BaseApiController {
+public class CategoryController : BaseApiController {
 	private readonly ICategoryRepository _categoryRepository;
 
-	public CatgeoryController(ICategoryRepository categoryRepository) => _categoryRepository = categoryRepository;
+	public CategoryController(ICategoryRepository categoryRepository) => _categoryRepository = categoryRepository;
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
