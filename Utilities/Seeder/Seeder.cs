@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Entities;
-
-namespace Utilities_aspnet.Utilities.Seeder;
+﻿namespace Utilities_aspnet.Utilities.Seeder;
 
 public interface ISeedRepository {
 	Task<bool> SeedLocations();

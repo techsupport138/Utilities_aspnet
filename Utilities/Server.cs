@@ -17,7 +17,5 @@ public class Server {
 		}
 	}
 
-	public static void Configure(IHttpContextAccessor? httpContextAccessor) {
-		_httpContextAccessor = httpContextAccessor;
-	}
+	public static void Configure(IHttpContextAccessor? httpContextAccessor) => _httpContextAccessor = httpContextAccessor;
 }

@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Entities;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface IContentRepository {
 	Task<GenericResponse<ContentReadDto>> Create(ContentCreateUpdateDto dto);

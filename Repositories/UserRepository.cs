@@ -1,5 +1,4 @@
-﻿using Utilities_aspnet.Entities;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+﻿using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Utilities_aspnet.Repositories;
 

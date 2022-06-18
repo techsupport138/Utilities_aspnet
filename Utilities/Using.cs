@@ -38,3 +38,4 @@ global using Swashbuckle.AspNetCore.SwaggerUI;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.SignalR;
 global using Utilities_aspnet.Utilities.Seeder;
+global using Utilities_aspnet.Entities;

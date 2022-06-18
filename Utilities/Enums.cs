@@ -1,5 +1,3 @@
-using Utilities_aspnet.Entities;
-
 namespace Utilities_aspnet.Utilities;
 
 public static class EnumExtension {

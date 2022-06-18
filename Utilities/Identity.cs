@@ -1,5 +1,3 @@
-using Utilities_aspnet.Entities;
-
 namespace Utilities_aspnet.Utilities;
 
 public static class IdentityExtensions {
@@ -46,46 +44,6 @@ public static class IdentityExtensions {
 			options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
 			options.SlidingExpiration = true;
 		});
-
-		//builder.Services.Configure<IdentityOptions>(options => {
-		//    options.Password.RequireDigit = false;
-		//    options.Password.RequiredLength = 4;
-		//    options.Password.RequireNonAlphanumeric = false;
-		//    options.Password.RequireUppercase = false;
-		//    options.Password.RequireLowercase = false;
-		//    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@";
-		//});
-
-		//builder.Services.Configure<CookiePolicyOptions>(options => {
-		//    options.CheckConsentNeeded = _ => false;
-		//    options.MinimumSameSitePolicy = SameSiteMode.None;
-		//    options.Secure = CookieSecurePolicy.Always;
-		//});
-
-		//builder.Services.ConfigureApplicationCookie(options => {
-		//    options.AccessDeniedPath = new PathString("/error/403");
-		//    options.Cookie.Name = "Cookie.Phopx";
-		//    options.Cookie.HttpOnly = false;
-		//    options.ExpireTimeSpan = TimeSpan.FromMinutes(604800);
-		//    options.LoginPath = new PathString("/Dashboard/Account/Login");
-		//    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-		//    options.SlidingExpiration = true;
-		//});
-
-		//var keySecret = "https://SinaMN75.com";
-		//var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keySecret));
-
-		////builder.Services.AddTransient(_ => new JwtSignInHandler(symmetricKey));
-
-		//builder.Services.AddAuthorization(auth =>
-		//{
-		//    auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-		//        .AddAuthenticationSchemes()
-		//        //.AddAuthenticationTypes(JwtBearerDefaults.AuthenticationScheme)
-		//        .RequireAuthenticatedUser().Build());
-		//});
-
-		//builder.Services.AddScoped<SignInManager<UserEntity>, SignInManager<UserEntity>>();
 	}
 
 	public static void SeedUser<T>(
@@ -108,10 +66,7 @@ public static class IdentityExtensions {
 			if (!context.Roles.Any()) roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
 
 			if (context.Users.Any(i => i.UserName == username)) return;
-			UserEntity adminUser = new() {
-				UserName = username,
-				Email = email
-			};
+			UserEntity adminUser = new() {UserName = username, Email = email};
 			userManager.CreateAsync(adminUser, password).GetAwaiter().GetResult();
 			userManager.AddToRoleAsync(adminUser, adminRole.Name).GetAwaiter().GetResult();
 		}
