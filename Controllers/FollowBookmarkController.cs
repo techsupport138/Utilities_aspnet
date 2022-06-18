@@ -23,13 +23,13 @@ public class FollowBookmarkController : BaseApiController {
 	}
 
 	[HttpPost("ToggleFolllow")]
-	public async Task<ActionResult<GenericResponse>> ToggleFollow(FollowWriteDto dto) {
+	public async Task<ActionResult<GenericResponse>> ToggleFollow(FollowCreateDto dto) {
 		GenericResponse result = await _repository.ToggleFollow(User.Identity?.Name!, dto);
 		return Result(result);
 	}
 
 	[HttpPost("RemoveFollowing")]
-	public async Task<ActionResult<GenericResponse>> RemoveFollowing(FollowWriteDto dto) {
+	public async Task<ActionResult<GenericResponse>> RemoveFollowing(FollowCreateDto dto) {
 		GenericResponse result = await _repository.RemoveFollowings(User?.Identity?.Name!, dto);
 		return Result(result);
 	}
