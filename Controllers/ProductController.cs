@@ -15,12 +15,12 @@ public class ProductController : BaseApiController {
 		=> Result(await _productRepository.Create(dto));
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Read(string useCase)
+	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Read()
 		=> Result(await _productRepository.Read(null));
 
 	[HttpGet("Mine")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> ReadMine(string useCase)
+	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> ReadMine()
 		=> Result(await _productRepository.ReadMine());
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
