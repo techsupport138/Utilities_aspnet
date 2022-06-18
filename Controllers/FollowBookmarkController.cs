@@ -1,5 +1,4 @@
-﻿using Utilities_aspnet.Entities;
-using Utilities_aspnet.Repositories;
+﻿using Utilities_aspnet.Repositories;
 
 namespace Utilities_aspnet.Controllers;
 
@@ -9,9 +8,7 @@ namespace Utilities_aspnet.Controllers;
 public class FollowBookmarkController : BaseApiController {
 	private readonly IFollowBookmarkRepository _repository;
 
-	public FollowBookmarkController(IFollowBookmarkRepository repository) {
-		_repository = repository;
-	}
+	public FollowBookmarkController(IFollowBookmarkRepository repository) => _repository = repository;
 
 	[HttpPost("ReadFollowers")]
 	public async Task<ActionResult<GenericResponse<FollowReadDto>>> ReadFollowers() {

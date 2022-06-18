@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Entities;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface INotificationRepository {
 	Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications();

@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Entities;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface ICategoryRepository {
 	public Task<GenericResponse<CategoryReadDto>> Create(CategoryCreateUpdateDto dto);

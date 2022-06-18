@@ -18,9 +18,9 @@ public class SmsSender : ISmsSender {
 	public long SendSms(string mobileNumber, string message) {
 		AppSettings appSettings = new();
 		_config.GetSection("AppSettings").Bind(appSettings);
-		SMSPanelSettings smsSetting = appSettings.SMSPanelSettings;
+		SmsPanelSettings smsSetting = appSettings.SmsPanelSettings;
 		switch (smsSetting.Sender) {
-			case Sender.SMS_Ir:
+			case Sender.SmsIr:
 				// string? token = new Token()
 				//     .GetToken(smsSetting.SmsApiKey, smsSetting.SmsSecret);
 				// MessageSendObject? messageSendObject = new() {
@@ -49,7 +49,7 @@ public class SmsSender : ISmsSender {
 				// else
 				// return -1;
 				break;
-			case Sender.FarazSMS:
+			case Sender.FarazSms:
 
 				#region FarazSMS
 

@@ -1,4 +1,3 @@
-using Utilities_aspnet.Entities;
 using Utilities_aspnet.Repositories;
 
 namespace Utilities_aspnet.Controllers;

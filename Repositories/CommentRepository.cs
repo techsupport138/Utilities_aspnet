@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Entities;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface ICommentRepository {
 	Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto entity);

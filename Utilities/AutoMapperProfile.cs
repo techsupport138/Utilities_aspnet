@@ -1,5 +1,3 @@
-using Utilities_aspnet.Entities;
-
 namespace Utilities_aspnet.Utilities;
 
 public class AutoMapperProfile : Profile {
@@ -15,7 +13,7 @@ public class AutoMapperProfile : Profile {
 		CreateMap<MediaEntity, MediaDto>().ForMember(x => x.Link,
 		                                             c => c.MapFrom(
 			                                             v => v.Link == null
-				                                             ? $"{NetworkUtil.ServerAddress}/Medias/{v.FileName}"
+				                                             ? $"{Server.ServerAddress}/Medias/{v.FileName}"
 				                                             : v.Link)).ReverseMap();
 
 		CreateMap<ContentEntity, ContentReadDto>().ReverseMap();

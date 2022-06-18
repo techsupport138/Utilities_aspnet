@@ -32,9 +32,8 @@ public static class StartupExtension {
 		this WebApplicationBuilder builder,
 		string connectionStrings,
 		DatabaseType databaseType) where T : DbContext {
-		builder.Services.AddCors(c =>
-			                         c.AddPolicy("AllowOrigin",
-			                                     option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin",
+		                                          option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 		builder.Services.AddScoped<DbContext, T>();
 		builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -89,8 +88,8 @@ public static class StartupExtension {
 		builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 	}
 
-	private static void AddUtilitiesSwagger(this WebApplicationBuilder builder, IServiceProvider serviceProvider) {
-		NetworkUtil.Configure(serviceProvider.GetService<IHttpContextAccessor>());
+	private static void AddUtilitiesSwagger(this WebApplicationBuilder builder, IServiceProvider? serviceProvider) {
+		Server.Configure(serviceProvider?.GetService<IHttpContextAccessor>());
 		builder.Services.AddEndpointsApiExplorer();
 		builder.Services.AddSwaggerGen(c => {
 			c.UseInlineDefinitionsForEnums();
@@ -105,18 +104,16 @@ public static class StartupExtension {
 
 			c.AddSecurityRequirement(new OpenApiSecurityRequirement {
 				{
-					new OpenApiSecurityScheme {
-						Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "Bearer"}
-					},
+					new OpenApiSecurityScheme
+						{Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "Bearer"}},
 					Array.Empty<string>()
 				}
 			});
 		});
 	}
 
-	private static void AddRedis(this WebApplicationBuilder builder, string connectionString) {
-		builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(connectionString));
-	}
+	private static void AddRedis(this WebApplicationBuilder builder, string connectionString)
+		=> builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(connectionString));
 
 	public static void UseUtilitiesServices(this WebApplication app) {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
