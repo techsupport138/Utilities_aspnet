@@ -3,8 +3,8 @@
 public interface IFollowBookmarkRepository {
 	Task<GenericResponse<FollowReadDto>> GetFollowers(string id);
 	Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
-	Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto dto);
-	Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto dto);
+	Task<GenericResponse> ToggleFollow(string sourceUserId, FollowCreateDto dto);
+	Task<GenericResponse> RemoveFollowings(string targetUserId, FollowCreateDto dto);
 	Task<GenericResponse<BookmarkReadDto>> ReadBookmarks();
 
 	Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto);
@@ -63,10 +63,10 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
 		IEnumerable<UserEntity?> followers = await _context.Set<FollowEntity>()
 			.AsNoTracking()
-			.Where(x => x.SourceUserId == id)
-			.Include(x => x.TargetUser)
+			.Where(x => x.FollowerUserId == id)
+			.Include(x => x.FollowsUser)
 			.ThenInclude(x => x.Media)
-			.Select(x => x.TargetUser)
+			.Select(x => x.FollowsUser)
 			.ToListAsync();
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followers);
@@ -77,10 +77,10 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id) {
 		IEnumerable<UserEntity?> followings = await _context.Set<FollowEntity>()
 			.AsNoTracking()
-			.Where(x => x.TargetUserId == id)
-			.Include(x => x.SourceUser)
+			.Where(x => x.FollowsUserId == id)
+			.Include(x => x.FollowerUser)
 			.ThenInclude(x => x.Media)
-			.Select(x => x.SourceUser)
+			.Select(x => x.FollowerUser)
 			.ToListAsync();
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followings);
@@ -88,47 +88,39 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 		return new GenericResponse<FollowingReadDto>(new FollowingReadDto {Followings = users});
 	}
 
-	public async Task<GenericResponse> ToggleFollow(string sourceUserId, FollowWriteDto parameters) {
-		IEnumerable<string> users = await _context.Set<UserEntity>()
-			.AsNoTracking()
-			.Where(x => parameters.Followers.Contains(x.Id))
-			.Select(x => x.Id)
-			.ToListAsync();
+	public async Task<GenericResponse> ToggleFollow(string sourceUserId, FollowCreateDto parameters) {
 
-		foreach (string? targetUserId in users) {
+
 			FollowEntity? follow = await _context.Set<FollowEntity>()
-				.FirstOrDefaultAsync(x => x.SourceUserId == sourceUserId && x.TargetUserId == targetUserId);
+				.FirstOrDefaultAsync(x => x.FollowerUserId == sourceUserId && x.FollowsUserId == parameters.UserId);
 			if (follow != null) {
 				_context.Set<FollowEntity>().Remove(follow);
 			}
 			else {
 				follow = new FollowEntity {
-					SourceUserId = sourceUserId,
-					TargetUserId = targetUserId
+					FollowerUserId = sourceUserId,
+					FollowsUserId = parameters.UserId
 				};
 
 				await _context.Set<FollowEntity>().AddAsync(follow);
 			}
-		}
 
 		await _context.SaveChangesAsync();
 
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
-	public async Task<GenericResponse> RemoveFollowings(string targetUserId, FollowWriteDto parameters) {
-		IEnumerable<string> users = await _context.Set<UserEntity>()
-			.AsNoTracking()
-			.Where(x => parameters.Followers.Contains(x.Id))
-			.Select(x => x.Id)
-			.ToListAsync();
+	public async Task<GenericResponse> RemoveFollowings(string userId, FollowCreateDto parameters) {
 
-		IEnumerable<FollowEntity> followings = await _context.Set<FollowEntity>()
-			.Where(x => parameters.Followers.Contains(x.SourceUserId) && x.TargetUserId == targetUserId)
-			.ToListAsync();
+		FollowEntity? following = await _context.Set<FollowEntity>()
+			.Where(x => x.FollowerUserId == parameters.UserId && x.FollowsUserId == userId)
+			.FirstOrDefaultAsync();
+		if(following != null)
+        {
+			_context.Set<FollowEntity>().Remove(following);
+			await _context.SaveChangesAsync();
+		}
 
-		_context.Set<FollowEntity>().RemoveRange(followings);
-		await _context.SaveChangesAsync();
 
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}

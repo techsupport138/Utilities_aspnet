@@ -2,11 +2,11 @@
 
 [Table("Follows")]
 public class FollowEntity : BaseEntity {
-	public string? SourceUserId { get; set; }
-	public UserEntity? SourceUser { get; set; }
+	public string? FollowerUserId { get; set; }
+	public UserEntity? FollowerUser { get; set; }
 
-	public string? TargetUserId { get; set; }
-	public UserEntity? TargetUser { get; set; }
+	public string? FollowsUserId { get; set; }
+	public UserEntity? FollowsUser { get; set; }
 }
 
 [Table("Bookmarks")]
@@ -36,8 +36,8 @@ public class FollowReadDto {
 	public IEnumerable<UserReadDto>? Followers { get; set; }
 }
 
-public class FollowWriteDto {
-	public IEnumerable<string>? Followers { get; set; }
+public class FollowCreateDto {
+	public string UserId { get; set; } = null!;
 }
 
 public class FollowingReadDto {
