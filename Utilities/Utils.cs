@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using Utilities_aspnet.Repositories;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
 	public static void SetupUtilities<T>(

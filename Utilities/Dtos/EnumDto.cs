@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities.Dtos;
+﻿using Utilities_aspnet.Entities;
+
+namespace Utilities_aspnet.Utilities.Dtos;
 
 public class EnumDto {
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
