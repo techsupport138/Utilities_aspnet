@@ -2,8 +2,8 @@ namespace Utilities_aspnet.Repositories;
 
 public interface IProductRepository {
 	Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
-	Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? paraneters, string useCase);
-	Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine(string useCase);
+	Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? paraneters);
+	Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine();
 	Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
 	Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
@@ -31,7 +31,7 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
 	}
 
-	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto? parameters, string useCase) {
+	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto parameters) {
 		List<ProductEntity> queryable = await _context.Set<ProductEntity>()
 			.AsNoTracking()
 			.Include(i => i.Media)
@@ -44,125 +44,123 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Forms)!
 			.ThenInclude(x => x.FormField)
 			.Where(x => x.DeletedAt == null)
-			.Where(x => x.UseCase == useCase)
+			.Where(x => x.UseCase == parameters.UseCase)
 			.ToListAsync();
 
 		int totalCount = queryable.Count;
 
-		if (parameters != null) {
-			if (!string.IsNullOrEmpty(parameters.Title))
-				queryable = queryable.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(parameters.Title))
-					.ToList();
-
-			if (!string.IsNullOrEmpty(parameters.SubTitle))
-				queryable = queryable
-					.Where(x => !string.IsNullOrEmpty(x.Subtitle) && x.Subtitle.Contains(parameters.SubTitle)).ToList();
-
-			if (!string.IsNullOrEmpty(parameters.Type))
-				queryable = queryable
-					.Where(x => !string.IsNullOrEmpty(x.Type) && x.Type.Contains(parameters.Type)).ToList();
-
-			if (!string.IsNullOrEmpty(parameters.Details))
-				queryable = queryable.Where(x => !string.IsNullOrWhiteSpace(x.Details) && x.Details.Contains(parameters.Details))
-					.ToList();
-
-			if (!string.IsNullOrEmpty(parameters.Description))
-				queryable = queryable.Where(x =>
-					                            !string.IsNullOrEmpty(x.Description) &&
-					                            x.Description.Contains(parameters.Description)).ToList();
-
-			if (!string.IsNullOrEmpty(parameters.UseCase))
-				queryable = queryable.Where(x =>
-					                            !string.IsNullOrEmpty(x.UseCase) && x.UseCase.Contains(parameters.UseCase))
-					.ToList();
-
-			if (parameters.StartPriceRange.HasValue)
-				queryable = queryable.Where(x => x.Price >= parameters.StartPriceRange.Value).ToList();
-
-			if (parameters.EndPriceRange.HasValue)
-				queryable = queryable.Where(x => x.Price <= parameters.EndPriceRange.Value).ToList();
-
-			if (parameters.Enabled == true)
-				queryable = queryable.Where(x => x.Enabled == parameters.Enabled).ToList();
-
-			if (parameters.IsForSale.HasValue)
-				queryable = queryable.Where(x => x.IsForSale == parameters.IsForSale).ToList();
-
-			if (parameters.IsBookmarked == true)
-				queryable = queryable.Where(x =>
-					                            x.Bookmarks!.Any(
-						                            y => y.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!))
-					.ToList();
-
-			if (parameters.VisitsCount.HasValue)
-				queryable = queryable.Where(x => x.VisitCount == parameters.VisitsCount).ToList();
-
-			if (parameters.Length.HasValue)
-				queryable = queryable.Where(x => x.Length == parameters.Length).ToList();
-
-			if (parameters.Width.HasValue)
-				queryable = queryable.Where(x => x.Width == parameters.Width).ToList();
-
-			if (parameters.Height.HasValue)
-				queryable = queryable.Where(x => x.Height == parameters.Height).ToList();
-
-			if (parameters.Weight.HasValue)
-				queryable = queryable.Where(x => x.Weight == parameters.Weight).ToList();
-
-			if (parameters.MinOrder.HasValue)
-				queryable = queryable.Where(x => x.MinOrder >= parameters.MinOrder).ToList();
-
-			if (parameters.MaxOrder.HasValue)
-				queryable = queryable.Where(x => x.MaxOrder <= parameters.MaxOrder).ToList();
-
-			if (parameters.Unit.IsNotNullOrEmpty())
-				queryable = queryable.Where(x => x.Unit == parameters.Unit).ToList();
-
-			if (!string.IsNullOrEmpty(parameters.Address))
-				queryable = queryable
-					.Where(x => !string.IsNullOrEmpty(x.Address) && x.Address.Contains(parameters.Address)).ToList();
-
-			if (parameters.StartDate.HasValue)
-				queryable = queryable.Where(x => x.StartDate >= parameters.StartDate).ToList();
-
-			if (parameters.EndDate.HasValue)
-				queryable = queryable.Where(x => x.EndDate <= parameters.EndDate).ToList();
-
-			if (!string.IsNullOrEmpty(parameters.Author))
-				queryable = queryable
-					.Where(x => !string.IsNullOrEmpty(x.Author) && x.Author.Contains(parameters.Author)).ToList();
-
-			if (!string.IsNullOrEmpty(parameters.Email))
-				queryable = queryable
-					.Where(x => !string.IsNullOrEmpty(x.Email) && x.Email.Contains(parameters.Email)).ToList();
-
-			if (!string.IsNullOrEmpty(parameters.PhoneNumber))
-				queryable = queryable
-					.Where(x => !string.IsNullOrEmpty(x.PhoneNumber) && x.PhoneNumber.Contains(parameters.PhoneNumber)).ToList();
-
-			if (parameters.Locations != null && parameters.Locations.Any())
-				queryable = queryable.Where(x => x.Locations != null &&
-				                                 x.Locations.Any(y => parameters.Locations.Contains(y.Id))).ToList();
-
-			if (parameters.Categories != null && parameters.Categories.Any())
-				queryable = queryable.Where(x => x.Categories != null &&
-				                                 x.Categories.Any(y => parameters.Categories.Contains(y.Id))).ToList();
-
-			totalCount = queryable.Count;
-
-			if (parameters.FilterOrder.HasValue)
-				queryable = parameters.FilterOrder switch {
-					ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
-					ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
-					ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title).ToList(),
-					ProductFilterOrder.ZToA => queryable.OrderByDescending(x => x.Title).ToList(),
-					_ => queryable.OrderBy(x => x.CreatedAt).ToList()
-				};
-
-			queryable = queryable.Skip((parameters.PageNumber - 1) * parameters.PageSize)
-				.Take(parameters.PageSize)
+		if (!string.IsNullOrEmpty(parameters.Title))
+			queryable = queryable.Where(x => !string.IsNullOrEmpty(x.Title) && x.Title.Contains(parameters.Title))
 				.ToList();
-		}
+
+		if (!string.IsNullOrEmpty(parameters.SubTitle))
+			queryable = queryable
+				.Where(x => !string.IsNullOrEmpty(x.Subtitle) && x.Subtitle.Contains(parameters.SubTitle)).ToList();
+
+		if (!string.IsNullOrEmpty(parameters.Type))
+			queryable = queryable
+				.Where(x => !string.IsNullOrEmpty(x.Type) && x.Type.Contains(parameters.Type)).ToList();
+
+		if (!string.IsNullOrEmpty(parameters.Details))
+			queryable = queryable.Where(x => !string.IsNullOrWhiteSpace(x.Details) && x.Details.Contains(parameters.Details))
+				.ToList();
+
+		if (!string.IsNullOrEmpty(parameters.Description))
+			queryable = queryable.Where(x =>
+				                            !string.IsNullOrEmpty(x.Description) &&
+				                            x.Description.Contains(parameters.Description)).ToList();
+
+		if (!string.IsNullOrEmpty(parameters.UseCase))
+			queryable = queryable.Where(x =>
+				                            !string.IsNullOrEmpty(x.UseCase) && x.UseCase.Contains(parameters.UseCase))
+				.ToList();
+
+		if (parameters.StartPriceRange.HasValue)
+			queryable = queryable.Where(x => x.Price >= parameters.StartPriceRange.Value).ToList();
+
+		if (parameters.EndPriceRange.HasValue)
+			queryable = queryable.Where(x => x.Price <= parameters.EndPriceRange.Value).ToList();
+
+		if (parameters.Enabled == true)
+			queryable = queryable.Where(x => x.Enabled == parameters.Enabled).ToList();
+
+		if (parameters.IsForSale.HasValue)
+			queryable = queryable.Where(x => x.IsForSale == parameters.IsForSale).ToList();
+
+		if (parameters.IsBookmarked == true)
+			queryable = queryable.Where(x =>
+				                            x.Bookmarks!.Any(
+					                            y => y.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!))
+				.ToList();
+
+		if (parameters.VisitsCount.HasValue)
+			queryable = queryable.Where(x => x.VisitCount == parameters.VisitsCount).ToList();
+
+		if (parameters.Length.HasValue)
+			queryable = queryable.Where(x => x.Length == parameters.Length).ToList();
+
+		if (parameters.Width.HasValue)
+			queryable = queryable.Where(x => x.Width == parameters.Width).ToList();
+
+		if (parameters.Height.HasValue)
+			queryable = queryable.Where(x => x.Height == parameters.Height).ToList();
+
+		if (parameters.Weight.HasValue)
+			queryable = queryable.Where(x => x.Weight == parameters.Weight).ToList();
+
+		if (parameters.MinOrder.HasValue)
+			queryable = queryable.Where(x => x.MinOrder >= parameters.MinOrder).ToList();
+
+		if (parameters.MaxOrder.HasValue)
+			queryable = queryable.Where(x => x.MaxOrder <= parameters.MaxOrder).ToList();
+
+		if (parameters.Unit.IsNotNullOrEmpty())
+			queryable = queryable.Where(x => x.Unit == parameters.Unit).ToList();
+
+		if (!string.IsNullOrEmpty(parameters.Address))
+			queryable = queryable
+				.Where(x => !string.IsNullOrEmpty(x.Address) && x.Address.Contains(parameters.Address)).ToList();
+
+		if (parameters.StartDate.HasValue)
+			queryable = queryable.Where(x => x.StartDate >= parameters.StartDate).ToList();
+
+		if (parameters.EndDate.HasValue)
+			queryable = queryable.Where(x => x.EndDate <= parameters.EndDate).ToList();
+
+		if (!string.IsNullOrEmpty(parameters.Author))
+			queryable = queryable
+				.Where(x => !string.IsNullOrEmpty(x.Author) && x.Author.Contains(parameters.Author)).ToList();
+
+		if (!string.IsNullOrEmpty(parameters.Email))
+			queryable = queryable
+				.Where(x => !string.IsNullOrEmpty(x.Email) && x.Email.Contains(parameters.Email)).ToList();
+
+		if (!string.IsNullOrEmpty(parameters.PhoneNumber))
+			queryable = queryable
+				.Where(x => !string.IsNullOrEmpty(x.PhoneNumber) && x.PhoneNumber.Contains(parameters.PhoneNumber)).ToList();
+
+		if (parameters.Locations != null && parameters.Locations.Any())
+			queryable = queryable.Where(x => x.Locations != null &&
+			                                 x.Locations.Any(y => parameters.Locations.Contains(y.Id))).ToList();
+
+		if (parameters.Categories != null && parameters.Categories.Any())
+			queryable = queryable.Where(x => x.Categories != null &&
+			                                 x.Categories.Any(y => parameters.Categories.Contains(y.Id))).ToList();
+
+		totalCount = queryable.Count;
+
+		if (parameters.FilterOrder.HasValue)
+			queryable = parameters.FilterOrder switch {
+				ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price).ToList(),
+				ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price).ToList(),
+				ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title).ToList(),
+				ProductFilterOrder.ZToA => queryable.OrderByDescending(x => x.Title).ToList(),
+				_ => queryable.OrderBy(x => x.CreatedAt).ToList()
+			};
+
+		queryable = queryable.Skip((parameters.PageNumber - 1) * parameters.PageSize)
+			.Take(parameters.PageSize)
+			.ToList();
 
 		IEnumerable<ProductReadDto> dto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
 
@@ -194,10 +192,9 @@ public class ProductRepository : IProductRepository {
 		};
 	}
 
-	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine(string useCase) {
-		GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null, useCase);
-		IEnumerable<ProductReadDto> i = e.Result.Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
-			.Where(x => x.UseCase == useCase);
+	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine() {
+		GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null);
+		IEnumerable<ProductReadDto> i = e.Result.Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name);
 		return new GenericResponse<IEnumerable<ProductReadDto>>(i);
 	}
 

@@ -16,18 +16,18 @@ public class ProductController : BaseApiController {
 
 	[HttpGet]
 	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Read(string useCase)
-		=> Result(await _productRepository.Read(null, useCase));
+		=> Result(await _productRepository.Read(null));
 
 	[HttpGet("Mine")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> ReadMine(string useCase)
-		=> Result(await _productRepository.ReadMine(useCase));
+		=> Result(await _productRepository.ReadMine());
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
 	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Filter(FilterProductDto? dto)
-		=> Result(await _productRepository.Read(dto, dto.UseCase));
+		=> Result(await _productRepository.Read(dto));
 
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<ProductReadDto>>> ReadById(Guid id)

@@ -51,7 +51,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
 	public async Task<GenericResponse<BookmarkReadDto>> ReadBookmarks() {
 		GenericResponse<IEnumerable<ProductReadDto>> products =
-			await _productRepository.Read(new FilterProductDto {IsBookmarked = true}, "allProducts");
+			await _productRepository.Read(new FilterProductDto {IsBookmarked = true});
 
 		BookmarkReadDto dto = new() {
 			Products = products.Result
