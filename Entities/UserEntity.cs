@@ -128,5 +128,4 @@ public class UserCreateUpdateDto {
 	public int? GenderId { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
-	public IEnumerable<UploadDto>? Media { get; set; }
 }
