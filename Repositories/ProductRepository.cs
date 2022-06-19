@@ -275,9 +275,7 @@ public static class ProductEntityExtension {
 
 		List<CategoryEntity> listCategory = new();
 		List<LocationEntity> listLocation = new();
-		List<FormEntity> listForm = new();
-		List<ReportEntity> listReport = new();
-		List<VoteFieldEntity> listVoteFields = new();
+		//List<VoteFieldEntity> listVoteFields = new();
 
 		foreach (Guid item in dto.Categories ?? new List<Guid>()) {
 			CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
@@ -296,9 +294,7 @@ public static class ProductEntityExtension {
 		
 		entity.Categories = listCategory;
 		entity.Locations = listLocation;
-		entity.Forms = listForm;
-		entity.Reports = listReport;
-		entity.VoteFields = listVoteFields;
+		//entity.VoteFields = listVoteFields;
 
 		return entity;
 	}
