@@ -295,8 +295,12 @@ public class UserRepository : IUserRepository {
 
 		FillUserData(dto, entity);
 
-		await _context.Set<UserEntity>().AddAsync(entity);
-		await _context.SaveChangesAsync();
+		IdentityResult? result = await _userManager.CreateAsync(entity, dto.Password);
+		if (!result.Succeeded)
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
+													 "The information was not entered correctly");
+		//await _context.Set<UserEntity>().AddAsync(entity);
+		//await _context.SaveChangesAsync();
 
 		return await GetProfileById(entity.Id);
 	}
