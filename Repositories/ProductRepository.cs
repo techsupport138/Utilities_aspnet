@@ -288,21 +288,11 @@ public static class ProductEntityExtension {
 			LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
 			if (e != null) listLocation.Add(e);
 		}
-		
-		foreach (Guid item in dto.Forms ?? new List<Guid>()) {
-			FormEntity? e = await context.Set<FormEntity>().FirstOrDefaultAsync(x => x.Id == item);
-			if (e != null) listForm.Add(e);
-		}
 
-		foreach (Guid item in dto.Reports ?? new List<Guid>()) {
-			ReportEntity? e = await context.Set<ReportEntity>().FirstOrDefaultAsync(x => x.Id == item);
-			if (e != null) listReport.Add(e);
-		}
-
-		foreach (Guid item in dto.VoteFields ?? new List<Guid>()) {
-			VoteFieldEntity? e = await context.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.Id == item);
-			if (e != null) listVoteFields.Add(e);
-		}
+		//foreach (Guid item in dto.VoteFields ?? new List<Guid>()) {
+		//	VoteFieldEntity? e = await context.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.Id == item);
+		//	if (e != null) listVoteFields.Add(e);
+		//}
 		
 		entity.Categories = listCategory;
 		entity.Locations = listLocation;
