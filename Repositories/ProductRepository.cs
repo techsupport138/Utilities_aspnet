@@ -184,8 +184,21 @@ public class ProductRepository : IProductRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine() {
-		GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null);
-		IEnumerable<ProductReadDto> i = e.Result.Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name);
+		//GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null);
+		IEnumerable<ProductEntity> products = await _context.Set<ProductEntity>()
+			.AsNoTracking()
+			.Include(i => i.Media)
+			.Include(i => i.Categories)
+			.Include(i => i.Comments)
+			.Include(i => i.Locations)
+			.Include(i => i.Reports)
+			.Include(i => i.User)
+			.Include(i => i.Bookmarks)
+			.Include(i => i.Forms)!
+			.ThenInclude(x => x.FormField)
+			.Where(x => x.DeletedAt == null && x.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
+			.ToListAsync();
+		IEnumerable<ProductReadDto> i = _mapper.Map<IEnumerable<ProductReadDto>>(products).ToList();
 		return new GenericResponse<IEnumerable<ProductReadDto>>(i);
 	}
 
