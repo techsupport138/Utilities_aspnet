@@ -57,7 +57,7 @@ public class ChatRepository : IChatRepository {
 			ProfileImage = "",
 			UserId = id,
 			Send = x.ToUserId == id
-		}).OrderByDescending(x => x.Id).ToList();
+		}).OrderByDescending(x => x.DateTime).ToList();
 
 		return conversations.Count < 1
 			? new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.NotFound)
