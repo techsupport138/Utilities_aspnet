@@ -116,9 +116,9 @@ public class ProductCreateUpdateDto {
 	public ProductStatus? Status { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
-	public IEnumerable<Guid>? Forms { get; set; }
-	public IEnumerable<Guid>? VoteFields { get; set; }
-	public IEnumerable<Guid>? Reports { get; set; }
+	//public IEnumerable<Guid>? Forms { get; set; }
+	//public IEnumerable<Guid>? VoteFields { get; set; }
+	//public IEnumerable<Guid>? Reports { get; set; }
 }
 
 public class FilterProductDto {
