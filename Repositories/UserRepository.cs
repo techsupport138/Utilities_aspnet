@@ -197,7 +197,7 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto) {
-		UserEntity? entity = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == dto.Id);
+		UserEntity? entity = _context.Set<UserEntity>().Include(x=>x.Location).Include(x=>x.Categories).FirstOrDefault(x => x.Id == dto.Id);
 
 		if (entity == null)
 			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
