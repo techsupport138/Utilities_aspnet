@@ -339,6 +339,9 @@ public class UserRepository : IUserRepository {
 		entity.Birthdate = dto.BirthDate ?? entity.Birthdate;
 		entity.Wallet = dto.Wallet ?? entity.Wallet;
 		entity.GenderId = dto.GenderId ?? entity.GenderId;
+		entity.UserName = dto.UserName ?? entity.UserName;
+		entity.Email = dto.Email ?? entity.Email;
+		entity.PhoneNumber = dto.PhoneNumber ?? entity.PhoneNumber;
 
 		if (dto.Locations.IsNotNullOrEmpty()) {
 			List<LocationEntity> list = new();
