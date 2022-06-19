@@ -4,7 +4,6 @@ namespace Utilities_aspnet.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class NotificationController : BaseApiController {
 	private readonly INotificationRepository _notificationRepository;
 
@@ -12,12 +11,15 @@ public class NotificationController : BaseApiController {
 		_notificationRepository = notificationRepository;
 	}
 
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
 	[HttpGet]
 	public async Task<ActionResult<GenericResponse<IEnumerable<NotificationDto>>>> Read() {
 		GenericResponse<IEnumerable<NotificationDto>> i = await _notificationRepository.GetNotifications();
 		return Result(i);
 	}
 
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost]
 	public async Task<ActionResult<GenericResponse>> Create(NotificationCreateUpdateDto model) {
 		GenericResponse i = await _notificationRepository.CreateNotification(model);
