@@ -63,10 +63,10 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
 		IEnumerable<UserEntity?> followers = await _context.Set<FollowEntity>()
 			.AsNoTracking()
-			.Where(x => x.FollowerUserId == id)
-			.Include(x => x.FollowsUser)
+			.Where(x => x.FollowsUserId == id)
+			.Include(x => x.FollowerUser)
 			.ThenInclude(x => x.Media)
-			.Select(x => x.FollowsUser)
+			.Select(x => x.FollowerUser)
 			.ToListAsync();
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followers);
@@ -77,10 +77,10 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id) {
 		IEnumerable<UserEntity?> followings = await _context.Set<FollowEntity>()
 			.AsNoTracking()
-			.Where(x => x.FollowsUserId == id)
-			.Include(x => x.FollowerUser)
+			.Where(x => x.FollowerUserId == id)
+			.Include(x => x.FollowsUser)
 			.ThenInclude(x => x.Media)
-			.Select(x => x.FollowerUser)
+			.Select(x => x.FollowsUser)
 			.ToListAsync();
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followings);
