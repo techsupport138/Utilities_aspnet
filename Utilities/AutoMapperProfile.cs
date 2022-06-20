@@ -28,7 +28,6 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.lon,c => c.MapFrom(v => v.Longitude))
             .ForMember(x => x.Ty,c => c.MapFrom(v => v.Type))
             .ForMember(x => x.Ch,c => c.MapFrom(v => v.Children))
-            .ForMember(x => x.m,c => c.MapFrom(v => (v.Media != null)? $"{Server.ServerAddress}/Medias/{v.Media.FirstOrDefault().FileName}": null))
             .ReverseMap();
 
 
