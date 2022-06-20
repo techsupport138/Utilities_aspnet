@@ -57,6 +57,14 @@ public class RegisterWithEmailDto {
 	public bool Keep { get; set; } = true;
 }
 
+public class RegisterDto {
+	public string? UserName { get; set; }
+	public string? Email { get; set; }
+	public string? PhoneNumber { get; set; }
+	public string? Password { get; set; }
+	public bool SendSMS { get; set; }
+}
+
 public class RegisterFormWithEmailDto {
 	public string Email { get; set; }
 	public string Password { get; set; }

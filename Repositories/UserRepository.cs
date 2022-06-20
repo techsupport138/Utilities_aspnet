@@ -17,6 +17,12 @@ public interface IUserRepository {
 	Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto parameter);
 	Task<GenericResponse> DeleteUser(string id);
 	Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
+
+	Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithEmailDto model);
+	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
+	Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
+	Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser);
+
 }
 
 public class UserRepository : IUserRepository {
@@ -324,7 +330,179 @@ public class UserRepository : IUserRepository {
 		return token;
 	}
 
-	private async void FillUserData(UserCreateUpdateDto dto, UserEntity entity) {
+
+	#region New Login Register
+
+
+	public async Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser)
+	{
+		UserEntity? model = _context.Set<UserEntity>()
+			.FirstOrDefault(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email || x.PhoneNumber == aspNetUser.PhoneNumber);
+		if (model != null)
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
+													 "This email or username already exists");
+
+		UserEntity user = new()
+		{
+			Email = aspNetUser.Email??"",
+			UserName = aspNetUser.UserName??aspNetUser.Email??aspNetUser.PhoneNumber,
+			PhoneNumber = aspNetUser.PhoneNumber,
+			EmailConfirmed = false,
+			PhoneNumberConfirmed = false,
+			FullName = "",
+			Wallet = 0,
+			Suspend = false
+		};
+
+		IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
+		if (!result.Succeeded)
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
+													 "The information was not entered correctly");
+
+		JwtSecurityToken token = await CreateToken(user);
+
+		string? otp = "9999";
+		if (aspNetUser.SendSMS)
+		{
+			if (aspNetUser.Email != null &&  aspNetUser.Email.IsEmail())
+			{
+				//ToDo_AddEmailSender
+			}
+			else
+			{
+				otp = _otp.SendOtp(user.Id, 4);
+			}
+		}
+
+		return new GenericResponse<UserReadDto?>(
+			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+			UtilitiesStatusCodes.Success, "Success");
+	}
+
+
+	public async Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithEmailDto model)
+	{
+		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
+		if(user == null) user = await _userManager.FindByNameAsync(model.Email);
+		if (user == null)
+		{
+			user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x=>x.PhoneNumber == model.Email);
+		}
+
+		if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "User not found");
+
+		bool result = await _userManager.CheckPasswordAsync(user, model.Password);
+		if (!result)
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
+
+		JwtSecurityToken token = await CreateToken(user);
+
+		return new GenericResponse<UserReadDto?>(
+			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+			UtilitiesStatusCodes.Success, "Success");
+	}
+
+
+
+	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto)
+	{
+		UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == dto.Mobile);
+
+		if (model != null)
+		{
+			string? otp = "9999";
+			if (dto.SendSMS) otp = _otp.SendOtp(model.Id, 4);
+			return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
+        }
+        else
+        {
+			model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == dto.Mobile);
+			string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
+			if (dto.Mobile.Length <= 9 || !mobile.IsNumerical())
+				return new GenericResponse<string?>("", UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
+			else
+			{
+				UserEntity user = new()
+				{
+					Email = "",
+					PhoneNumber = mobile,
+					UserName = mobile,
+					AppUserName = mobile,
+					AppPhoneNumber = mobile,
+					EmailConfirmed = false,
+					PhoneNumberConfirmed = false,
+					FullName = "",
+					Wallet = 0,
+					Suspend = false
+				};
+
+				IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
+				if (!result.Succeeded)
+					return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest,
+														"The information was not entered correctly");
+
+				string? otp = "9999";
+				if (dto.SendSMS)
+                {
+					if (dto.Mobile.IsEmail())
+					{
+						//ToDo_AddEmailSender
+					}
+					else
+					{
+						otp = _otp.SendOtp(user.Id, 4);
+					}
+				}
+				
+				return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
+			}
+		}
+		
+	}
+
+
+	public async Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto)
+	{
+		
+
+		if (dto.VerificationCode.Length >= 6 && !dto.VerificationCode.IsNumerical())
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongVerificationCode,
+													 "کد تایید وارد شده صحیح نیست");
+
+		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile);
+		if(user == null)
+			user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == dto.Mobile);
+
+		if (user == null)
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "کاربر یافت نشد");
+
+		if (user.Suspend)
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
+
+		JwtSecurityToken token = await CreateToken(user);
+		if (dto.VerificationCode == "9999")
+			return new GenericResponse<UserReadDto?>(
+				GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+				UtilitiesStatusCodes.Success, "Success"
+			);
+
+		if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
+
+		return new GenericResponse<UserReadDto?>(
+			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+			UtilitiesStatusCodes.Success, "Success"
+		);
+	}
+
+
+
+    #endregion
+
+
+
+
+    private async void FillUserData(UserCreateUpdateDto dto, UserEntity entity) {
 		entity.FirstName = dto.FirstName ?? entity.FirstName;
 		entity.LastName = dto.LastName ?? entity.LastName;
 		entity.FullName = dto.FullName ?? entity.FullName;
