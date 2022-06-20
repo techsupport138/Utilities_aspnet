@@ -27,6 +27,7 @@ public class CategoryRepository : ICategoryRepository {
 	public async Task<GenericResponse<IEnumerable<CategoryReadDto>>> Read() {
 		IEnumerable<CategoryEntity> i = await _dbContext.Set<CategoryEntity>()
 			.Include(i => i.Media)
+			.Include(i => i.Parent)
 			.Include(i => i.Children).ThenInclude(i => i.Media).Where(x => x.ParentId == null)
 			.AsNoTracking()
 			.ToListAsync();
