@@ -3,7 +3,6 @@
 public interface ICategoryRepository {
 	public Task<GenericResponse<CategoryReadDto>> Create(CategoryCreateUpdateDto dto);
 	public Task<GenericResponse<IEnumerable<CategoryReadDto>>> Read();
-	public Task<GenericResponse<IEnumerable<CategoryReadDto>>> ReadV2();
 	public Task<GenericResponse<CategoryReadDto>> Update(CategoryCreateUpdateDto dto);
 	public Task<GenericResponse> Delete(Guid id);
 }
