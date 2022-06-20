@@ -411,7 +411,7 @@ public class UserRepository : IUserRepository {
 		if (model != null)
 		{
 			string? otp = "9999";
-			if (dto.SendSMS) otp = _otp.SendOtp(model.Id, 4);
+			//ToDo_AddEmailSender
 			return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
         }
         else
@@ -420,6 +420,12 @@ public class UserRepository : IUserRepository {
 			string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
 			if (dto.Mobile.Length <= 9 || !mobile.IsNumerical())
 				return new GenericResponse<string?>("", UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
+			if (model != null)
+			{
+				string? otp = "9999";
+				if (dto.SendSMS) otp = _otp.SendOtp(model.Id, 4);
+				return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
+			}
 			else
 			{
 				UserEntity user = new()
