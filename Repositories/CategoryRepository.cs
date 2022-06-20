@@ -28,15 +28,6 @@ public class CategoryRepository : ICategoryRepository {
 	public async Task<GenericResponse<IEnumerable<CategoryReadDto>>> Read() {
 		IEnumerable<CategoryEntity> i = await _dbContext.Set<CategoryEntity>()
 			.Include(i => i.Media)
-			.Include(i => i.Parent).ThenInclude(i => i.Media)
-			.AsNoTracking()
-			.ToListAsync();
-		return new GenericResponse<IEnumerable<CategoryReadDto>>(_mapper.Map<IEnumerable<CategoryReadDto>>(i));
-	}
-
-	public async Task<GenericResponse<IEnumerable<CategoryReadDto>>> ReadV2() {
-		IEnumerable<CategoryEntity> i = await _dbContext.Set<CategoryEntity>()
-			.Include(i => i.Media)
 			.Include(i => i.Children).ThenInclude(i => i.Media).Where(x => x.ParentId == null)
 			.AsNoTracking()
 			.ToListAsync();
