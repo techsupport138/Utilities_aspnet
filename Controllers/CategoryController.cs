@@ -16,7 +16,11 @@ public class CategoryController : BaseApiController {
 
 	[HttpGet]
 	public async Task<ActionResult<GenericResponse<IEnumerable<CategoryReadDto>>>> Read()
-		=> Result(await _categoryRepository.Read());
+		=> Result(await _categoryRepository.ReadChildren());
+
+	[HttpGet("Parent")]
+	public async Task<ActionResult<GenericResponse<IEnumerable<CategoryReadDto>>>> ReadParent()
+		=> Result(await _categoryRepository.ReadChildren());
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
