@@ -29,17 +29,18 @@ public class LocationEntity {
 
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
+	[InverseProperty("Parent")]
+	public IEnumerable<LocationEntity>? Children { get; set; }
 }
 
 public class LocationReadDto {
-	public int Id { get; set; }
-	public string Title { get; set; }
-	public int? ParentId { get; set; }
-	public LocationReadDto? Parent { get; set; }
-	public double? Latitude { get; set; }
-	public double? Longitude { get; set; }
-	public IEnumerable<MediaDto>? Media { get; set; }
-	public LocationType Type { get; set; }
+	public int I { get; set; }
+	public string T { get; set; }
+	public double? lat { get; set; }
+	public double? lon { get; set; }
+	public string? m { get; set; }
+	public IEnumerable<LocationReadDto>? Ch { get; set; }
+	public LocationType Ty { get; set; }
 }
 
 public class LocationCreateDto {
