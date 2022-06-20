@@ -26,7 +26,6 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.T,c => c.MapFrom(v => v.Title))
             .ForMember(x => x.lat,c => c.MapFrom(v => v.Latitude))
             .ForMember(x => x.lon,c => c.MapFrom(v => v.Longitude))
-            .ForMember(x => x.Ty,c => c.MapFrom(v => v.Type))
             .ForMember(x => x.Ch,c => c.MapFrom(v => v.Children))
             .ReverseMap();
 

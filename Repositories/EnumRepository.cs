@@ -39,8 +39,7 @@ public class AppSettingRepository : IAppSettingRepository {
 	}
 
 	public Task<GenericResponse<IEnumerable<LocationReadDto?>>> ReadLocation() {
-		IEnumerable<LocationEntity> model = _context.Set<LocationEntity>().Include(x => x.Children).ThenInclude(x => x.Media)
-			.Include(x => x.Media).Where(x=>x.ParentId == null);
+		IEnumerable<LocationEntity> model = _context.Set<LocationEntity>().Include(x => x.Children).Where(x=>x.ParentId == null);
 
 		return Task.FromResult(
 			new GenericResponse<IEnumerable<LocationReadDto?>>(_mapper.Map<IEnumerable<LocationReadDto>>(model)));

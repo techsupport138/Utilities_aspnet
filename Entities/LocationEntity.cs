@@ -38,9 +38,7 @@ public class LocationReadDto {
 	public string T { get; set; }
 	public double? lat { get; set; }
 	public double? lon { get; set; }
-	public string? m { get; set; }
 	public IEnumerable<LocationReadDto>? Ch { get; set; }
-	public LocationType Ty { get; set; }
 }
 
 public class LocationCreateDto {
