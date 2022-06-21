@@ -20,7 +20,7 @@ public class CommentRepository : ICommentRepository {
 
 	public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
 		CommentEntity? comment = await _context.Set<CommentEntity>()
-			.AsNoTracking()
+			.AsNoTracking().Include(x=>x.User)
 			.Where(x => x.Id == id)
 			.FirstOrDefaultAsync();
 

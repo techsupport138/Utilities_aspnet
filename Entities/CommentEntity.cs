@@ -32,4 +32,5 @@ public class CommentReadDto {
 	public string? Comment { get; set; }
 	public Guid? ParentId { get; set; }
 	public string? UserId { get; set; }
+    public UserMinimalReadDto? User { get; set; }
 }

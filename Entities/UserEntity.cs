@@ -13,6 +13,7 @@ public class UserEntity : IdentityUser {
 	public string? Type { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
+	public string? Color { get; set; }
 	public double? Wallet { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
 	public DateTime? Birthdate { get; set; }
@@ -117,6 +118,7 @@ public class UserReadDto {
 	public string? AppUserName { get; set; }
 	public string? AppPhoneNumber { get; set; }
 	public string? AppEmail { get; set; }
+	public string? Color { get; set; }
 	public string? Type { get; set; }
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
@@ -134,6 +136,20 @@ public class UserReadDto {
 	public IEnumerable<LocationReadDto>? Locations { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<ProductReadDto>? Products { get; set; }
+}
+
+public class UserMinimalReadDto
+{
+	public string? Id { get; set; }
+	public string? FullName { get; set; }
+	public string? PhoneNumber { get; set; }
+	public string? UserName { get; set; }
+	public string? FirstName { get; set; }
+	public string? LastName { get; set; }
+	public string? Color { get; set; }
+	public GenderEntity? Gender { get; set; }
+	public IEnumerable<MediaDto>? Media { get; set; }
+	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 }
 
 public class UserCreateUpdateDto {
@@ -154,6 +170,7 @@ public class UserCreateUpdateDto {
 	public string? Type { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
+	public string? Color { get; set; }
 	public bool? Suspend { get; set; }
 	public double? Wallet { get; set; }
 	public bool? ShowContactInfo { get; set; }
