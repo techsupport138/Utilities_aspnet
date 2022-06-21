@@ -19,7 +19,7 @@ public class UserController : BaseApiController {
 	}
 	
 	[HttpPost("LoginWithPassword")]
-	public async Task<ActionResult<GenericResponse>> LoginWithPassword(LoginWithEmailDto dto)
+	public async Task<ActionResult<GenericResponse>> LoginWithPassword(LoginWithPasswordDto dto)
 	{
 		GenericResponse i = await _userRepository.LoginWithPassword(dto);
 		return Result(i);
