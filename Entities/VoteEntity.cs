@@ -7,7 +7,7 @@ public class VoteEntity : BaseEntity {
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
 
-	public VoteFieldEntity? VoteFields { get; set; }
+	public VoteFieldEntity? VoteField { get; set; }
 	public Guid? VoteFieldId { get; set; }
 
 	public ProductEntity? Product { get; set; }
