@@ -47,7 +47,7 @@ public class VoteRepository : IVoteRepository {
 	
 	public async Task<GenericResponse<IEnumerable<VoteReadDto>?>> ReadVoteFields(Guid id) {
 
-		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x =>x.ProductId == id).ToListAsync();
+		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x =>x.ProductId == id).Include(x=>x.Votes).ToListAsync();
 
 		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
 	}
