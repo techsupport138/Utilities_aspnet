@@ -42,6 +42,7 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<ReportEntity>? Reports { get; set; }
 	public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
 	public IEnumerable<CommentEntity>? Comments { get; set; }
+	public IEnumerable<TeamEntity>? Teams { get; set; }
 }
 
 public class ProductReadDto {
