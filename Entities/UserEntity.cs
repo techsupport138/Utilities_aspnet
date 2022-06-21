@@ -25,7 +25,6 @@ public class UserEntity : IdentityUser {
 	public IEnumerable<LocationEntity>? Location { get; set; }
 	public IEnumerable<FormEntity>? FormBuilders { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
-	public IEnumerable<ReportEntity>? Reports { get; set; }
 	public IEnumerable<ProductEntity>? Products { get; set; }
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<TransactionEntity>? Transactions { get; set; }
