@@ -1,7 +1,7 @@
 namespace Utilities_aspnet.Repositories;
 
 public interface IVoteRepository {
-	Task<GenericResponse> CreateUpdateVote(IEnumerable<VoteCreateUpdateDto> dto);
+	Task<GenericResponse> CreateUpdateVote(VoteCreateUpdateDto dto);
 	Task<GenericResponse<IEnumerable<VoteReadDto>?>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto);
 	Task<GenericResponse<IEnumerable<VoteReadDto>?>> ReadVoteFields(Guid id);
 }
@@ -52,12 +52,12 @@ public class VoteRepository : IVoteRepository {
 		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
 	}
 	
-	public async Task<GenericResponse> CreateUpdateVote(IEnumerable<VoteCreateUpdateDto> dto) {
+	public async Task<GenericResponse> CreateUpdateVote(VoteCreateUpdateDto dto) {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
-		foreach (VoteCreateUpdateDto item in dto)
+		foreach (VoteDto item in dto.Votes)
 			try {
 				VoteEntity? up = await _dbContext.Set<VoteEntity>().FirstOrDefaultAsync(x =>
-					x.ProductId == item.ProductId && x.VoteFieldId == item.VoteFieldId && x.UserId == userId);
+					x.ProductId == dto.ProductId && x.VoteFieldId == item.VoteFieldId && x.UserId == userId);
 				if (up != null) {
 					up.Score = item.Score;
 					await _dbContext.SaveChangesAsync();
@@ -65,7 +65,7 @@ public class VoteRepository : IVoteRepository {
 				else {
 					_dbContext.Set<VoteEntity>().Add(new VoteEntity
 					{
-						ProductId = item.ProductId,
+						ProductId = dto.ProductId,
 						Score = item.Score,
 						VoteFieldId = item.VoteFieldId,
 						UserId = userId
@@ -75,7 +75,7 @@ public class VoteRepository : IVoteRepository {
 				
 			}
 			catch {
-				// ignored
+				return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 			}
 
 		return new GenericResponse();

@@ -11,7 +11,7 @@ public class VoteController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse>> Create(IEnumerable<VoteCreateUpdateDto> dto)
+	public async Task<ActionResult<GenericResponse>> Create(VoteCreateUpdateDto dto)
 		=> Result(await _voteRepository.CreateUpdateVote(dto));
 	
 	[HttpPost("VoteField")]
