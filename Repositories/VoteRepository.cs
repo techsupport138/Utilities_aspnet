@@ -3,6 +3,7 @@ namespace Utilities_aspnet.Repositories;
 public interface IVoteRepository {
 	Task<GenericResponse> CreateUpdateVote(IEnumerable<VoteCreateUpdateDto> dto);
 	Task<GenericResponse<IEnumerable<VoteReadDto>?>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto);
+	Task<GenericResponse<IEnumerable<VoteReadDto>?>> ReadVoteFields(Guid id);
 }
 
 public class VoteRepository : IVoteRepository {
@@ -40,6 +41,13 @@ public class VoteRepository : IVoteRepository {
 			}
 
 		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x =>x.ProductId == dto.ProductId).ToListAsync();
+
+		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
+	}
+	
+	public async Task<GenericResponse<IEnumerable<VoteReadDto>?>> ReadVoteFields(Guid id) {
+
+		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x =>x.ProductId == id).ToListAsync();
 
 		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
 	}

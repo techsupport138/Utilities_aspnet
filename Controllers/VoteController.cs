@@ -18,6 +18,11 @@ public class VoteController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<IEnumerable<VoteReadDto>?>>> CreateVoteFields(VoteFieldCreateUpdateDto dto)
 		=> Result(await _voteRepository.CreateUpdateVoteFields(dto));
+	
+	[HttpGet("VoteField/{id:guid}")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	public async Task<ActionResult<GenericResponse<IEnumerable<VoteReadDto>?>>> ReadVoteFields(Guid id)
+		=> Result(await _voteRepository.CreateUpdateVoteFields(id));
 
 	
 }
