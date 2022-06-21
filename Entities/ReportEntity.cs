@@ -14,14 +14,15 @@ public class ReportEntity : BaseEntity {
 	public ProductEntity? Product { get; set; }
 }
 
-public class ReportCreateDto : BaseReadDto {
+public class ReportCreateDto {
 	public string? Title { get; set; }
 	public string? Description { get; set; }
 	public Guid? ProductId { get; set; }
 	public string? UserId { get; set; }
 }
 
-public class ReportReadDto : BaseReadDto {
+public class ReportReadDto {
+	public Guid Id { get; set; }
 	public string? Title { get; set; }
 	public string? Description { get; set; }
 
@@ -29,7 +30,8 @@ public class ReportReadDto : BaseReadDto {
 	public ProductEntity? Product { get; set; }
 }
 
-public class ReportFilterDto : BaseReadDto {
+public class ReportFilterDto {
+	public Guid? Id { get; set; }
 	public bool? User { get; set; }
 	public bool? Product { get; set; }
 }

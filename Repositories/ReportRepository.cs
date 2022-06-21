@@ -3,26 +3,30 @@ namespace Utilities_aspnet.Repositories;
 public interface IReportRepository {
 	Task<GenericResponse<ReportReadDto?>> Create(ReportCreateDto dto);
 	Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto);
+	Task<GenericResponse<ReportReadDto?>> ReadById(Guid id);
 	Task<GenericResponse> Delete(Guid id);
 }
 
 public class ReportRepository : IReportRepository {
 	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
+	private readonly IMapper _mapper;
 
-	public ReportRepository(DbContext context, IHttpContextAccessor httpContextAccessor) {
+	public ReportRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = context;
 		_httpContextAccessor = httpContextAccessor;
+		_mapper = mapper;
 	}
 
 	public async Task<GenericResponse<ReportReadDto?>> Create(ReportCreateDto dto) {
 		ReportEntity entity = new() {
-			UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!,
+			CreatorUserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!,
 			Title = dto.Title,
 			Description = dto.Description
 		};
 
 		if (dto.ProductId.HasValue) entity.ProductId = dto.ProductId;
+		if (!dto.UserId.IsNotNullOrEmpty()) entity.UserId = dto.UserId;
 
 		await _dbContext.Set<ReportEntity>().AddAsync(entity);
 		await _dbContext.SaveChangesAsync();
@@ -32,25 +36,16 @@ public class ReportRepository : IReportRepository {
 
 	public async Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto) {
 		IQueryable<ReportEntity> entities = _dbContext.Set<ReportEntity>().AsNoTracking();
-
+		
 		if (dto.User == true)
 			entities = entities.Include(x => x.User);
 
 		if (dto.Product == true)
 			entities = entities.Include(x => x.Product);
 
-		IEnumerable<ReportReadDto> result = await entities.Select(x => new ReportReadDto {
-			CreatedAt = x.CreatedAt,
-			DeletedAt = x.DeletedAt,
-			Description = x.Description,
-			Id = x.Id,
-			Product = x.Product,
-			Title = x.Title,
-			UpdatedAt = x.UpdatedAt,
-			User = x.User
-		}).ToListAsync();
+		IEnumerable<ReportEntity> result = await entities.ToListAsync();
 
-		return new GenericResponse<IEnumerable<ReportReadDto>>(result);
+		return new GenericResponse<IEnumerable<ReportReadDto>>(_mapper.Map<IEnumerable<ReportReadDto>>(result));
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
@@ -68,22 +63,12 @@ public class ReportRepository : IReportRepository {
 	}
 
 	public async Task<GenericResponse<ReportReadDto?>> ReadById(Guid id) {
-		ReportReadDto? report = await _dbContext.Set<ReportEntity>()
+		ReportEntity? entity = await _dbContext.Set<ReportEntity>()
 			.AsNoTracking()
 			.Include(x => x.User)
 			.Include(x => x.Product)
-			.Select(x => new ReportReadDto {
-				CreatedAt = x.CreatedAt,
-				DeletedAt = x.DeletedAt,
-				Description = x.Description,
-				Id = x.Id,
-				Product = x.Product,
-				Title = x.Title,
-				UpdatedAt = x.UpdatedAt,
-				User = x.User
-			})
-			.FirstOrDefaultAsync();
+			.FirstOrDefaultAsync(x=>x.Id == id);
 
-		return new GenericResponse<ReportReadDto?>(report);
+		return new GenericResponse<ReportReadDto?>(_mapper.Map<ReportReadDto>(entity));
 	}
 }

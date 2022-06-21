@@ -48,6 +48,8 @@ public class AutoMapperProfile : Profile
         CreateMap<TransactionEntity, TransactionReadDto>().ReverseMap();
         CreateMap<TransactionEntity, TransactionCreateDto>().ReverseMap();
 
+        CreateMap<ReportEntity, ReportReadDto>().ReverseMap();
+
         CreateMap<UserCreateUpdateDto, UserEntity>()
             .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
             .ForMember(x => x.Location, y => y.Ignore())
