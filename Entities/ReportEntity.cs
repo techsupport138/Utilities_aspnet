@@ -31,7 +31,6 @@ public class ReportReadDto {
 }
 
 public class ReportFilterDto {
-	public Guid? Id { get; set; }
 	public bool? User { get; set; }
 	public bool? Product { get; set; }
 }
