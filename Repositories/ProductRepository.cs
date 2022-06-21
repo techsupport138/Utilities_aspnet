@@ -39,7 +39,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Comments)
 			.Include(i => i.Locations)
 			.Include(i => i.Reports)
-			.Include(i => i.User)
+			.Include(i => i.User)!.ThenInclude(x=>x.Media)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Forms)!
 			.ThenInclude(x => x.FormField)
@@ -196,7 +196,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Comments)
 			.Include(i => i.Locations)
 			.Include(i => i.Reports)
-			.Include(i => i.User)
+			.Include(i => i.User)!.ThenInclude(x => x.Media)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Forms)!
 			.ThenInclude(x => x.FormField)
