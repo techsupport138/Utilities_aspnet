@@ -18,7 +18,7 @@ public interface IUserRepository {
 	Task<GenericResponse> DeleteUser(string id);
 	Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
 
-	Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithEmailDto model);
+	Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model);
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser);
@@ -380,7 +380,7 @@ public class UserRepository : IUserRepository {
 	}
 
 
-	public async Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithEmailDto model)
+	public async Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model)
 	{
 		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
 		if(user == null) user = await _userManager.FindByNameAsync(model.Email);

@@ -98,6 +98,11 @@ public class LoginWithEmailDto {
 	public bool Keep { get; set; } = true;
 }
 
+public class LoginWithPasswordDto {
+	public string Email { get; set; }
+	public string Password { get; set; }
+}
+
 public class ChangePasswordDto {
 	public string OldPassword { get; set; }
 	public string NewPassword { get; set; }
