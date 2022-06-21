@@ -25,6 +25,8 @@ public class VoteFieldEntity : BaseEntity {
 }
 
 public class VoteFieldCreateDto {
+    public Guid? Id { get; set; }
+	public Guid? ProductId { get; set; }
 	public string? Title { get; set; }
 }
 
