@@ -10,7 +10,8 @@ public class AutoMapperProfile : Profile
         CreateMap<ProductEntity, ProductReadDto>().ReverseMap();
         CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap()
             .ForMember(x => x.Locations, y => y.Ignore())
-            .ForMember(x => x.Categories, y => y.Ignore());
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.Teams, y => y.Ignore());
 
         CreateMap<MediaEntity, MediaDto>().ForMember(x => x.Link,
                                                      c => c.MapFrom(
