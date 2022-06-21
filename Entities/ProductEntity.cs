@@ -83,6 +83,7 @@ public class ProductReadDto {
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }
 	public IEnumerable<FormDto>? Forms { get; set; }
 	public IEnumerable<CommentReadDto>? Comments { get; set; }
+	public IEnumerable<TeamReadDto>? Teams { get; set; }
 }
 
 public class ProductCreateUpdateDto {
@@ -117,6 +118,7 @@ public class ProductCreateUpdateDto {
 	public ProductStatus? Status { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
+	public IEnumerable<string>? Teams { get; set; }
 	//public IEnumerable<Guid>? Forms { get; set; }
 	//public IEnumerable<Guid>? VoteFields { get; set; }
 	//public IEnumerable<Guid>? Reports { get; set; }

@@ -21,6 +21,8 @@ public class AutoMapperProfile : Profile
         CreateMap<ContentEntity, ContentReadDto>().ReverseMap();
         CreateMap<ContentEntity, ContentCreateUpdateDto>().ReverseMap();
 
+        CreateMap<TeamEntity, TeamReadDto>().ReverseMap();
+
         CreateMap<LocationEntity, LocationReadDto>()
             .ForMember(x => x.I,c => c.MapFrom(v => v.Id))
             .ForMember(x => x.T,c => c.MapFrom(v => v.Title))

@@ -51,8 +51,13 @@ public class TeamEntity : BaseEntity
 }
 
 
+public class TeamReadDto
+{
+	public UserReadDto? User { get; set; }
+}
 
-	public class GetMobileVerificationCodeForLoginDto {
+
+public class GetMobileVerificationCodeForLoginDto {
 	public string Mobile { get; set; }
 	public bool SendSMS { get; set; }
 }
