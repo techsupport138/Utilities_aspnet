@@ -30,9 +30,9 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	public async Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto) {
 		BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
 			.FirstOrDefault(x => (
-				                     x.ProductId == dto.ProductId ||
-				                     x.CategoryId == dto.CategoryId) &&
-			                     x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
+				                     ((x.ProductId != null && x.ProductId == dto.ProductId) ||
+				                     (x.CategoryId != null && x.CategoryId == dto.CategoryId)) &&
+			                     x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
 		if (oldBookmark == null) {
 			BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 

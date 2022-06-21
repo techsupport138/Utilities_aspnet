@@ -7,7 +7,7 @@ public class VoteEntity : BaseEntity {
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
 
-	public VoteFieldEntity? VotingField { get; set; }
+	public VoteFieldEntity? VoteField { get; set; }
 	public Guid? VoteFieldId { get; set; }
 
 	public ProductEntity? Product { get; set; }
@@ -24,11 +24,24 @@ public class VoteFieldEntity : BaseEntity {
 	public Guid? ProductId { get; set; }
 }
 
-public class VoteFieldCreateDto {
+public class VoteFieldCreateUpdateDto {
+    public List<VoteFieldDto>? VoteFields { get; set; }
+	public Guid? ProductId { get; set; }
+
+}
+public class VoteFieldDto {
+    public Guid? Id { get; set; }
 	public string? Title { get; set; }
 }
 
+public class VoteCreateUpdateDto {
+	public double? Score { get; set; }
+	public Guid? ProductId { get; set; }
+	public Guid? VoteFieldId { get; set; }
+}
+
 public class VoteReadDto {
+	public Guid? Id { get; set; }
 	public string? Title { get; set; }
 	public double? Point { get; set; }
 }

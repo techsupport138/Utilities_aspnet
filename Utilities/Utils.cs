@@ -85,6 +85,7 @@ public static class StartupExtension {
 		builder.Services.AddTransient<ISeedRepository, SeedRepository>();
 		builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 		builder.Services.AddTransient<IContentRepository, ContentRepository>();
+		builder.Services.AddTransient<IVoteRepository, VoteRepository>();
 		builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 	}
 

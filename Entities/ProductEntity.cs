@@ -42,6 +42,7 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<ReportEntity>? Reports { get; set; }
 	public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
 	public IEnumerable<CommentEntity>? Comments { get; set; }
+	public IEnumerable<TeamEntity>? Teams { get; set; }
 }
 
 public class ProductReadDto {
@@ -82,6 +83,7 @@ public class ProductReadDto {
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }
 	public IEnumerable<FormDto>? Forms { get; set; }
 	public IEnumerable<CommentReadDto>? Comments { get; set; }
+	public IEnumerable<TeamReadDto>? Teams { get; set; }
 }
 
 public class ProductCreateUpdateDto {
@@ -116,9 +118,10 @@ public class ProductCreateUpdateDto {
 	public ProductStatus? Status { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
-	//public IEnumerable<Guid>? Forms { get; set; }
-	//public IEnumerable<Guid>? VoteFields { get; set; }
-	//public IEnumerable<Guid>? Reports { get; set; }
+	public IEnumerable<string>? Teams { get; set; }
+    //public IEnumerable<Guid>? Forms { get; set; }
+    //public IEnumerable<string>? VoteFields { get; set; }
+    //public IEnumerable<Guid>? Reports { get; set; }
 }
 
 public class FilterProductDto {

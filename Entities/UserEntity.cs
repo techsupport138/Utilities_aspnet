@@ -29,6 +29,7 @@ public class UserEntity : IdentityUser {
 	public IEnumerable<ProductEntity>? Products { get; set; }
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<TransactionEntity>? Transactions { get; set; }
+	public IEnumerable<TeamEntity>? Teams { get; set; }
 }
 
 [Table("Otps")]
@@ -38,6 +39,23 @@ public class OtpEntity : BaseEntity {
 	public UserEntity User { get; set; }
 	public string UserId { get; set; }
 }
+
+
+[Table("Teams")]
+public class TeamEntity : BaseEntity
+{
+	public string? UserId { get; set; }
+	public UserEntity? User { get; set; }
+	public Guid? ProductId { get; set; }
+	public ProductEntity? Product { get; set; }
+}
+
+
+public class TeamReadDto
+{
+	public UserReadDto? User { get; set; }
+}
+
 
 public class GetMobileVerificationCodeForLoginDto {
 	public string Mobile { get; set; }

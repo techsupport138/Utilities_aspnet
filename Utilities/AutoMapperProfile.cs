@@ -10,7 +10,8 @@ public class AutoMapperProfile : Profile
         CreateMap<ProductEntity, ProductReadDto>().ReverseMap();
         CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap()
             .ForMember(x => x.Locations, y => y.Ignore())
-            .ForMember(x => x.Categories, y => y.Ignore());
+            .ForMember(x => x.Categories, y => y.Ignore())
+            .ForMember(x => x.Teams, y => y.Ignore());
 
         CreateMap<MediaEntity, MediaDto>().ForMember(x => x.Link,
                                                      c => c.MapFrom(
@@ -21,12 +22,18 @@ public class AutoMapperProfile : Profile
         CreateMap<ContentEntity, ContentReadDto>().ReverseMap();
         CreateMap<ContentEntity, ContentCreateUpdateDto>().ReverseMap();
 
+        CreateMap<TeamEntity, TeamReadDto>().ReverseMap();
+
         CreateMap<LocationEntity, LocationReadDto>()
             .ForMember(x => x.I,c => c.MapFrom(v => v.Id))
             .ForMember(x => x.T,c => c.MapFrom(v => v.Title))
             .ForMember(x => x.lat,c => c.MapFrom(v => v.Latitude))
             .ForMember(x => x.lon,c => c.MapFrom(v => v.Longitude))
             .ForMember(x => x.Ch,c => c.MapFrom(v => v.Children))
+            .ReverseMap();
+        
+        CreateMap<VoteFieldEntity, VoteReadDto>()
+            .ForMember(x => x.Point,c => c.MapFrom(v => (v.Votes == null || v.Votes.Count()<1)?0:(v.Votes.Sum(x=>x.Score)/v.Votes.Count())))
             .ReverseMap();
 
 
