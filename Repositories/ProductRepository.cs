@@ -45,6 +45,8 @@ public class ProductRepository : IProductRepository {
 			.ThenInclude(x => x.FormField)
 			.Include(i => i.Teams)!
 			.ThenInclude(x => x.User)
+			.Include(i => i.VoteFields)!
+			.ThenInclude(x => x.Votes)
 			.Where(x => x.DeletedAt == null)
 			.ToListAsync();
 
@@ -200,6 +202,8 @@ public class ProductRepository : IProductRepository {
 			.ThenInclude(x => x.FormField)
 			.Include(i => i.Teams)!
 			.ThenInclude(x => x.User)
+			.Include(i => i.VoteFields)!
+			.ThenInclude(x => x.Votes)
 			.Where(x => x.DeletedAt == null && x.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
 			.ToListAsync();
 		IEnumerable<ProductReadDto> i = _mapper.Map<IEnumerable<ProductReadDto>>(products).ToList();
@@ -217,6 +221,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.User)
 			.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
 			.Include(i => i.Teams)!.ThenInclude(x => x.User)
+			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
 	}
