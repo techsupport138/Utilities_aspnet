@@ -86,7 +86,7 @@ public class ProductRepository : IProductRepository {
 				.Where(x => x.Bookmarks!.Any(y => y.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)).ToList();
 
 		if (dto.VisitsCount.HasValue)
-			queryable = queryable.Where(x => x.VisitCount == dto.VisitsCount).ToList();
+			queryable = queryable.Where(x => x.VisitsCount == dto.VisitsCount).ToList();
 
 		if (dto.Length.HasValue)
 			queryable = queryable.Where(x => x.Length == dto.Length).ToList();
@@ -271,7 +271,7 @@ public static class ProductEntityExtension {
 		entity.Price = dto.Price ?? entity.Price;
 		entity.IsForSale = dto.IsForSale ?? entity.IsForSale;
 		entity.Enabled = dto.Enabled ?? entity.Enabled;
-		entity.VisitCount = dto.VisitsCount ?? entity.VisitCount;
+		entity.VisitsCount = dto.VisitsCount ?? entity.VisitsCount;
 		entity.Length = dto.Length ?? entity.Length;
 		entity.Width = dto.Width ?? entity.Width;
 		entity.Height = dto.Height ?? entity.Height;
