@@ -3,6 +3,7 @@
 namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
+	Task<GenericResponse> SeederUser(SeederUserDto dto);
 	Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto dto);
 	Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
 	Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
@@ -48,6 +49,32 @@ public class UserRepository : IUserRepository {
 		_mapper = mapper;
 		_smsSender = smsSender;
 	}
+
+
+	public async Task<GenericResponse> SeederUser(SeederUserDto dto)
+	{
+        try 
+		{
+			foreach(var item in dto.Users)
+            {
+				UserEntity? entity = _mapper.Map<UserEntity>(item);
+
+				FillUserData(item, entity);
+
+				IdentityResult? result = await _userManager.CreateAsync(entity, item.Password);
+			}
+
+		}
+        catch
+        {
+			return new GenericResponse(UtilitiesStatusCodes.Unhandled,
+													 "The information was not entered correctly");
+		}
+
+		return new GenericResponse(UtilitiesStatusCodes.Success);
+	}
+
+
 
 	public async Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model) {
 		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);

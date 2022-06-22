@@ -179,3 +179,8 @@ public class UserCreateUpdateDto {
 	public IEnumerable<Guid>? Categories { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
 }
+
+public class SeederUserDto {
+    public List<UserCreateUpdateDto> Users { get; set; }
+}
+

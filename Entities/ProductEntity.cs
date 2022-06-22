@@ -75,6 +75,10 @@ public class ProductReadDto {
 	public decimal? Price { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
+	public double? Length { get; set; }
+	public double? Width { get; set; }
+	public double? Height { get; set; }
+	public double? Weight { get; set; }
 	public DateTime? CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
 	public DateTime? DeletedAt { get; set; }

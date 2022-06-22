@@ -6,11 +6,13 @@ public class AppSettingsController : BaseApiController {
 	private readonly IAppSettingRepository _appSettingRepository;
 	private readonly ISeedRepository _seedRepository;
 	private readonly IProductRepository _productRepository;
+	private readonly IUserRepository _userRepository;
 
-	public AppSettingsController(IAppSettingRepository appSettingRepository, ISeedRepository seedRepository, IProductRepository productRepository) {
+	public AppSettingsController(IAppSettingRepository appSettingRepository, ISeedRepository seedRepository, IProductRepository productRepository, IUserRepository userRepository) {
 		_appSettingRepository = appSettingRepository;
 		_seedRepository = seedRepository;
 		_productRepository = productRepository;
+		_userRepository = userRepository;
 	}
 
 	[HttpGet]
@@ -47,6 +49,11 @@ public class AppSettingsController : BaseApiController {
 	[HttpPost("SeedCategories")]
 	public async Task<ActionResult<GenericResponse>> SeedCategories(SeederCategoryDto dto)	
 		=> Result(await _seedRepository.SeedCategories(dto));
+	
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[HttpPost("SeedUsers")]
+	public async Task<ActionResult<GenericResponse>> SeedUsers(SeederUserDto dto)	
+		=> Result(await _userRepository.SeederUser(dto));
 
 	
 }
