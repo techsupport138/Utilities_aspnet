@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Repositories;
-
-namespace Utilities_aspnet.Controllers;
+﻿namespace Utilities_aspnet.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

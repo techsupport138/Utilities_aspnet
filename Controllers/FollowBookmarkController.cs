@@ -1,6 +1,4 @@
-﻿using Utilities_aspnet.Repositories;
-
-namespace Utilities_aspnet.Controllers;
+﻿namespace Utilities_aspnet.Controllers;
 
 [ApiController]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
