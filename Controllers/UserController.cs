@@ -89,6 +89,8 @@ public class UserController : BaseApiController {
 		}
 	}
 
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
 	[HttpGet("GetProfileByUsername/{username}")]
 	public async Task<ActionResult<GenericResponse<UserReadDto?>>> GetProfileByUsername(string username) {
 		try {
@@ -123,6 +125,8 @@ public class UserController : BaseApiController {
 		}
 	}
 
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
 	[HttpGet("{id}")]
 	public async Task<ActionResult<GenericResponse<UserReadDto?>>> ReadById(string id) {
 		try {
