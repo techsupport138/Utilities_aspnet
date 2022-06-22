@@ -3,6 +3,7 @@
 public interface ISeedRepository {
 	Task<bool> SeedLocations();
 	Task<bool> SeedGenders();
+	Task<GenericResponse> SeedCategories(SeederCategoryDto dto);
 }
 
 public class SeedRepository : ISeedRepository {
@@ -10,9 +11,11 @@ public class SeedRepository : ISeedRepository {
 		{"مرد", "زن", "تیم", "شرکت", "موسسه فرهنگی هنری", "اتحادیه(مشاغل آزاد)", "سازمان های مردم نهاد"};
 
 	private readonly DbContext _context;
+	private readonly IMapper _mapper;
 
-	public SeedRepository(DbContext context) {
+	public SeedRepository(DbContext context, IMapper mapper) {
 		_context = context;
+		_mapper = mapper;
 	}
 
 	public async Task<bool> SeedLocations() {
@@ -70,4 +73,26 @@ public class SeedRepository : ISeedRepository {
 
 		return true;
 	}
+
+	public async Task<GenericResponse> SeedCategories(SeederCategoryDto dto)
+	{
+        try
+        {
+			foreach (var item in dto.Categories)
+			{
+				CategoryEntity entity = _mapper.Map<CategoryEntity>(item);
+
+				await _context.AddAsync(entity);
+				await _context.SaveChangesAsync();
+			}
+		}
+        catch
+        {
+			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
+		}
+
+		return new GenericResponse(UtilitiesStatusCodes.Success);
+	}
+
+
 }

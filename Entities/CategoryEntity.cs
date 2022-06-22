@@ -49,3 +49,7 @@ public class CategoryCreateUpdateDto {
 	public string? UseCase { get; set; }
 	public string? Type { get; set; }
 }
+
+public class SeederCategoryDto {
+    public List<CategoryCreateUpdateDto> Categories { get; set; }
+}
