@@ -56,6 +56,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<UserEntity, UserMinimalReadDto>().ReverseMap();
 
+        CreateMap<BlockEntity, BlockReadDto>().ReverseMap();
+
         CreateMap<UserCreateUpdateDto, UserEntity>()
             .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
             .ForMember(x => x.Location, y => y.Ignore())
