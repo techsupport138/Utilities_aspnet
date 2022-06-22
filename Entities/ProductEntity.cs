@@ -17,7 +17,7 @@ public class ProductEntity : BaseEntity {
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public decimal? Price { get; set; }
-	public int? VisitCount { get; set; }
+	public int? VisitsCount { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Length { get; set; }
