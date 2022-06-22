@@ -39,6 +39,7 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<FormEntity>? Forms { get; set; }
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<VoteFieldEntity>? VoteFields { get; set; }
+	public IEnumerable<VoteEntity>? Votes { get; set; }
 	public IEnumerable<ReportEntity>? Reports { get; set; }
 	public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
 	public IEnumerable<CommentEntity>? Comments { get; set; }
@@ -67,8 +68,10 @@ public class ProductReadDto {
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public int? VisitsCount { get; set; }
+	public int? DownloadCount { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
+	public double? Score { get; set; }
 	public decimal? Price { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }

@@ -47,5 +47,5 @@ public class VoteDto {
 public class VoteReadDto {
 	public Guid? Id { get; set; }
 	public string? Title { get; set; }
-	public double? Point { get; set; }
+	public double? Score { get; set; }
 }

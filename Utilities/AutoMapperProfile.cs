@@ -7,7 +7,9 @@ public class AutoMapperProfile : Profile
         CreateMap<CategoryEntity, CategoryReadDto>().ReverseMap();
         CreateMap<CategoryEntity, CategoryCreateUpdateDto>().ReverseMap();
 
-        CreateMap<ProductEntity, ProductReadDto>().ReverseMap();
+        CreateMap<ProductEntity, ProductReadDto>()
+            .ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || v.Votes.Count() < 1) ? 0 : (v.Votes.Sum(x => x.Score) / v.Votes.Count())))
+            .ReverseMap();
         CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap()
             .ForMember(x => x.Locations, y => y.Ignore())
             .ForMember(x => x.Categories, y => y.Ignore())
@@ -33,7 +35,7 @@ public class AutoMapperProfile : Profile
             .ReverseMap();
         
         CreateMap<VoteFieldEntity, VoteReadDto>()
-            .ForMember(x => x.Point,c => c.MapFrom(v => (v.Votes == null || v.Votes.Count()<1)?0:(v.Votes.Sum(x=>x.Score)/v.Votes.Count())))
+            .ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || v.Votes.Count()<1)?0:(v.Votes.Sum(x=>x.Score)/v.Votes.Count())))
             .ReverseMap();
 
 
