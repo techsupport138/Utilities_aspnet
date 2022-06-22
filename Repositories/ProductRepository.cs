@@ -45,7 +45,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Forms)!
 			.ThenInclude(x => x.FormField)
 			.Include(i => i.Teams)!
-			.ThenInclude(x => x.User)
+			.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(i => i.VoteFields)!
 			.ThenInclude(x => x.Votes)
 			.Where(x => x.DeletedAt == null)
@@ -203,7 +203,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Forms)!
 			.ThenInclude(x => x.FormField)
 			.Include(i => i.Teams)!
-			.ThenInclude(x => x.User)
+			.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(i => i.VoteFields)!
 			.ThenInclude(x => x.Votes)
 			.Where(x => x.DeletedAt == null && x.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
@@ -223,7 +223,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Votes)
 			.Include(i => i.User)!.ThenInclude(x => x.Media)
 			.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
-			.Include(i => i.Teams)!.ThenInclude(x => x.User)
+			.Include(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
