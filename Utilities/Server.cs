@@ -4,6 +4,7 @@ public class Server {
 	private static IHttpContextAccessor? _httpContextAccessor;
 
 	private static string? _serverAddress;
+	private static string? _userId;
 
 	public static string ServerAddress {
 		get {
@@ -14,6 +15,13 @@ public class Server {
 			string? pathBase = request?.PathBase.ToUriComponent();
 			_serverAddress = $"{scheme}://{host}{pathBase}";
 			return _serverAddress;
+		}
+	}
+	
+	public static string? UserId {
+		get {
+			_userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
+			return _userId;
 		}
 	}
 
