@@ -2,7 +2,7 @@
 
 [ApiController]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 public class FollowBookmarkController : BaseApiController {
 	private readonly IFollowBookmarkRepository _repository;
 
