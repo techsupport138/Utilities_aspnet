@@ -5,10 +5,12 @@
 public class AppSettingsController : BaseApiController {
 	private readonly IAppSettingRepository _appSettingRepository;
 	private readonly ISeedRepository _seedRepository;
+	private readonly IProductRepository _productRepository;
 
-	public AppSettingsController(IAppSettingRepository appSettingRepository, ISeedRepository seedRepository) {
+	public AppSettingsController(IAppSettingRepository appSettingRepository, ISeedRepository seedRepository, IProductRepository productRepository) {
 		_appSettingRepository = appSettingRepository;
 		_seedRepository = seedRepository;
+		_productRepository = productRepository;
 	}
 
 	[HttpGet]
@@ -29,10 +31,17 @@ public class AppSettingsController : BaseApiController {
 		await _seedRepository.SeedLocations();
 		return Ok();
 	}
-
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpGet("SeedGenders")]
 	public async Task<ActionResult> SeedGenders() {
 		await _seedRepository.SeedGenders();
 		return Ok();
 	}
+
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[HttpPost("SeedProducts")]
+	public async Task<ActionResult<GenericResponse>> SeedProducts(SeederProductDto dto)	
+		=> Result(await _productRepository.SeederProduct(dto));
+
+	
 }

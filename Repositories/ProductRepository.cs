@@ -1,6 +1,7 @@
 namespace Utilities_aspnet.Repositories;
 
 public interface IProductRepository {
+	Task<GenericResponse> SeederProduct(SeederProductDto dto);
 	Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto);
 	Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto dto);
 	Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine();
@@ -20,6 +21,27 @@ public class ProductRepository : IProductRepository {
 		_httpContextAccessor = httpContextAccessor;
 	}
 
+	public async Task<GenericResponse> SeederProduct(SeederProductDto dto) {
+		if (dto == null || dto.Products.Count<1) throw new ArgumentException("Dto must not be null", nameof(dto));
+
+        try
+        {
+			foreach (var item in dto.Products)
+			{
+				ProductEntity entity = _mapper.Map<ProductEntity>(item);
+
+				ProductEntity e = await entity.FillData(item, _httpContextAccessor, _context);
+				await _context.Set<ProductEntity>().AddAsync(e);
+				await _context.SaveChangesAsync();
+			}
+        }
+        catch
+        {
+			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
+		}
+		return new GenericResponse();
+	}
+	
 	public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);

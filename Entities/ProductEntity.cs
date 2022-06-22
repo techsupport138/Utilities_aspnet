@@ -127,6 +127,12 @@ public class ProductCreateUpdateDto {
     //public IEnumerable<Guid>? Reports { get; set; }
 }
 
+public class SeederProductDto {
+    public List<ProductCreateUpdateDto> Products { get; set; }
+}
+
+
+
 public class FilterProductDto {
 	public string? Title { get; set; }
 	public string? SubTitle { get; set; }
