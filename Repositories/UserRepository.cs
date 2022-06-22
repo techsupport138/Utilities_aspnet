@@ -202,6 +202,10 @@ public class UserRepository : IUserRepository {
 			                                         $"User: {id} Not Found");
 
 		UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
+		userReadDto.CountProducts = model.Products.ToList().Count;
+		var follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == model.Id).ToListAsync();
+		userReadDto.CountFollowers = follower.Count;
+
 		userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
 		userReadDto.Token = token;
 		return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
@@ -215,6 +219,9 @@ public class UserRepository : IUserRepository {
 			.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
 		if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? dto = _mapper.Map<UserReadDto>(model);
+		dto.CountProducts = model.Products.ToList().Count;
+		var follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
+		dto.CountFollowers = follower.Count;
 		return new GenericResponse<UserReadDto?>(dto);
 	}
 
@@ -226,6 +233,9 @@ public class UserRepository : IUserRepository {
 			.AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
 		if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? dto = _mapper.Map<UserReadDto>(entity);
+		dto.CountProducts = entity.Products.ToList().Count;
+		var follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
+		dto.CountFollowers = follower.Count;
 		return new GenericResponse<UserReadDto?>(dto);
 	}
 

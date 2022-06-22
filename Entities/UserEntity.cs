@@ -130,6 +130,8 @@ public class UserReadDto {
 	public bool? ShowContactInfo { get; set; }
 	public bool IsAdmin { get; set; }
 	public bool? Suspend { get; set; }
+	public int? CountFollowers { get; set; }
+	public int? CountProducts { get; set; }
 	public DateTime? BirthDate { get; set; }
 	public GenderEntity? Gender { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
@@ -147,6 +149,8 @@ public class UserMinimalReadDto
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
 	public string? Color { get; set; }
+	public int? CountFollowers { get; set; }
+	public int? CountProducts { get; set; }
 	public GenderEntity? Gender { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
