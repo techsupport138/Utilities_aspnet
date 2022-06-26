@@ -22,26 +22,23 @@ public class ProductRepository : IProductRepository {
 	}
 
 	public async Task<GenericResponse> SeederProduct(SeederProductDto dto) {
-		if (dto == null || dto.Products.Count<1) throw new ArgumentException("Dto must not be null", nameof(dto));
+		if (dto == null || dto.Products.Count < 1) throw new ArgumentException("Dto must not be null", nameof(dto));
 
-        try
-        {
-			foreach (var item in dto.Products)
-			{
+		try {
+			foreach (var item in dto.Products) {
 				ProductEntity entity = _mapper.Map<ProductEntity>(item);
 
 				ProductEntity e = await entity.FillData(item, _httpContextAccessor, _context);
 				await _context.Set<ProductEntity>().AddAsync(e);
 				await _context.SaveChangesAsync();
 			}
-        }
-        catch
-        {
+		}
+		catch {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 		return new GenericResponse();
 	}
-	
+
 	public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
@@ -62,7 +59,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Locations)
 			.Include(i => i.Reports)
 			.Include(i => i.Votes)
-			.Include(i => i.User)!.ThenInclude(x=>x.Media)
+			.Include(i => i.User)!.ThenInclude(x => x.Media)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Forms)!
 			.ThenInclude(x => x.FormField)
@@ -252,8 +249,7 @@ public class ProductRepository : IProductRepository {
 	}
 
 	public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
-		ProductEntity? entity = await _context.Set<ProductEntity>().Where(x => x.Id == dto.Id)
-			.Include(x => x.Categories).Include(x => x.Locations).Include(x => x.Forms).Include(x => x.VoteFields).Include(x=>x.Reports).Include(x=>x.Teams).FirstOrDefaultAsync();
+		ProductEntity? entity = await _context.Set<ProductEntity>().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
 
 		if (entity == null)
 			return new GenericResponse<ProductReadDto>(new ProductReadDto());
@@ -308,40 +304,36 @@ public static class ProductEntityExtension {
 		entity.StartDate = dto.StartDate ?? entity.StartDate;
 		entity.EndDate = dto.EndDate ?? entity.EndDate;
 
-		List<CategoryEntity> listCategory = new();
-		List<LocationEntity> listLocation = new();
-		List<TeamEntity> listTeam = new();
-		//List<VoteFieldEntity> listVoteFields = new();
-
-		foreach (Guid item in dto.Categories ?? new List<Guid>()) {
-			CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-			if (e != null) listCategory.Add(e);
-		}
-		
-		foreach (int item in dto.Locations ?? new List<int>()) {
-			LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
-			if (e != null) listLocation.Add(e);
-		}
-		foreach (string item in dto.Teams ?? new List<string>()) {
-			UserEntity? e = await context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == item);
-			if (e != null)
-			{
-				TeamEntity? t = new TeamEntity { UserId = e.Id};
-				await context.Set<TeamEntity>().AddAsync(t);
-				//await context.SaveChangesAsync();
-				listTeam.Add(t);
+		if (dto.Categories.IsNotNullOrEmpty()) {
+			List<CategoryEntity> listCategory = new();
+			foreach (Guid item in dto.Categories ?? new List<Guid>()) {
+				CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				if (e != null) listCategory.Add(e);
 			}
+			entity.Categories = listCategory;
 		}
 
-		//foreach (Guid item in dto.VoteFields ?? new List<Guid>()) {
-		//	VoteFieldEntity? e = await context.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.Id == item);
-		//	if (e != null) listVoteFields.Add(e);
-		//}
-		
-		entity.Categories = listCategory;
-		entity.Locations = listLocation;
-		entity.Teams = listTeam;
-		//entity.VoteFields = listVoteFields;
+		if (dto.Locations.IsNotNullOrEmpty()) {
+			List<LocationEntity> listLocation = new();
+			foreach (int item in dto.Locations ?? new List<int>()) {
+				LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				if (e != null) listLocation.Add(e);
+			}
+			entity.Locations = listLocation;
+		}
+
+		if (dto.Teams.IsNotNullOrEmpty()) {
+			List<TeamEntity> listTeam = new();
+			foreach (string item in dto.Teams ?? new List<string>()) {
+				UserEntity? e = await context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				if (e != null) {
+					TeamEntity? t = new() {UserId = e.Id};
+					await context.Set<TeamEntity>().AddAsync(t);
+					listTeam.Add(t);
+				}
+			}
+			entity.Teams = listTeam;
+		}
 
 		return entity;
 	}
