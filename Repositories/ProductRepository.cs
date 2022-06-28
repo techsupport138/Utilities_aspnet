@@ -55,7 +55,7 @@ public class ProductRepository : IProductRepository {
 			.AsNoTracking()
 			.Include(i => i.Media)
 			.Include(i => i.Categories)
-			.Include(i => i.Comments)
+			.Include(i => i.Comments)!.ThenInclude(x=>x.Children)
 			.Include(i => i.Locations)
 			.Include(i => i.Reports)
 			.Include(i => i.Votes)
