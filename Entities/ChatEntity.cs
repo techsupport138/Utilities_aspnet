@@ -13,6 +13,7 @@ public class ChatEntity : BaseEntity {
 	public UserEntity ToUser { get; set; } = null!;
 
 	public string MessageText { get; set; } = null!;
+	public bool ReadMessage { get; set; } = false;
 }
 
 public class ChatReadDto {
@@ -24,6 +25,7 @@ public class ChatReadDto {
 	public DateTime? DateTime { get; set; }
 	public string? ProfileImage { get; set; }
 	public bool Send { get; set; }
+	public int? UnReadMessages { get; set; } = 0;
 }
 
 public class ChatCreateUpdateDto {

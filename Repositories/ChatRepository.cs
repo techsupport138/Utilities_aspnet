@@ -23,7 +23,8 @@ public class ChatRepository : IChatRepository {
 			CreatedAt = DateTime.Now,
 			FromUserId = userId!,
 			ToUserId = model.UserId,
-			MessageText = model.MessageText
+			MessageText = model.MessageText,
+			ReadMessage = false
 		};
 		await _context.Set<ChatEntity>().AddAsync(conversation);
 		await _context.SaveChangesAsync();
@@ -45,6 +46,16 @@ public class ChatRepository : IChatRepository {
 		if (user == null) return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.BadRequest);
 		List<ChatEntity> conversation = await _context.Set<ChatEntity>()
 			.Where(c => c.ToUserId == userId && c.FromUserId == id).ToListAsync();
+
+		foreach(var item in conversation)
+        {
+			if(item.ReadMessage == false)
+            {
+				item.ReadMessage = true;
+				await _context.SaveChangesAsync();
+            }
+        }
+
 		IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>()
 			.Where(x => x.FromUserId == userId && x.ToUserId == id).ToListAsync();
 
@@ -81,6 +92,9 @@ public class ChatRepository : IChatRepository {
 			ChatEntity? conversation = await _context.Set<ChatEntity>()
 				.Where(c => c.FromUserId == item && c.ToUserId == userId || c.FromUserId == userId && c.ToUserId == item)
 				.OrderByDescending(c => c.CreatedAt).Take(1).FirstOrDefaultAsync();
+			int? countUnReadMessage = _context.Set<ChatEntity>()
+				.Where(c => c.FromUserId == item && c.ToUserId == userId)
+				.ToList().Count(x=>x.ReadMessage==false);
 			conversations.Add(new ChatReadDto {
 				Id = conversation!.Id,
 				DateTime = conversation.CreatedAt,
@@ -89,7 +103,8 @@ public class ChatRepository : IChatRepository {
 				PhoneNumber = user?.PhoneNumber,
 				ProfileImage = "",
 				UserId = conversation.ToUserId == item ? conversation.ToUserId : conversation.FromUserId,
-				Send = conversation.ToUserId == item
+				Send = conversation.ToUserId == item,
+				UnReadMessages = countUnReadMessage
 			});
 		}
 
