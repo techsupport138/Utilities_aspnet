@@ -3,6 +3,7 @@
 namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
+	Task<GenericResponse<GrowthRateReadDto?>> GrowthRate(string id);
 	Task<GenericResponse> SeederUser(SeederUserDto dto);
 	Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto dto);
 	Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
@@ -76,6 +77,16 @@ public class UserRepository : IUserRepository {
 
 
 
+	public async Task<GenericResponse<GrowthRateReadDto?>> GrowthRate(string id) {
+
+		var entity = new GrowthRateReadDto { InterActive1 = 1, InterActive2 = 2, InterActive3 = 1 , InterActive4 = 3, InterActive5 = 2, InterActive6 = 4, InterActive7 = 1,
+		Feedback1 = 5, Feedback2 = 1, Feedback3=3,Feedback4=4, Feedback5=1, Feedback6=2, Feedback7=3,
+		TotalInterActive = 35, TotalFeedback = 65, Id = id
+		};
+
+		return new GenericResponse<GrowthRateReadDto?>(entity, UtilitiesStatusCodes.Success, "Success");
+	}
+	
 	public async Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model) {
 		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
 

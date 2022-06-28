@@ -156,6 +156,27 @@ public class UserMinimalReadDto
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 }
 
+public class GrowthRateReadDto
+{
+	public string? Id { get; set; }
+    public double InterActive1 { get; set; }
+    public double InterActive2 { get; set; }
+    public double InterActive3 { get; set; }
+    public double InterActive4 { get; set; }
+    public double InterActive5 { get; set; }
+    public double InterActive6 { get; set; }
+    public double InterActive7 { get; set; }
+    public double Feedback1 { get; set; }
+    public double Feedback2 { get; set; }
+    public double Feedback3 { get; set; }
+    public double Feedback4 { get; set; }
+    public double Feedback5 { get; set; }
+    public double Feedback6 { get; set; }
+    public double Feedback7 { get; set; }
+    public double TotalInterActive { get; set; }
+    public double TotalFeedback { get; set; }
+}
+
 public class UserCreateUpdateDto {
 	public string? Id { get; set; }
 	public string? PhoneNumber { get; set; }

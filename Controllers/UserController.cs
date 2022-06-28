@@ -9,6 +9,14 @@ public class UserController : BaseApiController {
 		_userRepository = userRepository;
 	}
 
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[HttpGet("GrowthRate")]
+	public async Task<ActionResult<GenericResponse>> GrowthRate()
+	{
+		GenericResponse i = await _userRepository.GrowthRate(User.Identity!.Name!);
+		return Result(i);
+	}
+
 	[HttpPost("Register")]
 	public async Task<ActionResult<GenericResponse>> Register(RegisterDto dto)
 	{
