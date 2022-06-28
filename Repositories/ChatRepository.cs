@@ -54,6 +54,7 @@ public class ChatRepository : IChatRepository {
 			DateTime = x.CreatedAt,
 			MessageText = x.MessageText,
 			FullName = user.FullName,
+			PhoneNumber = user.PhoneNumber,
 			ProfileImage = "",
 			UserId = id,
 			Send = x.ToUserId == id
@@ -75,7 +76,7 @@ public class ChatRepository : IChatRepository {
 		IEnumerable<string> userIds = toUserId.Distinct();
 
 		foreach (string? item in userIds) {
-			var user = await _context.Set<UserEntity>().Include(x => x.Media).Select(x => new {x.Id, x.FullName})
+			var user = await _context.Set<UserEntity>().Include(x => x.Media).Select(x => new {x.Id, x.FullName, x.PhoneNumber})
 				.FirstOrDefaultAsync(x => x.Id == item);
 			ChatEntity? conversation = await _context.Set<ChatEntity>()
 				.Where(c => c.FromUserId == item && c.ToUserId == userId || c.FromUserId == userId && c.ToUserId == item)
@@ -85,6 +86,7 @@ public class ChatRepository : IChatRepository {
 				DateTime = conversation.CreatedAt,
 				MessageText = conversation.MessageText,
 				FullName = user?.FullName,
+				PhoneNumber = user?.PhoneNumber,
 				ProfileImage = "",
 				UserId = conversation.ToUserId == item ? conversation.ToUserId : conversation.FromUserId,
 				Send = conversation.ToUserId == item

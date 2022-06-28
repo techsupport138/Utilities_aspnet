@@ -21,7 +21,6 @@ public class CommentCreateUpdateDto {
 	public Guid? ParentId { get; set; }
 	public double? Score { get; set; }
 	public string? Comment { get; set; }
-	public string? UserId { get; set; }
 	public Guid? ProductId { get; set; }
 }
 
