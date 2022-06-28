@@ -39,6 +39,10 @@ public class AutoMapperProfile : Profile
         CreateMap<VoteFieldEntity, VoteReadDto>()
             .ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || v.Votes.Count()<1)?0:(v.Votes.Sum(x=>x.Score)/v.Votes.Count())))
             .ReverseMap();
+        
+        CreateMap<VoteFieldEntity, MyVoteReadDto>()
+            .ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || v.Votes.Count()<1)?0: (v.Votes.FirstOrDefault(x => x.UserId == Server.UserId) != null? v.Votes.FirstOrDefault(x => x.UserId == Server.UserId).Score??0 : 0 )))
+            .ReverseMap();
 
 
         CreateMap<UserEntity, UserReadDto>().ReverseMap();
