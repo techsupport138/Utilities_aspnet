@@ -10,6 +10,7 @@ public class AutoMapperProfile : Profile
         CreateMap<ProductEntity, ProductReadDto>()
             .ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || v.Votes.Count() < 1) ? 0 : (v.Votes.Sum(x => x.Score) / v.Votes.Count())))
             .ForMember(x => x.IsBookmarked, c => c.MapFrom(v => (v.Bookmarks == null || v.Bookmarks.Count() < 1) ? false : v.Bookmarks.Any(x=>x.UserId == Server.UserId)))
+            .ForMember(x => x.MyVotes, c => c.MapFrom(v => v.VoteFields != null? v.VoteFields.Where(c=>c.Votes != null? c.Votes.Any(b=>b.UserId == Server.UserId && b.ProductId == v.Id):false): null))
             .ReverseMap();
         CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap()
             .ForMember(x => x.Locations, y => y.Ignore())
