@@ -9,13 +9,13 @@ public class CommentController : BaseApiController {
 		_repository = commentRepository;
 	}
 
-	[HttpGet]
+	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<CommentReadDto>>> Read(Guid id) {
 		GenericResponse<CommentReadDto?> result = await _repository.Read(id);
 		return Result(result);
 	}
 	
-	[HttpGet]
+	[HttpGet("ReadByProductId/{id:guid}")]
 	public async Task<ActionResult<GenericResponse<IEnumerable<CommentReadDto>?>>> ReadByProductId(Guid id) {
 		GenericResponse< IEnumerable<CommentReadDto>?> result = await _repository.ReadByProductId(id);
 		return Result(result);
