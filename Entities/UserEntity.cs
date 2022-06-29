@@ -10,6 +10,7 @@ public class UserEntity : IdentityUser {
 	public string? AppUserName { get; set; }
 	public string? AppPhoneNumber { get; set; }
 	public string? AppEmail { get; set; }
+	public string? Website { get; set; }
 	public string? Type { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }

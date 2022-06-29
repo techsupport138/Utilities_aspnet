@@ -575,6 +575,7 @@ public class UserRepository : IUserRepository {
 		entity.Email = dto.Email ?? entity.Email;
 		entity.PhoneNumber = dto.PhoneNumber ?? entity.PhoneNumber;
 		entity.Color = dto.Color ?? entity.Color;
+		entity.Website = dto.Website ?? entity.Website;
 
 		if (dto.Locations.IsNotNullOrEmpty()) {
 			List<LocationEntity> list = new();
