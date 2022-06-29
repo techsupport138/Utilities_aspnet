@@ -12,6 +12,8 @@ public class ProductController : BaseApiController {
 	public async Task<ActionResult<GenericResponse<ProductReadDto>>> Create(ProductCreateUpdateDto dto)
 		=> Result(await _productRepository.Create(dto));
 
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
 	[HttpGet]
 	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Read()
 		=> Result(await _productRepository.Read(null));
@@ -27,6 +29,8 @@ public class ProductController : BaseApiController {
 	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Filter(FilterProductDto? dto)
 		=> Result(await _productRepository.Read(dto));
 
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<ProductReadDto>>> ReadById(Guid id)
 		=> Result(await _productRepository.ReadById(id));
