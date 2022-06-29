@@ -63,6 +63,13 @@ public enum FileTypes {
 	Link = 7
 }
 
+public enum OrderStatuses
+{
+	Pending = 0,
+	Canceled = 1,
+	Paid = 100
+}
+
 public enum LocationType {
 	Planet = 0,
 	Continent = 1,
