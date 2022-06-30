@@ -55,8 +55,8 @@ public class BookmarkReadDto {
 }
 public class BookmarkReadOldDto {
 	public IEnumerable<UserReadDto>? Users { get; set; }
-	public IEnumerable<ProductReadDto>? Products { get; set; }
-	public IEnumerable<ProductReadDto>? Categories { get; set; }
+	public IEnumerable<ProductReadDto>? Product { get; set; }
+	public IEnumerable<ProductReadDto>? Category { get; set; }
 }
 
 public class FollowReadDto {
