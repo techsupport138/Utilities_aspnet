@@ -78,6 +78,14 @@ public class GlobalSearchRepository : IGlobalSearchRepository
             userList = userList.Where(x => x.Id == userId).ToList();
 
         }
+		
+		if (filter.Categories != null && filter.Categories.Count() >0)
+        {
+            productList = productList.Where(x => x.Categories.Any(x=>filter.Categories.Contains(x.Id))).ToList();
+            categoryList = categoryList.Where(x => filter.Categories.Contains(x.Id)).ToList();
+            userList = userList.Where(x => x.Categories.Any(x => filter.Categories.Contains(x.Id))).ToList();
+
+        }
 
         model.Categories = _mapper.Map<IEnumerable<CategoryReadDto>>(categoryList);
         model.Users = _mapper.Map<IEnumerable<UserReadDto>>(userList);
