@@ -22,6 +22,7 @@ public class CommentRepository : ICommentRepository {
 	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
 		IEnumerable<CommentEntity> ? comment = await _context.Set<CommentEntity>()
 			.AsNoTracking().Include(x=>x.User)!.ThenInclude(x => x.Media)
+			.Include(x=>x.Media)
 			.Include(x=>x.Children)!.ThenInclude(x=>x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Children)!.ThenInclude(x=>x.Children)
 			.Where(x => x.ProductId == id && x.ParentId == null).OrderBy(x=>x.CreatedAt).ToListAsync();
@@ -34,6 +35,7 @@ public class CommentRepository : ICommentRepository {
 	public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
 		CommentEntity? comment = await _context.Set<CommentEntity>()
 			.AsNoTracking().Include(x=>x.User)!.ThenInclude(x => x.Media)
+			.Include(x => x.Media)
 			.Include(x=>x.Children)!.ThenInclude(x=>x.User)!.ThenInclude(x => x.Media)
 			.Where(x => x.Id == id)
 			.FirstOrDefaultAsync();
