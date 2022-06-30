@@ -8,9 +8,9 @@ public interface IFollowBookmarkRepository {
 	Task<GenericResponse<BookmarkReadDto>> ReadBookmarks();
 
 	Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto);
-	Task<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>> ReadBookmarkFolders();
-	Task<GenericResponse> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto);
-	Task<GenericResponse> DeleteBookmarkFolder(Guid id);
+	//Task<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>> ReadBookmarkFolders();
+	//Task<GenericResponse> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto);
+	//Task<GenericResponse> DeleteBookmarkFolder(Guid id);
 
 }
 
@@ -41,7 +41,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
 			if (dto.ProductId.HasValue) bookmark.ProductId = dto.ProductId;
-			if (dto.BookmarkFolderId.HasValue) bookmark.BookmarkFolderId = dto.BookmarkFolderId;
+			bookmark.FolderName = dto.FolderName;
 
 			await _context.Set<BookmarkEntity>().AddAsync(bookmark);
 			await _context.SaveChangesAsync();
@@ -62,47 +62,47 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			Products = products.Result
 		};
 
-		return new GenericResponse<BookmarkReadDto>(_mapper.Map<BookmarkReadDto>(dto));
+		return new GenericResponse<BookmarkReadDto?>(_mapper.Map<BookmarkReadDto>(dto));
 	}
 	
-	public async Task<GenericResponse> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto) {
-		BookmarkFolderEntity? oldBookmarkFolder = _context.Set<BookmarkFolderEntity>()
-			.FirstOrDefault(x => ( x.Id == dto.Id && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
-		if (oldBookmarkFolder == null) {
-			BookmarkFolderEntity bookmarkFolder = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name! , Title = dto.Title};
+	//public async Task<GenericResponse> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto) {
+	//	BookmarkFolderEntity? oldBookmarkFolder = _context.Set<BookmarkFolderEntity>()
+	//		.FirstOrDefault(x => ( x.Id == dto.Id && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
+	//	if (oldBookmarkFolder == null) {
+	//		BookmarkFolderEntity bookmarkFolder = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name! , Title = dto.Title};
 
-			await _context.Set<BookmarkFolderEntity>().AddAsync(bookmarkFolder);
-			await _context.SaveChangesAsync();
-		}
-		else {
-			oldBookmarkFolder.Title = dto.Title;
-			await _context.SaveChangesAsync();
-		}
+	//		await _context.Set<BookmarkFolderEntity>().AddAsync(bookmarkFolder);
+	//		await _context.SaveChangesAsync();
+	//	}
+	//	else {
+	//		oldBookmarkFolder.Title = dto.Title;
+	//		await _context.SaveChangesAsync();
+	//	}
 
-		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
-	}
+	//	return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+	//}
 
-	public async Task<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>> ReadBookmarkFolders() {
+	//public async Task<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>> ReadBookmarkFolders() {
 
-		IEnumerable<BookmarkFolderEntity>? bookmarkFolders = await _context.Set<BookmarkFolderEntity>().Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!).ToListAsync();
+	//	IEnumerable<BookmarkFolderEntity>? bookmarkFolders = await _context.Set<BookmarkFolderEntity>().Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!).ToListAsync();
 
 
-		return new GenericResponse<IEnumerable<BookmarkFolderReadDto>?>(_mapper.Map<IEnumerable<BookmarkFolderReadDto>?>(bookmarkFolders));
-	}
+	//	return new GenericResponse<IEnumerable<BookmarkFolderReadDto>?>(_mapper.Map<IEnumerable<BookmarkFolderReadDto>?>(bookmarkFolders));
+	//}
 
-	public async Task<GenericResponse> DeleteBookmarkFolder(Guid id)
-	{
-		BookmarkFolderEntity? bookmarkFolder = _context.Set<BookmarkFolderEntity>().Include(x=>x.Bookmarks)
-			.FirstOrDefault(x => (x.Id == id && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
-		if (bookmarkFolder != null)
-		{
+	//public async Task<GenericResponse> DeleteBookmarkFolder(Guid id)
+	//{
+	//	BookmarkFolderEntity? bookmarkFolder = _context.Set<BookmarkFolderEntity>().Include(x=>x.Bookmarks)
+	//		.FirstOrDefault(x => (x.Id == id && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
+	//	if (bookmarkFolder != null)
+	//	{
 
-			_context.Set<BookmarkFolderEntity>().Remove(bookmarkFolder);
-			await _context.SaveChangesAsync();
-		}
+	//		_context.Set<BookmarkFolderEntity>().Remove(bookmarkFolder);
+	//		await _context.SaveChangesAsync();
+	//	}
 
-		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
-	}
+	//	return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+	//}
 
 	public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
 		IEnumerable<UserEntity?> followers = await _context.Set<FollowEntity>()

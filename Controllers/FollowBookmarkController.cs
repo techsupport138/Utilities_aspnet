@@ -26,23 +26,23 @@ public class FollowBookmarkController : BaseApiController {
 		return Result(result);
 	}
 	
-	[HttpPost("BookmarkFolder")]
-	public async Task<ActionResult<GenericResponse>> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto) {
-		GenericResponse result = await _repository.CreateUpdateBookmarkFolder(dto);
-		return Result(result);
-	}
+	//[HttpPost("BookmarkFolder")]
+	//public async Task<ActionResult<GenericResponse>> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto) {
+	//	GenericResponse result = await _repository.CreateUpdateBookmarkFolder(dto);
+	//	return Result(result);
+	//}
 	
-	[HttpGet("BookmarkFolder")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>>> ReadBookmarkFolders() {
-		GenericResponse<IEnumerable<BookmarkFolderReadDto>?> result = await _repository.ReadBookmarkFolders();
-		return Result(result);
-	}
+	//[HttpGet("BookmarkFolder")]
+	//public async Task<ActionResult<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>>> ReadBookmarkFolders() {
+	//	GenericResponse<IEnumerable<BookmarkFolderReadDto>?> result = await _repository.ReadBookmarkFolders();
+	//	return Result(result);
+	//}
 	
-	[HttpDelete("BookmarkFolder/{id:guid}")]
-	public async Task<ActionResult<GenericResponse>> DeleteBookmarkFolders(Guid id) {
-		GenericResponse result = await _repository.DeleteBookmarkFolder(id);
-		return Result(result);
-	}
+	//[HttpDelete("BookmarkFolder/{id:guid}")]
+	//public async Task<ActionResult<GenericResponse>> DeleteBookmarkFolders(Guid id) {
+	//	GenericResponse result = await _repository.DeleteBookmarkFolder(id);
+	//	return Result(result);
+	//}
 
 	[HttpPost("RemoveFollowing")]
 	public async Task<ActionResult<GenericResponse>> RemoveFollowing(FollowCreateDto dto) {

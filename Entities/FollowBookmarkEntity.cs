@@ -13,6 +13,7 @@ public class FollowEntity : BaseEntity {
 public class BookmarkEntity : BaseEntity {
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
+	public string? FolderName { get; set; }
 
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
@@ -20,20 +21,20 @@ public class BookmarkEntity : BaseEntity {
 	public CategoryEntity? Category { get; set; }
 	public Guid? CategoryId { get; set; }
 	
-	public BookmarkFolderEntity? BookmarkFolder { get; set; }
-	public Guid? BookmarkFolderId { get; set; }
+	//public BookmarkFolderEntity? BookmarkFolder { get; set; }
+	//public Guid? BookmarkFolderId { get; set; }
 }
 
-[Table("BookmarkFolders")]
-public class BookmarkFolderEntity : BaseEntity {
-	public UserEntity? User { get; set; }
-	public string? UserId { get; set; }
-    public string? Title { get; set; }
-	public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
-}
+//[Table("BookmarkFolders")]
+//public class BookmarkFolderEntity : BaseEntity {
+//	public UserEntity? User { get; set; }
+//	public string? UserId { get; set; }
+//    public string? Title { get; set; }
+//	public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
+//}
 
 public class BookmarkCreateDto {
-	public Guid? BookmarkFolderId { get; set; }
+	public string? FolderName { get; set; }
 	public Guid? ProductId { get; set; }
 	public Guid? CategoryId { get; set; }
 }
