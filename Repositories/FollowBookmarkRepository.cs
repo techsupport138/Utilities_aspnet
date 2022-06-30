@@ -5,7 +5,7 @@ public interface IFollowBookmarkRepository {
 	Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
 	Task<GenericResponse> ToggleFollow(string sourceUserId, FollowCreateDto dto);
 	Task<GenericResponse> RemoveFollowings(string targetUserId, FollowCreateDto dto);
-	Task<GenericResponse<BookmarkReadDto>> ReadBookmarks();
+	Task<GenericResponse<IEnumerable<BookmarkReadDto>?>> ReadBookmarks();
 
 	Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto);
 	//Task<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>> ReadBookmarkFolders();
@@ -54,16 +54,28 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
-	public async Task<GenericResponse<BookmarkReadDto>> ReadBookmarks() {
-		GenericResponse<IEnumerable<ProductReadDto>> products =
-			await _productRepository.Read(new FilterProductDto {IsBookmarked = true});
+	public async Task<GenericResponse<IEnumerable<BookmarkReadDto>?>> ReadBookmarks() {
+        IEnumerable<BookmarkEntity>? bookmark = await _context.Set<BookmarkEntity>().Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
+			.Include(x=>x.Product).ThenInclude(x=>x.Media).Include(x => x.Product).ThenInclude(i => i.Votes).Include(x => x.Product).ThenInclude(i => i.User)!.ThenInclude(x => x.Media)
+			.Include(x => x.Product).ThenInclude(i => i.Bookmarks).Include(x => x.Product).ThenInclude(i => i.Forms)!.ThenInclude(x => x.FormField)
+			.Include(x => x.Product).ThenInclude(i => i.Categories).Include(x => x.Product).ThenInclude(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children)
+			.Include(x => x.Product).ThenInclude(i => i.Locations).Include(x => x.Product).ThenInclude(i => i.Reports).Include(x => x.Product).ThenInclude(i => i.Teams)!
+			.ThenInclude(x => x.User)!.ThenInclude(x => x.Media).ToListAsync();
 
-		BookmarkReadDto dto = new() {
-			Products = products.Result
-		};
 
-		return new GenericResponse<BookmarkReadDto?>(_mapper.Map<BookmarkReadDto>(dto));
+        return new GenericResponse<IEnumerable<BookmarkReadDto>?>(_mapper.Map<IEnumerable<BookmarkReadDto>>(bookmark));
 	}
+	
+	//public async Task<GenericResponse<BookmarkReadDto>> ReadBookmarksOld() {
+	//	GenericResponse<IEnumerable<ProductReadDto>> products =
+	//		await _productRepository.Read(new FilterProductDto {IsBookmarked = true});
+
+	//	BookmarkReadDto dto = new() {
+	//		Products = products.Result
+	//	};
+
+	//	return new GenericResponse<BookmarkReadDto?>(_mapper.Map<BookmarkReadDto>(dto));
+	//}
 	
 	//public async Task<GenericResponse> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto) {
 	//	BookmarkFolderEntity? oldBookmarkFolder = _context.Set<BookmarkFolderEntity>()

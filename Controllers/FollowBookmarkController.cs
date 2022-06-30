@@ -57,8 +57,8 @@ public class FollowBookmarkController : BaseApiController {
 	}
 
 	[HttpPost("ReadBookmarks")]
-	public async Task<IActionResult> ReadBookmarks() {
-		GenericResponse i = await _repository.ReadBookmarks();
+	public async Task<ActionResult<GenericResponse<IEnumerable<BookmarkReadDto>?>>> ReadBookmarks() {
+		GenericResponse<IEnumerable<BookmarkReadDto>?> i = await _repository.ReadBookmarks();
 		return Result(i);
 	}
 }
