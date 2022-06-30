@@ -24,7 +24,7 @@ public class CommentRepository : ICommentRepository {
 			.AsNoTracking().Include(x=>x.User)!.ThenInclude(x => x.Media)
 			.Include(x=>x.Children)!.ThenInclude(x=>x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Children)!.ThenInclude(x=>x.Children)
-			.Where(x => x.ProductId == id && x.ParentId == null).ToListAsync();
+			.Where(x => x.ProductId == id && x.ParentId == null).OrderBy(x=>x.CreatedAt).ToListAsync();
 
 		IEnumerable<CommentReadDto>? result = _mapper.Map<IEnumerable<CommentReadDto>?>(comment);
 

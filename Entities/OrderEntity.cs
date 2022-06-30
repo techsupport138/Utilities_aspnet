@@ -16,6 +16,7 @@ public class OrderEntity : BaseEntity {
 }
 
 public class OrderReadDto {
+	public Guid? Id { get; set; }
 	public string? Description { get; set; }
 	public OrderStatuses? Status { get; set; }
 	public decimal? Price { get; set; }
