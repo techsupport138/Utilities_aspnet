@@ -16,7 +16,7 @@ public class ProductController : BaseApiController {
 	[AllowAnonymous]
 	[HttpGet]
 	public async Task<ActionResult<GenericResponse<IEnumerable<ProductReadDto>>>> Read()
-		=> Result(await _productRepository.Read(null));
+		=> Result(await _productRepository.Read(new FilterProductDto()));
 
 	[HttpGet("Mine")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
