@@ -60,6 +60,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Reports)
 			.Include(i => i.Votes)
 			.Include(i => i.User)!.ThenInclude(x => x.Media)
+			.Include(i => i.User)!.ThenInclude(x => x.Categories)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Forms)!
 			.ThenInclude(x => x.FormField)
@@ -218,6 +219,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Reports)
 			.Include(i => i.Votes)
 			.Include(i => i.User)!.ThenInclude(x => x.Media)
+			.Include(i => i.User)!.ThenInclude(x => x.Categories)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Forms)!
 			.ThenInclude(x => x.FormField)
@@ -241,6 +243,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Votes)
 			.Include(i => i.User)!.ThenInclude(x => x.Media)
+			.Include(i => i.User)!.ThenInclude(x => x.Categories)
 			.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
 			.Include(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
