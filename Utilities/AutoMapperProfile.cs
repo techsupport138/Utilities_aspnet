@@ -58,6 +58,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<ReportEntity, ReportReadDto>().ReverseMap();
 
+        CreateMap<BookmarkFolderEntity, BookmarkFolderReadDto>().ReverseMap();
+
 
         CreateMap<UserEntity, UserMinimalReadDto>().ReverseMap();
 

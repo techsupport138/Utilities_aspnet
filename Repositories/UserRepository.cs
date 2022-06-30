@@ -206,6 +206,7 @@ public class UserRepository : IUserRepository {
 			.Include(u => u.Categories)
 			.Include(u => u.Location)
 			.Include(u => u.Products)
+			.Include(u=>u.BookmarkFolders)
 			.FirstOrDefaultAsync(u => u.Id == id);
 
 		if (model == null)
@@ -227,6 +228,7 @@ public class UserRepository : IUserRepository {
 			.Include(u => u.Media)
 			.Include(u => u.Categories)
 			.Include(u => u.Products)
+			.Include(u => u.BookmarkFolders)
 			.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
 		if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? dto = _mapper.Map<UserReadDto>(model);
@@ -241,6 +243,7 @@ public class UserRepository : IUserRepository {
 			.Include(u => u.Media)
 			.Include(u => u.Categories)
 			.Include(u => u.Products)
+			.Include(u => u.BookmarkFolders)
 			.AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
 		if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? dto = _mapper.Map<UserReadDto>(entity);

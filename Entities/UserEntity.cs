@@ -31,6 +31,7 @@ public class UserEntity : IdentityUser {
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<TransactionEntity>? Transactions { get; set; }
 	public IEnumerable<TeamEntity>? Teams { get; set; }
+	public IEnumerable<BookmarkFolderEntity>? BookmarkFolders { get; set; }
 }
 
 [Table("Otps")]
@@ -139,6 +140,7 @@ public class UserReadDto {
 	public IEnumerable<LocationReadDto>? Locations { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<ProductReadDto>? Products { get; set; }
+	public IEnumerable<BookmarkFolderReadDto>? BookmarkFolders { get; set; }
 }
 
 public class UserMinimalReadDto
