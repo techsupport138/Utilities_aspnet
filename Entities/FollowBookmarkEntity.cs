@@ -50,8 +50,8 @@ public class BookmarkFolderReadDto {
 
 public class BookmarkReadDto {
 	public string? FolderName { get; set; }
-	public ProductReadDto? Products { get; set; }
-	public ProductReadDto? Categories { get; set; }
+	public ProductReadDto? Product { get; set; }
+	public ProductReadDto? Category { get; set; }
 }
 public class BookmarkReadOldDto {
 	public IEnumerable<UserReadDto>? Users { get; set; }
