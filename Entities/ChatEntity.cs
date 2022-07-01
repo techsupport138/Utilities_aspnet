@@ -14,6 +14,7 @@ public class ChatEntity : BaseEntity {
 
 	public string MessageText { get; set; } = null!;
 	public bool ReadMessage { get; set; } = false;
+	public IEnumerable<MediaEntity>? Media { get; set; }
 }
 
 public class ChatReadDto {
@@ -26,6 +27,7 @@ public class ChatReadDto {
 	public string? ProfileImage { get; set; }
 	public bool Send { get; set; }
 	public int? UnReadMessages { get; set; } = 0;
+	public IEnumerable<MediaDto>? Media { get; set; }
 }
 
 public class ChatCreateUpdateDto {

@@ -15,6 +15,7 @@ public class CommentEntity : BaseEntity {
 	public Guid? ProductId { get; set; }
 	[InverseProperty("Parent")]
 	public IEnumerable<CommentEntity>? Children { get; set; }
+	public IEnumerable<MediaEntity>? Media { get; set; }
 }
 
 public class CommentCreateUpdateDto {
@@ -35,4 +36,5 @@ public class CommentReadDto {
 	public string? UserId { get; set; }
     public UserMinimalReadDto? User { get; set; }
 	public IEnumerable<CommentReadDto>? Children { get; set; }
+	public IEnumerable<MediaDto>? Media { get; set; }
 }

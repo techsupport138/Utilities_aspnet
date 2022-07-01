@@ -12,12 +12,14 @@ public class TopProductRepository : ITopProductRepository
     private readonly DbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly INotificationRepository _notificationRepository;
 
-    public TopProductRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+    public TopProductRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor, INotificationRepository notificationRepository)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _httpContextAccessor = httpContextAccessor;
+        _notificationRepository = notificationRepository;
     }
 
     public async Task<GenericResponse<TopProductReadDto?>> Create(TopProductCreateDto dto)
@@ -25,6 +27,7 @@ public class TopProductRepository : ITopProductRepository
         TopProductEntity? entity = null;
         try
         {
+            ProductEntity product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x=>x.Id == dto.ProductId);
             TopProductEntity? topProduct = new TopProductEntity
             {
                 ProductId = dto.ProductId,
@@ -34,6 +37,7 @@ public class TopProductRepository : ITopProductRepository
             await _dbContext.Set<TopProductEntity>().AddAsync(topProduct);
             await _dbContext.SaveChangesAsync();
             entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product).ThenInclude(x => x.Media).FirstOrDefaultAsync(x => x.Id == topProduct.Id);
+            _notificationRepository.CreateNotification(new NotificationCreateUpdateDto { Link=dto.ProductId.ToString(), Title="Your Post Is TopPost", UserId = product.UserId, UseCase="TopProduct" });
         }
         catch
         {

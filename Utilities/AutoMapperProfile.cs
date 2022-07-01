@@ -7,6 +7,8 @@ public class AutoMapperProfile : Profile
         CreateMap<CategoryEntity, CategoryReadDto>().ReverseMap();
         CreateMap<CategoryEntity, CategoryCreateUpdateDto>().ReverseMap();
 
+        CreateMap<OrderEntity, OrderReadDto>().ReverseMap();
+
         CreateMap<ProductEntity, ProductReadDto>()
             .ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || v.Votes.Count() < 1) ? 0 : (v.Votes.Sum(x => x.Score) / v.Votes.Count())))
             .ForMember(x => x.IsBookmarked, c => c.MapFrom(v => (v.Bookmarks == null || v.Bookmarks.Count() < 1) ? false : v.Bookmarks.Any(x=>x.UserId == Server.UserId)))

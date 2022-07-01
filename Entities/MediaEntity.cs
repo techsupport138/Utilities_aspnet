@@ -17,6 +17,10 @@ public class MediaEntity : BaseEntity {
 
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
+	public CommentEntity? Comment { get; set; }
+	public Guid? CommentId { get; set; }
+	public ChatEntity? Chat { get; set; }
+	public Guid? ChatId { get; set; }
 
 	public NotificationEntity? Notification { get; set; }
 	public Guid? NotificationId { get; set; }
@@ -43,4 +47,6 @@ public class UploadDto {
 	public Guid? ContentId { get; set; }
 	public Guid? CategoryId { get; set; }
 	public Guid? NotificationId { get; set; }
+	public Guid? CommentId { get; set; }
+	public Guid? ChatId { get; set; }
 }
