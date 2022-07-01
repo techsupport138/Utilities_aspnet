@@ -32,9 +32,9 @@ public class AutoMapperProfile : Profile
 
         CreateMap<LocationEntity, LocationReadDto>()
             .ForMember(x => x.I,c => c.MapFrom(v => v.Id))
-            .ForMember(x => x.T,c => c.MapFrom(v => v.Title))
-            .ForMember(x => x.lat,c => c.MapFrom(v => v.Latitude))
-            .ForMember(x => x.lon,c => c.MapFrom(v => v.Longitude))
+            .ForMember(x => x.N,c => c.MapFrom(v => v.Title))
+            .ForMember(x => x.Lat,c => c.MapFrom(v => v.Latitude))
+            .ForMember(x => x.Lon,c => c.MapFrom(v => v.Longitude))
             .ForMember(x => x.Ch,c => c.MapFrom(v => v.Children))
             .ReverseMap();
         
@@ -66,9 +66,7 @@ public class AutoMapperProfile : Profile
 
 
         CreateMap<UserEntity, UserMinimalReadDto>().ReverseMap();
-
-        CreateMap<BlockEntity, BlockReadDto>().ReverseMap();
-
+        
         CreateMap<TopProductEntity, TopProductReadDto>().ReverseMap();
 
         CreateMap<UserCreateUpdateDto, UserEntity>()

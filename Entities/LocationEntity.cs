@@ -34,10 +34,12 @@ public class LocationEntity {
 }
 
 public class LocationReadDto {
-	public int I { get; set; }
-	public string T { get; set; }
-	public double? lat { get; set; }
-	public double? lon { get; set; }
+	public int? I { get; set; }
+	public string? N { get; set; }
+	public double? Lat { get; set; }
+	public double? Lon { get; set; }
+	public LocationReadDto? P { get; set; }
+	public int? Pi { get; set; }
 	public IEnumerable<LocationReadDto>? Ch { get; set; }
 }
 

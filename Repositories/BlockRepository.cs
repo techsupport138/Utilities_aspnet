@@ -1,9 +1,9 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IBlockRepository {
-	Task<GenericResponse<BlockReadDto>> ReadMine();
-	Task<GenericResponse<BlockReadDto>> Read();
-	Task<GenericResponse> ToggleBlock(BlockCreateDto dto);
+	Task<GenericResponse<IEnumerable<UserReadDto>>> ReadMine();
+	Task<GenericResponse<IEnumerable<UserReadDto>>> Read();
+	Task<GenericResponse> ToggleBlock(string userId);
 }
 
 public class BlockRepository : IBlockRepository {
@@ -14,17 +14,13 @@ public class BlockRepository : IBlockRepository {
 	public BlockRepository(
 		DbContext context,
 		IMapper mapper,
-		IHttpContextAccessor httpContextAccessor)
-	{
+		IHttpContextAccessor httpContextAccessor) {
 		_context = context;
 		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	
-
-	public async Task<GenericResponse<BlockReadDto>> ReadMine() {
-
+	public async Task<GenericResponse<IEnumerable<UserReadDto>>> ReadMine() {
 		IEnumerable<UserEntity?> blocks = await _context.Set<BlockEntity>()
 			.AsNoTracking()
 			.Where(x => x.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
@@ -35,11 +31,10 @@ public class BlockRepository : IBlockRepository {
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(blocks);
 
-		return new GenericResponse<BlockReadDto>(new BlockReadDto { Blocks = users});
+		return new GenericResponse<IEnumerable<UserReadDto>>(new List<UserReadDto>(users));
 	}
-	
-	public async Task<GenericResponse<BlockReadDto>> Read() {
 
+	public async Task<GenericResponse<IEnumerable<UserReadDto>>> Read() {
 		IEnumerable<UserEntity?> blocks = await _context.Set<BlockEntity>()
 			.AsNoTracking()
 			.Include(x => x.BlockedUser)
@@ -49,31 +44,27 @@ public class BlockRepository : IBlockRepository {
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(blocks);
 
-		return new GenericResponse<BlockReadDto>(new BlockReadDto { Blocks = users});
+		return new GenericResponse<IEnumerable<UserReadDto>>(new List<UserReadDto>(users));
 	}
 
-	
-
-	public async Task<GenericResponse> ToggleBlock(BlockCreateDto dto) {
-
-
+	public async Task<GenericResponse> ToggleBlock(string userId) {
 		BlockEntity? block = await _context.Set<BlockEntity>()
-				.FirstOrDefaultAsync(x => x.UserId == _httpContextAccessor.HttpContext.User.Identity.Name && x.BlockedUserId == dto.UserId);
-			if (block != null) {
-				_context.Set<BlockEntity>().Remove(block);
-			}
-			else {
+			.FirstOrDefaultAsync(
+				x => x.UserId == _httpContextAccessor.HttpContext.User.Identity.Name && x.BlockedUserId == userId);
+		if (block != null) {
+			_context.Set<BlockEntity>().Remove(block);
+		}
+		else {
 			block = new BlockEntity {
-					UserId = _httpContextAccessor.HttpContext.User.Identity.Name,
-					BlockedUserId = dto.UserId
-				};
+				UserId = _httpContextAccessor.HttpContext.User.Identity.Name,
+				BlockedUserId = userId
+			};
 
-				await _context.Set<BlockEntity>().AddAsync(block);
-			}
+			await _context.Set<BlockEntity>().AddAsync(block);
+		}
 
 		await _context.SaveChangesAsync();
 
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
-
 }

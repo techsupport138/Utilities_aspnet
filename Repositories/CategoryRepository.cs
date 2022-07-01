@@ -62,6 +62,7 @@ public class CategoryRepository : ICategoryRepository {
 		if (entity == null) return new GenericResponse<CategoryReadDto>(null, UtilitiesStatusCodes.NotFound);
 		entity.Title = dto.Title ?? entity.Title;
 		entity.TitleTr1 = dto.TitleTr1 ?? entity.TitleTr1;
+		entity.TitleTr2 = dto.TitleTr2 ?? entity.TitleTr2;
 		entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
 		entity.Color = dto.Color ?? entity.Color;
 		entity.Link = dto.Link ?? entity.Link;

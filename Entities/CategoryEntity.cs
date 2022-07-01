@@ -4,6 +4,7 @@ namespace Utilities_aspnet.Entities;
 public class CategoryEntity : BaseEntity {
 	public string? Title { get; set; }
 	public string? TitleTr1 { get; set; }
+	public string? TitleTr2 { get; set; }
 	public string? Subtitle { get; set; }
 	public string? Color { get; set; }
 	public string? Link { get; set; }
@@ -27,6 +28,7 @@ public class CategoryReadDto {
 	public int? SecondaryId { get; set; }
 	public string? Title { get; set; }
 	public string? TitleTr1 { get; set; }
+	public string? TitleTr2 { get; set; }
 	public string? Subtitle { get; set; }
 	public string? Color { get; set; }
 	public string? Link { get; set; }
@@ -43,6 +45,7 @@ public class CategoryCreateUpdateDto {
 	public Guid? ParentId { get; set; }
 	public string? Title { get; set; }
 	public string? TitleTr1 { get; set; }
+	public string? TitleTr2 { get; set; }
 	public string? Subtitle { get; set; }
 	public string? Link { get; set; }
 	public string? Color { get; set; }
@@ -51,5 +54,5 @@ public class CategoryCreateUpdateDto {
 }
 
 public class SeederCategoryDto {
-    public List<CategoryCreateUpdateDto> Categories { get; set; }
+	public List<CategoryCreateUpdateDto> Categories { get; set; }
 }

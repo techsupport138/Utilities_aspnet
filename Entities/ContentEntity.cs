@@ -12,7 +12,6 @@ public class ContentEntity : BaseEntity {
 }
 
 public class ContentReadDto : BaseReadDto {
-	public Guid? Id { get; set; }
 	public string? Title { get; set; }
 	public string? SubTitle { get; set; }
 	public string? Description { get; set; }
