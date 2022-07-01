@@ -56,7 +56,7 @@ public class UserRepository : IUserRepository {
 	{
         try 
 		{
-			foreach(var item in dto.Users)
+			foreach(UserCreateUpdateDto item in dto.Users)
             {
 				UserEntity? entity = _mapper.Map<UserEntity>(item);
 
@@ -79,7 +79,7 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<GrowthRateReadDto?>> GrowthRate(string id) {
 
-		var entity = new GrowthRateReadDto { InterActive1 = 1, InterActive2 = 2, InterActive3 = 1 , InterActive4 = 3, InterActive5 = 2, InterActive6 = 4, InterActive7 = 1,
+		GrowthRateReadDto entity = new GrowthRateReadDto { InterActive1 = 1, InterActive2 = 2, InterActive3 = 1 , InterActive4 = 3, InterActive5 = 2, InterActive6 = 4, InterActive7 = 1,
 		Feedback1 = 5, Feedback2 = 1, Feedback3=3,Feedback4=4, Feedback5=1, Feedback6=2, Feedback7=3,
 		TotalInterActive = 35, TotalFeedback = 65, Id = id
 		};
@@ -214,7 +214,7 @@ public class UserRepository : IUserRepository {
 
 		UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
 		userReadDto.CountProducts = model.Products.ToList().Count;
-		var follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == model.Id).ToListAsync();
+		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == model.Id).ToListAsync();
 		userReadDto.CountFollowers = follower.Count;
 
 		userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
@@ -231,7 +231,7 @@ public class UserRepository : IUserRepository {
 		if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? dto = _mapper.Map<UserReadDto>(model);
 		dto.CountProducts = model.Products.ToList().Count;
-		var follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
+		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
 		dto.CountFollowers = follower.Count;
 		return new GenericResponse<UserReadDto?>(dto);
 	}
@@ -245,7 +245,7 @@ public class UserRepository : IUserRepository {
 		if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? dto = _mapper.Map<UserReadDto>(entity);
 		dto.CountProducts = entity.Products.ToList().Count;
-		var follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
+		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
 		dto.CountFollowers = follower.Count;
 		return new GenericResponse<UserReadDto?>(dto);
 	}
@@ -581,7 +581,7 @@ public class UserRepository : IUserRepository {
 		if (dto.Locations.IsNotNullOrEmpty()) {
 			List<LocationEntity> list = new();
 			foreach (int item in dto.Locations ?? new List<int>()) {
-				LocationEntity? e = await _context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				LocationEntity? e = _context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item).Result;
 				if (e != null) list.Add(e);
 			}
 
@@ -591,7 +591,7 @@ public class UserRepository : IUserRepository {
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> list = new();
 			foreach (Guid item in dto.Categories!) {
-				CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				CategoryEntity? e = _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item).Result;
 				if (e != null) list.Add(_mapper.Map<CategoryEntity>(e));
 			}
 

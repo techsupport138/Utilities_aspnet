@@ -22,7 +22,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository
 
 	
 	public async Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string userId) {
-		var model = new GlobalSearchDto();
+		GlobalSearchDto? model = new GlobalSearchDto();
 
         IEnumerable<CategoryEntity> categoryList = await _context.Set<CategoryEntity>().Include(x => x.Users).Include(x => x.Media).Include(i => i.Media)
 			.Include(i => i.Children).ThenInclude(i => i.Media).Where(x => x.ParentId == null).Where(x => x.Title.Contains(filter.Title) && filter.Category && x.DeletedAt == null)

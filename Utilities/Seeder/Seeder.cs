@@ -78,7 +78,7 @@ public class SeedRepository : ISeedRepository {
 	{
         try
         {
-			foreach (var item in dto.Categories)
+			foreach (CategoryCreateUpdateDto? item in dto.Categories)
 			{
 				CategoryEntity entity = _mapper.Map<CategoryEntity>(item);
 

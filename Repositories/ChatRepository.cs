@@ -47,7 +47,7 @@ public class ChatRepository : IChatRepository {
 		List<ChatEntity> conversation = await _context.Set<ChatEntity>()
 			.Where(c => c.ToUserId == userId && c.FromUserId == id).ToListAsync();
 
-		foreach(var item in conversation)
+		foreach(ChatEntity? item in conversation)
         {
 			if(item.ReadMessage == false)
             {

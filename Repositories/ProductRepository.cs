@@ -25,7 +25,7 @@ public class ProductRepository : IProductRepository {
 		if (dto == null || dto.Products.Count < 1) throw new ArgumentException("Dto must not be null", nameof(dto));
 
 		try {
-			foreach (var item in dto.Products) {
+			foreach (ProductCreateUpdateDto? item in dto.Products) {
 				ProductEntity entity = _mapper.Map<ProductEntity>(item);
 
 				ProductEntity e = await entity.FillData(item, _httpContextAccessor, _context);
