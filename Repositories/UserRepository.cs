@@ -34,6 +34,7 @@ public class UserRepository : IUserRepository {
 	private readonly SignInManager<UserEntity> _signInManager;
 	private readonly ISmsSender _smsSender;
 	private readonly UserManager<UserEntity> _userManager;
+	private readonly CategoryRepository _categoryRepository;
 
 	public UserRepository(
 		DbContext context,
@@ -42,8 +43,10 @@ public class UserRepository : IUserRepository {
 		IConfiguration config,
 		IMapper mapper,
 		IOtpService otp,
+		CategoryRepository categoryRepository,
 		ISmsSender smsSender) {
 		_context = context;
+		_categoryRepository = categoryRepository;
 		_userManager = userManager;
 		_signInManager = signInManager;
 		_otp = otp;
@@ -586,12 +589,13 @@ public class UserRepository : IUserRepository {
 
 			entity.Location = list;
 		}
-
+		
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> list = new();
-			foreach (Guid item in dto.Categories ?? new List<Guid>()) {
-				CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) list.Add(e);
+			foreach (Guid item in dto.Categories!) {
+				GenericResponse<CategoryReadDto> e = await _categoryRepository.ReadById(item);
+				// CategoryEntity? e = await _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				if (e != null) list.Add(_mapper.Map<CategoryEntity>(e.Result));
 			}
 
 			entity.Categories = list;

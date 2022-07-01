@@ -5,6 +5,7 @@ public interface ICategoryRepository {
 	public Task<GenericResponse<IEnumerable<CategoryReadDto>>> ReadChildren();
 	public Task<GenericResponse<IEnumerable<CategoryReadDto>>> ReadParent();
 	public Task<GenericResponse<CategoryReadDto>> Update(CategoryCreateUpdateDto dto);
+	public Task<GenericResponse<CategoryReadDto>> ReadById(Guid id);
 	public Task<GenericResponse> Delete(Guid id);
 }
 
@@ -41,6 +42,11 @@ public class CategoryRepository : ICategoryRepository {
 			.AsNoTracking()
 			.ToListAsync();
 		return new GenericResponse<IEnumerable<CategoryReadDto>>(_mapper.Map<IEnumerable<CategoryReadDto>>(i));
+	}
+
+	public async Task<GenericResponse<CategoryReadDto>> ReadById(Guid id) {
+		CategoryEntity? i = await _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		return new GenericResponse<CategoryReadDto>(_mapper.Map<CategoryReadDto>(i));
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
