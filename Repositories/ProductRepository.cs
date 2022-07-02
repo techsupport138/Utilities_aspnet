@@ -75,6 +75,13 @@ public class ProductRepository : IProductRepository {
 		if (!string.IsNullOrEmpty(dto.Title))
 			queryable = queryable.Where(x => (x.Title ?? "").Contains(dto.Title))
 				.ToList();
+		if (dto.IsFollowing == true)
+		{
+			string? userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
+			List<string?>? userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId).Select(x => x.FollowsUserId).ToListAsync();
+
+			queryable = queryable.Where(x => userFollowing.Contains(x.UserId)).ToList();
+		}
 
 		if (!string.IsNullOrEmpty(dto.SubTitle))
 			queryable = queryable
