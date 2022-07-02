@@ -162,6 +162,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
         if (follow != null)
         {
             _context.Set<FollowEntity>().Remove(follow);
+            await _context.SaveChangesAsync();
         }
         else
         {
@@ -172,6 +173,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
             };
 
             await _context.Set<FollowEntity>().AddAsync(follow);
+            await _context.SaveChangesAsync();
             try
             {
                 _notificationRepository.CreateNotification(new NotificationCreateUpdateDto { UserId = parameters.UserId, Message = "You are being followed by " + myUser.UserName, Title = "Follow" });
@@ -179,8 +181,6 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository
             catch { }
 
         }
-
-        await _context.SaveChangesAsync();
 
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
     }
