@@ -158,6 +158,7 @@ public class FilterProductDto {
 	public bool? IsForSale { get; set; }
 	public bool? IsBookmarked { get; set; }
 	public bool? Minimal { get; set; }
+	public bool? IsFollowing { get; set; }
 	public int? VisitsCount { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
