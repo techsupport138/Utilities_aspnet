@@ -58,9 +58,9 @@ public class ProductRepository : IProductRepository {
 				.Include(i => i.Media)
 				.Include(i => i.Categories)
 				.Include(i => i.User).ThenInclude(x => x.Media)
-				.Include(i => i.User)
 				.Include(i => i.Bookmarks)
 				.Where(x => x.DeletedAt == null)
+				.AsNoTracking()
 				.ToListAsync();
 		else
 			queryable = await _context.Set<ProductEntity>()
@@ -80,6 +80,7 @@ public class ProductRepository : IProductRepository {
 				.Include(i => i.VoteFields)!
 				.ThenInclude(x => x.Votes)
 				.Where(x => x.DeletedAt == null)
+				.AsNoTracking()
 				.ToListAsync();
 
 		if (!string.IsNullOrEmpty(dto.Title))
