@@ -51,26 +51,36 @@ public class ProductRepository : IProductRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto dto) {
-		List<ProductEntity> queryable = await _context.Set<ProductEntity>()
-			.AsNoTracking()
-			.Include(i => i.Media)
-			.Include(i => i.Categories)
-			.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x=>x.Children)
-			.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x=>x.Media)
-			.Include(i => i.Locations)
-			.Include(i => i.Reports)
-			.Include(i => i.Votes)
-			.Include(i => i.User)!.ThenInclude(x => x.Media)
-			.Include(i => i.User)!.ThenInclude(x => x.Categories)
-			.Include(i => i.Bookmarks)
-			.Include(i => i.Forms)!
-			.ThenInclude(x => x.FormField)
-			.Include(i => i.Teams)!
-			.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
-			.Include(i => i.VoteFields)!
-			.ThenInclude(x => x.Votes)
-			.Where(x => x.DeletedAt == null)
-			.ToListAsync();
+		List<ProductEntity> queryable;
+
+		if (dto.Minimal ?? false)
+			queryable = await _context.Set<ProductEntity>()
+				.Include(i => i.Media)
+				.Include(i => i.Categories)
+				.Include(i => i.User).ThenInclude(x => x.Media)
+				.Include(i => i.User)
+				.Include(i => i.Bookmarks)
+				.Where(x => x.DeletedAt == null)
+				.ToListAsync();
+		else
+			queryable = await _context.Set<ProductEntity>()
+				.Include(i => i.Media)
+				.Include(i => i.Categories)
+				.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children).ThenInclude(x => x.Media)
+				.Include(i => i.Locations)
+				.Include(i => i.Reports)
+				.Include(i => i.Votes)
+				.Include(i => i.User)!.ThenInclude(x => x.Media)
+				.Include(i => i.User)!.ThenInclude(x => x.Categories)
+				.Include(i => i.Bookmarks)
+				.Include(i => i.Forms)!
+				.ThenInclude(x => x.FormField)
+				.Include(i => i.Teams)!
+				.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
+				.Include(i => i.VoteFields)!
+				.ThenInclude(x => x.Votes)
+				.Where(x => x.DeletedAt == null)
+				.ToListAsync();
 
 		if (!string.IsNullOrEmpty(dto.Title))
 			queryable = queryable.Where(x => (x.Title ?? "").Contains(dto.Title))
