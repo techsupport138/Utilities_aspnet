@@ -18,5 +18,6 @@ public class GlobalSearchParams {
 	public bool Product { get; set; } = true;
 	public bool Category { get; set; } = true;
 	public bool IsBookmark { get; set; } = false;
+	public bool IsFollowing { get; set; } = false;
 	public bool IsMine { get; set; } = false;
 }
