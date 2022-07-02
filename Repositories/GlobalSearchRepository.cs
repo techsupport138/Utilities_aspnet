@@ -59,8 +59,13 @@ public class GlobalSearchRepository : IGlobalSearchRepository
 
 
 
+		if (filter.IsFollowing)
+		{
+			List<string?>? userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId).Select(x => x.FollowsUserId).ToListAsync();
 
-        if (filter.Oldest)
+			productList = productList.Where(x => userFollowing.Contains(x.UserId)).ToList();
+		}
+		if (filter.Oldest)
         {
             categoryList = categoryList.OrderBy(x => x.CreatedAt).ToList();
             userList = userList.OrderBy(x => x.CreatedAt).ToList();
@@ -78,6 +83,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository
             userList = userList.Where(x => x.Id == userId).ToList();
 
         }
+		
 		
 		if (filter.Categories != null && filter.Categories.Count() >0)
         {
