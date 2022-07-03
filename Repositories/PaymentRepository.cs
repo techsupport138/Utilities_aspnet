@@ -70,7 +70,7 @@ public class PaymentRepository : IPaymentRepository
     {
         if (userId.IsNullOrEmpty()) { return new GenericResponse(UtilitiesStatusCodes.BadRequest); }
 
-        var _user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userId);
+        var _user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
         //int Amount = Decimal.ToInt32(model.Price);
         int Amount = amount;
         var payment = new Zarinpal.Payment(zarinPalMerchantId, Amount);
