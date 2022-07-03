@@ -10,6 +10,9 @@ public class TransactionEntity : BaseEntity {
 	public string? UserId { get; set; }
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
+	public string? Authority { get; set; }
+	public string? GatewayName { get; set; }
+	public long? RefId { get; set; }
 }
 
 public class TransactionReadDto {
