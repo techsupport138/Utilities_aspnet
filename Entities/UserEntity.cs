@@ -137,6 +137,7 @@ public class UserReadDto {
 	public int? CountProducts { get; set; }
 	public DateTime? BirthDate { get; set; }
 	public GenderEntity? Gender { get; set; }
+	public GrowthRateReadDto? GrowthRate { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
 	public IEnumerable<LocationReadDto>? Locations { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }

@@ -79,6 +79,32 @@ public class UserRepository : IUserRepository
     }
 
 
+    public async Task<GrowthRateReadDto?> GetGrowthRate(string id)
+    {
+
+        GrowthRateReadDto? entity = new GrowthRateReadDto
+        {
+            InterActive1 = 1,
+            InterActive2 = 2,
+            InterActive3 = 1,
+            InterActive4 = 3,
+            InterActive5 = 2,
+            InterActive6 = 4,
+            InterActive7 = 1,
+            Feedback1 = 5,
+            Feedback2 = 1,
+            Feedback3 = 3,
+            Feedback4 = 4,
+            Feedback5 = 1,
+            Feedback6 = 2,
+            Feedback7 = 3,
+            TotalInterActive = 35,
+            TotalFeedback = 65,
+            Id = id
+        };
+
+        return entity;
+    }
 
     public async Task<GenericResponse<GrowthRateReadDto?>> GrowthRate(string id)
     {
@@ -249,6 +275,15 @@ public class UserRepository : IUserRepository
 
         userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
         userReadDto.Token = token;
+        try
+        {
+            userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
+        }
+        catch
+        {
+            userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
+        }
+
         return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -266,6 +301,15 @@ public class UserRepository : IUserRepository
         dto.CountProducts = model.Products.ToList().Count;
         List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
         dto.CountFollowers = follower.Count;
+        try
+        {
+            dto.GrowthRate = GetGrowthRate(dto.Id).Result;
+        }
+        catch
+        {
+            dto.GrowthRate = GetGrowthRate(dto.Id).Result;
+        }
+
         return new GenericResponse<UserReadDto?>(dto);
     }
 
@@ -283,6 +327,14 @@ public class UserRepository : IUserRepository
         dto.CountProducts = entity.Products.ToList().Count;
         List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
         dto.CountFollowers = follower.Count;
+        try
+        {
+            dto.GrowthRate = GetGrowthRate(dto.Id).Result;
+        }
+        catch
+        {
+            dto.GrowthRate = GetGrowthRate(dto.Id).Result;
+        }
         return new GenericResponse<UserReadDto?>(dto);
     }
 
