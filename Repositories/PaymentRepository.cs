@@ -93,5 +93,78 @@ public class PaymentRepository : IPaymentRepository
         _context.SaveChanges();
         return new GenericResponse(UtilitiesStatusCodes.Success);
     }
+    
+    public async Task<GenericResponse<string?>> BuyProduct(Guid productId, string zarinPalMerchantId)
+    {
+        string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
+
+        try
+        {
+            ProductEntity product = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x=>x.Id == productId);
+            UserEntity user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x=>x.Id == userId);
+            int Amount = Decimal.ToInt32(product.Price??0);
+            var payment = new Zarinpal.Payment(zarinPalMerchantId, Amount);
+            var callbackUrl = string.Format("{0}Payment/CallBack/{1}", Server.ServerAddress, productId);
+            var Desc = $"خرید محصول {product.Title}";
+            //var result = payment.PaymentRequest(Desc, callbackUrl, "", _user.PhoneNumber).Result;
+            var result = payment.PaymentRequest(Desc, callbackUrl, "", user?.PhoneNumber).Result;
+            ///todo
+            ///save to db 
+            await _context.Set<TransactionEntity>().AddAsync(new TransactionEntity()
+            {
+                Amount = Amount,
+                Authority = result.Authority,
+                CreatedAt = DateTime.Now,
+                Descriptions = Desc,
+                GatewayName = "ZarinPal",
+                UserId = userId,
+                ProductId = productId,
+                //PayDateTime = DateTime.Now,
+                StatusId = TransactionStatus.Pending
+
+            });
+            await _context.SaveChangesAsync();
+
+            if (result.Status == 100 && result.Authority.Length == 36)
+            {
+                var url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
+                return new GenericResponse<string?>(url, UtilitiesStatusCodes.BadRequest);
+            }
+            else
+            {
+                return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
+            }
+        }
+        catch (Exception ex)
+        {
+            return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
+        }
+
+        
+    }
+
+    public async Task<GenericResponse> CallBack(Guid productId, string authority, string status, string zarinPalMerchantId)
+    {
+        
+
+        var product = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId);
+        int Amount = Decimal.ToInt32(product.Price??0);
+        //int Amount = amount;
+        var payment = new Zarinpal.Payment(zarinPalMerchantId, Amount);
+        if (!status.Equals("OK"))
+        {
+            return new GenericResponse(UtilitiesStatusCodes.BadRequest);
+        }
+        var verify = payment.Verification(authority).Result;
+        //verify.RefId
+        var _pay = _context.Set<TransactionEntity>().FirstOrDefault(x => x.Authority == authority);
+        _pay.StatusId = (TransactionStatus?)Math.Abs(verify.Status);
+        _pay.RefId = verify.RefId;
+        _pay.UpdatedAt = DateTime.Now;
+        _context.Set<TransactionEntity>().Update(_pay);
+
+        _context.SaveChanges();
+        return new GenericResponse(UtilitiesStatusCodes.Success);
+    }
 
 }
