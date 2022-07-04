@@ -31,6 +31,7 @@ public class UserEntity : IdentityUser {
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<TransactionEntity>? Transactions { get; set; }
 	public IEnumerable<TeamEntity>? Teams { get; set; }
+	public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
 	//public IEnumerable<BookmarkFolderEntity>? BookmarkFolders { get; set; }
 }
 

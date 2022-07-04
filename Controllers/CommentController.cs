@@ -27,6 +27,13 @@ public class CommentController : BaseApiController {
 		GenericResponse result = await _repository.Create(parameter);
 		return Result(result);
 	}
+	
+	[HttpPost("ToggleLikeComment/{commentId:guid}")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	public async Task<ActionResult<GenericResponse<CommentReadDto?>>> ToggleLikeComment(Guid commentId) {
+		GenericResponse<CommentReadDto?> result = await _repository.ToggleLikeComment(commentId);
+		return Result(result);
+	}
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

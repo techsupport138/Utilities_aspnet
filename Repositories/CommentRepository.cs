@@ -2,6 +2,7 @@
 
 public interface ICommentRepository {
 	Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto entity);
+	Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId);
 	Task<GenericResponse<CommentReadDto?>> Read(Guid id);
 	Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id);
 	Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity);
@@ -51,6 +52,26 @@ public class CommentRepository : ICommentRepository {
 
 		await _context.AddAsync(comment);
 		await _context.SaveChangesAsync();
+
+		return await Read(comment.Id);
+	}
+	
+	public async Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId){
+		string userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
+		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x=>x.Id == commentId);
+		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>().FirstOrDefaultAsync(x=>x.CommentId == commentId && x.UserId == userId);
+		if(oldLikeComment != null)
+        {
+			comment.Score = comment.Score - 1;
+			_context.Set<LikeCommentEntity>().Remove(oldLikeComment);
+			await _context.SaveChangesAsync();
+        }
+        else
+        {
+			comment.Score = comment.Score + 1;
+			await _context.AddAsync(new LikeCommentEntity { UserId = userId, CommentId = commentId});
+			await _context.SaveChangesAsync();
+		}
 
 		return await Read(comment.Id);
 	}

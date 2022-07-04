@@ -16,6 +16,18 @@ public class CommentEntity : BaseEntity {
 	[InverseProperty("Parent")]
 	public IEnumerable<CommentEntity>? Children { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
+	public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
+}
+
+[Table("LikeComment")]
+public class LikeCommentEntity : BaseEntity
+{
+	public double? Score { get; set; } = 0;
+	public UserEntity? User { get; set; }
+	public string? UserId { get; set; }
+
+	public CommentEntity? Comment { get; set; }
+	public Guid? CommentId { get; set; }
 }
 
 public class CommentCreateUpdateDto {
