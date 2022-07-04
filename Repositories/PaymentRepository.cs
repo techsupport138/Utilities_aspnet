@@ -3,7 +3,9 @@
 public interface IPaymentRepository
 {
     Task<GenericResponse<string?>> IncreaseWalletBalance(decimal amount, string zarinPalMerchantId);
+    Task<GenericResponse<string?>> BuyProduct(Guid productId, string zarinPalMerchantId);
     Task<GenericResponse> WalletCallBack(int amount, string authority, string status, string userId, string zarinPalMerchantId);
+    Task<GenericResponse> CallBack(Guid productId, string authority, string status, string zarinPalMerchantId);
 }
 
 public class PaymentRepository : IPaymentRepository
