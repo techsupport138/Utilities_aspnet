@@ -234,8 +234,8 @@ public class UserRepository : IUserRepository
             .Include(u => u.Media)
             .Include(u => u.Categories)
             .Include(u => u.Location)
-            .Include(u => u.Products)
-                        .Include(u => u.Gender)
+            .Include(u => u.Products)!.ThenInclude(x=>x.Media)
+            .Include(u => u.Gender)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (model == null)
@@ -257,7 +257,7 @@ public class UserRepository : IUserRepository
         UserEntity? model = await _context.Set<UserEntity>()
             .Include(u => u.Media)
             .Include(u => u.Categories)
-            .Include(u => u.Products)
+            .Include(u => u.Products)!.ThenInclude(x => x.Media)
             .Include(u => u.Location)
                         .Include(u => u.Gender)
             .AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
@@ -274,7 +274,7 @@ public class UserRepository : IUserRepository
         UserEntity? entity = await _context.Set<UserEntity>()
             .Include(u => u.Media)
             .Include(u => u.Categories)
-            .Include(u => u.Products)
+            .Include(u => u.Products)!.ThenInclude(x => x.Media)
                         .Include(u => u.Location)
                         .Include(u => u.Gender)
             .AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
