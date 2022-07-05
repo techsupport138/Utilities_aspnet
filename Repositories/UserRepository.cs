@@ -243,7 +243,7 @@ public class UserRepository : IUserRepository {
 			                                         $"User: {id} Not Found");
 
 		UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
-		userReadDto.CountProducts = model.Products.ToList().Count;
+		userReadDto.CountProducts = model.Products?.Count();
 		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == model.Id).ToListAsync();
 		userReadDto.CountFollowers = follower.Count;
 
@@ -269,7 +269,7 @@ public class UserRepository : IUserRepository {
 			.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
 		if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? dto = _mapper.Map<UserReadDto>(model);
-		dto.CountProducts = model.Products.ToList().Count;
+		dto.CountProducts = model.Products?.Count();
 		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
 		dto.CountFollowers = follower.Count;
 		dto.GrowthRate = GetGrowthRate(dto.Id).Result;
@@ -287,7 +287,7 @@ public class UserRepository : IUserRepository {
 			.AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
 		if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? dto = _mapper.Map<UserReadDto>(entity);
-		dto.CountProducts = entity.Products.ToList().Count;
+		dto.CountProducts = entity.Products?.Count();
 		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
 		dto.CountFollowers = follower.Count;
 		try {

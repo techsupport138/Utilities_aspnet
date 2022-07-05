@@ -92,7 +92,7 @@ public class ChatRepository : IChatRepository {
 				.OrderByDescending(c => c.CreatedAt).Take(1).FirstOrDefaultAsync();
 			int? countUnReadMessage = _context.Set<ChatEntity>()
 				.Where(c => c.FromUserId == item && c.ToUserId == userId)
-				.ToList().Count(x => x.ReadMessage == false);
+				.Count(x => x.ReadMessage == false);
 			conversations.Add(new ChatReadDto {
 				Id = conversation!.Id,
 				DateTime = conversation.CreatedAt,
