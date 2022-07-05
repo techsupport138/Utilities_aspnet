@@ -29,6 +29,7 @@ public class LocationEntity {
 
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
+
 	[InverseProperty("Parent")]
 	public IEnumerable<LocationEntity>? Children { get; set; }
 }

@@ -1,7 +1,6 @@
 namespace Utilities_aspnet.Controllers;
 
 [ApiController]
-
 [Route("api/[controller]")]
 public class GlobalSearchController : BaseApiController {
 	private readonly IGlobalSearchRepository _globalSearchRepository;

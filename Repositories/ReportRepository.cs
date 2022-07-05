@@ -36,7 +36,7 @@ public class ReportRepository : IReportRepository {
 
 	public async Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto) {
 		IQueryable<ReportEntity> entities = _dbContext.Set<ReportEntity>().AsNoTracking();
-		
+
 		if (dto.User == true)
 			entities = entities.Include(x => x.User)!.ThenInclude(x => x.Media);
 
@@ -67,7 +67,7 @@ public class ReportRepository : IReportRepository {
 			.AsNoTracking()
 			.Include(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Product)!.ThenInclude(x => x.Media)
-			.FirstOrDefaultAsync(x=>x.Id == id);
+			.FirstOrDefaultAsync(x => x.Id == id);
 
 		return new GenericResponse<ReportReadDto?>(_mapper.Map<ReportReadDto>(entity));
 	}

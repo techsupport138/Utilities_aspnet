@@ -14,7 +14,7 @@ public class ReportController : BaseApiController {
 		GenericResponse<IEnumerable<ReportReadDto>> result = await _repository.Read(parameters);
 		return Result(result);
 	}
-	
+
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<ReportReadDto>>> ReadById(Guid id) {
 		GenericResponse<ReportReadDto?> result = await _repository.ReadById(id);

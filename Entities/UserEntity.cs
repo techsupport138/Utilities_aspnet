@@ -31,6 +31,7 @@ public class UserEntity : IdentityUser {
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<TransactionEntity>? Transactions { get; set; }
 	public IEnumerable<TeamEntity>? Teams { get; set; }
+
 	public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
 	//public IEnumerable<BookmarkFolderEntity>? BookmarkFolders { get; set; }
 }
@@ -43,22 +44,17 @@ public class OtpEntity : BaseEntity {
 	public string UserId { get; set; }
 }
 
-
 [Table("Teams")]
-public class TeamEntity : BaseEntity
-{
+public class TeamEntity : BaseEntity {
 	public string? UserId { get; set; }
 	public UserEntity? User { get; set; }
 	public Guid? ProductId { get; set; }
 	public ProductEntity? Product { get; set; }
 }
 
-
-public class TeamReadDto
-{
+public class TeamReadDto {
 	public UserReadDto? User { get; set; }
 }
-
 
 public class GetMobileVerificationCodeForLoginDto {
 	public string Mobile { get; set; }
@@ -145,8 +141,7 @@ public class UserReadDto {
 	public IEnumerable<BookmarkFolderReadDto>? BookmarkFolders { get; set; }
 }
 
-public class UserMinimalReadDto
-{
+public class UserMinimalReadDto {
 	public string? Id { get; set; }
 	public string? FullName { get; set; }
 	public string? PhoneNumber { get; set; }
@@ -161,25 +156,24 @@ public class UserMinimalReadDto
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 }
 
-public class GrowthRateReadDto
-{
+public class GrowthRateReadDto {
 	public string? Id { get; set; }
-    public double InterActive1 { get; set; }
-    public double InterActive2 { get; set; }
-    public double InterActive3 { get; set; }
-    public double InterActive4 { get; set; }
-    public double InterActive5 { get; set; }
-    public double InterActive6 { get; set; }
-    public double InterActive7 { get; set; }
-    public double Feedback1 { get; set; }
-    public double Feedback2 { get; set; }
-    public double Feedback3 { get; set; }
-    public double Feedback4 { get; set; }
-    public double Feedback5 { get; set; }
-    public double Feedback6 { get; set; }
-    public double Feedback7 { get; set; }
-    public double TotalInterActive { get; set; }
-    public double TotalFeedback { get; set; }
+	public double InterActive1 { get; set; }
+	public double InterActive2 { get; set; }
+	public double InterActive3 { get; set; }
+	public double InterActive4 { get; set; }
+	public double InterActive5 { get; set; }
+	public double InterActive6 { get; set; }
+	public double InterActive7 { get; set; }
+	public double Feedback1 { get; set; }
+	public double Feedback2 { get; set; }
+	public double Feedback3 { get; set; }
+	public double Feedback4 { get; set; }
+	public double Feedback5 { get; set; }
+	public double Feedback6 { get; set; }
+	public double Feedback7 { get; set; }
+	public double TotalInterActive { get; set; }
+	public double TotalFeedback { get; set; }
 }
 
 public class UserCreateUpdateDto {
@@ -211,6 +205,5 @@ public class UserCreateUpdateDto {
 }
 
 public class SeederUserDto {
-    public List<UserCreateUpdateDto> Users { get; set; }
+	public List<UserCreateUpdateDto> Users { get; set; }
 }
-

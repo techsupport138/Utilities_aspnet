@@ -8,7 +8,11 @@ public class AppSettingsController : BaseApiController {
 	private readonly IProductRepository _productRepository;
 	private readonly IUserRepository _userRepository;
 
-	public AppSettingsController(IAppSettingRepository appSettingRepository, ISeedRepository seedRepository, IProductRepository productRepository, IUserRepository userRepository) {
+	public AppSettingsController(
+		IAppSettingRepository appSettingRepository,
+		ISeedRepository seedRepository,
+		IProductRepository productRepository,
+		IUserRepository userRepository) {
 		_appSettingRepository = appSettingRepository;
 		_seedRepository = seedRepository;
 		_productRepository = productRepository;
@@ -33,6 +37,7 @@ public class AppSettingsController : BaseApiController {
 		await _seedRepository.SeedLocations();
 		return Ok();
 	}
+
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpGet("SeedGenders")]
 	public async Task<ActionResult> SeedGenders() {
@@ -42,18 +47,16 @@ public class AppSettingsController : BaseApiController {
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost("SeedProducts")]
-	public async Task<ActionResult<GenericResponse>> SeedProducts(SeederProductDto dto)	
+	public async Task<ActionResult<GenericResponse>> SeedProducts(SeederProductDto dto)
 		=> Result(await _productRepository.SeederProduct(dto));
-	
+
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost("SeedCategories")]
-	public async Task<ActionResult<GenericResponse>> SeedCategories(SeederCategoryDto dto)	
+	public async Task<ActionResult<GenericResponse>> SeedCategories(SeederCategoryDto dto)
 		=> Result(await _seedRepository.SeedCategories(dto));
-	
+
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost("SeedUsers")]
-	public async Task<ActionResult<GenericResponse>> SeedUsers(SeederUserDto dto)	
+	public async Task<ActionResult<GenericResponse>> SeedUsers(SeederUserDto dto)
 		=> Result(await _userRepository.SeederUser(dto));
-
-	
 }

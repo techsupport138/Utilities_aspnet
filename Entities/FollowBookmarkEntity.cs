@@ -20,7 +20,7 @@ public class BookmarkEntity : BaseEntity {
 
 	public CategoryEntity? Category { get; set; }
 	public Guid? CategoryId { get; set; }
-	
+
 	//public BookmarkFolderEntity? BookmarkFolder { get; set; }
 	//public Guid? BookmarkFolderId { get; set; }
 }
@@ -43,6 +43,7 @@ public class BookmarkFolderCreateUpdateDto {
 	public Guid? Id { get; set; }
 	public string? Title { get; set; }
 }
+
 public class BookmarkFolderReadDto {
 	public Guid? Id { get; set; }
 	public string? Title { get; set; }
@@ -53,6 +54,7 @@ public class BookmarkReadDto {
 	public ProductReadDto? Product { get; set; }
 	public ProductReadDto? Category { get; set; }
 }
+
 public class BookmarkReadOldDto {
 	public IEnumerable<UserReadDto>? Users { get; set; }
 	public IEnumerable<ProductReadDto>? Product { get; set; }

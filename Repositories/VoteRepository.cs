@@ -27,8 +27,7 @@ public class VoteRepository : IVoteRepository {
 					await _dbContext.SaveChangesAsync();
 				}
 				else {
-					_dbContext.Set<VoteFieldEntity>().Add(new VoteFieldEntity
-					{
+					_dbContext.Set<VoteFieldEntity>().Add(new VoteFieldEntity {
 						ProductId = dto.ProductId,
 						Title = item.Title
 					});
@@ -40,18 +39,19 @@ public class VoteRepository : IVoteRepository {
 				// ignored
 			}
 
-		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x =>x.ProductId == dto.ProductId).ToListAsync();
+		IEnumerable<VoteFieldEntity> entity =
+			await _dbContext.Set<VoteFieldEntity>().Where(x => x.ProductId == dto.ProductId).ToListAsync();
 
 		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
 	}
-	
+
 	public async Task<GenericResponse<IEnumerable<VoteReadDto>?>> ReadVoteFields(Guid id) {
-
-		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x =>x.ProductId == id).Include(x=>x.Votes).ToListAsync();
+		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x => x.ProductId == id)
+			.Include(x => x.Votes).ToListAsync();
 
 		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
 	}
-	
+
 	public async Task<GenericResponse> CreateUpdateVote(VoteCreateUpdateDto dto) {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 		foreach (VoteDto item in dto.Votes)
@@ -63,8 +63,7 @@ public class VoteRepository : IVoteRepository {
 					await _dbContext.SaveChangesAsync();
 				}
 				else {
-					_dbContext.Set<VoteEntity>().Add(new VoteEntity
-					{
+					_dbContext.Set<VoteEntity>().Add(new VoteEntity {
 						ProductId = dto.ProductId,
 						Score = item.Score,
 						VoteFieldId = item.VoteFieldId,
@@ -72,7 +71,6 @@ public class VoteRepository : IVoteRepository {
 					});
 					await _dbContext.SaveChangesAsync();
 				}
-				
 			}
 			catch {
 				return new GenericResponse(UtilitiesStatusCodes.BadRequest);
@@ -80,6 +78,4 @@ public class VoteRepository : IVoteRepository {
 
 		return new GenericResponse();
 	}
-
-
 }

@@ -17,7 +17,7 @@ public class Server {
 			return _serverAddress;
 		}
 	}
-	
+
 	public static string? UserId {
 		get {
 			_userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;

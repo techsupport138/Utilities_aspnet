@@ -21,23 +21,23 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
-		IEnumerable<CommentEntity> ? comment = await _context.Set<CommentEntity>()
-			.AsNoTracking().Include(x=>x.User)!.ThenInclude(x => x.Media)
-			.Include(x=>x.Media)
-			.Include(x=>x.Children)!.ThenInclude(x=>x.User)!.ThenInclude(x => x.Media)
-			.Include(x => x.Children)!.ThenInclude(x=>x.Children)
-			.Where(x => x.ProductId == id && x.ParentId == null).OrderByDescending(x=>x.CreatedAt).ToListAsync();
+		IEnumerable<CommentEntity>? comment = await _context.Set<CommentEntity>()
+			.AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media)
+			.Include(x => x.Media)
+			.Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
+			.Include(x => x.Children)!.ThenInclude(x => x.Children)
+			.Where(x => x.ProductId == id && x.ParentId == null).OrderByDescending(x => x.CreatedAt).ToListAsync();
 
 		IEnumerable<CommentReadDto>? result = _mapper.Map<IEnumerable<CommentReadDto>?>(comment);
 
-		return new GenericResponse<IEnumerable<CommentReadDto>?> (result);
+		return new GenericResponse<IEnumerable<CommentReadDto>?>(result);
 	}
-	
+
 	public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
 		CommentEntity? comment = await _context.Set<CommentEntity>()
-			.AsNoTracking().Include(x=>x.User)!.ThenInclude(x => x.Media)
+			.AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Media)
-			.Include(x=>x.Children)!.ThenInclude(x=>x.User)!.ThenInclude(x => x.Media)
+			.Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Where(x => x.Id == id)
 			.FirstOrDefaultAsync();
 
@@ -55,21 +55,20 @@ public class CommentRepository : ICommentRepository {
 
 		return await Read(comment.Id);
 	}
-	
-	public async Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId){
+
+	public async Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId) {
 		string userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
-		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x=>x.Id == commentId);
-		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>().FirstOrDefaultAsync(x=>x.CommentId == commentId && x.UserId == userId);
-		if(oldLikeComment != null)
-        {
+		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == commentId);
+		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>()
+			.FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
+		if (oldLikeComment != null) {
 			comment.Score = comment.Score - 1;
 			_context.Set<LikeCommentEntity>().Remove(oldLikeComment);
 			await _context.SaveChangesAsync();
-        }
-        else
-        {
+		}
+		else {
 			comment.Score = comment.Score + 1;
-			await _context.AddAsync(new LikeCommentEntity { UserId = userId, CommentId = commentId});
+			await _context.AddAsync(new LikeCommentEntity {UserId = userId, CommentId = commentId});
 			await _context.SaveChangesAsync();
 		}
 

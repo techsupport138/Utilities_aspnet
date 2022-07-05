@@ -63,8 +63,7 @@ public enum FileTypes {
 	Link = 7
 }
 
-public enum OrderStatuses
-{
+public enum OrderStatuses {
 	Pending = 0,
 	Canceled = 1,
 	Paid = 100

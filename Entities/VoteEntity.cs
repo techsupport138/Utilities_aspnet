@@ -25,12 +25,12 @@ public class VoteFieldEntity : BaseEntity {
 }
 
 public class VoteFieldCreateUpdateDto {
-    public List<VoteFieldDto>? VoteFields { get; set; }
+	public List<VoteFieldDto>? VoteFields { get; set; }
 	public Guid? ProductId { get; set; }
-
 }
+
 public class VoteFieldDto {
-    public Guid? Id { get; set; }
+	public Guid? Id { get; set; }
 	public string? Title { get; set; }
 }
 
@@ -49,6 +49,7 @@ public class VoteReadDto {
 	public string? Title { get; set; }
 	public double? Score { get; set; }
 }
+
 public class MyVoteReadDto {
 	public Guid? Id { get; set; }
 	public string? Title { get; set; }

@@ -13,15 +13,16 @@ public class CommentEntity : BaseEntity {
 
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
+
 	[InverseProperty("Parent")]
 	public IEnumerable<CommentEntity>? Children { get; set; }
+
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
 }
 
 [Table("LikeComment")]
-public class LikeCommentEntity : BaseEntity
-{
+public class LikeCommentEntity : BaseEntity {
 	public double? Score { get; set; } = 0;
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
@@ -46,7 +47,7 @@ public class CommentReadDto {
 	public string? Comment { get; set; }
 	public Guid? ParentId { get; set; }
 	public string? UserId { get; set; }
-    public UserMinimalReadDto? User { get; set; }
+	public UserMinimalReadDto? User { get; set; }
 	public IEnumerable<CommentReadDto>? Children { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
 }

@@ -14,10 +14,10 @@ public class CommentController : BaseApiController {
 		GenericResponse<CommentReadDto?> result = await _repository.Read(id);
 		return Result(result);
 	}
-	
+
 	[HttpGet("ReadByProductId/{id:guid}")]
 	public async Task<ActionResult<GenericResponse<IEnumerable<CommentReadDto>?>>> ReadByProductId(Guid id) {
-		GenericResponse< IEnumerable<CommentReadDto>?> result = await _repository.ReadByProductId(id);
+		GenericResponse<IEnumerable<CommentReadDto>?> result = await _repository.ReadByProductId(id);
 		return Result(result);
 	}
 
@@ -27,7 +27,7 @@ public class CommentController : BaseApiController {
 		GenericResponse result = await _repository.Create(parameter);
 		return Result(result);
 	}
-	
+
 	[HttpPost("ToggleLikeComment/{commentId:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<CommentReadDto?>>> ToggleLikeComment(Guid commentId) {

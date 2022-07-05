@@ -47,14 +47,12 @@ public class ChatRepository : IChatRepository {
 		List<ChatEntity> conversation = await _context.Set<ChatEntity>()
 			.Where(c => c.ToUserId == userId && c.FromUserId == id).ToListAsync();
 
-		foreach(ChatEntity? item in conversation)
-        {
-			if(item.ReadMessage == false)
-            {
+		foreach (ChatEntity? item in conversation) {
+			if (item.ReadMessage == false) {
 				item.ReadMessage = true;
 				await _context.SaveChangesAsync();
-            }
-        }
+			}
+		}
 
 		IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>()
 			.Where(x => x.FromUserId == userId && x.ToUserId == id).ToListAsync();
@@ -94,7 +92,7 @@ public class ChatRepository : IChatRepository {
 				.OrderByDescending(c => c.CreatedAt).Take(1).FirstOrDefaultAsync();
 			int? countUnReadMessage = _context.Set<ChatEntity>()
 				.Where(c => c.FromUserId == item && c.ToUserId == userId)
-				.ToList().Count(x=>x.ReadMessage==false);
+				.ToList().Count(x => x.ReadMessage == false);
 			conversations.Add(new ChatReadDto {
 				Id = conversation!.Id,
 				DateTime = conversation.CreatedAt,

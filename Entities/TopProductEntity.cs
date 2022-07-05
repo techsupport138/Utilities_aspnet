@@ -2,7 +2,6 @@ namespace Utilities_aspnet.Entities;
 
 [Table("TopProducts")]
 public class TopProductEntity : BaseEntity {
-	
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
 
@@ -10,9 +9,8 @@ public class TopProductEntity : BaseEntity {
 	public Guid? ProductId { get; set; }
 }
 
-
 public class TopProductReadDto {
-    public Guid? Id { get; set; }
+	public Guid? Id { get; set; }
 	public ProductEntity? Product { get; set; }
 }
 

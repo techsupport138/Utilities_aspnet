@@ -11,41 +11,34 @@ public class UserController : BaseApiController {
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpGet("GrowthRate")]
-	public async Task<ActionResult<GenericResponse>> GrowthRate()
-	{
+	public async Task<ActionResult<GenericResponse>> GrowthRate() {
 		GenericResponse i = await _userRepository.GrowthRate(User.Identity!.Name!);
 		return Result(i);
 	}
 
 	[HttpPost("Register")]
-	public async Task<ActionResult<GenericResponse>> Register(RegisterDto dto)
-	{
+	public async Task<ActionResult<GenericResponse>> Register(RegisterDto dto) {
 		GenericResponse i = await _userRepository.Register(dto);
 		return Result(i);
 	}
-	
+
 	[HttpPost("LoginWithPassword")]
-	public async Task<ActionResult<GenericResponse>> LoginWithPassword(LoginWithPasswordDto dto)
-	{
+	public async Task<ActionResult<GenericResponse>> LoginWithPassword(LoginWithPasswordDto dto) {
 		GenericResponse i = await _userRepository.LoginWithPassword(dto);
 		return Result(i);
 	}
-	
+
 	[HttpPost("GetVerificationCodeForLogin")]
-	public async Task<ActionResult<GenericResponse>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto)
-	{
+	public async Task<ActionResult<GenericResponse>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
 		GenericResponse i = await _userRepository.GetVerificationCodeForLogin(dto);
 		return Result(i);
 	}
-	
+
 	[HttpPost("VerifyCodeForLogin")]
-	public async Task<ActionResult<GenericResponse>> VerifyCodeForLogin(VerifyMobileForLoginDto dto)
-	{
+	public async Task<ActionResult<GenericResponse>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) {
 		GenericResponse i = await _userRepository.VerifyCodeForLogin(dto);
 		return Result(i);
 	}
-
-
 
 	[HttpPost("GetTokenForTest/{mobile}")]
 	public async Task<ActionResult<GenericResponse>> GetTokenForTest(string mobile) {

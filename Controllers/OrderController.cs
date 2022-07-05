@@ -21,10 +21,10 @@ public class OrderController : BaseApiController {
 		GenericResponse<IEnumerable<OrderReadDto>> i = await _orderRepository.Read();
 		return Result(i);
 	}
-	
+
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<OrderReadDto?>>> ReadById(Guid id) {
-		GenericResponse <OrderReadDto?> i = await _orderRepository.ReadById(id);
+		GenericResponse<OrderReadDto?> i = await _orderRepository.ReadById(id);
 		return Result(i);
 	}
 

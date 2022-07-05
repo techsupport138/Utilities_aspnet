@@ -74,25 +74,19 @@ public class SeedRepository : ISeedRepository {
 		return true;
 	}
 
-	public async Task<GenericResponse> SeedCategories(SeederCategoryDto dto)
-	{
-        try
-        {
-			foreach (CategoryCreateUpdateDto? item in dto.Categories)
-			{
+	public async Task<GenericResponse> SeedCategories(SeederCategoryDto dto) {
+		try {
+			foreach (CategoryCreateUpdateDto? item in dto.Categories) {
 				CategoryEntity entity = _mapper.Map<CategoryEntity>(item);
 
 				await _context.AddAsync(entity);
 				await _context.SaveChangesAsync();
 			}
 		}
-        catch
-        {
+		catch {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 
-		return new GenericResponse(UtilitiesStatusCodes.Success);
+		return new GenericResponse();
 	}
-
-
 }
