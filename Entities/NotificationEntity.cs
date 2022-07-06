@@ -34,6 +34,7 @@ public class NotificationCreateUpdateDto {
 	public Guid? Id { get; set; } = null!;
 	public string? Title { get; set; } = null!;
 	public string? UserId { get; set; }
+	public string? CreatorUserId { get; set; }
 	public string? Message { get; set; }
 	public string? Link { get; set; }
 	public string? Media { get; set; }

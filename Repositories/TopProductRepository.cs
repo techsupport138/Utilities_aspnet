@@ -36,8 +36,9 @@ public class TopProductRepository : ITopProductRepository {
 			await _dbContext.SaveChangesAsync();
 			entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product).ThenInclude(x => x.Media)
 				.FirstOrDefaultAsync(x => x.Id == topProduct.Id);
+			string? linkMedia = entity?.Product?.Media?.OrderBy(x=>x.CreatedAt).Select(x => x.Link)?.FirstOrDefault();
 			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
-				Link = dto.ProductId.ToString(), Title = "Your Post Is TopPost", UserId = product.UserId, UseCase = "TopProduct"
+				Link = dto.ProductId.ToString(), Title = "Your Post Is TopPost", UserId = product.UserId, UseCase = "TopProduct", Media = linkMedia
 			});
 		}
 		catch {

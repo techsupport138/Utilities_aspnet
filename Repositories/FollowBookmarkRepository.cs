@@ -164,7 +164,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			await _context.SaveChangesAsync();
 			try {
 				_notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
-					UserId = parameters.UserId, Message = "You are being followed by " + myUser.UserName, Title = "Follow", UseCase = "Follow"
+					UserId = parameters.UserId, Message = "You are being followed by " + myUser.UserName, Title = "Follow", UseCase = "Follow", CreatorUserId = sourceUserId
 				});
 			}
 			catch { }

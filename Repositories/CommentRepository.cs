@@ -13,11 +13,13 @@ public class CommentRepository : ICommentRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IMapper _mapper;
+	private readonly INotificationRepository _notificationRepository;
 
-	public CommentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public CommentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor, INotificationRepository notificationRepository) {
 		_context = context;
 		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
+		_notificationRepository = notificationRepository;
 	}
 
 	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
@@ -52,6 +54,23 @@ public class CommentRepository : ICommentRepository {
 
 		await _context.AddAsync(comment);
 		await _context.SaveChangesAsync();
+
+		try
+		{
+			ProductEntity? product = await _context.Set<ProductEntity>().Include(x=>x.Media).FirstOrDefaultAsync(x=>x.Id == comment.ProductId);
+			string? linkMedia = product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.Link)?.FirstOrDefault();
+			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto
+			{
+				UserId = product.UserId,
+				Message = "Comment",
+				Title = "Comment",
+				UseCase = "Comment",
+				CreatorUserId = comment.UserId,
+				Media = linkMedia,
+				Link = product.Id.ToString()
+			});
+		}
+		catch { }
 
 		return await Read(comment.Id);
 	}
