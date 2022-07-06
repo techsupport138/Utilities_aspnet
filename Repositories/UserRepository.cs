@@ -249,12 +249,7 @@ public class UserRepository : IUserRepository {
 
 		userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
 		userReadDto.Token = token;
-		try {
-			userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
-		}
-		catch {
-			userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
-		}
+		userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
 
 		return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
 	}
@@ -290,12 +285,7 @@ public class UserRepository : IUserRepository {
 		dto.CountProducts = entity.Products?.Count();
 		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
 		dto.CountFollowers = follower.Count;
-		try {
-			dto.GrowthRate = GetGrowthRate(dto.Id).Result;
-		}
-		catch {
-			dto.GrowthRate = GetGrowthRate(dto.Id).Result;
-		}
+		dto.GrowthRate = GetGrowthRate(dto.Id).Result;
 		return new GenericResponse<UserReadDto?>(dto);
 	}
 
