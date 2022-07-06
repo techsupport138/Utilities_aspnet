@@ -38,7 +38,7 @@ public class PaymentRepository : IPaymentRepository {
 			UserEntity user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 			int Amount = Decimal.ToInt32(amount);
 			var payment = new Payment(zarinPalMerchantId, Amount);
-			var callbackUrl = string.Format("{0}Payment/WalletCallBack/{1}/{2}", Server.ServerAddress, user?.Id, Amount);
+			var callbackUrl = string.Format("{0}/Payment/WalletCallBack/{1}/{2}", Server.ServerAddress, user?.Id, Amount);
 			var Desc = $"شارژ کیف پول به مبلغ {Amount}";
 			//var result = payment.PaymentRequest(Desc, callbackUrl, "", _user.PhoneNumber).Result;
 			var result = payment.PaymentRequest(Desc, callbackUrl, "", user?.PhoneNumber).Result;
@@ -108,7 +108,7 @@ public class PaymentRepository : IPaymentRepository {
 			UserEntity user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 			int Amount = Decimal.ToInt32(product.Price ?? 0);
 			var payment = new Payment(zarinPalMerchantId, Amount);
-			var callbackUrl = string.Format("{0}Payment/CallBack/{1}", Server.ServerAddress, productId);
+			var callbackUrl = string.Format("{0}/Payment/CallBack/{1}", Server.ServerAddress, productId);
 			var Desc = $"خرید محصول {product.Title}";
 			//var result = payment.PaymentRequest(Desc, callbackUrl, "", _user.PhoneNumber).Result;
 			var result = payment.PaymentRequest(Desc, callbackUrl, "", user?.PhoneNumber).Result;
