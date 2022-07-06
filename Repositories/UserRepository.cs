@@ -24,6 +24,7 @@ public interface IUserRepository {
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser);
+	Task<GenericResponse<UserMinimalReadDto?>> GetMinProfileById(string id);
 }
 
 public class UserRepository : IUserRepository {
@@ -270,6 +271,19 @@ public class UserRepository : IUserRepository {
 		dto.GrowthRate = GetGrowthRate(dto.Id).Result;
 
 		return new GenericResponse<UserReadDto?>(dto);
+	}
+	
+	public async Task<GenericResponse<UserMinimalReadDto?>> GetMinProfileById(string id) {
+		UserEntity? model = await _context.Set<UserEntity>()
+			.Include(u => u.Media)
+			.Include(u=>u.Categories)
+			.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+		if (model == null) return new GenericResponse<UserMinimalReadDto?>(null, UtilitiesStatusCodes.NotFound);
+		UserMinimalReadDto? dto = _mapper.Map<UserMinimalReadDto>(model);
+		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
+		dto.CountFollowers = follower.Count;
+
+		return new GenericResponse<UserMinimalReadDto?>(dto);
 	}
 
 	public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username) {

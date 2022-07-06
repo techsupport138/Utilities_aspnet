@@ -102,6 +102,19 @@ public class UserController : BaseApiController {
 			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
 		}
 	}
+	
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
+	[HttpGet("GetProfileByUsername/{userId}")]
+	public async Task<ActionResult<GenericResponse<UserMinimalReadDto?>>> GetProfileByUserId(string userId) {
+		try {
+			GenericResponse i = await _userRepository.GetMinProfileById(userId);
+			return Result(i);
+		}
+		catch (Exception) {
+			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
+		}
+	}
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

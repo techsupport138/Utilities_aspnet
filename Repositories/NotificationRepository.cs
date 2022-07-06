@@ -45,7 +45,7 @@ public class NotificationRepository : INotificationRepository {
 			if (model.Media.EndsWith("svg")) type = FileTypes.Svg;
 
 			await _context.Set<MediaEntity>().AddAsync(new MediaEntity {
-				NotificationId = notification.Id, CreatedAt = DateTime.Now, FileType = type, FileName = model.Media
+				NotificationId = notification.Id, CreatedAt = DateTime.Now, FileType = type, FileName = model.Media, Link = model.Media
 			});
 			await _context.SaveChangesAsync();
 		}
