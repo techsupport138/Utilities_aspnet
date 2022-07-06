@@ -19,7 +19,7 @@ public class SmsSender : ISmsSender {
 		AppSettings appSettings = new();
 		_config.GetSection("AppSettings").Bind(appSettings);
 		SmsPanelSettings smsSetting = appSettings.SmsPanelSettings;
-		switch (smsSetting.Sender) {
+		switch (Sender.FarazSms) {
 			case Sender.SmsIr:
 				// string? token = new Token()
 				//     .GetToken(smsSetting.SmsApiKey, smsSetting.SmsSecret);
