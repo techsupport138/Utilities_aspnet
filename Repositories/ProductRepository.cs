@@ -272,7 +272,7 @@ public class ProductRepository : IProductRepository {
 	}
 
 	public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
-		ProductEntity? entity = await _context.Set<ProductEntity>().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
+		ProductEntity? entity = await _context.Set<ProductEntity>().Include(x=>x.Categories).Include(x=>x.Locations).Include(x=>x.Teams).Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
 
 		if (entity == null)
 			return new GenericResponse<ProductReadDto>(new ProductReadDto());
