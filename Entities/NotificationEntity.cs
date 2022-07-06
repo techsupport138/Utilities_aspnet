@@ -10,7 +10,12 @@ public class NotificationEntity : BaseEntity {
 	public IEnumerable<MediaEntity>? Media { get; set; }
 
 	public string? UserId { get; set; }
+	[ForeignKey(nameof(UserId))]
 	public virtual UserEntity? User { get; set; }
+	
+	public string? CreatorUserId { get; set; }
+	[ForeignKey(nameof(CreatorUserId))]
+	public virtual UserEntity? CreatorUser { get; set; }
 }
 
 public class NotificationDto {
@@ -21,6 +26,7 @@ public class NotificationDto {
 	public DateTime CreatedAt { get; set; }
 	public bool Visited { get; set; }
 	public string? UseCase { get; set; }
+	public UserEntity? CreatorUser { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
 }
 
