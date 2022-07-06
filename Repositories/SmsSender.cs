@@ -66,7 +66,7 @@ public class SmsSender : ISmsSender {
 				                     ",\"fromNum\" : " +
 				                     "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " +
 				                     mobileNumber.TrimStart(new[] {'0'}) + "" +
-				                     ",\"patternCode\": \"whrqg2ad1r\"" + ",\"inputData\" : [{\"verification-code\":" + message +
+									 ",\"patternCode\": \"atd5eng0d73h5wh\"" + ",\"inputData\" : [{\"verification-code\":" + message +
 				                     "}]}",
 				                     ParameterType.RequestBody);
 
