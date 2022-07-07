@@ -79,7 +79,7 @@ public class ProductController : BaseApiController {
 	public async Task<ActionResult<GenericResponse<ProductReadDto>>> BenchmarkReadById(Guid id)
 		=> Result(await _productRepository.ReadById(id));
 
-	[HttpPut]
+	[HttpPut("Benchmark")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<ProductReadDto>>> BenchmarkUpdate(ProductCreateUpdateDto dto)
 		=> Result(await _productRepository.Update(dto));
