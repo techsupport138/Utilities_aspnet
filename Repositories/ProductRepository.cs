@@ -8,14 +8,8 @@ public interface IProductRepository {
 	Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
 	Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
-
-	//
-	Task<GenericResponse<IEnumerable<ProductReadDto>>> BenchMarkRead();
 }
 
-[MemoryDiagnoser]
-[Orderer(SummaryOrderPolicy.FastestToSlowest)]
-[RankColumn]
 public class ProductRepository : IProductRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
@@ -296,11 +290,6 @@ public class ProductRepository : IProductRepository {
 		i.DeletedAt = DateTime.Now;
 		await _context.SaveChangesAsync();
 		return new GenericResponse();
-	}
-
-	[Benchmark]
-	public Task<GenericResponse<IEnumerable<ProductReadDto>>> BenchMarkRead() {
-		return Read(new FilterProductDto());
 	}
 }
 
