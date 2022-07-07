@@ -1,11 +1,15 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using ElmahCore.Mvc;
+using ElmahCore.Sql;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
 	public static void SetupUtilities<T>(
 		this WebApplicationBuilder builder,
 		string connectionStrings,
 		DatabaseType databaseType = DatabaseType.SqlServer,
-		string? redisConnectionString = null) where T : DbContext {
+		string? redisConnectionString = null,
+		bool useElmah = false) where T : DbContext {
 		builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
 
 		if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
@@ -24,6 +28,13 @@ public static class StartupExtension {
 			options.MaxRequestBodySize = int.MaxValue; // or your desired value
 		});
 		builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
+		if (useElmah)
+			builder.Services.AddElmah<SqlErrorLog>(
+				options => {
+					options.ConnectionString = connectionStrings;
+					options.SqlServerDatabaseSchemaName = "Errors";
+					options.SqlServerDatabaseTableName = "ElmahError";
+				});
 	}
 
 	private static void AddUtilitiesServices<T>(
@@ -148,7 +159,7 @@ public static class StartupExtension {
 		});
 	}
 
-	public static void UseUtilitiesServices(this WebApplication app) {
+	public static void UseUtilitiesServices(this WebApplication app, bool useElmah = false) {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 		if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
@@ -159,6 +170,7 @@ public static class StartupExtension {
 		app.UseRouting();
 		app.UseAuthorization();
 		app.UseEndpoints(endpoints => { endpoints.MapHub<UtilitiesHub>("/utilitiesHub"); });
+		if (useElmah) app.UseElmah();
 	}
 
 	private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
