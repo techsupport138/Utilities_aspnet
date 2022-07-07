@@ -8,6 +8,9 @@ public interface IProductRepository {
 	Task<GenericResponse<ProductReadDto>> ReadById(Guid id);
 	Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
+
+	//
+	Task<GenericResponse<IEnumerable<ProductReadDto>>> BenchMarkRead();
 }
 
 [MemoryDiagnoser]
@@ -24,7 +27,6 @@ public class ProductRepository : IProductRepository {
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	[Benchmark]
 	public async Task<GenericResponse> SeederProduct(SeederProductDto dto) {
 		if (dto == null || dto.Products.Count < 1) throw new ArgumentException("Dto must not be null", nameof(dto));
 
@@ -43,7 +45,6 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse();
 	}
 
-	[Benchmark]
 	public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
@@ -55,7 +56,6 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
 	}
 
-	[Benchmark]
 	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto dto) {
 		List<ProductEntity> queryable;
 
@@ -232,7 +232,6 @@ public class ProductRepository : IProductRepository {
 		};
 	}
 
-	[Benchmark]
 	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine() {
 		IEnumerable<ProductEntity> products = await _context.Set<ProductEntity>()
 			.AsNoTracking()
@@ -258,7 +257,6 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<IEnumerable<ProductReadDto>>(i);
 	}
 
-	[Benchmark]
 	public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
 		ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
 			.Include(i => i.Media)
@@ -278,7 +276,6 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
 	}
 
-	[Benchmark]
 	public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
 		ProductEntity? entity = await _context.Set<ProductEntity>().Include(x => x.Categories).Include(x => x.Locations)
 			.Include(x => x.Teams).Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
@@ -293,13 +290,17 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(e));
 	}
 
-	[Benchmark]
 	public async Task<GenericResponse> Delete(Guid id) {
 		ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id);
 		i.DeletedAt = DateTime.Now;
 		await _context.SaveChangesAsync();
 		return new GenericResponse();
+	}
+
+	[Benchmark]
+	public Task<GenericResponse<IEnumerable<ProductReadDto>>> BenchMarkRead() {
+		return Read(new FilterProductDto());
 	}
 }
 
