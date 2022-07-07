@@ -10,6 +10,9 @@ public interface IProductRepository {
 	Task<GenericResponse> Delete(Guid id);
 }
 
+[MemoryDiagnoser]
+[Orderer(SummaryOrderPolicy.FastestToSlowest)]
+[RankColumn]
 public class ProductRepository : IProductRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
@@ -21,6 +24,7 @@ public class ProductRepository : IProductRepository {
 		_httpContextAccessor = httpContextAccessor;
 	}
 
+	[Benchmark]
 	public async Task<GenericResponse> SeederProduct(SeederProductDto dto) {
 		if (dto == null || dto.Products.Count < 1) throw new ArgumentException("Dto must not be null", nameof(dto));
 
@@ -39,6 +43,7 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse();
 	}
 
+	[Benchmark]
 	public async Task<GenericResponse<ProductReadDto>> Create(ProductCreateUpdateDto dto) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
@@ -50,6 +55,7 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i.Entity));
 	}
 
+	[Benchmark]
 	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> Read(FilterProductDto dto) {
 		List<ProductEntity> queryable;
 
@@ -226,8 +232,8 @@ public class ProductRepository : IProductRepository {
 		};
 	}
 
+	[Benchmark]
 	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadMine() {
-		//GenericResponse<IEnumerable<ProductReadDto>> e = await Read(null);
 		IEnumerable<ProductEntity> products = await _context.Set<ProductEntity>()
 			.AsNoTracking()
 			.Include(i => i.Media)
@@ -252,6 +258,7 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<IEnumerable<ProductReadDto>>(i);
 	}
 
+	[Benchmark]
 	public async Task<GenericResponse<ProductReadDto>> ReadById(Guid id) {
 		ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
 			.Include(i => i.Media)
@@ -271,8 +278,10 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(i));
 	}
 
+	[Benchmark]
 	public async Task<GenericResponse<ProductReadDto>> Update(ProductCreateUpdateDto dto) {
-		ProductEntity? entity = await _context.Set<ProductEntity>().Include(x=>x.Categories).Include(x=>x.Locations).Include(x=>x.Teams).Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
+		ProductEntity? entity = await _context.Set<ProductEntity>().Include(x => x.Categories).Include(x => x.Locations)
+			.Include(x => x.Teams).Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
 
 		if (entity == null)
 			return new GenericResponse<ProductReadDto>(new ProductReadDto());
@@ -284,6 +293,7 @@ public class ProductRepository : IProductRepository {
 		return new GenericResponse<ProductReadDto>(_mapper.Map<ProductReadDto>(e));
 	}
 
+	[Benchmark]
 	public async Task<GenericResponse> Delete(Guid id) {
 		ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id);

@@ -38,3 +38,5 @@ global using Microsoft.AspNetCore.SignalR;
 global using Utilities_aspnet.Utilities.Seeder;
 global using Utilities_aspnet.Entities;
 global using Utilities_aspnet.Repositories;
+global using BenchmarkDotNet.Attributes;
+global using BenchmarkDotNet.Order;
