@@ -105,7 +105,7 @@ public class UserController : BaseApiController {
 	
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
-	[HttpGet("GetProfileByUsername/{userId}")]
+	[HttpGet("GetProfileByUserId/{userId}")]
 	public async Task<ActionResult<GenericResponse<UserMinimalReadDto?>>> GetProfileByUserId(string userId) {
 		try {
 			GenericResponse i = await _userRepository.GetMinProfileById(userId);
