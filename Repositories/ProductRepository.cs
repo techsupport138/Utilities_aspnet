@@ -202,7 +202,7 @@ public class ProductRepository : IProductRepository {
 		if (_httpContextAccessor?.HttpContext?.User.Identity == null)
 			return new GenericResponse<IEnumerable<ProductReadDto>>(readDto) {
 				TotalCount = totalCount,
-				PageCount = totalCount % dto?.PageSize == 0
+				PageCount = totalCount % dto.PageSize == 0
 					? totalCount / dto?.PageSize
 					: totalCount / dto?.PageSize + 1,
 				PageSize = dto?.PageSize
@@ -231,19 +231,19 @@ public class ProductRepository : IProductRepository {
 		IQueryable<ProductEntity> queryable;
 		DbSet<ProductEntity> dbSet = _context.Set<ProductEntity>();
 
-		if (dto.ShowCategories.IsNullOrFalse()) dbSet.Include(i => i.Categories);
-		if (dto.ShowComments.IsNullOrFalse())
+		if (dto.ShowCategories.IsTrue()) dbSet.Include(i => i.Categories);
+		if (dto.ShowComments.IsTrue())
 			dbSet.Include(i => i.Comments!.Where(x => x.ParentId == null))
 				.ThenInclude(x => x.Children)!
 				.ThenInclude(x => x.Media);
-		if (dto.ShowLocation.IsNullOrFalse()) dbSet.Include(i => i.Locations);
-		if (dto.ShowForms.IsNullOrFalse()) dbSet.Include(i => i.Forms);
-		if (dto.ShowMedia.IsNullOrFalse()) dbSet.Include(i => i.Media);
-		if (dto.ShowReports.IsNullOrFalse()) dbSet.Include(i => i.Reports);
-		if (dto.ShowTeams.IsNullOrFalse()) dbSet.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media);
-		if (dto.ShowVotes.IsNullOrFalse()) dbSet.Include(i => i.Votes);
-		if (dto.ShowVoteFields.IsNullOrFalse()) dbSet.Include(i => i.VoteFields);
-		if (dto.ShowCreator.IsNullOrFalse()) dbSet.Include(i => i.User).ThenInclude(x => x!.Media);
+		if (dto.ShowLocation.IsTrue()) dbSet.Include(i => i.Locations);
+		if (dto.ShowForms.IsTrue()) dbSet.Include(i => i.Forms);
+		if (dto.ShowMedia.IsTrue()) dbSet.Include(i => i.Media);
+		if (dto.ShowReports.IsTrue()) dbSet.Include(i => i.Reports);
+		if (dto.ShowTeams.IsTrue()) dbSet.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media);
+		if (dto.ShowVotes.IsTrue()) dbSet.Include(i => i.Votes);
+		if (dto.ShowVoteFields.IsTrue()) dbSet.Include(i => i.VoteFields);
+		if (dto.ShowCreator.IsTrue()) dbSet.Include(i => i.User).ThenInclude(x => x!.Media);
 
 		queryable = dbSet.Where(x => x.DeletedAt == null);
 
