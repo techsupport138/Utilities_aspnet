@@ -11,11 +11,11 @@ public class NotificationEntity : BaseEntity {
 
 	public string? UserId { get; set; }
 	[ForeignKey(nameof(UserId))]
-	public virtual UserEntity? User { get; set; }
+	public UserEntity? User { get; set; }
 	
 	public string? CreatorUserId { get; set; }
 	[ForeignKey(nameof(CreatorUserId))]
-	public virtual UserEntity? CreatorUser { get; set; }
+	public UserEntity? CreatorUser { get; set; }
 }
 
 public class NotificationDto {
