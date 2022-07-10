@@ -18,9 +18,9 @@ public class Server {
 		}
 	}
 
-	public static string? UserId {
+	public static string UserId {
 		get {
-			_userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
+			_userId = _httpContextAccessor?.HttpContext!.User.Identity!.Name!;
 			return _userId;
 		}
 	}

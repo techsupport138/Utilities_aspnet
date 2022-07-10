@@ -20,6 +20,7 @@ public class AppSettingsController : BaseApiController {
 	}
 
 	[HttpGet]
+	[Benchmark]
 	public async Task<ActionResult<GenericResponse<EnumDto>>> Read() {
 		GenericResponse i = await _appSettingRepository.Read();
 		return Ok(i);
@@ -59,4 +60,5 @@ public class AppSettingsController : BaseApiController {
 	[HttpPost("SeedUsers")]
 	public async Task<ActionResult<GenericResponse>> SeedUsers(SeederUserDto dto)
 		=> Result(await _userRepository.SeederUser(dto));
+	
 }
