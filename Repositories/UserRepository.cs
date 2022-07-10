@@ -70,7 +70,7 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GrowthRateReadDto?> GetGrowthRate(string id) {
-		GrowthRateReadDto? entity = new() {
+		GrowthRateReadDto entity = new() {
 			InterActive1 = 1,
 			InterActive2 = 2,
 			InterActive3 = 1,

@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.Query;
+
 namespace Utilities_aspnet.Repositories;
 
 public interface IProductRepository {
@@ -88,7 +90,7 @@ public class ProductRepository : IProductRepository {
 				.ToList();
 		if (dto.IsFollowing == true) {
 			string? userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
-			List<string?>? userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId)
+			List<string?> userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId)
 				.Select(x => x.FollowsUserId).ToListAsync();
 
 			queryable = queryable.Where(x => userFollowing.Contains(x.UserId)).ToList();
@@ -228,29 +230,28 @@ public class ProductRepository : IProductRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<ProductReadDto>>> ReadV2(ProductFilterDto dto) {
-		IQueryable<ProductEntity> queryable;
-		DbSet<ProductEntity> dbSet = _context.Set<ProductEntity>();
+		IIncludableQueryable<ProductEntity, object?> dbSet = _context.Set<ProductEntity>().Include(i => i.Media);
 
-		if (dto.ShowCategories.IsTrue()) dbSet.Include(i => i.Categories);
+		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(i => i.Categories);
 		if (dto.ShowComments.IsTrue())
-			dbSet.Include(i => i.Comments!.Where(x => x.ParentId == null))
+			dbSet = dbSet.Include(i => i.Comments!.Where(x => x.ParentId == null))
 				.ThenInclude(x => x.Children)!
 				.ThenInclude(x => x.Media);
-		if (dto.ShowLocation.IsTrue()) dbSet.Include(i => i.Locations);
-		if (dto.ShowForms.IsTrue()) dbSet.Include(i => i.Forms);
-		if (dto.ShowMedia.IsTrue()) dbSet.Include(i => i.Media);
-		if (dto.ShowReports.IsTrue()) dbSet.Include(i => i.Reports);
-		if (dto.ShowTeams.IsTrue()) dbSet.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media);
-		if (dto.ShowVotes.IsTrue()) dbSet.Include(i => i.Votes);
-		if (dto.ShowVoteFields.IsTrue()) dbSet.Include(i => i.VoteFields);
-		if (dto.ShowCreator.IsTrue()) dbSet.Include(i => i.User).ThenInclude(x => x!.Media);
+		if (dto.ShowLocation.IsTrue()) dbSet = dbSet.Include(i => i.Locations);
+		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(i => i.Forms);
+		if (dto.ShowMedia.IsTrue()) dbSet = dbSet.Include(i => i.Media);
+		if (dto.ShowReports.IsTrue()) dbSet = dbSet.Include(i => i.Reports);
+		if (dto.ShowTeams.IsTrue()) dbSet = dbSet.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media);
+		if (dto.ShowVotes.IsTrue()) dbSet = dbSet.Include(i => i.Votes);
+		if (dto.ShowVoteFields.IsTrue()) dbSet = dbSet.Include(i => i.VoteFields);
+		if (dto.ShowCreator.IsTrue()) dbSet = dbSet.Include(i => i.User).ThenInclude(x => x!.Media);
 
-		queryable = dbSet.Where(x => x.DeletedAt == null);
+		IQueryable<ProductEntity> queryable = dbSet.Where(x => x.DeletedAt == null);
 
 		if (!string.IsNullOrEmpty(dto.Title)) queryable = queryable.Where(x => (x.Title ?? "").Contains(dto.Title));
 		if (dto.IsFollowing == true) {
 			string? userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
-			List<string?>? userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId)
+			List<string?> userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId)
 				.Select(x => x.FollowsUserId).ToListAsync();
 
 			queryable = queryable.Where(x => userFollowing.Contains(x.UserId));
@@ -511,7 +512,7 @@ public static class ProductEntityExtension {
 			foreach (string item in dto.Teams ?? new List<string>()) {
 				UserEntity? e = await context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == item);
 				if (e != null) {
-					TeamEntity? t = new() {UserId = e.Id};
+					TeamEntity t = new() {UserId = e.Id};
 					await context.Set<TeamEntity>().AddAsync(t);
 					listTeam.Add(t);
 				}

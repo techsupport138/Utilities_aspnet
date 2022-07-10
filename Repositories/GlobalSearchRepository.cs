@@ -19,7 +19,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 	}
 
 	public async Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string userId) {
-		GlobalSearchDto? model = new();
+		GlobalSearchDto model = new();
 
 		IEnumerable<CategoryEntity> categoryList = await _context.Set<CategoryEntity>().Include(x => x.Users)
 			.Include(x => x.Media).Include(i => i.Media)
@@ -56,7 +56,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 			.OrderByDescending(x => x.CreatedAt).ToListAsync();
 
 		if (filter.IsFollowing) {
-			List<string?>? userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId)
+			List<string?> userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId)
 				.Select(x => x.FollowsUserId).ToListAsync();
 
 			productList = productList.Where(x => userFollowing.Contains(x.UserId)).ToList();

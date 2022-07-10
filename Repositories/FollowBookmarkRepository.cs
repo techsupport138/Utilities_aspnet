@@ -54,7 +54,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<BookmarkReadDto>?>> ReadBookmarks() {
-		IEnumerable<BookmarkEntity>? bookmark = await _context.Set<BookmarkEntity>()
+		IEnumerable<BookmarkEntity> bookmark = await _context.Set<BookmarkEntity>()
 			.Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
 			.Include(x => x.Product).ThenInclude(x => x.Media).Include(x => x.Product).ThenInclude(i => i.Votes)
 			.Include(x => x.Product).ThenInclude(i => i.User)!.ThenInclude(x => x.Media)

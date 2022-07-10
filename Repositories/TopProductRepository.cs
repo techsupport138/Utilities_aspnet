@@ -27,7 +27,7 @@ public class TopProductRepository : ITopProductRepository {
 		TopProductEntity? entity = null;
 		try {
 			ProductEntity product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == dto.ProductId);
-			TopProductEntity? topProduct = new() {
+			TopProductEntity topProduct = new() {
 				ProductId = dto.ProductId,
 				CreatedAt = DateTime.Now,
 				UserId = _httpContextAccessor.HttpContext?.User.Identity?.Name
@@ -56,7 +56,7 @@ public class TopProductRepository : ITopProductRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<TopProductReadDto>?>> Read() {
-		IEnumerable<TopProductEntity>? entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product)
+		IEnumerable<TopProductEntity> entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product)
 			.ThenInclude(x => x.Media).OrderByDescending(x => x.CreatedAt).ToListAsync();
 
 		return new GenericResponse<IEnumerable<TopProductReadDto>?>(_mapper.Map<IEnumerable<TopProductReadDto>?>(entity));

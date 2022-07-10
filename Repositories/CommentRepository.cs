@@ -23,7 +23,7 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
-		IEnumerable<CommentEntity>? comment = await _context.Set<CommentEntity>()
+		IEnumerable<CommentEntity> comment = await _context.Set<CommentEntity>()
 			.AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Media)
 			.Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
