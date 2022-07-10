@@ -46,54 +46,6 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<TeamEntity>? Teams { get; set; }
 }
 
-public class ProductFilterDto {
-	public string? Title { get; set; }
-	public string? Subtitle { get; set; }
-	public string? Description { get; set; }
-	public string? Details { get; set; }
-	public string? Link { get; set; }
-	public string? Website { get; set; }
-	public string? Address { get; set; }
-	public string? Author { get; set; }
-	public string? PhoneNumber { get; set; }
-	public string? Email { get; set; }
-	public string? Type { get; set; }
-	public string? Unit { get; set; }
-	public string? UseCase { get; set; }
-	public bool? Enabled { get; set; }
-	public bool? IsForSale { get; set; }
-	public bool? IsBookmarked { get; set; }
-	public bool? IsFollowing { get; set; }
-	public bool? ShowLocation { get; set; } = false;
-	public bool? ShowMedia { get; set; } = false;
-	public bool? ShowForms { get; set; } = false;
-	public bool? ShowCategories { get; set; } = false;
-	public bool? ShowVoteFields { get; set; } = false;
-	public bool? ShowVotes { get; set; } = false;
-	public bool? ShowReports { get; set; } = false;
-	public bool? ShowComments { get; set; } = false;
-	public bool? ShowTeams { get; set; } = false;
-	public bool? ShowCreator { get; set; } = false;
-	public double? Length { get; set; }
-	public double? Width { get; set; }
-	public double? Height { get; set; }
-	public double? Weight { get; set; }
-	public double? MinOrder { get; set; }
-	public double? MaxOrder { get; set; }
-	public decimal? StartPriceRange { get; set; }
-	public decimal? EndPriceRange { get; set; }
-	public int? VisitsCount { get; set; }
-	public int PageSize { get; set; } = 1000;
-	public int PageNumber { get; set; } = 1;
-	public DateTime? StartDate { get; set; }
-	public DateTime? EndDate { get; set; }
-	public ProductStatus? Status { get; set; }
-	public IEnumerable<int>? Locations { get; set; }
-	public IEnumerable<Guid>? Categories { get; set; }
-
-	public ProductFilterOrder? FilterOrder { get; set; } = ProductFilterOrder.AToZ;
-}
-
 public class ProductReadDto {
 	public Guid? Id { get; set; }
 	public string? UserId { get; set; }
@@ -181,8 +133,52 @@ public class ProductCreateUpdateDto {
 	//public IEnumerable<Guid>? Reports { get; set; }
 }
 
-public class SeederProductDto {
-	public List<ProductCreateUpdateDto> Products { get; set; }
+public class ProductFilterDto {
+	public string? Title { get; set; }
+	public string? Subtitle { get; set; }
+	public string? Description { get; set; }
+	public string? Details { get; set; }
+	public string? Link { get; set; }
+	public string? Website { get; set; }
+	public string? Address { get; set; }
+	public string? Author { get; set; }
+	public string? PhoneNumber { get; set; }
+	public string? Email { get; set; }
+	public string? Type { get; set; }
+	public string? Unit { get; set; }
+	public string? UseCase { get; set; }
+	public bool? Enabled { get; set; }
+	public bool? IsForSale { get; set; }
+	public bool? IsBookmarked { get; set; }
+	public bool? IsFollowing { get; set; }
+	public bool? ShowLocation { get; set; } = false;
+	public bool? ShowMedia { get; set; } = false;
+	public bool? ShowForms { get; set; } = false;
+	public bool? ShowCategories { get; set; } = false;
+	public bool? ShowVoteFields { get; set; } = false;
+	public bool? ShowVotes { get; set; } = false;
+	public bool? ShowReports { get; set; } = false;
+	public bool? ShowComments { get; set; } = false;
+	public bool? ShowTeams { get; set; } = false;
+	public bool? ShowCreator { get; set; } = false;
+	public double? Length { get; set; }
+	public double? Width { get; set; }
+	public double? Height { get; set; }
+	public double? Weight { get; set; }
+	public double? MinOrder { get; set; }
+	public double? MaxOrder { get; set; }
+	public decimal? StartPriceRange { get; set; }
+	public decimal? EndPriceRange { get; set; }
+	public int? VisitsCount { get; set; }
+	public int PageSize { get; set; } = 1000;
+	public int PageNumber { get; set; } = 1;
+	public DateTime? StartDate { get; set; }
+	public DateTime? EndDate { get; set; }
+	public ProductStatus? Status { get; set; }
+	public IEnumerable<int>? Locations { get; set; }
+	public IEnumerable<Guid>? Categories { get; set; }
+
+	public ProductFilterOrder? FilterOrder { get; set; } = ProductFilterOrder.AToZ;
 }
 
 public class FilterProductDto {
@@ -223,6 +219,10 @@ public class FilterProductDto {
 
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
+}
+
+public class SeederProductDto {
+	public List<ProductCreateUpdateDto> Products { get; set; }
 }
 
 public enum ProductFilterOrder {

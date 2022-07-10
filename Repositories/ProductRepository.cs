@@ -85,9 +85,8 @@ public class ProductRepository : IProductRepository {
 				.AsNoTracking()
 				.ToListAsync();
 
-		if (!string.IsNullOrEmpty(dto.Title))
-			queryable = queryable.Where(x => (x.Title ?? "").Contains(dto.Title))
-				.ToList();
+		if (dto.Title.IsNotNullOrEmpty())
+			queryable = queryable.Where(x => (x.Title ?? "").Contains(dto.Title)).ToList();
 		if (dto.IsFollowing == true) {
 			string? userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
 			List<string?> userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId)
@@ -96,19 +95,19 @@ public class ProductRepository : IProductRepository {
 			queryable = queryable.Where(x => userFollowing.Contains(x.UserId)).ToList();
 		}
 
-		if (!string.IsNullOrEmpty(dto.Subtitle))
+		if (dto.Subtitle.IsNotNullOrEmpty())
 			queryable = queryable
 				.Where(x => (x.Subtitle ?? "").Contains(dto.Subtitle)).ToList();
 
-		if (!string.IsNullOrEmpty(dto.Type))
+		if (dto.Type.IsNotNullOrEmpty())
 			queryable = queryable
 				.Where(x => (x.Type ?? "").Contains(dto.Type)).ToList();
 
-		if (!string.IsNullOrEmpty(dto.Details))
+		if (dto.Details.IsNotNullOrEmpty())
 			queryable = queryable.Where(x => (x.Details ?? "").Contains(dto.Details))
 				.ToList();
 
-		if (!string.IsNullOrEmpty(dto.Description))
+		if (dto.Description.IsNotNullOrEmpty())
 			queryable = queryable.Where(x => (x.Description ?? "").Contains(dto.Description)).ToList();
 
 		if (dto.StartPriceRange.HasValue)
@@ -154,9 +153,8 @@ public class ProductRepository : IProductRepository {
 		if (dto.UseCase.IsNotNullOrEmpty())
 			queryable = queryable.Where(x => x.UseCase == dto.UseCase).ToList();
 
-		if (!string.IsNullOrEmpty(dto.Address))
-			queryable = queryable
-				.Where(x => (x.Address ?? "").Contains(dto.Address)).ToList();
+		if (dto.Address.IsNotNullOrEmpty())
+			queryable = queryable.Where(x => (x.Address ?? "").Contains(dto.Address)).ToList();
 
 		if (dto.StartDate.HasValue)
 			queryable = queryable.Where(x => x.StartDate >= dto.StartDate).ToList();
@@ -164,17 +162,14 @@ public class ProductRepository : IProductRepository {
 		if (dto.EndDate.HasValue)
 			queryable = queryable.Where(x => x.EndDate <= dto.EndDate).ToList();
 
-		if (!string.IsNullOrEmpty(dto.Author))
-			queryable = queryable
-				.Where(x => (x.Author ?? "").Contains(dto.Author)).ToList();
+		if (dto.Author.IsNotNullOrEmpty())
+			queryable = queryable.Where(x => (x.Author ?? "").Contains(dto.Author)).ToList();
 
-		if (!string.IsNullOrEmpty(dto.Email))
-			queryable = queryable
-				.Where(x => (x.Email ?? "").Contains(dto.Email)).ToList();
+		if (dto.Email.IsNotNullOrEmpty())
+			queryable = queryable.Where(x => (x.Email ?? "").Contains(dto.Email)).ToList();
 
-		if (!string.IsNullOrEmpty(dto.PhoneNumber))
-			queryable = queryable
-				.Where(x => (x.PhoneNumber ?? "").Contains(dto.PhoneNumber)).ToList();
+		if (dto.PhoneNumber.IsNotNullOrEmpty())
+			queryable = queryable.Where(x => (x.PhoneNumber ?? "").Contains(dto.PhoneNumber)).ToList();
 
 		if (dto.Locations != null && dto.Locations.Any())
 			queryable = queryable.Where(x => x.Locations != null &&
@@ -246,119 +241,66 @@ public class ProductRepository : IProductRepository {
 		if (dto.ShowVoteFields.IsTrue()) dbSet = dbSet.Include(i => i.VoteFields);
 		if (dto.ShowCreator.IsTrue()) dbSet = dbSet.Include(i => i.User).ThenInclude(x => x!.Media);
 
-		IQueryable<ProductEntity> queryable = dbSet.Where(x => x.DeletedAt == null);
+		IQueryable<ProductEntity> q = dbSet.Where(x => x.DeletedAt == null);
 
-		if (!string.IsNullOrEmpty(dto.Title)) queryable = queryable.Where(x => (x.Title ?? "").Contains(dto.Title));
 		if (dto.IsFollowing == true) {
-			string? userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
+			string? userId = _httpContextAccessor?.HttpContext?.User.Identity?.Name;
 			List<string?> userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId)
 				.Select(x => x.FollowsUserId).ToListAsync();
 
-			queryable = queryable.Where(x => userFollowing.Contains(x.UserId));
+			q = q.Where(x => userFollowing.Contains(x.UserId));
 		}
-
-		if (!string.IsNullOrEmpty(dto.Subtitle))
-			queryable = queryable
-				.Where(x => (x.Subtitle ?? "").Contains(dto.Subtitle));
-
-		if (!string.IsNullOrEmpty(dto.Type))
-			queryable = queryable
-				.Where(x => (x.Type ?? "").Contains(dto.Type));
-
-		if (!string.IsNullOrEmpty(dto.Details))
-			queryable = queryable.Where(x => (x.Details ?? "").Contains(dto.Details));
-
-		if (!string.IsNullOrEmpty(dto.Description))
-			queryable = queryable.Where(x => (x.Description ?? "").Contains(dto.Description));
-
-		if (dto.StartPriceRange.HasValue)
-			queryable = queryable.Where(x => x.Price >= dto.StartPriceRange.Value);
-
-		if (dto.EndPriceRange.HasValue)
-			queryable = queryable.Where(x => x.Price <= dto.EndPriceRange.Value);
-
-		if (dto.Enabled == true)
-			queryable = queryable.Where(x => x.Enabled == dto.Enabled);
-
-		if (dto.IsForSale.HasValue)
-			queryable = queryable.Where(x => x.IsForSale == dto.IsForSale);
-
 		if (dto.IsBookmarked == true)
-			queryable = queryable
-				.Where(x => x.Bookmarks!.Any(y => y.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
+			q = q.Where(x => x.Bookmarks!.Any(y => y.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
 
-		if (dto.VisitsCount.HasValue)
-			queryable = queryable.Where(x => x.VisitsCount == dto.VisitsCount);
-
-		if (dto.Length.HasValue)
-			queryable = queryable.Where(x => x.Length == dto.Length);
-
-		if (dto.Width.HasValue)
-			queryable = queryable.Where(x => x.Width == dto.Width);
-
-		if (dto.Height.HasValue)
-			queryable = queryable.Where(x => x.Height == dto.Height);
-
-		if (dto.Weight.HasValue)
-			queryable = queryable.Where(x => x.Weight == dto.Weight);
-
-		if (dto.MinOrder.HasValue)
-			queryable = queryable.Where(x => x.MinOrder >= dto.MinOrder);
-
-		if (dto.MaxOrder.HasValue)
-			queryable = queryable.Where(x => x.MaxOrder <= dto.MaxOrder);
-
-		if (dto.Unit.IsNotNullOrEmpty())
-			queryable = queryable.Where(x => x.Unit == dto.Unit);
-
-		if (dto.UseCase.IsNotNullOrEmpty())
-			queryable = queryable.Where(x => x.UseCase == dto.UseCase);
-
-		if (!string.IsNullOrEmpty(dto.Address))
-			queryable = queryable
-				.Where(x => (x.Address ?? "").Contains(dto.Address));
-
-		if (dto.StartDate.HasValue)
-			queryable = queryable.Where(x => x.StartDate >= dto.StartDate);
-
-		if (dto.EndDate.HasValue)
-			queryable = queryable.Where(x => x.EndDate <= dto.EndDate);
-
-		if (!string.IsNullOrEmpty(dto.Author))
-			queryable = queryable
-				.Where(x => (x.Author ?? "").Contains(dto.Author));
-
-		if (!string.IsNullOrEmpty(dto.Email))
-			queryable = queryable
-				.Where(x => (x.Email ?? "").Contains(dto.Email));
-
-		if (!string.IsNullOrEmpty(dto.PhoneNumber))
-			queryable = queryable
-				.Where(x => (x.PhoneNumber ?? "").Contains(dto.PhoneNumber));
+		if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
+		if (dto.Subtitle.IsNotNullOrEmpty()) q = q.Where(x => (x.Subtitle ?? "").Contains(dto.Subtitle!));
+		if (dto.Type.IsNotNullOrEmpty()) q = q.Where(x => (x.Type ?? "").Contains(dto.Type!));
+		if (dto.Details.IsNotNullOrEmpty()) q = q.Where(x => (x.Details ?? "").Contains(dto.Details!));
+		if (dto.Description.IsNotNullOrEmpty()) q = q.Where(x => (x.Description ?? "").Contains(dto.Description!));
+		if (dto.Author.IsNotNullOrEmpty()) q = q.Where(x => (x.Author ?? "").Contains(dto.Author!));
+		if (dto.Email.IsNotNullOrEmpty()) q = q.Where(x => (x.Email ?? "").Contains(dto.Email!));
+		if (dto.PhoneNumber.IsNotNullOrEmpty()) q = q.Where(x => (x.PhoneNumber ?? "").Contains(dto.PhoneNumber!));
+		if (dto.Address.IsNotNullOrEmpty()) q = q.Where(x => (x.Address ?? "").Contains(dto.Address!));
+		if (dto.Unit.IsNotNullOrEmpty()) q = q.Where(x => x.Unit == dto.Unit);
+		if (dto.UseCase.IsNotNullOrEmpty()) q = q.Where(x => x.UseCase == dto.UseCase);
+		if (dto.StartPriceRange.HasValue) q = q.Where(x => x.Price >= dto.StartPriceRange.Value);
+		if (dto.EndPriceRange.HasValue) q = q.Where(x => x.Price <= dto.EndPriceRange.Value);
+		if (dto.Enabled.HasValue) q = q.Where(x => x.Enabled == dto.Enabled);
+		if (dto.IsForSale.HasValue) q = q.Where(x => x.IsForSale == dto.IsForSale);
+		if (dto.VisitsCount.HasValue) q = q.Where(x => x.VisitsCount == dto.VisitsCount);
+		if (dto.Length.HasValue) q = q.Where(x => x.Length == dto.Length);
+		if (dto.Width.HasValue) q = q.Where(x => x.Width == dto.Width);
+		if (dto.Height.HasValue) q = q.Where(x => x.Height == dto.Height);
+		if (dto.Weight.HasValue) q = q.Where(x => x.Weight == dto.Weight);
+		if (dto.MinOrder.HasValue) q = q.Where(x => x.MinOrder >= dto.MinOrder);
+		if (dto.MaxOrder.HasValue) q = q.Where(x => x.MaxOrder <= dto.MaxOrder);
+		if (dto.StartDate.HasValue) q = q.Where(x => x.StartDate >= dto.StartDate);
+		if (dto.EndDate.HasValue) q = q.Where(x => x.EndDate <= dto.EndDate);
 
 		if (dto.Locations != null && dto.Locations.Any())
-			queryable = queryable.Where(x => x.Locations != null &&
-			                                 x.Locations.Any(y => dto.Locations.Contains(y.Id)));
+			q = q.Where(x => x.Locations != null &&
+			                 x.Locations.Any(y => dto.Locations.Contains(y.Id)));
 
 		if (dto.Categories != null && dto.Categories.Any())
-			queryable = queryable.Where(x => x.Categories != null &&
-			                                 x.Categories.Any(y => dto.Categories.Contains(y.Id)));
+			q = q.Where(x => x.Categories != null &&
+			                 x.Categories.Any(y => dto.Categories.Contains(y.Id)));
 
-		int totalCount = queryable.Count();
+		int totalCount = q.Count();
 
 		if (dto.FilterOrder.HasValue)
-			queryable = dto.FilterOrder switch {
-				ProductFilterOrder.LowPrice => queryable.OrderBy(x => x.Price),
-				ProductFilterOrder.HighPrice => queryable.OrderByDescending(x => x.Price),
-				ProductFilterOrder.AToZ => queryable.OrderBy(x => x.Title),
-				ProductFilterOrder.ZToA => queryable.OrderByDescending(x => x.Title),
-				_ => queryable.OrderBy(x => x.CreatedAt)
+			q = dto.FilterOrder switch {
+				ProductFilterOrder.LowPrice => q.OrderBy(x => x.Price),
+				ProductFilterOrder.HighPrice => q.OrderByDescending(x => x.Price),
+				ProductFilterOrder.AToZ => q.OrderBy(x => x.Title),
+				ProductFilterOrder.ZToA => q.OrderByDescending(x => x.Title),
+				_ => q.OrderBy(x => x.CreatedAt)
 			};
 
-		queryable = queryable.Skip((dto.PageNumber - 1) * dto.PageSize)
+		q = q.Skip((dto.PageNumber - 1) * dto.PageSize)
 			.Take(dto.PageSize);
 
-		IEnumerable<ProductReadDto> readDto = _mapper.Map<IEnumerable<ProductReadDto>>(queryable).ToList();
+		IEnumerable<ProductReadDto> readDto = _mapper.Map<IEnumerable<ProductReadDto>>(q).ToList();
 
 		if (_httpContextAccessor?.HttpContext?.User.Identity == null)
 			return new GenericResponse<IEnumerable<ProductReadDto>>(readDto) {
