@@ -20,7 +20,6 @@ public class AppSettingsController : BaseApiController {
 	}
 
 	[HttpGet]
-	[Benchmark]
 	public async Task<ActionResult<GenericResponse<EnumDto>>> Read() {
 		GenericResponse i = await _appSettingRepository.Read();
 		return Ok(i);

@@ -71,7 +71,7 @@ public static class StartupExtension {
 			options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 			options.UseCamelCasing(true);
 		});
-
+		
 		builder.Services.AddSignalR(i => i.EnableDetailedErrors = true);
 		builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 		builder.Services.AddMemoryCache();
@@ -171,6 +171,7 @@ public static class StartupExtension {
 		app.UseAuthorization();
 		app.UseEndpoints(endpoints => { endpoints.MapHub<UtilitiesHub>("/utilitiesHub"); });
 		if (useElmah) app.UseElmah();
+		app.UseMiddleware<ResponseTimeMiddleware>();
 	}
 
 	private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
