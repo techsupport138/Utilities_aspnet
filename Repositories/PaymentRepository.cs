@@ -38,7 +38,7 @@ public class PaymentRepository : IPaymentRepository {
 		try {
 			UserEntity user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 			int Amount = Decimal.ToInt32(amount);
-			Payment? payment = new Payment(zarinPalMerchantId, Amount);
+			Payment? payment = new(zarinPalMerchantId, Amount);
 			string? callbackUrl = string.Format("{0}/Payment/WalletCallBack/{1}/{2}", Server.ServerAddress, user?.Id, Amount);
 			string? Desc = $"شارژ کیف پول به مبلغ {Amount}";
 			//var result = payment.PaymentRequest(Desc, callbackUrl, "", _user.PhoneNumber).Result;
@@ -81,7 +81,7 @@ public class PaymentRepository : IPaymentRepository {
 		UserEntity? _user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 		//int Amount = Decimal.ToInt32(model.Price);
 		int Amount = amount;
-		Payment? payment = new Payment(zarinPalMerchantId, Amount);
+		Payment? payment = new(zarinPalMerchantId, Amount);
 		if (!status.Equals("OK")) {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
@@ -108,7 +108,7 @@ public class PaymentRepository : IPaymentRepository {
 			ProductEntity product = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId);
 			UserEntity user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 			int Amount = Decimal.ToInt32(product.Price ?? 0);
-			Payment? payment = new Payment(zarinPalMerchantId, Amount);
+			Payment? payment = new(zarinPalMerchantId, Amount);
 			string? callbackUrl = string.Format("{0}/Payment/CallBack/{1}", Server.ServerAddress, productId);
 			string? Desc = $"خرید محصول {product.Title}";
 			//var result = payment.PaymentRequest(Desc, callbackUrl, "", _user.PhoneNumber).Result;
@@ -147,7 +147,7 @@ public class PaymentRepository : IPaymentRepository {
 		ProductEntity? product = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId);
 		int Amount = Decimal.ToInt32(product.Price ?? 0);
 		//int Amount = amount;
-		Payment? payment = new Payment(zarinPalMerchantId, Amount);
+		Payment? payment = new(zarinPalMerchantId, Amount);
 		if (!status.Equals("OK")) {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}

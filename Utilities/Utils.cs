@@ -163,6 +163,7 @@ public static class StartupExtension {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 		if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+		app.UseMiddleware<ResponseTimeMiddleware>();
 		app.UseDeveloperExceptionPage();
 		app.UseUtilitiesSwagger();
 		app.UseStaticFiles();
@@ -171,7 +172,6 @@ public static class StartupExtension {
 		app.UseAuthorization();
 		app.UseEndpoints(endpoints => { endpoints.MapHub<UtilitiesHub>("/utilitiesHub"); });
 		if (useElmah) app.UseElmah();
-		app.UseMiddleware<ResponseTimeMiddleware>();
 	}
 
 	private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
