@@ -20,4 +20,5 @@ public class GlobalSearchParams {
 	public bool IsBookmark { get; set; } = false;
 	public bool IsFollowing { get; set; } = false;
 	public bool IsMine { get; set; } = false;
+	public bool Minimal { get; set; } = false;
 }
