@@ -62,7 +62,7 @@ public class SmsSender : ISmsSender {
 				request.AddHeader("Authorization", "AccessKey U4-OM_COTYg_NBkwWBQtYeUUv1ODRKDrXEYtmtDfyRY=");
 
 				request.AddParameter("undefined",
-				                     "{\"op\" : \"pattern\"" + ",\"user\" : \"09130269500\"" + ",\"pass\":  \"C1System\"" +
+				                     "{\"op\" : \"pattern\"" + ",\"user\" : \"Anborapp\"" + ",\"pass\":  \"Anbor:/3890\"" +
 				                     ",\"fromNum\" : " +
 				                     "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " +
 				                     mobileNumber.TrimStart(new[] {'0'}) + "" +
