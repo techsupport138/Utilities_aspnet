@@ -54,8 +54,8 @@ public class SmsSender : ISmsSender {
 				#region FarazSMS
 
 				RestClient client = new("http://188.0.240.110/api/select");
-				RestRequest request = new(); //  new(Method.Post);
-				request.Method = Method.Post;
+				RestRequest request = new RestRequest(Method.POST);
+				//request.Method = Method.Post;
 
 				request.AddHeader("cache-control", "no-cache");
 				request.AddHeader("Content-Type", "application/json");
@@ -70,7 +70,10 @@ public class SmsSender : ISmsSender {
 				                     "}]}",
 				                     ParameterType.RequestBody);
 
-				client.ExecutePostAsync(request);
+				//client.ExecutePostAsync(request);
+				IRestResponse response = client.Execute(request);
+
+
 				return 0;
 
 				#endregion
