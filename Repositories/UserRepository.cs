@@ -273,10 +273,10 @@ public class UserRepository : IUserRepository {
 		if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
 		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products);
 
-		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt != null);
+		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
 
-		// if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
-		// if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
+		if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
+		if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
 
 		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
 		IEnumerable<UserReadDto>? readDto = _mapper.Map<IEnumerable<UserReadDto>>(entity);
