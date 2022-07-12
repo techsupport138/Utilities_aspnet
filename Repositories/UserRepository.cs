@@ -6,12 +6,10 @@ namespace Utilities_aspnet.Repositories;
 public interface IUserRepository {
 	Task<GenericResponse<GrowthRateReadDto?>> GrowthRate(string id);
 	Task<GenericResponse> SeederUser(SeederUserDto dto);
-	Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto dto);
 	Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
 	Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto);
-	Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null);
-	Task<GenericResponse<UserReadDto?>> GetUser(UserFilterDto dto, string? token = null);
+	Task<GenericResponse<UserReadDto?>> GetProfile(string idOrUserName, string? token = null);
 	Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
 	Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
 	Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto);
@@ -126,33 +124,6 @@ public class UserRepository : IUserRepository {
 			UtilitiesStatusCodes.Success, "Success");
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> RegisterWithEmail(RegisterWithEmailDto aspNetUser) {
-		UserEntity? model = _context.Set<UserEntity>()
-			.FirstOrDefault(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email);
-		if (model != null)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
-			                                         "This email or username already exists");
-
-		UserEntity user = new() {
-			Email = aspNetUser.Email,
-			UserName = aspNetUser.UserName,
-			PhoneNumber = aspNetUser.UserName,
-			EmailConfirmed = false,
-			PhoneNumberConfirmed = false
-		};
-
-		IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
-		if (!result.Succeeded)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
-			                                         "The information was not entered correctly");
-
-		JwtSecurityToken token = await CreateToken(user);
-
-		return new GenericResponse<UserReadDto?>(
-			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-			UtilitiesStatusCodes.Success, "Success");
-	}
-
 	public async Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
 		UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == dto.Mobile);
 		string mobile = dto.Mobile.Replace("+98", "0").Replace("+", "");
@@ -222,7 +193,8 @@ public class UserRepository : IUserRepository {
 		);
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null) {
+	public async Task<GenericResponse<UserReadDto?>> GetProfile(string idOrUserName, string? token = null) {
+		bool isUserId = Guid.TryParse(idOrUserName, out _);
 		UserEntity? model = await _context.Set<UserEntity>()
 			.AsNoTracking()
 			.Include(u => u.Media)
@@ -230,11 +202,11 @@ public class UserRepository : IUserRepository {
 			.Include(u => u.Location)
 			.Include(u => u.Products)!.ThenInclude(x => x.Media)
 			.Include(u => u.Gender)
-			.FirstOrDefaultAsync(u => u.Id == id);
+			.FirstOrDefaultAsync(u => isUserId ? u.Id == idOrUserName : u.UserName == idOrUserName);
 
 		if (model == null)
 			return new GenericResponse<UserReadDto?>(new UserReadDto(), UtilitiesStatusCodes.NotFound,
-			                                         $"User: {id} Not Found");
+			                                         $"User: {idOrUserName} Not Found");
 
 		UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
 		userReadDto.CountProducts = model.Products?.Count();
@@ -246,29 +218,6 @@ public class UserRepository : IUserRepository {
 		userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
 
 		return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
-	}
-
-	public async Task<GenericResponse<UserReadDto?>> GetUser(UserFilterDto dto, string? token = null) {
-		IIncludableQueryable<UserEntity, object?>? i = _context.Set<UserEntity>()
-			.Include(u => u.Media)
-			.Include(u => u.Gender);
-		if (dto.ShowCategories.IsTrue()) i.Include(u => u.Categories);
-		if (dto.ShowForms.IsTrue()) i.Include(u => u.FormBuilders);
-		if (dto.ShowLocations.IsTrue()) i.Include(u => u.Location);
-		if (dto.ShowTransactions.IsTrue()) i.Include(u => u.Transactions);
-		if (dto.ShowProducts.IsTrue()) i.Include(u => u.Products);
-
-		UserEntity? entity =
-			await i.FirstOrDefaultAsync(x => dto.UserId != null ? x.Id == dto.UserId : x.UserName == dto.UserName);
-
-		if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
-		UserReadDto? readDto = _mapper.Map<UserReadDto>(i);
-		readDto.CountProducts = entity.Products?.Count();
-		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
-		readDto.CountFollowers = follower.Count;
-		readDto.GrowthRate = GetGrowthRate(readDto.Id).Result;
-
-		return new GenericResponse<UserReadDto?>(readDto);
 	}
 
 	public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id) {
