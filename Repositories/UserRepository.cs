@@ -567,12 +567,17 @@ public class UserRepository : IUserRepository {
 
 	#endregion
 
-	private async void FillUserData(UserCreateUpdateDto dto, UserEntity entity) {
+	private void FillUserData(UserCreateUpdateDto dto, UserEntity entity) {
 		entity.FirstName = dto.FirstName ?? entity.FirstName;
 		entity.LastName = dto.LastName ?? entity.LastName;
 		entity.FullName = dto.FullName ?? entity.FullName;
 		entity.Bio = dto.Bio ?? entity.Bio;
 		entity.AppUserName = dto.AppUserName ?? entity.AppUserName;
+		entity.AppEmail = dto.AppEmail ?? entity.AppEmail;
+		entity.Instagram = dto.Instagram ?? entity.Instagram;
+		entity.Telegram = dto.Telegram ?? entity.Telegram;
+		entity.WhatsApp = dto.WhatsApp ?? entity.WhatsApp;
+		entity.LinkedIn = dto.LinkedIn ?? entity.LinkedIn;
 		entity.AppEmail = dto.AppEmail ?? entity.AppEmail;
 		entity.Region = dto.Region ?? entity.Region;
 		entity.Activity = dto.Activity ?? entity.Activity;

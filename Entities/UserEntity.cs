@@ -10,6 +10,10 @@ public class UserEntity : IdentityUser {
 	public string? AppUserName { get; set; }
 	public string? AppPhoneNumber { get; set; }
 	public string? AppEmail { get; set; }
+	public string? Instagram { get; set; }
+	public string? Telegram { get; set; }
+	public string? WhatsApp { get; set; }
+	public string? LinkedIn { get; set; }
 	public string? Website { get; set; }
 	public string? Type { get; set; }
 	public string? Region { get; set; }
@@ -117,6 +121,10 @@ public class UserReadDto {
 	public string? AppUserName { get; set; }
 	public string? AppPhoneNumber { get; set; }
 	public string? AppEmail { get; set; }
+	public string? Instagram { get; set; }
+	public string? Telegram { get; set; }
+	public string? Whatsapp { get; set; }
+	public string? LinkedIn { get; set; }
 	public string? Color { get; set; }
 	public string? Type { get; set; }
 	public string? FirstName { get; set; }
@@ -191,6 +199,10 @@ public class UserCreateUpdateDto {
 	public string? AppUserName { get; set; }
 	public string? AppPhoneNumber { get; set; }
 	public string? AppEmail { get; set; }
+	public string? Instagram { get; set; }
+	public string? Telegram { get; set; }
+	public string? WhatsApp { get; set; }
+	public string? LinkedIn { get; set; }
 	public string? Type { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
@@ -212,6 +224,7 @@ public class UserFilterDto {
 	public bool? ShowForms { get; set; }
 	public bool? ShowProducts { get; set; }
 	public bool? ShowTransactions { get; set; }
+	public bool? ShowFollowings { get; set; }
 }
 
 public class SeederUserDto {
