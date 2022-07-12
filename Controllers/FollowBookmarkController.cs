@@ -9,14 +9,14 @@ public class FollowBookmarkController : BaseApiController {
 	public FollowBookmarkController(IFollowBookmarkRepository repository) => _repository = repository;
 
 	[HttpPost("ReadFollowers")]
-	public async Task<ActionResult<GenericResponse<FollowReadDto>>> ReadFollowers() {
-		GenericResponse<FollowReadDto> result = await _repository.GetFollowers(User.Identity?.Name!);
+	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> ReadFollowers() {
+		GenericResponse<IEnumerable<UserReadDto>> result = await _repository.GetFollowers(User.Identity?.Name!);
 		return Result(result);
 	}
 
 	[HttpPost("ReadFollowings")]
-	public async Task<ActionResult<GenericResponse<FollowReadDto>>> ReadFollowings() {
-		GenericResponse<FollowingReadDto> result = await _repository.GetFollowing(User.Identity?.Name!);
+	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> ReadFollowings() {
+		GenericResponse<IEnumerable<UserReadDto>> result = await _repository.GetFollowing(User.Identity?.Name!);
 		return Result(result);
 	}
 

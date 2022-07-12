@@ -28,25 +28,12 @@ public class BookmarkCreateDto {
 	public Guid? CategoryId { get; set; }
 }
 
-public class BookmarkFolderReadDto {
-	public Guid? Id { get; set; }
-	public string? Title { get; set; }
-}
-
 public class BookmarkReadDto {
 	public string? FolderName { get; set; }
 	public ProductReadDto? Product { get; set; }
 	public ProductReadDto? Category { get; set; }
 }
 
-public class FollowReadDto {
-	public IEnumerable<UserReadDto>? Followers { get; set; }
-}
-
 public class FollowCreateDto {
 	public string UserId { get; set; } = null!;
-}
-
-public class FollowingReadDto {
-	public IEnumerable<UserReadDto>? Followings { get; set; }
 }

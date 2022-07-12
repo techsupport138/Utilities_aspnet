@@ -146,7 +146,6 @@ public class UserReadDto {
 	public IEnumerable<LocationReadDto>? Locations { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<ProductReadDto>? Products { get; set; }
-	public IEnumerable<BookmarkFolderReadDto>? BookmarkFolders { get; set; }
 }
 
 public class UserMinimalReadDto {

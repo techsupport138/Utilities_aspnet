@@ -341,21 +341,20 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers(UserFilterDto dto) {
-		DbSet<UserEntity> dbSet = _context.Set<UserEntity>();
-
-		if (dto.ShowMedia.IsTrue()) dbSet.Include(u => u.Media);
-		if (dto.ShowGender.IsTrue()) dbSet.Include(u => u.Gender);
-		if (dto.ShowCategories.IsTrue()) dbSet.Include(u => u.Categories);
-		if (dto.ShowForms.IsTrue()) dbSet.Include(u => u.FormBuilders);
-		if (dto.ShowLocations.IsTrue()) dbSet.Include(u => u.Location);
-		if (dto.ShowTransactions.IsTrue()) dbSet.Include(u => u.Transactions);
-		if (dto.ShowProducts.IsTrue()) dbSet.Include(u => u.Products);
+		IIncludableQueryable<UserEntity, object?> dbSet = _context.Set<UserEntity>().Include(u => u.Media);
+		
+		if (dto.ShowGender.IsTrue()) dbSet = dbSet.Include(u => u.Gender);
+		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(u => u.Categories);
+		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
+		if (dto.ShowLocations.IsTrue()) dbSet = dbSet.Include(u => u.Location);
+		if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
+		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products);
 
 		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt != null);
 
 		if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
-		if (dto.UserName != null) q = q.Where(x => x.AppUserName == dto.UserName);
-		
+		if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
+
 		IEnumerable<UserReadDto>? result = _mapper.Map<IEnumerable<UserReadDto>>(await q.AsNoTracking().ToListAsync());
 
 		return new GenericResponse<IEnumerable<UserReadDto>>(result);

@@ -1,16 +1,13 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IFollowBookmarkRepository {
-	Task<GenericResponse<FollowReadDto>> GetFollowers(string id);
-	Task<GenericResponse<FollowingReadDto>> GetFollowing(string id);
+	Task<GenericResponse<IEnumerable<UserReadDto>>> GetFollowers(string id);
+	Task<GenericResponse<IEnumerable<UserReadDto>>> GetFollowing(string id);
 	Task<GenericResponse> ToggleFollow(string sourceUserId, FollowCreateDto dto);
 	Task<GenericResponse> RemoveFollowings(string targetUserId, FollowCreateDto dto);
 	Task<GenericResponse<IEnumerable<BookmarkReadDto>?>> ReadBookmarks();
 
 	Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto);
-	//Task<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>> ReadBookmarkFolders();
-	//Task<GenericResponse> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto);
-	//Task<GenericResponse> DeleteBookmarkFolder(Guid id);
 }
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
@@ -69,56 +66,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 		return new GenericResponse<IEnumerable<BookmarkReadDto>?>(_mapper.Map<IEnumerable<BookmarkReadDto>>(bookmark));
 	}
 
-	//public async Task<GenericResponse<BookmarkReadDto>> ReadBookmarksOld() {
-	//	GenericResponse<IEnumerable<ProductReadDto>> products =
-	//		await _productRepository.Read(new FilterProductDto {IsBookmarked = true});
-
-	//	BookmarkReadDto dto = new() {
-	//		Products = products.Result
-	//	};
-
-	//	return new GenericResponse<BookmarkReadDto?>(_mapper.Map<BookmarkReadDto>(dto));
-	//}
-
-	//public async Task<GenericResponse> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto) {
-	//	BookmarkFolderEntity? oldBookmarkFolder = _context.Set<BookmarkFolderEntity>()
-	//		.FirstOrDefault(x => ( x.Id == dto.Id && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
-	//	if (oldBookmarkFolder == null) {
-	//		BookmarkFolderEntity bookmarkFolder = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name! , Title = dto.Title};
-
-	//		await _context.Set<BookmarkFolderEntity>().AddAsync(bookmarkFolder);
-	//		await _context.SaveChangesAsync();
-	//	}
-	//	else {
-	//		oldBookmarkFolder.Title = dto.Title;
-	//		await _context.SaveChangesAsync();
-	//	}
-
-	//	return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
-	//}
-
-	//public async Task<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>> ReadBookmarkFolders() {
-
-	//	IEnumerable<BookmarkFolderEntity>? bookmarkFolders = await _context.Set<BookmarkFolderEntity>().Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!).ToListAsync();
-
-	//	return new GenericResponse<IEnumerable<BookmarkFolderReadDto>?>(_mapper.Map<IEnumerable<BookmarkFolderReadDto>?>(bookmarkFolders));
-	//}
-
-	//public async Task<GenericResponse> DeleteBookmarkFolder(Guid id)
-	//{
-	//	BookmarkFolderEntity? bookmarkFolder = _context.Set<BookmarkFolderEntity>().Include(x=>x.Bookmarks)
-	//		.FirstOrDefault(x => (x.Id == id && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
-	//	if (bookmarkFolder != null)
-	//	{
-
-	//		_context.Set<BookmarkFolderEntity>().Remove(bookmarkFolder);
-	//		await _context.SaveChangesAsync();
-	//	}
-
-	//	return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
-	//}
-
-	public async Task<GenericResponse<FollowReadDto>> GetFollowers(string id) {
+	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetFollowers(string id) {
 		IEnumerable<UserEntity?> followers = await _context.Set<FollowEntity>()
 			.AsNoTracking()
 			.Where(x => x.FollowsUserId == id)
@@ -129,10 +77,10 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followers);
 
-		return new GenericResponse<FollowReadDto>(new FollowReadDto {Followers = users});
+		return new GenericResponse<IEnumerable<UserReadDto>>(users);
 	}
 
-	public async Task<GenericResponse<FollowingReadDto>> GetFollowing(string id) {
+	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetFollowing(string id) {
 		IEnumerable<UserEntity?> followings = await _context.Set<FollowEntity>()
 			.AsNoTracking()
 			.Where(x => x.FollowerUserId == id)
@@ -143,7 +91,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followings);
 
-		return new GenericResponse<FollowingReadDto>(new FollowingReadDto {Followings = users});
+		return new GenericResponse<IEnumerable<UserReadDto>>(users);
 	}
 
 	public async Task<GenericResponse> ToggleFollow(string sourceUserId, FollowCreateDto parameters) {
@@ -164,7 +112,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			await _context.SaveChangesAsync();
 			try {
 				_notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
-					UserId = parameters.UserId, Message = "You are being followed by " + myUser.UserName, Title = "Follow", UseCase = "Follow", CreatorUserId = sourceUserId
+					UserId = parameters.UserId, Message = "You are being followed by " + myUser.UserName, Title = "Follow",
+					UseCase = "Follow", CreatorUserId = sourceUserId
 				});
 			}
 			catch { }
