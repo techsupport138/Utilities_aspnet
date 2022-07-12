@@ -13,8 +13,6 @@ public interface IUserRepository {
 	Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
 	Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
 	Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto);
-	Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto dto);
-	Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto dto);
 	Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers();
 	Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto parameter);
 	Task<GenericResponse> DeleteUser(string id);
@@ -315,39 +313,6 @@ public class UserRepository : IUserRepository {
 		await _context.SaveChangesAsync();
 		GenericResponse<UserReadDto?> readDto = await GetProfile(entity.Id, "");
 		return readDto;
-	}
-
-	public async Task<GenericResponse<UserReadDto?>> LoginFormWithEmail(LoginWithEmailDto model) {
-		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
-
-		if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
-
-		SignInResult? result =
-			await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.Keep, false);
-		return !result.Succeeded
-			? new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!")
-			: new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
-	}
-
-	public async Task<GenericResponse<UserReadDto?>> RegisterFormWithEmail(RegisterFormWithEmailDto model) {
-		UserEntity? u = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == model.Email);
-		if (u != null)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
-			                                         "This email or username already exists");
-
-		UserEntity user = new() {
-			Email = model.Email,
-			UserName = model.Email,
-			EmailConfirmed = false,
-			PhoneNumberConfirmed = false,
-			Suspend = false
-		};
-
-		IdentityResult? result = await _userManager.CreateAsync(user, model.Password);
-		return !result.Succeeded
-			? new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
-			                                    "The information was not entered correctly")
-			: new GenericResponse<UserReadDto?>(GetProfile(user.Id).Result.Result, UtilitiesStatusCodes.Success, "Success");
 	}
 
 	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers() {
