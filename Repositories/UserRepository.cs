@@ -10,7 +10,6 @@ public interface IUserRepository {
 	Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> GetProfile(string idOrUserName, string? token = null);
-	Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
 	Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto);
 	Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers(UserFilterDto dto);
 	Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto parameter);
@@ -230,23 +229,6 @@ public class UserRepository : IUserRepository {
 		dto.CountFollowers = follower.Count;
 
 		return new GenericResponse<UserMinimalReadDto?>(dto);
-	}
-
-	public async Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string username) {
-		UserEntity? entity = await _context.Set<UserEntity>()
-			.Include(u => u.Media)
-			.Include(u => u.Categories)
-			.Include(u => u.Products)!.ThenInclude(x => x.Media)
-			.Include(u => u.Location)
-			.Include(u => u.Gender)
-			.AsNoTracking().FirstOrDefaultAsync(i => i.UserName == username);
-		if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
-		UserReadDto? dto = _mapper.Map<UserReadDto>(entity);
-		dto.CountProducts = entity.Products?.Count();
-		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
-		dto.CountFollowers = follower.Count;
-		dto.GrowthRate = GetGrowthRate(dto.Id).Result;
-		return new GenericResponse<UserReadDto?>(dto);
 	}
 
 	public async Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto) {

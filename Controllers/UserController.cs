@@ -63,59 +63,7 @@ public class UserController : BaseApiController {
 		GenericResponse i = await _userRepository.VerifyMobileForLogin(dto);
 		return Result(i);
 	}
-
-	[HttpGet("GetProfile")]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<UserReadDto>>> ReadProfile() {
-		try {
-			GenericResponse i = await _userRepository.GetProfile(User.Identity!.Name!);
-			return Result(i);
-		}
-		catch (Exception) {
-			return StatusCode(UtilitiesStatusCodes.Unhandled.Value(),
-			                  new GenericResponse<UserReadDto>(null, UtilitiesStatusCodes.Unhandled, "یه مشکلی پیش اومده"));
-		}
-	}
-
-	[HttpPut("UpdateProfile")]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse>> UpdateProfile(UserCreateUpdateDto dto) {
-		try {
-			dto.Id = User.Identity.Name;
-			GenericResponse i = await _userRepository.UpdateUser(dto);
-			return Result(i);
-		}
-		catch (Exception) {
-			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
-		}
-	}
-
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[AllowAnonymous]
-	[HttpGet("GetProfileByUsername/{username}")]
-	public async Task<ActionResult<GenericResponse<UserReadDto?>>> GetProfileByUsername(string username) {
-		try {
-			GenericResponse i = await _userRepository.GetProfileByUserName(username);
-			return Result(i);
-		}
-		catch (Exception) {
-			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
-		}
-	}
 	
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[AllowAnonymous]
-	[HttpGet("GetProfileByUserId/{userId}")]
-	public async Task<ActionResult<GenericResponse<UserMinimalReadDto?>>> GetProfileByUserId(string userId) {
-		try {
-			GenericResponse i = await _userRepository.GetMinProfileById(userId);
-			return Result(i);
-		}
-		catch (Exception) {
-			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
-		}
-	}
-
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse>> Create(UserCreateUpdateDto dto) {
@@ -128,8 +76,8 @@ public class UserController : BaseApiController {
 		}
 	}
 
-	[HttpPost("Read")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> Read(UserFilterDto dto) {
+	[HttpPost("Filter")]
+	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> Filter(UserFilterDto dto) {
 		try {
 			GenericResponse i = await _userRepository.GetUsers(dto);
 			return Result(i);
@@ -138,9 +86,7 @@ public class UserController : BaseApiController {
 			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
 		}
 	}
-
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[AllowAnonymous]
+	
 	[HttpGet("{id}")]
 	public async Task<ActionResult<GenericResponse<UserReadDto?>>> ReadById(string id) {
 		try {
