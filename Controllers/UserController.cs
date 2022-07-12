@@ -128,10 +128,10 @@ public class UserController : BaseApiController {
 		}
 	}
 
-	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> Read() {
+	[HttpPost("Read")]
+	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> Read(UserFilterDto dto) {
 		try {
-			GenericResponse i = await _userRepository.GetUsers();
+			GenericResponse i = await _userRepository.GetUsers(dto);
 			return Result(i);
 		}
 		catch (Exception) {
