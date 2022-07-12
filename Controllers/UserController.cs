@@ -144,7 +144,7 @@ public class UserController : BaseApiController {
 	[HttpGet("{id}")]
 	public async Task<ActionResult<GenericResponse<UserReadDto?>>> ReadById(string id) {
 		try {
-			GenericResponse i = await _userRepository.GetProfileById(id);
+			GenericResponse i = await _userRepository.GetProfile(id);
 			return Result(i);
 		}
 		catch (Exception) {
