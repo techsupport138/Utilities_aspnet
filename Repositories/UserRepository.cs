@@ -15,7 +15,7 @@ public interface IUserRepository {
 	Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
 	Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
 	Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto);
-	Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers();
+	Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers(UserFilterDto dto);
 	Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto parameter);
 	Task<GenericResponse> DeleteUser(string id);
 	Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
@@ -264,9 +264,10 @@ public class UserRepository : IUserRepository {
 		if (dto.ShowLocations.IsTrue()) i.Include(u => u.Location);
 		if (dto.ShowTransactions.IsTrue()) i.Include(u => u.Transactions);
 		if (dto.ShowProducts.IsTrue()) i.Include(u => u.Products);
-		
-		UserEntity? entity = await i.FirstOrDefaultAsync(x => dto.UserId != null ? x.Id == dto.UserId : x.UserName == dto.UserName);
-		
+
+		UserEntity? entity =
+			await i.FirstOrDefaultAsync(x => dto.UserId != null ? x.Id == dto.UserId : x.UserName == dto.UserName);
+
 		if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserReadDto? readDto = _mapper.Map<UserReadDto>(i);
 		readDto.CountProducts = entity.Products?.Count();
@@ -339,15 +340,21 @@ public class UserRepository : IUserRepository {
 		return readDto;
 	}
 
-	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers() {
-		IEnumerable<UserEntity> users = await _context.Set<UserEntity>()
-			.AsNoTracking()
-			.Include(u => u.Media)
-			.Include(u => u.Categories)
-			.Include(u => u.Products)
-			.ToListAsync();
+	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers(UserFilterDto dto) {
+		IIncludableQueryable<UserEntity, object?> dbSet = _context.Set<UserEntity>().Include(u => u.Media);
 
-		IEnumerable<UserReadDto>? result = _mapper.Map<IEnumerable<UserReadDto>>(users);
+		if (dto.ShowCategories.IsTrue()) dbSet.Include(u => u.Categories);
+		if (dto.ShowForms.IsTrue()) dbSet.Include(u => u.FormBuilders);
+		if (dto.ShowLocations.IsTrue()) dbSet.Include(u => u.Location);
+		if (dto.ShowTransactions.IsTrue()) dbSet.Include(u => u.Transactions);
+		if (dto.ShowProducts.IsTrue()) dbSet.Include(u => u.Products);
+
+		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
+
+		if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
+		if (dto.UserName != null) q = q.Where(x => x.AppUserName == dto.UserName);
+		
+		IEnumerable<UserReadDto>? result = _mapper.Map<IEnumerable<UserReadDto>>(await q.AsNoTracking().ToListAsync());
 
 		return new GenericResponse<IEnumerable<UserReadDto>>(result);
 	}
