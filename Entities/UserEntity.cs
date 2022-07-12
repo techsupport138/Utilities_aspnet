@@ -204,6 +204,16 @@ public class UserCreateUpdateDto {
 	public IEnumerable<int>? Locations { get; set; }
 }
 
+public class UserFilterDto {
+	public string? UserId { get; set; }
+	public string? UserName { get; set; }
+	public bool? ShowCategories { get; set; }
+	public bool? ShowLocations { get; set; }
+	public bool? ShowForms { get; set; }
+	public bool? ShowProducts { get; set; }
+	public bool? ShowTransactions { get; set; }
+}
+
 public class SeederUserDto {
 	public List<UserCreateUpdateDto> Users { get; set; }
 }

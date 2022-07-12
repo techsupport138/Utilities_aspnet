@@ -1,4 +1,5 @@
-﻿using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+﻿using Microsoft.EntityFrameworkCore.Query;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Utilities_aspnet.Repositories;
 
@@ -10,6 +11,7 @@ public interface IUserRepository {
 	Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> GetProfile(string id, string? token = null);
+	Task<GenericResponse<UserReadDto?>> GetUser(UserFilterDto dto, string? token = null);
 	Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
 	Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
 	Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto);
@@ -253,6 +255,28 @@ public class UserRepository : IUserRepository {
 		return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
 	}
 
+	public async Task<GenericResponse<UserReadDto?>> GetUser(UserFilterDto dto, string? token = null) {
+		IIncludableQueryable<UserEntity, object?>? i = _context.Set<UserEntity>()
+			.Include(u => u.Media)
+			.Include(u => u.Gender);
+		if (dto.ShowCategories.IsTrue()) i.Include(u => u.Categories);
+		if (dto.ShowForms.IsTrue()) i.Include(u => u.FormBuilders);
+		if (dto.ShowLocations.IsTrue()) i.Include(u => u.Location);
+		if (dto.ShowTransactions.IsTrue()) i.Include(u => u.Transactions);
+		if (dto.ShowProducts.IsTrue()) i.Include(u => u.Products);
+		
+		UserEntity? entity = await i.FirstOrDefaultAsync(x => dto.UserId != null ? x.Id == dto.UserId : x.UserName == dto.UserName);
+		
+		if (entity == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
+		UserReadDto? readDto = _mapper.Map<UserReadDto>(i);
+		readDto.CountProducts = entity.Products?.Count();
+		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
+		readDto.CountFollowers = follower.Count;
+		readDto.GrowthRate = GetGrowthRate(readDto.Id).Result;
+
+		return new GenericResponse<UserReadDto?>(readDto);
+	}
+
 	public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id) {
 		UserEntity? model = await _context.Set<UserEntity>()
 			.Include(u => u.Media)
@@ -270,11 +294,11 @@ public class UserRepository : IUserRepository {
 
 		return new GenericResponse<UserReadDto?>(dto);
 	}
-	
+
 	public async Task<GenericResponse<UserMinimalReadDto?>> GetMinProfileById(string id) {
 		UserEntity? model = await _context.Set<UserEntity>()
 			.Include(u => u.Media)
-			.Include(u=>u.Categories)
+			.Include(u => u.Categories)
 			.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
 		if (model == null) return new GenericResponse<UserMinimalReadDto?>(null, UtilitiesStatusCodes.NotFound);
 		UserMinimalReadDto? dto = _mapper.Map<UserMinimalReadDto>(model);
