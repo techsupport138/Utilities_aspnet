@@ -10,7 +10,6 @@ public interface IUserRepository {
 	Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> GetProfile(string idOrUserName, string? token = null);
-	Task<GenericResponse<UserReadDto?>> GetProfileById(string id);
 	Task<GenericResponse<UserReadDto?>> GetProfileByUserName(string id);
 	Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto);
 	Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers(UserFilterDto dto);
@@ -220,24 +219,6 @@ public class UserRepository : IUserRepository {
 		return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> GetProfileById(string id) {
-		UserEntity? model = await _context.Set<UserEntity>()
-			.Include(u => u.Media)
-			.Include(u => u.Categories)
-			.Include(u => u.Products)!.ThenInclude(x => x.Media)
-			.Include(u => u.Location)
-			.Include(u => u.Gender)
-			.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
-		if (model == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound);
-		UserReadDto? dto = _mapper.Map<UserReadDto>(model);
-		dto.CountProducts = model.Products?.Count();
-		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
-		dto.CountFollowers = follower.Count;
-		dto.GrowthRate = GetGrowthRate(dto.Id).Result;
-
-		return new GenericResponse<UserReadDto?>(dto);
-	}
-
 	public async Task<GenericResponse<UserMinimalReadDto?>> GetMinProfileById(string id) {
 		UserEntity? model = await _context.Set<UserEntity>()
 			.Include(u => u.Media)
@@ -294,8 +275,8 @@ public class UserRepository : IUserRepository {
 
 		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt != null);
 
-		if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
-		if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
+		// if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
+		// if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
 
 		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
 		IEnumerable<UserReadDto>? readDto = _mapper.Map<IEnumerable<UserReadDto>>(entity);
@@ -347,10 +328,7 @@ public class UserRepository : IUserRepository {
 		if (!result.Succeeded)
 			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
 			                                         "The information was not entered correctly");
-		//await _context.Set<UserEntity>().AddAsync(entity);
-		//await _context.SaveChangesAsync();
-
-		return await GetProfileById(entity.Id);
+		return await GetProfile(entity.Id);
 	}
 
 	private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
