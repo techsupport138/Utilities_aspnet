@@ -8,15 +8,15 @@ public class FollowBookmarkController : BaseApiController {
 
 	public FollowBookmarkController(IFollowBookmarkRepository repository) => _repository = repository;
 
-	[HttpPost("ReadFollowers")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> ReadFollowers() {
-		GenericResponse<IEnumerable<UserReadDto>> result = await _repository.GetFollowers(User.Identity?.Name!);
+	[HttpPost("ReadFollowers/{userId}")]
+	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> ReadFollowers(string userId) {
+		GenericResponse<IEnumerable<UserReadDto>> result = await _repository.GetFollowers(userId);
 		return Result(result);
 	}
 
-	[HttpPost("ReadFollowings")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> ReadFollowings() {
-		GenericResponse<IEnumerable<UserReadDto>> result = await _repository.GetFollowing(User.Identity?.Name!);
+	[HttpPost("ReadFollowings/{userId}")]
+	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> ReadFollowings(string userId) {
+		GenericResponse<IEnumerable<UserReadDto>> result = await _repository.GetFollowing(userId);
 		return Result(result);
 	}
 
@@ -25,25 +25,7 @@ public class FollowBookmarkController : BaseApiController {
 		GenericResponse result = await _repository.ToggleFollow(User.Identity?.Name!, dto);
 		return Result(result);
 	}
-
-	//[HttpPost("BookmarkFolder")]
-	//public async Task<ActionResult<GenericResponse>> CreateUpdateBookmarkFolder(BookmarkFolderCreateUpdateDto dto) {
-	//	GenericResponse result = await _repository.CreateUpdateBookmarkFolder(dto);
-	//	return Result(result);
-	//}
-
-	//[HttpGet("BookmarkFolder")]
-	//public async Task<ActionResult<GenericResponse<IEnumerable<BookmarkFolderReadDto>?>>> ReadBookmarkFolders() {
-	//	GenericResponse<IEnumerable<BookmarkFolderReadDto>?> result = await _repository.ReadBookmarkFolders();
-	//	return Result(result);
-	//}
-
-	//[HttpDelete("BookmarkFolder/{id:guid}")]
-	//public async Task<ActionResult<GenericResponse>> DeleteBookmarkFolders(Guid id) {
-	//	GenericResponse result = await _repository.DeleteBookmarkFolder(id);
-	//	return Result(result);
-	//}
-
+	
 	[HttpPost("RemoveFollowing")]
 	public async Task<ActionResult<GenericResponse>> RemoveFollowing(FollowCreateDto dto) {
 		GenericResponse result = await _repository.RemoveFollowings(User?.Identity?.Name!, dto);

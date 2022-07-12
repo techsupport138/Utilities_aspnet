@@ -31,24 +31,17 @@ public class UserRepository : IUserRepository {
 	private readonly DbContext _context;
 	private readonly IMapper _mapper;
 	private readonly IOtpService _otp;
-	private readonly SignInManager<UserEntity> _signInManager;
-	private readonly ISmsSender _smsSender;
 	private readonly UserManager<UserEntity> _userManager;
 
 	public UserRepository(
 		DbContext context,
 		UserManager<UserEntity> userManager,
-		SignInManager<UserEntity> signInManager,
-		IConfiguration config,
 		IMapper mapper,
-		IOtpService otp,
-		ISmsSender smsSender) {
+		IOtpService otp) {
 		_context = context;
 		_userManager = userManager;
-		_signInManager = signInManager;
 		_otp = otp;
 		_mapper = mapper;
-		_smsSender = smsSender;
 	}
 
 	public async Task<GenericResponse> SeederUser(SeederUserDto dto) {
@@ -355,9 +348,10 @@ public class UserRepository : IUserRepository {
 		if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
 		if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
 
-		IEnumerable<UserReadDto>? result = _mapper.Map<IEnumerable<UserReadDto>>(await q.AsNoTracking().ToListAsync());
+		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
+		IEnumerable<UserReadDto>? readDto = _mapper.Map<IEnumerable<UserReadDto>>(entity);
 
-		return new GenericResponse<IEnumerable<UserReadDto>>(result);
+		return new GenericResponse<IEnumerable<UserReadDto>>(readDto);
 	}
 
 	public async Task<GenericResponse> DeleteUser(string id) {
