@@ -54,15 +54,15 @@ public class SmsSender : ISmsSender {
 				#region FarazSMS
 
 				RestClient client = new("http://188.0.240.110/api/select");
-				RestRequest request = new(); //  new(Method.Post);
-				request.Method = Method.Post;
+				RestRequest request = new RestRequest(Method.POST);
+				//request.Method = Method.Post;
 
 				request.AddHeader("cache-control", "no-cache");
 				request.AddHeader("Content-Type", "application/json");
 				request.AddHeader("Authorization", "AccessKey U4-OM_COTYg_NBkwWBQtYeUUv1ODRKDrXEYtmtDfyRY=");
 
 				request.AddParameter("undefined",
-				                     "{\"op\" : \"pattern\"" + ",\"user\" : \"09130269500\"" + ",\"pass\":  \"C1System\"" +
+				                     "{\"op\" : \"pattern\"" + ",\"user\" : \"Anborapp\"" + ",\"pass\":  \"Anbor:/3890\"" +
 				                     ",\"fromNum\" : " +
 				                     "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " +
 				                     mobileNumber.TrimStart(new[] {'0'}) + "" +
@@ -70,7 +70,10 @@ public class SmsSender : ISmsSender {
 				                     "}]}",
 				                     ParameterType.RequestBody);
 
-				client.ExecutePostAsync(request);
+				//client.ExecutePostAsync(request);
+				IRestResponse response = client.Execute(request);
+
+
 				return 0;
 
 				#endregion
