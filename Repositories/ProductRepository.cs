@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore.Query;
-
 namespace Utilities_aspnet.Repositories;
 
 public interface IProductRepository {

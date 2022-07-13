@@ -1,7 +1,4 @@
-﻿using Zarinpal;
-using Zarinpal.Models;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface IPaymentRepository {
 	Task<GenericResponse<string?>> IncreaseWalletBalance(double amount, string zarinPalMerchantId);

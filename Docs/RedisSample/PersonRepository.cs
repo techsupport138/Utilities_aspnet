@@ -1,6 +1,3 @@
-// using System.Text.Json;
-// using StackExchange.Redis;
-//
 // namespace Utilities_aspnet.Docs.RedisSample;
 //
 // public interface IPersonRepository {

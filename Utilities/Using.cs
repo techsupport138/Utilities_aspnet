@@ -40,3 +40,7 @@ global using Utilities_aspnet.Entities;
 global using Utilities_aspnet.Repositories;
 global using System.Diagnostics;
 global using Microsoft.EntityFrameworkCore.Query;
+global using Zarinpal;
+global using Zarinpal.Models;
+global using ElmahCore.Mvc;
+global using ElmahCore.Sql;
