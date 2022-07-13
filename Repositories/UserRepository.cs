@@ -203,7 +203,7 @@ public class UserRepository : IUserRepository {
 			.FirstOrDefaultAsync(u => isUserId ? u.Id == idOrUserName : u.UserName == idOrUserName);
 
 		if (model == null)
-			return new GenericResponse<UserReadDto?>(new UserReadDto(), UtilitiesStatusCodes.NotFound,
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound,
 			                                         $"User: {idOrUserName} Not Found");
 
 		UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
