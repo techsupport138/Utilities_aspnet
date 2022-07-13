@@ -25,7 +25,7 @@ public class FollowBookmarkController : BaseApiController {
 		GenericResponse result = await _repository.ToggleFollow(User.Identity?.Name!, dto);
 		return Result(result);
 	}
-	
+
 	[HttpPost("RemoveFollowing")]
 	public async Task<ActionResult<GenericResponse>> RemoveFollowing(FollowCreateDto dto) {
 		GenericResponse result = await _repository.RemoveFollowings(User?.Identity?.Name!, dto);

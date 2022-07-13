@@ -11,21 +11,13 @@ public interface IMediaRepository {
 public class MediaRepository : IMediaRepository {
 	private readonly IWebHostEnvironment _env;
 
-	public MediaRepository(IWebHostEnvironment env) {
-		_env = env;
-	}
+	public MediaRepository(IWebHostEnvironment env) => _env = env;
 
-	public string GetFileName(Guid guid, string folder, string ext) {
-		return folder + guid.ToString("N") + ext;
-	}
+	public string GetFileName(Guid guid, string folder, string ext) => folder + guid.ToString("N") + ext;
 
-	public string GetFileName(Guid guid, string ext = ".png") {
-		return guid.ToString("N") + ext;
-	}
+	public string GetFileName(Guid guid, string ext = ".png") => guid.ToString("N") + ext;
 
-	public string GetFileUrl(string name, string folder) {
-		return Path.Combine(folder, name);
-	}
+	public string GetFileUrl(string name, string folder) => Path.Combine(folder, name);
 
 	public bool SaveMedia(IFormFile image, string name, string folder) {
 		try {
@@ -57,7 +49,5 @@ public class MediaRepository : IMediaRepository {
 		}
 	}
 
-	public bool SaveMedia(IFormFile image, string name) {
-		return SaveMedia(image, name, "");
-	}
+	public bool SaveMedia(IFormFile image, string name) => SaveMedia(image, name, "");
 }

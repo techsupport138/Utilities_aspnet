@@ -18,7 +18,8 @@ public class NotificationRepository : INotificationRepository {
 
 	public async Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications() {
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-		IEnumerable<NotificationEntity> model = await _context.Set<NotificationEntity>().Include(x => x.Media).Include(x=>x.CreatorUser).ThenInclude(x=>x.Media)
+		IEnumerable<NotificationEntity> model = await _context.Set<NotificationEntity>().Include(x => x.Media)
+			.Include(x => x.CreatorUser).ThenInclude(x => x.Media)
 			.Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt)
 			.ToListAsync();
 
@@ -46,7 +47,8 @@ public class NotificationRepository : INotificationRepository {
 			if (model.Media.EndsWith("svg")) type = FileTypes.Svg;
 
 			await _context.Set<MediaEntity>().AddAsync(new MediaEntity {
-				NotificationId = notification.Id, CreatedAt = DateTime.Now, FileType = type, FileName = model.Media, Link = model.Media
+				NotificationId = notification.Id, CreatedAt = DateTime.Now, FileType = type, FileName = model.Media,
+				Link = model.Media
 			});
 			await _context.SaveChangesAsync();
 		}

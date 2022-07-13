@@ -44,7 +44,7 @@ public class UserController : BaseApiController {
 		GenericResponse i = await _userRepository.VerifyMobileForLogin(dto);
 		return Result(i);
 	}
-	
+
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse>> Create(UserCreateUpdateDto dto) {
@@ -67,7 +67,7 @@ public class UserController : BaseApiController {
 			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
 		}
 	}
-	
+
 	[HttpGet("{id}")]
 	public async Task<ActionResult<GenericResponse<UserReadDto?>>> ReadById(string id) {
 		try {

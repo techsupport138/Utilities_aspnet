@@ -30,7 +30,10 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 			.Where(x => x.Title.Contains(filter.Title) && filter.Category && x.DeletedAt == null)
 			.OrderByDescending(x => x.CreatedAt).ToListAsync();
 
-		IQueryable<UserEntity> userList = _context.Set<UserEntity>().Where(x => x.FullName.Contains(filter.Title) && filter.User);
+		IQueryable<UserEntity> userList = _context.Set<UserEntity>().Where(
+			x => x.UserName.Contains(filter.Title) && filter.User ||
+			     x.FullName.Contains(filter.Title) && filter.User ||
+			     x.AppUserName.Contains(filter.Title) && filter.User);
 
 		if (filter.Minimal)
 			userList = userList.OrderByDescending(x => x.CreatedAt);

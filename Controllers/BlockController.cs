@@ -8,12 +8,6 @@ public class BlockController : BaseApiController {
 
 	public BlockController(IBlockRepository repository) => _repository = repository;
 
-	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> Read() {
-		GenericResponse<IEnumerable<UserReadDto>> result = await _repository.Read();
-		return Result(result);
-	}
-
 	[HttpGet("ReadMine")]
 	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> ReadMine() {
 		GenericResponse<IEnumerable<UserReadDto>> result = await _repository.ReadMine();

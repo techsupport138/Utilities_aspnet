@@ -66,13 +66,13 @@ public class SmsSender : ISmsSender {
 				                     ",\"fromNum\" : " +
 				                     "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " +
 				                     mobileNumber.TrimStart(new[] {'0'}) + "" +
-									 ",\"patternCode\": \"atd5eng0d73h5wh\"" + ",\"inputData\" : [{\"verification-code\":" + message +
+				                     ",\"patternCode\": \"atd5eng0d73h5wh\"" + ",\"inputData\" : [{\"verification-code\":" +
+				                     message +
 				                     "}]}",
 				                     ParameterType.RequestBody);
 
 				//client.ExecutePostAsync(request);
 				IRestResponse response = client.Execute(request);
-
 
 				return 0;
 

@@ -15,7 +15,11 @@ public class CommentRepository : ICommentRepository {
 	private readonly IMapper _mapper;
 	private readonly INotificationRepository _notificationRepository;
 
-	public CommentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor, INotificationRepository notificationRepository) {
+	public CommentRepository(
+		DbContext context,
+		IMapper mapper,
+		IHttpContextAccessor httpContextAccessor,
+		INotificationRepository notificationRepository) {
 		_context = context;
 		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
@@ -55,12 +59,11 @@ public class CommentRepository : ICommentRepository {
 		await _context.AddAsync(comment);
 		await _context.SaveChangesAsync();
 
-		try
-		{
-			ProductEntity? product = await _context.Set<ProductEntity>().Include(x=>x.Media).FirstOrDefaultAsync(x=>x.Id == comment.ProductId);
+		try {
+			ProductEntity? product = await _context.Set<ProductEntity>().Include(x => x.Media)
+				.FirstOrDefaultAsync(x => x.Id == comment.ProductId);
 			string? linkMedia = product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.Link)?.FirstOrDefault();
-			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto
-			{
+			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
 				UserId = product.UserId,
 				Message = "Comment",
 				Title = "Comment",

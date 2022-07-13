@@ -10,10 +10,12 @@ public class NotificationEntity : BaseEntity {
 	public IEnumerable<MediaEntity>? Media { get; set; }
 
 	public string? UserId { get; set; }
+
 	[ForeignKey(nameof(UserId))]
 	public UserEntity? User { get; set; }
-	
+
 	public string? CreatorUserId { get; set; }
+
 	[ForeignKey(nameof(CreatorUserId))]
 	public UserEntity? CreatorUser { get; set; }
 }

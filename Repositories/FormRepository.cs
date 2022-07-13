@@ -3,7 +3,7 @@ namespace Utilities_aspnet.Repositories;
 public interface IFormRepository {
 	Task<GenericResponse<IEnumerable<FormFieldDto>>> ReadFormFields(Guid categoryId);
 	Task<GenericResponse<IEnumerable<FormFieldDto>?>> CreateFormFields(FormFieldDto dto);
-	Task<GenericResponse<IEnumerable<FormFieldDto>>> UpdateFormBuilder(FormCreateDto model);
+	Task<GenericResponse<IEnumerable<FormFieldDto>>> UpdateForm(FormCreateDto model);
 	Task<GenericResponse<IEnumerable<FormFieldDto>?>> UpdateFormFields(FormFieldDto dto);
 	Task<GenericResponse> DeleteFormField(Guid id);
 	Task<GenericResponse> DeleteFormBuilder(Guid id);
@@ -18,7 +18,7 @@ public class FormRepository : IFormRepository {
 		_mapper = mapper;
 	}
 
-	public async Task<GenericResponse<IEnumerable<FormFieldDto>>> UpdateFormBuilder(FormCreateDto model) {
+	public async Task<GenericResponse<IEnumerable<FormFieldDto>>> UpdateForm(FormCreateDto model) {
 		foreach (CategoryCreateUpdateDto item in model.Form)
 			try {
 				FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>

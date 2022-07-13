@@ -19,7 +19,7 @@ public class OrderRepository : IOrderRepository {
 	}
 
 	public async Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto) {
-		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
+		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
 		OrderEntity? oldOrder =
 			await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
 		if (oldOrder == null) {
@@ -51,7 +51,7 @@ public class OrderRepository : IOrderRepository {
 
 	public async Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine() {
 		IEnumerable<OrderEntity> model =
-			await _dbContext.Set<OrderEntity>().Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
+			await _dbContext.Set<OrderEntity>().Where(i => i.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
 				.ToListAsync();
 		return new GenericResponse<IEnumerable<OrderReadDto>>(_mapper.Map<IEnumerable<OrderReadDto>>(model));
 	}

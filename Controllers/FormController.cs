@@ -31,7 +31,7 @@ public class FormController : BaseApiController {
 
 	[HttpPost]
 	public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> CreateForm(FormCreateDto model) {
-		GenericResponse<IEnumerable<FormFieldDto>> i = await _formRepository.UpdateFormBuilder(model);
+		GenericResponse<IEnumerable<FormFieldDto>> i = await _formRepository.UpdateForm(model);
 		return Result(i);
 	}
 
