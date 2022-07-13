@@ -100,9 +100,9 @@ public class UserController : BaseApiController {
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse>> Update(UserCreateUpdateDto dto) {
+	public async Task<ActionResult<GenericResponse<UserReadDto>>> Update(UserCreateUpdateDto dto) {
 		try {
-			GenericResponse i = await _userRepository.UpdateUser(dto);
+			GenericResponse<UserReadDto?> i = await _userRepository.UpdateUser(dto);
 			return Result(i);
 		}
 		catch (Exception) {

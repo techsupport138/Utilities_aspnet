@@ -253,7 +253,7 @@ public class UserRepository : IUserRepository {
 		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
 		if (dto.ShowLocations.IsTrue()) dbSet = dbSet.Include(u => u.Location);
 		if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
-		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products);
+		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products).ThenInclude(u => u.Media);
 
 		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
 
