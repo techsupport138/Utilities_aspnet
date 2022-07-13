@@ -2,7 +2,7 @@
 
 [Table("Transactions")]
 public class TransactionEntity : BaseEntity {
-	public decimal? Amount { get; set; }
+	public double? Amount { get; set; }
 	public string? Descriptions { get; set; }
 	public TransactionStatus? StatusId { get; set; } = TransactionStatus.Pending;
 	public string? PaymentId { get; set; }
@@ -18,7 +18,7 @@ public class TransactionEntity : BaseEntity {
 public class TransactionReadDto {
 	public Guid? Id { get; set; }
 	public string? UserId { get; set; }
-	public decimal? Amount { get; set; }
+	public double? Amount { get; set; }
 	public string? Descriptions { get; set; }
 	public TransactionStatus? StatusId { get; set; } = TransactionStatus.Pending;
 	public string? PaymentId { get; set; }
@@ -33,7 +33,7 @@ public class TransactionReadDto {
 }
 
 public class TransactionCreateDto {
-	public decimal? Amount { get; set; }
+	public double? Amount { get; set; }
 	public string? UserId { get; set; }
 	public string? Descriptions { get; set; }
 	public TransactionStatus? StatusId { get; set; } = TransactionStatus.Pending;

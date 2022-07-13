@@ -10,20 +10,16 @@ public interface IContentRepository {
 
 public class ContentRepository : IContentRepository {
 	private readonly DbContext _context;
-	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IMapper _mapper;
 
-	public ContentRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public ContentRepository(DbContext context, IMapper mapper) {
 		_context = context;
 		_mapper = mapper;
-		_httpContextAccessor = httpContextAccessor;
 	}
 
 	public async Task<GenericResponse<ContentReadDto>> Create(ContentCreateUpdateDto dto) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
-		ContentEntity entity = _mapper.Map<ContentEntity>(dto);
-		entity.UserId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-		EntityEntry<ContentEntity> i = await _context.Set<ContentEntity>().AddAsync(entity);
+		EntityEntry<ContentEntity> i = await _context.Set<ContentEntity>().AddAsync(_mapper.Map<ContentEntity>(dto));
 		await _context.SaveChangesAsync();
 		return new GenericResponse<ContentReadDto>(_mapper.Map<ContentReadDto>(i.Entity));
 	}

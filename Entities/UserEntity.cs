@@ -20,6 +20,7 @@ public class UserEntity : IdentityUser {
 	public string? Activity { get; set; }
 	public string? Color { get; set; }
 	public double? Wallet { get; set; } = 0;
+	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
 	public DateTime? Birthdate { get; set; }
 	public DateTime? CreatedAt { get; set; }
@@ -134,6 +135,7 @@ public class UserReadDto {
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
 	public double? Wallet { get; set; }
+	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
 	public bool IsAdmin { get; set; }
 	public bool? Suspend { get; set; }
@@ -209,6 +211,7 @@ public class UserCreateUpdateDto {
 	public string? Color { get; set; }
 	public bool? Suspend { get; set; }
 	public double? Wallet { get; set; }
+	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
 	public DateTime? BirthDate { get; set; }
 	public int? GenderId { get; set; }

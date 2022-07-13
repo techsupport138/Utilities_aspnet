@@ -14,10 +14,7 @@ public class ProductEntity : BaseEntity {
 	public string? Email { get; set; }
 	public string? Type { get; set; }
 	public string? UseCase { get; set; }
-	public bool? IsForSale { get; set; }
-	public bool? Enabled { get; set; }
-	public decimal? Price { get; set; }
-	public int? VisitsCount { get; set; }
+	public string? Unit { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Length { get; set; }
@@ -26,7 +23,10 @@ public class ProductEntity : BaseEntity {
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
-	public string? Unit { get; set; }
+	public double? Price { get; set; }
+	public bool? IsForSale { get; set; }
+	public bool? Enabled { get; set; }
+	public int? VisitsCount { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
@@ -72,7 +72,7 @@ public class ProductReadDto {
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
 	public double? Score { get; set; }
-	public decimal? Price { get; set; }
+	public double? Price { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public double? Length { get; set; }
@@ -114,7 +114,7 @@ public class ProductCreateUpdateDto {
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public int? VisitsCount { get; set; }
-	public decimal? Price { get; set; }
+	public double? Price { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public double? Length { get; set; }
@@ -167,8 +167,8 @@ public class ProductFilterDto {
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
-	public decimal? StartPriceRange { get; set; }
-	public decimal? EndPriceRange { get; set; }
+	public double? StartPriceRange { get; set; }
+	public double? EndPriceRange { get; set; }
 	public int? VisitsCount { get; set; }
 	public int PageSize { get; set; } = 1000;
 	public int PageNumber { get; set; } = 1;
@@ -195,8 +195,8 @@ public class FilterProductDto {
 	public string? Type { get; set; }
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
-	public decimal? StartPriceRange { get; set; }
-	public decimal? EndPriceRange { get; set; }
+	public double? StartPriceRange { get; set; }
+	public double? EndPriceRange { get; set; }
 	public bool? Enabled { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? IsBookmarked { get; set; }
