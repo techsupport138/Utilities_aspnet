@@ -9,22 +9,9 @@ public class UserController : BaseApiController {
 		_userRepository = userRepository;
 	}
 
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[HttpGet("GrowthRate")]
-	public async Task<ActionResult<GenericResponse>> GrowthRate() {
-		GenericResponse i = await _userRepository.GrowthRate(User.Identity!.Name!);
-		return Result(i);
-	}
-
 	[HttpPost("Register")]
 	public async Task<ActionResult<GenericResponse>> Register(RegisterDto dto) {
 		GenericResponse i = await _userRepository.Register(dto);
-		return Result(i);
-	}
-
-	[HttpPost("LoginWithPassword")]
-	public async Task<ActionResult<GenericResponse>> LoginWithPassword(LoginWithPasswordDto dto) {
-		GenericResponse i = await _userRepository.LoginWithPassword(dto);
 		return Result(i);
 	}
 
@@ -46,12 +33,6 @@ public class UserController : BaseApiController {
 		return Result(i);
 	}
 
-	[HttpPost("LoginWithEmail")]
-	public async Task<ActionResult<GenericResponse>> LoginWithEmail(LoginWithEmailDto dto) {
-		GenericResponse i = await _userRepository.LoginWithEmail(dto);
-		return Result(i);
-	}
-
 	[HttpPost("GetMobileVerificationCodeForLogin")]
 	public async Task<ActionResult<GenericResponse>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
 		GenericResponse i = await _userRepository.GetMobileVerificationCodeForLogin(dto);
@@ -68,7 +49,7 @@ public class UserController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse>> Create(UserCreateUpdateDto dto) {
 		try {
-			GenericResponse i = await _userRepository.CreateUser(dto);
+			GenericResponse i = await _userRepository.Create(dto);
 			return Result(i);
 		}
 		catch (Exception) {
@@ -79,7 +60,7 @@ public class UserController : BaseApiController {
 	[HttpPost("Filter")]
 	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> Filter(UserFilterDto dto) {
 		try {
-			GenericResponse i = await _userRepository.GetUsers(dto);
+			GenericResponse i = await _userRepository.Read(dto);
 			return Result(i);
 		}
 		catch (Exception) {
@@ -90,7 +71,7 @@ public class UserController : BaseApiController {
 	[HttpGet("{id}")]
 	public async Task<ActionResult<GenericResponse<UserReadDto?>>> ReadById(string id) {
 		try {
-			GenericResponse i = await _userRepository.GetProfile(id);
+			GenericResponse i = await _userRepository.ReadById(id);
 			return Result(i);
 		}
 		catch (Exception) {
@@ -102,7 +83,7 @@ public class UserController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<UserReadDto>>> Update(UserCreateUpdateDto dto) {
 		try {
-			GenericResponse<UserReadDto?> i = await _userRepository.UpdateUser(dto);
+			GenericResponse<UserReadDto?> i = await _userRepository.Update(dto);
 			return Result(i);
 		}
 		catch (Exception) {
@@ -114,7 +95,7 @@ public class UserController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse>> Delete(string id) {
 		try {
-			GenericResponse i = await _userRepository.DeleteUser(id);
+			GenericResponse i = await _userRepository.Delete(id);
 			return Result(i);
 		}
 		catch (Exception) {

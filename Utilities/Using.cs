@@ -39,3 +39,4 @@ global using Utilities_aspnet.Utilities.Seeder;
 global using Utilities_aspnet.Entities;
 global using Utilities_aspnet.Repositories;
 global using System.Diagnostics;
+global using Microsoft.EntityFrameworkCore.Query;

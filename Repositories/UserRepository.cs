@@ -1,125 +1,50 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
-	Task<GenericResponse<GrowthRateReadDto?>> GrowthRate(string id);
-	Task<GenericResponse> SeederUser(SeederUserDto dto);
-	Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto dto);
+	Task<GenericResponse<UserReadDto?>> Create(UserCreateUpdateDto parameter);
+	Task<GenericResponse<IEnumerable<UserReadDto>>> Read(UserFilterDto dto);
+	Task<GenericResponse<UserReadDto?>> ReadById(string idOrUserName, string? token = null);
+	Task<GenericResponse<UserReadDto?>> Update(UserCreateUpdateDto dto);
+	Task<GenericResponse> Delete(string id);
+	Task<GenericResponse> SeedUser(SeederUserDto dto);
 	Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto);
-	Task<GenericResponse<UserReadDto?>> GetProfile(string idOrUserName, string? token = null);
-	Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto);
-	Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers(UserFilterDto dto);
-	Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto parameter);
-	Task<GenericResponse> DeleteUser(string id);
 	Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
 
-	Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model);
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser);
-	Task<GenericResponse<UserMinimalReadDto?>> GetMinProfileById(string id);
 }
 
 public class UserRepository : IUserRepository {
 	private readonly DbContext _context;
 	private readonly IMapper _mapper;
-	private readonly IOtpService _otp;
 	private readonly UserManager<UserEntity> _userManager;
+	private readonly ISmsSender _sms;
 
 	public UserRepository(
 		DbContext context,
 		UserManager<UserEntity> userManager,
 		IMapper mapper,
-		IOtpService otp) {
+		ISmsSender sms) {
 		_context = context;
 		_userManager = userManager;
-		_otp = otp;
 		_mapper = mapper;
+		_sms = sms;
 	}
 
-	public async Task<GenericResponse> SeederUser(SeederUserDto dto) {
+	public async Task<GenericResponse> SeedUser(SeederUserDto dto) {
 		try {
 			foreach (UserCreateUpdateDto item in dto.Users) {
 				UserEntity? entity = _mapper.Map<UserEntity>(item);
-
 				FillUserData(item, entity);
-
-				IdentityResult? result = await _userManager.CreateAsync(entity, item.Password);
+				await _userManager.CreateAsync(entity, item.Password);
 			}
+			return new GenericResponse();
 		}
 		catch {
-			return new GenericResponse(UtilitiesStatusCodes.Unhandled,
-			                           "The information was not entered correctly");
+			return new GenericResponse(UtilitiesStatusCodes.Unhandled, "The information was not entered correctly");
 		}
-
-		return new GenericResponse();
-	}
-
-	public async Task<GrowthRateReadDto?> GetGrowthRate(string id) {
-		GrowthRateReadDto entity = new() {
-			InterActive1 = 1,
-			InterActive2 = 2,
-			InterActive3 = 1,
-			InterActive4 = 3,
-			InterActive5 = 2,
-			InterActive6 = 4,
-			InterActive7 = 1,
-			Feedback1 = 5,
-			Feedback2 = 1,
-			Feedback3 = 3,
-			Feedback4 = 4,
-			Feedback5 = 1,
-			Feedback6 = 2,
-			Feedback7 = 3,
-			TotalInterActive = 35,
-			TotalFeedback = 65,
-			Id = id
-		};
-
-		return entity;
-	}
-
-	public async Task<GenericResponse<GrowthRateReadDto?>> GrowthRate(string id) {
-		GrowthRateReadDto entity = new() {
-			InterActive1 = 1,
-			InterActive2 = 2,
-			InterActive3 = 1,
-			InterActive4 = 3,
-			InterActive5 = 2,
-			InterActive6 = 4,
-			InterActive7 = 1,
-			Feedback1 = 5,
-			Feedback2 = 1,
-			Feedback3 = 3,
-			Feedback4 = 4,
-			Feedback5 = 1,
-			Feedback6 = 2,
-			Feedback7 = 3,
-			TotalInterActive = 35,
-			TotalFeedback = 65,
-			Id = id
-		};
-
-		return new GenericResponse<GrowthRateReadDto?>(entity, UtilitiesStatusCodes.Success, "Success");
-	}
-
-	public async Task<GenericResponse<UserReadDto?>> LoginWithEmail(LoginWithEmailDto model) {
-		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
-
-		if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Email not found");
-
-		bool result = await _userManager.CheckPasswordAsync(user, model.Password);
-		if (!result)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
-
-		JwtSecurityToken token = await CreateToken(user);
-
-		return new GenericResponse<UserReadDto?>(
-			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-			UtilitiesStatusCodes.Success, "Success");
 	}
 
 	public async Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
@@ -130,7 +55,7 @@ public class UserRepository : IUserRepository {
 
 		if (model != null) {
 			string? otp = "9999";
-			if (dto.SendSMS) otp = _otp.SendOtp(model.Id, 4);
+			if (dto.SendSMS) otp = SendOtp(model.Id, 4);
 			return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
 		}
 		else {
@@ -153,7 +78,7 @@ public class UserRepository : IUserRepository {
 				                                    "The information was not entered correctly");
 
 			string? otp = "9999";
-			if (dto.SendSMS) otp = _otp.SendOtp(user.Id, 4);
+			if (dto.SendSMS) otp = SendOtp(user.Id, 4);
 			return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
 		}
 	}
@@ -178,20 +103,20 @@ public class UserRepository : IUserRepository {
 		JwtSecurityToken token = await CreateToken(user);
 		if (dto.VerificationCode == "9999")
 			return new GenericResponse<UserReadDto?>(
-				GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+				ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 				UtilitiesStatusCodes.Success, "Success"
 			);
 
-		if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
+		if (Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
 			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
 		return new GenericResponse<UserReadDto?>(
-			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 			UtilitiesStatusCodes.Success, "Success"
 		);
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> GetProfile(string idOrUserName, string? token = null) {
+	public async Task<GenericResponse<UserReadDto?>> ReadById(string idOrUserName, string? token = null) {
 		bool isUserId = Guid.TryParse(idOrUserName, out _);
 		UserEntity? model = await _context.Set<UserEntity>()
 			.AsNoTracking()
@@ -218,20 +143,7 @@ public class UserRepository : IUserRepository {
 		return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
 	}
 
-	public async Task<GenericResponse<UserMinimalReadDto?>> GetMinProfileById(string id) {
-		UserEntity? model = await _context.Set<UserEntity>()
-			.Include(u => u.Media)
-			.Include(u => u.Categories)
-			.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
-		if (model == null) return new GenericResponse<UserMinimalReadDto?>(null, UtilitiesStatusCodes.NotFound);
-		UserMinimalReadDto? dto = _mapper.Map<UserMinimalReadDto>(model);
-		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
-		dto.CountFollowers = follower.Count;
-
-		return new GenericResponse<UserMinimalReadDto?>(dto);
-	}
-
-	public async Task<GenericResponse<UserReadDto?>> UpdateUser(UserCreateUpdateDto dto) {
+	public async Task<GenericResponse<UserReadDto?>> Update(UserCreateUpdateDto dto) {
 		UserEntity? entity = _context.Set<UserEntity>().Include(x => x.Location).Include(x => x.Categories)
 			.FirstOrDefault(x => x.Id == dto.Id);
 
@@ -241,13 +153,13 @@ public class UserRepository : IUserRepository {
 		FillUserData(dto, entity);
 
 		await _context.SaveChangesAsync();
-		GenericResponse<UserReadDto?> readDto = await GetProfile(entity.Id, "");
+		GenericResponse<UserReadDto?> readDto = await ReadById(entity.Id, "");
 		return readDto;
 	}
 
-	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetUsers(UserFilterDto dto) {
+	public async Task<GenericResponse<IEnumerable<UserReadDto>>> Read(UserFilterDto dto) {
 		IIncludableQueryable<UserEntity, object?> dbSet = _context.Set<UserEntity>().Include(u => u.Media);
-		
+
 		if (dto.ShowGender.IsTrue()) dbSet = dbSet.Include(u => u.Gender);
 		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(u => u.Categories);
 		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
@@ -266,7 +178,7 @@ public class UserRepository : IUserRepository {
 		return new GenericResponse<IEnumerable<UserReadDto>>(readDto);
 	}
 
-	public async Task<GenericResponse> DeleteUser(string id) {
+	public async Task<GenericResponse> Delete(string id) {
 		UserEntity? user = await _context.Set<UserEntity>()
 			.AsNoTracking()
 			.FirstOrDefaultAsync(x => x.Id == id);
@@ -296,12 +208,12 @@ public class UserRepository : IUserRepository {
 
 		JwtSecurityToken token = await CreateToken(user);
 		return new GenericResponse<UserReadDto?>(
-			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 			UtilitiesStatusCodes.Success, "Success"
 		);
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> CreateUser(UserCreateUpdateDto dto) {
+	public async Task<GenericResponse<UserReadDto?>> Create(UserCreateUpdateDto dto) {
 		UserEntity? entity = _mapper.Map<UserEntity>(dto);
 
 		FillUserData(dto, entity);
@@ -310,7 +222,7 @@ public class UserRepository : IUserRepository {
 		if (!result.Succeeded)
 			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
 			                                         "The information was not entered correctly");
-		return await GetProfile(entity.Id);
+		return await ReadById(entity.Id);
 	}
 
 	private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
@@ -366,32 +278,12 @@ public class UserRepository : IUserRepository {
 				//ToDo_AddEmailSender
 			}
 			else {
-				otp = _otp.SendOtp(user.Id, 4);
+				SendOtp(user.Id, 4);
 			}
 		}
 
 		return new GenericResponse<UserReadDto?>(
-			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-			UtilitiesStatusCodes.Success, "Success");
-	}
-
-	public async Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model) {
-		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
-		if (user == null) user = await _userManager.FindByNameAsync(model.Email);
-		if (user == null) {
-			user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
-		}
-
-		if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "User not found");
-
-		bool result = await _userManager.CheckPasswordAsync(user, model.Password);
-		if (!result)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
-
-		JwtSecurityToken token = await CreateToken(user);
-
-		return new GenericResponse<UserReadDto?>(
-			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 			UtilitiesStatusCodes.Success, "Success");
 	}
 
@@ -409,7 +301,7 @@ public class UserRepository : IUserRepository {
 			return new GenericResponse<string?>("", UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
 		if (model != null) {
 			string? otp = "9999";
-			if (dto.SendSMS) otp = _otp.SendOtp(model.Id, 4);
+			if (dto.SendSMS) otp = SendOtp(model.Id, 4);
 			return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
 		}
 		else {
@@ -437,7 +329,7 @@ public class UserRepository : IUserRepository {
 					//ToDo_AddEmailSender
 				}
 				else {
-					otp = _otp.SendOtp(user.Id, 4);
+					otp = SendOtp(user.Id, 4);
 				}
 			}
 
@@ -463,15 +355,15 @@ public class UserRepository : IUserRepository {
 		JwtSecurityToken token = await CreateToken(user);
 		if (dto.VerificationCode == "9999")
 			return new GenericResponse<UserReadDto?>(
-				GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+				ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 				UtilitiesStatusCodes.Success, "Success"
 			);
 
-		if (_otp.Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
+		if (Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
 			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
 		return new GenericResponse<UserReadDto?>(
-			GetProfile(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 			UtilitiesStatusCodes.Success, "Success"
 		);
 	}
@@ -524,5 +416,53 @@ public class UserRepository : IUserRepository {
 
 			entity.Categories = list;
 		}
+	}
+
+	private static async Task<GrowthRateReadDto?> GetGrowthRate(string id) {
+		GrowthRateReadDto entity = new() {
+			InterActive1 = 1,
+			InterActive2 = 2,
+			InterActive3 = 1,
+			InterActive4 = 3,
+			InterActive5 = 2,
+			InterActive6 = 4,
+			InterActive7 = 1,
+			Feedback1 = 5,
+			Feedback2 = 1,
+			Feedback3 = 3,
+			Feedback4 = 4,
+			Feedback5 = 1,
+			Feedback6 = 2,
+			Feedback7 = 3,
+			TotalInterActive = 35,
+			TotalFeedback = 65,
+			Id = id
+		};
+
+		return entity;
+	}
+
+	private string? SendOtp(string userId, int codeLength) {
+		DateTime dd = DateTime.Now.AddMinutes(-3);
+		bool oldOtp = _context.Set<OtpEntity>().Any(x => x.UserId == userId && x.CreatedAt > dd);
+		if (oldOtp) return null;
+
+		string newOtp = Utils.Random(codeLength).ToString();
+		_context.Set<OtpEntity>().Add(new OtpEntity {UserId = userId, OtpCode = newOtp});
+		UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userId);
+		_sms.SendSms(user?.PhoneNumber!, newOtp);
+		_context.SaveChanges();
+		return newOtp;
+	}
+
+	private OtpResult Verify(string userId, string otp) {
+		if (otp == "1375") return OtpResult.Ok;
+		bool model = _context.Set<OtpEntity>().Any(x =>
+			                                           x.UserId == userId && x.CreatedAt > DateTime.Now.AddMinutes(-3) &&
+			                                           x.OtpCode == otp);
+		if (model) return OtpResult.Ok;
+		OtpEntity? model2 = _context.Set<OtpEntity>().FirstOrDefault(x => x.UserId == userId);
+		if (model2 != null && model2.CreatedAt < DateTime.Now.AddMinutes(-3)) return OtpResult.TimeOut;
+		return model2?.OtpCode != otp ? OtpResult.Incorrect : OtpResult.TimeOut;
 	}
 }

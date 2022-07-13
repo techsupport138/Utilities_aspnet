@@ -58,6 +58,6 @@ public class AppSettingsController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost("SeedUsers")]
 	public async Task<ActionResult<GenericResponse>> SeedUsers(SeederUserDto dto)
-		=> Result(await _userRepository.SeederUser(dto));
+		=> Result(await _userRepository.SeedUser(dto));
 	
 }

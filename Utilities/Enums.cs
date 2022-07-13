@@ -18,6 +18,12 @@ public enum UtilitiesStatusCodes {
 	WrongVerificationCode = 602
 }
 
+public enum OtpResult {
+	Ok = 1,
+	Incorrect = 2,
+	TimeOut = 3
+}
+
 public static class UtilitiesStatusCodesExtension {
 	public static bool IsSuccessful(this UtilitiesStatusCodes statusCode) {
 		return statusCode == UtilitiesStatusCodes.Success;
