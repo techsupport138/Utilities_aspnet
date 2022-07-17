@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Repositories;
+﻿using System.Linq;
+
+namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
 	Task<GenericResponse<UserReadDto?>> Create(UserCreateUpdateDto parameter);
@@ -418,26 +420,43 @@ public class UserRepository : IUserRepository {
 		}
 	}
 
-	private static async Task<GrowthRateReadDto?> GetGrowthRate(string id) {
+	private async Task<GrowthRateReadDto?> GetGrowthRate(string id) {
+		List<CommentEntity> myComments = await _context.Set<CommentEntity>().Where(x => x.UserId == id).ToListAsync();
+		List<Guid> productIds = await _context.Set<ProductEntity>().Where(x => x.UserId == id).Select(x => x.Id).ToListAsync();
+		List<CommentEntity> comments = await _context.Set<CommentEntity>().Where(x => productIds.Contains((Guid)x.ProductId)).ToListAsync();
+
+		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
+		List<FollowEntity> following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == id).ToListAsync();
+
+		var saturday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Saturday);
+		var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+		var monday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+		var tuesday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Tuesday);
+		var wednesday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Wednesday);
+		var thursday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Thursday);
+
 		GrowthRateReadDto entity = new() {
-			InterActive1 = 1,
-			InterActive2 = 2,
-			InterActive3 = 1,
-			InterActive4 = 3,
-			InterActive5 = 2,
-			InterActive6 = 4,
-			InterActive7 = 1,
-			Feedback1 = 5,
-			Feedback2 = 1,
-			Feedback3 = 3,
-			Feedback4 = 4,
-			Feedback5 = 1,
-			Feedback6 = 2,
-			Feedback7 = 3,
-			TotalInterActive = 35,
-			TotalFeedback = 65,
+			InterActive1 = myComments.Where(x=>x.CreatedAt == saturday).Count() + following.Where(x => x.CreatedAt == saturday).Count(),
+			InterActive2 = myComments.Where(x => x.CreatedAt == sunday).Count() + following.Where(x => x.CreatedAt == sunday).Count(),
+			InterActive3 = myComments.Where(x => x.CreatedAt == monday).Count() + following.Where(x => x.CreatedAt == monday).Count(),
+			InterActive4 = myComments.Where(x => x.CreatedAt == tuesday).Count() + following.Where(x => x.CreatedAt == tuesday).Count(),
+			InterActive5 = myComments.Where(x => x.CreatedAt == wednesday).Count() + following.Where(x => x.CreatedAt == wednesday).Count(),
+			InterActive6 = myComments.Where(x => x.CreatedAt == thursday).Count() + following.Where(x => x.CreatedAt == thursday).Count(),
+			InterActive7 = 0,
+			Feedback1 = comments.Where(x => x.CreatedAt == saturday).Count() + follower.Where(x => x.CreatedAt == saturday).Count(),
+			Feedback2 = comments.Where(x => x.CreatedAt == sunday).Count() + follower.Where(x => x.CreatedAt == sunday).Count(),
+			Feedback3 = comments.Where(x => x.CreatedAt == monday).Count() + follower.Where(x => x.CreatedAt == monday).Count(),
+			Feedback4 = comments.Where(x => x.CreatedAt == tuesday).Count() + follower.Where(x => x.CreatedAt == tuesday).Count(),
+			Feedback5 = comments.Where(x => x.CreatedAt == wednesday).Count() + follower.Where(x => x.CreatedAt == wednesday).Count(),
+			Feedback6 = comments.Where(x => x.CreatedAt == thursday).Count() + follower.Where(x => x.CreatedAt == thursday).Count(),
+			Feedback7 = 0,
 			Id = id
 		};
+		double totalInteractive = entity.InterActive1 + entity.InterActive2 + entity.InterActive3 + entity.InterActive4 + entity.InterActive5 + entity.InterActive6;
+		double totalFeedback = entity.Feedback1 + entity.Feedback2 + entity.Feedback3 + entity.Feedback4 + entity.Feedback5 + entity.Feedback6;
+		double total = totalInteractive + totalFeedback;
+		entity.TotalInterActive = (totalInteractive / total) * 100;
+		entity.TotalFeedback = (totalFeedback / total) * 100;
 
 		return entity;
 	}
