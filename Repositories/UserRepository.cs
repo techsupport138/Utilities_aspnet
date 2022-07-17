@@ -435,28 +435,32 @@ public class UserRepository : IUserRepository {
 		var wednesday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Wednesday);
 		var thursday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Thursday);
 
-		GrowthRateReadDto entity = new() {
-			InterActive1 = myComments.Where(x=>x.CreatedAt == saturday).Count() + following.Where(x => x.CreatedAt == saturday).Count(),
-			InterActive2 = myComments.Where(x => x.CreatedAt == sunday).Count() + following.Where(x => x.CreatedAt == sunday).Count(),
-			InterActive3 = myComments.Where(x => x.CreatedAt == monday).Count() + following.Where(x => x.CreatedAt == monday).Count(),
-			InterActive4 = myComments.Where(x => x.CreatedAt == tuesday).Count() + following.Where(x => x.CreatedAt == tuesday).Count(),
-			InterActive5 = myComments.Where(x => x.CreatedAt == wednesday).Count() + following.Where(x => x.CreatedAt == wednesday).Count(),
-			InterActive6 = myComments.Where(x => x.CreatedAt == thursday).Count() + following.Where(x => x.CreatedAt == thursday).Count(),
+		GrowthRateReadDto entity = new()
+		{
+			InterActive1 = myComments.Where(x => x.CreatedAt.Value.Date == saturday).Count() + following.Where(x => x.CreatedAt.Value.Date == saturday).Count(),
+			InterActive2 = myComments.Where(x => x.CreatedAt.Value.Date == sunday).Count() + following.Where(x => x.CreatedAt.Value.Date == sunday).Count(),
+			InterActive3 = myComments.Where(x => x.CreatedAt.Value.Date == monday).Count() + following.Where(x => x.CreatedAt.Value.Date == monday).Count(),
+			InterActive4 = myComments.Where(x => x.CreatedAt.Value.Date == tuesday).Count() + following.Where(x => x.CreatedAt.Value.Date == tuesday).Count(),
+			InterActive5 = myComments.Where(x => x.CreatedAt.Value.Date == wednesday).Count() + following.Where(x => x.CreatedAt.Value.Date == wednesday).Count(),
+			InterActive6 = myComments.Where(x => x.CreatedAt.Value.Date == thursday).Count() + following.Where(x => x.CreatedAt.Value.Date == thursday).Count(),
 			InterActive7 = 0,
-			Feedback1 = comments.Where(x => x.CreatedAt == saturday).Count() + follower.Where(x => x.CreatedAt == saturday).Count(),
-			Feedback2 = comments.Where(x => x.CreatedAt == sunday).Count() + follower.Where(x => x.CreatedAt == sunday).Count(),
-			Feedback3 = comments.Where(x => x.CreatedAt == monday).Count() + follower.Where(x => x.CreatedAt == monday).Count(),
-			Feedback4 = comments.Where(x => x.CreatedAt == tuesday).Count() + follower.Where(x => x.CreatedAt == tuesday).Count(),
-			Feedback5 = comments.Where(x => x.CreatedAt == wednesday).Count() + follower.Where(x => x.CreatedAt == wednesday).Count(),
-			Feedback6 = comments.Where(x => x.CreatedAt == thursday).Count() + follower.Where(x => x.CreatedAt == thursday).Count(),
+			Feedback1 = comments.Where(x => x.CreatedAt.Value.Date == saturday).Count() + follower.Where(x => x.CreatedAt.Value.Date == saturday).Count(),
+			Feedback2 = comments.Where(x => x.CreatedAt.Value.Date == sunday).Count() + follower.Where(x => x.CreatedAt.Value.Date == sunday).Count(),
+			Feedback3 = comments.Where(x => x.CreatedAt.Value.Date == monday).Count() + follower.Where(x => x.CreatedAt.Value.Date == monday).Count(),
+			Feedback4 = comments.Where(x => x.CreatedAt.Value.Date == tuesday).Count() + follower.Where(x => x.CreatedAt.Value.Date == tuesday).Count(),
+			Feedback5 = comments.Where(x => x.CreatedAt.Value.Date == wednesday).Count() + follower.Where(x => x.CreatedAt.Value.Date == wednesday).Count(),
+			Feedback6 = comments.Where(x => x.CreatedAt.Value.Date == thursday).Count() + follower.Where(x => x.CreatedAt.Value.Date == thursday).Count(),
 			Feedback7 = 0,
 			Id = id
 		};
 		decimal totalInteractive = entity.InterActive1 + entity.InterActive2 + entity.InterActive3 + entity.InterActive4 + entity.InterActive5 + entity.InterActive6;
 		decimal totalFeedback = entity.Feedback1 + entity.Feedback2 + entity.Feedback3 + entity.Feedback4 + entity.Feedback5 + entity.Feedback6;
 		decimal total = totalInteractive + totalFeedback;
-		entity.TotalInterActive = ((decimal)totalInteractive / (decimal)total) * 100;
-		entity.TotalFeedback = ((decimal)totalFeedback / (decimal)total) * 100;
+		if (total > 0)
+		{
+			entity.TotalInterActive = ((totalInteractive / total) * 100);
+			entity.TotalFeedback = ((totalFeedback / total) * 100);
+		}
 
 		return entity;
 	}

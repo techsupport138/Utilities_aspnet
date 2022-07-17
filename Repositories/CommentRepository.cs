@@ -53,17 +53,27 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public async Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto entity) {
-		CommentEntity? comment = _mapper.Map<CommentEntity>(entity);
+		//CommentEntity? comment = _mapper.Map<CommentEntity>(entity);
+		CommentEntity? comment = new CommentEntity
+		{
+			CreatedAt = DateTime.Now,
+			Comment = entity.Comment,
+			ProductId = entity.ProductId,
+			Score = entity.Score
+		};
+
 		comment.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
 
-		await _context.AddAsync(comment);
-		await _context.SaveChangesAsync();
+		_context.Add(comment);
+		_context.SaveChanges();
 
-		try {
-			ProductEntity? product = await _context.Set<ProductEntity>().Include(x => x.Media)
-				.FirstOrDefaultAsync(x => x.Id == comment.ProductId);
+		try
+		{
+			ProductEntity? product = _context.Set<ProductEntity>().Include(x => x.Media)
+				.FirstOrDefault(x => x.Id == comment.ProductId);
 			string? linkMedia = product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.Link)?.FirstOrDefault();
-			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
+			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto
+			{
 				UserId = product.UserId,
 				Message = "Comment",
 				Title = "Comment",

@@ -40,17 +40,22 @@ public class NotificationRepository : INotificationRepository {
 			CreatorUserId = model.CreatorUserId,
 			Visited = false
 		};
-		await _context.Set<NotificationEntity>().AddAsync(notification);
-		await _context.SaveChangesAsync();
-		if (model.Media != null) {
+		_context.Set<NotificationEntity>().Add(notification);
+		_context.SaveChanges();
+		if (model.Media != null)
+		{
 			FileTypes type = FileTypes.Image;
 			if (model.Media.EndsWith("svg")) type = FileTypes.Svg;
 
-			await _context.Set<MediaEntity>().AddAsync(new MediaEntity {
-				NotificationId = notification.Id, CreatedAt = DateTime.Now, FileType = type, FileName = model.Media,
+			_context.Set<MediaEntity>().Add(new MediaEntity
+			{
+				NotificationId = notification.Id,
+				CreatedAt = DateTime.Now,
+				FileType = type,
+				FileName = model.Media,
 				Link = model.Media
 			});
-			await _context.SaveChangesAsync();
+			_context.SaveChanges();
 		}
 
 		return new GenericResponse();
