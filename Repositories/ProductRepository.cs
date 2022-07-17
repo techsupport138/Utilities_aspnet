@@ -428,6 +428,7 @@ public static class ProductEntityExtension {
 		entity.Address = dto.Address ?? entity.Address;
 		entity.StartDate = dto.StartDate ?? entity.StartDate;
 		entity.EndDate = dto.EndDate ?? entity.EndDate;
+		entity.Status = dto.Status ?? entity.Status;
 
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> listCategory = new();
