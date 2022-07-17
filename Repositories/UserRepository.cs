@@ -452,11 +452,11 @@ public class UserRepository : IUserRepository {
 			Feedback7 = 0,
 			Id = id
 		};
-		double totalInteractive = entity.InterActive1 + entity.InterActive2 + entity.InterActive3 + entity.InterActive4 + entity.InterActive5 + entity.InterActive6;
-		double totalFeedback = entity.Feedback1 + entity.Feedback2 + entity.Feedback3 + entity.Feedback4 + entity.Feedback5 + entity.Feedback6;
-		double total = totalInteractive + totalFeedback;
-		entity.TotalInterActive = (totalInteractive / total) * 100;
-		entity.TotalFeedback = (totalFeedback / total) * 100;
+		decimal totalInteractive = entity.InterActive1 + entity.InterActive2 + entity.InterActive3 + entity.InterActive4 + entity.InterActive5 + entity.InterActive6;
+		decimal totalFeedback = entity.Feedback1 + entity.Feedback2 + entity.Feedback3 + entity.Feedback4 + entity.Feedback5 + entity.Feedback6;
+		decimal total = totalInteractive + totalFeedback;
+		entity.TotalInterActive = ((decimal)totalInteractive / (decimal)total) * 100;
+		entity.TotalFeedback = ((decimal)totalFeedback / (decimal)total) * 100;
 
 		return entity;
 	}

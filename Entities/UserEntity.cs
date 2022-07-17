@@ -168,22 +168,22 @@ public class UserMinimalReadDto {
 
 public class GrowthRateReadDto {
 	public string? Id { get; set; }
-	public double InterActive1 { get; set; }
-	public double InterActive2 { get; set; }
-	public double InterActive3 { get; set; }
-	public double InterActive4 { get; set; }
-	public double InterActive5 { get; set; }
-	public double InterActive6 { get; set; }
-	public double InterActive7 { get; set; }
-	public double Feedback1 { get; set; }
-	public double Feedback2 { get; set; }
-	public double Feedback3 { get; set; }
-	public double Feedback4 { get; set; }
-	public double Feedback5 { get; set; }
-	public double Feedback6 { get; set; }
-	public double Feedback7 { get; set; }
-	public double TotalInterActive { get; set; }
-	public double TotalFeedback { get; set; }
+	public decimal InterActive1 { get; set; }
+	public decimal InterActive2 { get; set; }
+	public decimal InterActive3 { get; set; }
+	public decimal InterActive4 { get; set; }
+	public decimal InterActive5 { get; set; }
+	public decimal InterActive6 { get; set; }
+	public decimal InterActive7 { get; set; }
+	public decimal Feedback1 { get; set; }
+	public decimal Feedback2 { get; set; }
+	public decimal Feedback3 { get; set; }
+	public decimal Feedback4 { get; set; }
+	public decimal Feedback5 { get; set; }
+	public decimal Feedback6 { get; set; }
+	public decimal Feedback7 { get; set; }
+	public decimal TotalInterActive { get; set; }
+	public decimal TotalFeedback { get; set; }
 }
 
 public class UserCreateUpdateDto {
