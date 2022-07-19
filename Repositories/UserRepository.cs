@@ -10,10 +10,12 @@ public interface IUserRepository {
 	Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyMobileForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
+	Task<GenericResponse> CheckUserName(string userName);
 
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser);
+	Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model);
 }
 
 public class UserRepository : IUserRepository {
@@ -45,6 +47,19 @@ public class UserRepository : IUserRepository {
 		catch {
 			return new GenericResponse(UtilitiesStatusCodes.Unhandled, "The information was not entered correctly");
 		}
+	}
+	
+	public async Task<GenericResponse> CheckUserName(string userName) {
+		bool existUserName = await _context.Set<UserEntity>().AnyAsync(x => x.AppUserName == userName);
+		if (existUserName) {
+
+			return new GenericResponse(UtilitiesStatusCodes.BadRequest, "Username is available");
+		}
+        else
+        {
+			return new GenericResponse();
+		}
+		
 	}
 
 	public async Task<GenericResponse<string?>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
@@ -180,7 +195,6 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse> Delete(string id) {
 		UserEntity? user = await _context.Set<UserEntity>()
-			.AsNoTracking()
 			.FirstOrDefaultAsync(x => x.Id == id);
 
 		if (user == null)
@@ -245,6 +259,31 @@ public class UserRepository : IUserRepository {
 	}
 
 	#region New Login Register
+
+
+	public async Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model)
+	{
+		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
+		if (user == null) user = await _userManager.FindByNameAsync(model.Email);
+		if (user == null)
+		{
+			user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
+		}
+
+		if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "User not found");
+
+		bool result = await _userManager.CheckPasswordAsync(user, model.Password);
+		if (!result)
+			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
+
+		JwtSecurityToken token = await CreateToken(user);
+
+		return new GenericResponse<UserReadDto?>(
+			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+			UtilitiesStatusCodes.Success, "Success");
+	}
+
+
 
 	public async Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser) {
 		UserEntity? model = _context.Set<UserEntity>()

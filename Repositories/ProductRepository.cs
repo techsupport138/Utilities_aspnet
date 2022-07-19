@@ -359,8 +359,8 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Categories)
 			.Include(i => i.Locations)
 			.Include(i => i.Reports)
-			.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children)
-			.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Media)
+			.Include(i => i.Comments.Where(x => x.ParentId == null).OrderByDescending(x=>x.CreatedAt))!.ThenInclude(x => x.Children)
+			.Include(i => i.Comments.Where(x => x.ParentId == null).OrderByDescending(x => x.CreatedAt))!.ThenInclude(x => x.Media)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Votes)
 			.Include(i => i.User)!.ThenInclude(x => x.Media)
@@ -387,7 +387,7 @@ public class ProductRepository : IProductRepository {
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		ProductEntity? i = await _context.Set<ProductEntity>().AsNoTracking()
+		ProductEntity? i = await _context.Set<ProductEntity>()
 			.FirstOrDefaultAsync(i => i.Id == id);
 		i.DeletedAt = DateTime.Now;
 		await _context.SaveChangesAsync();
