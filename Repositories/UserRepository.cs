@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
 	Task<GenericResponse<UserReadDto?>> Create(UserCreateUpdateDto parameter);
