@@ -72,6 +72,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			.Where(x => x.FollowsUserId == id)
 			.Include(x => x.FollowerUser)
 			.ThenInclude(x => x.Media)
+			.Include(x => x.FollowerUser)
+			.ThenInclude(x => x.Categories).ThenInclude(x => x.Media)
 			.Select(x => x.FollowerUser)
 			.ToListAsync();
 
@@ -86,6 +88,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			.Where(x => x.FollowerUserId == id)
 			.Include(x => x.FollowsUser)
 			.ThenInclude(x => x.Media)
+			.Include(x => x.FollowsUser)
+			.ThenInclude(x => x.Categories).ThenInclude(x=>x.Media)
 			.Select(x => x.FollowsUser)
 			.ToListAsync();
 

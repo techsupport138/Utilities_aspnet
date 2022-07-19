@@ -134,6 +134,7 @@ public class UserReadDto {
 	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
 	public bool IsAdmin { get; set; }
+	public bool IsFollowing { get; set; } = false;
 	public bool? Suspend { get; set; }
 	public int? CountFollowers { get; set; }
 	public int? CountProducts { get; set; }
