@@ -19,6 +19,7 @@ public class UserEntity : IdentityUser {
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
 	public string? Color { get; set; }
+	public string? State { get; set; }
 	public double? Wallet { get; set; } = 0;
 	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
@@ -123,6 +124,7 @@ public class UserReadDto {
 	public string? Whatsapp { get; set; }
 	public string? LinkedIn { get; set; }
 	public string? Color { get; set; }
+	public string? State { get; set; }
 	public string? Type { get; set; }
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
@@ -156,6 +158,7 @@ public class UserMinimalReadDto {
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
 	public string? Color { get; set; }
+	public string? State { get; set; }
 	public int? CountFollowers { get; set; }
 	public int? CountProducts { get; set; }
 	public GenderEntity? Gender { get; set; }
@@ -206,6 +209,7 @@ public class UserCreateUpdateDto {
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
 	public string? Color { get; set; }
+	public string? State { get; set; }
 	public bool? Suspend { get; set; }
 	public double? Wallet { get; set; }
 	public double? Point { get; set; } = 0;
