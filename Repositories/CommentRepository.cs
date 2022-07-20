@@ -43,6 +43,7 @@ public class CommentRepository : ICommentRepository {
 		CommentEntity? comment = await _context.Set<CommentEntity>()
 			.AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Media)
+			.Include(x=>x.LikeComments)
 			.Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Where(x => x.Id == id)
 			.FirstOrDefaultAsync();
@@ -93,6 +94,10 @@ public class CommentRepository : ICommentRepository {
 		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == commentId);
 		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>()
 			.FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
+		if(comment.Score == null)
+        {
+			comment.Score = 0;
+        }
 		if (oldLikeComment != null) {
 			comment.Score = comment.Score - 1;
 			_context.Set<LikeCommentEntity>().Remove(oldLikeComment);

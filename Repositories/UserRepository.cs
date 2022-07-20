@@ -156,7 +156,7 @@ public class UserRepository : IUserRepository
             .Include(u => u.Media)
             .Include(u => u.Categories)
             .Include(u => u.Location)
-            .Include(u => u.Products)!.ThenInclude(x => x.Media)
+            .Include(u => u.Products.Where(x => x.DeletedAt == null))!.ThenInclude(x => x.Media)
             .Include(u => u.Gender)
             .FirstOrDefaultAsync(u => isUserId ? u.Id == idOrUserName : u.UserName == idOrUserName);
 
@@ -201,7 +201,7 @@ public class UserRepository : IUserRepository
         if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
         if (dto.ShowLocations.IsTrue()) dbSet = dbSet.Include(u => u.Location);
         if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
-        if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products).ThenInclude(u => u.Media);
+        if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products.Where(x=>x.DeletedAt == null)).ThenInclude(u => u.Media);
 
         IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
         if (dto.ShowFollowings.IsTrue())

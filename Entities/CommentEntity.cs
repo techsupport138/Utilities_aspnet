@@ -44,6 +44,7 @@ public class CommentReadDto {
 	public DateTime? UpdatedAt { get; set; }
 	public DateTime? DeletedAt { get; set; }
 	public double? Score { get; set; } = 0;
+	public bool IsLiked { get; set; } = false;
 	public string? Comment { get; set; }
 	public Guid? ParentId { get; set; }
 	public string? UserId { get; set; }
