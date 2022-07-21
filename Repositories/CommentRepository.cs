@@ -30,6 +30,7 @@ public class CommentRepository : ICommentRepository {
 		IEnumerable<CommentEntity> comment = await _context.Set<CommentEntity>()
 			.AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Media)
+			.Include(x=>x.LikeComments)
 			.Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Children)!.ThenInclude(x => x.Children)
 			.Where(x => x.ProductId == id && x.ParentId == null).OrderByDescending(x => x.CreatedAt).ToListAsync();
