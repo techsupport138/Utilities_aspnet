@@ -50,7 +50,7 @@ public class PaymentRepository : IPaymentRepository {
 
 			if (result.Status == 100 && result.Authority.Length == 36) {
 				string? url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
-				return new GenericResponse<string?>(url, UtilitiesStatusCodes.BadRequest);
+				return new GenericResponse<string?>(url, UtilitiesStatusCodes.Success);
 			}
 			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
 		}
@@ -114,7 +114,7 @@ public class PaymentRepository : IPaymentRepository {
 
 			if (result.Status == 100 && result.Authority.Length == 36) {
 				string? url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
-				return new GenericResponse<string?>(url, UtilitiesStatusCodes.BadRequest);
+				return new GenericResponse<string?>(url, UtilitiesStatusCodes.Success);
 			}
 			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
 		}
