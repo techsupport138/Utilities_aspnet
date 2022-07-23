@@ -38,6 +38,9 @@ public static class StartupExtension {
 		this WebApplicationBuilder builder,
 		string connectionStrings,
 		DatabaseType databaseType) where T : DbContext {
+		builder.Services.AddMemoryCache();
+		builder.Services.AddResponseCompression();
+		builder.Services.AddResponseCaching();
 		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin",
 		                                          option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 		builder.Services.AddScoped<DbContext, T>();
@@ -159,6 +162,7 @@ public static class StartupExtension {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 		if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+		app.UseResponseCaching();
 		app.UseMiddleware<ResponseTimeMiddleware>();
 		app.UseDeveloperExceptionPage();
 		app.UseUtilitiesSwagger();

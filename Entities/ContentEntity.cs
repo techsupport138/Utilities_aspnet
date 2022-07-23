@@ -9,7 +9,8 @@ public class ContentEntity : BaseEntity {
 	public IEnumerable<MediaEntity>? Media { get; set; }
 }
 
-public class ContentReadDto : BaseReadDto {
+public class ContentReadDto {
+	public Guid? Id { get; set; }
 	public string? Title { get; set; }
 	public string? SubTitle { get; set; }
 	public string? Description { get; set; }
