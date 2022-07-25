@@ -92,7 +92,7 @@ public class ProductReadDto {
 	public IEnumerable<MyVoteReadDto>? MyVotes { get; set; }
 	public IEnumerable<FormDto>? Forms { get; set; }
 	public IEnumerable<CommentReadDto>? Comments { get; set; }
-	public IEnumerable<UserReadDto>? Teams { get; set; }
+	public IEnumerable<TeamReadDto>? Teams { get; set; }
 }
 
 public class ProductCreateUpdateDto {

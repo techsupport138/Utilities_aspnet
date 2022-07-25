@@ -91,6 +91,8 @@ public class AutoMapperProfile : Profile {
 
 		CreateMap<TopProductEntity, TopProductReadDto>().ReverseMap();
 
+		CreateMap<TeamEntity, TeamReadDto>().ReverseMap();
+
 		CreateMap<UserCreateUpdateDto, UserEntity>()
 			.ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
 			.ForMember(x => x.Location, y => y.Ignore())
