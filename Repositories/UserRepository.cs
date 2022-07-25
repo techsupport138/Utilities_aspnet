@@ -337,7 +337,9 @@ public class UserRepository : IUserRepository
             PhoneNumberConfirmed = false,
             FullName = "",
             Wallet = 0,
-            Suspend = false
+            Suspend = false,
+            FirstName = aspNetUser.FirstName,
+            LastName = aspNetUser.LastName
         };
 
         IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
