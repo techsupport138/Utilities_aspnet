@@ -270,7 +270,7 @@ public class UserRepository : IUserRepository
         if (team == null)
             return new GenericResponse(UtilitiesStatusCodes.NotFound, "Team notfound");
 
-        _context.Set<UserEntity>().Remove(team);
+        _context.Set<TeamEntity>().Remove(team);
         await _context.SaveChangesAsync();
 
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
