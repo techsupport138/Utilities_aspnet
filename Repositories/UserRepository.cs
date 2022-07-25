@@ -173,6 +173,16 @@ public class UserRepository : IUserRepository
         userReadDto.Token = token;
         userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
 
+        try
+        {
+            if (_httpContextAccessor?.HttpContext?.User?.Identity?.Name != null)
+            {
+                userReadDto.IsFollowing = await _context.Set<FollowEntity>().AnyAsync(x => x.FollowsUserId == model.Id && x.FollowerUserId == _httpContextAccessor.HttpContext.User.Identity.Name);
+            }
+        }
+        catch { }
+
+
         return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
     }
 
@@ -201,7 +211,7 @@ public class UserRepository : IUserRepository
         if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
         if (dto.ShowLocations.IsTrue()) dbSet = dbSet.Include(u => u.Location);
         if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
-        if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products.Where(x=>x.DeletedAt == null)).ThenInclude(u => u.Media);
+        if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products.Where(x => x.DeletedAt == null)).ThenInclude(u => u.Media);
 
         IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
         if (dto.ShowFollowings.IsTrue())
@@ -218,6 +228,14 @@ public class UserRepository : IUserRepository
 
         List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
         IEnumerable<UserReadDto>? readDto = _mapper.Map<IEnumerable<UserReadDto>>(entity);
+        if (_httpContextAccessor?.HttpContext?.User?.Identity?.Name != null)
+        {
+            foreach (var item in readDto)
+            {
+                item.IsFollowing = await _context.Set<FollowEntity>().AnyAsync(x => x.FollowsUserId == item.Id && x.FollowerUserId == _httpContextAccessor.HttpContext.User.Identity.Name);
+            }
+        }
+
 
         return new GenericResponse<IEnumerable<UserReadDto>>(readDto);
     }
