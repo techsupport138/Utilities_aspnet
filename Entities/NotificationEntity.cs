@@ -28,7 +28,7 @@ public class NotificationDto {
 	public DateTime CreatedAt { get; set; }
 	public bool Visited { get; set; }
 	public string? UseCase { get; set; }
-	public UserEntity? CreatorUser { get; set; }
+	public UserReadDto? CreatorUser { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
 }
 
