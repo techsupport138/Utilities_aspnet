@@ -68,6 +68,7 @@ public class ProductReadDto {
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public int? VisitsCount { get; set; }
+	public int? CommentsCount { get; set; }
 	public int? DownloadCount { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }

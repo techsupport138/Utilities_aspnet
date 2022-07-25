@@ -67,8 +67,6 @@ public class ProductRepository : IProductRepository {
 				.Include(i => i.Media)
 				.Include(i => i.Categories)
 				.Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
-				.Include(i => i.Comments)!.ThenInclude(x => x.Media)
-				.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children).ThenInclude(x => x.Media)
 
 				.Include(i => i.Locations)
 				.Include(i => i.Reports)
@@ -230,9 +228,7 @@ public class ProductRepository : IProductRepository {
 
 		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(i => i.Categories);
 		if (dto.ShowComments.IsTrue())
-			dbSet = dbSet.Include(i => i.Comments!.Where(x => x.ParentId == null))
-				.ThenInclude(x => x.Children)!
-				.ThenInclude(x => x.Media);
+			dbSet = dbSet.Include(i => i.Comments);
 		if (dto.ShowLocation.IsTrue()) dbSet = dbSet.Include(i => i.Locations);
 		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(i => i.Forms);
 		if (dto.ShowMedia.IsTrue()) dbSet = dbSet.Include(i => i.Media);
@@ -336,9 +332,7 @@ public class ProductRepository : IProductRepository {
 			.AsNoTracking()
 			.Include(i => i.Media)
 			.Include(i => i.Categories)
-			.Include(i => i.Comments)!.ThenInclude(x => x.Media)
 			.Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
-			.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children)!.ThenInclude(x => x.Media)
 			.Include(i => i.Locations)
 			.Include(i => i.Reports)
 			.Include(i => i.Votes)
@@ -363,9 +357,7 @@ public class ProductRepository : IProductRepository {
 			.Include(i => i.Categories)
 			.Include(i => i.Locations)
 			.Include(i => i.Reports)
-			.Include(i => i.Comments)!.ThenInclude(x => x.Media)
 			.Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
-			.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children)!.ThenInclude(x => x.Media)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Votes)
 			.Include(i => i.User)!.ThenInclude(x => x.Media)

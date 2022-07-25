@@ -12,6 +12,10 @@ public class AutoMapperProfile : Profile {
 			           c => c.MapFrom(v => (v.Votes == null || v.Votes.Count() < 1)
 				                          ? 0
 				                          : (v.Votes.Sum(x => x.Score) / v.Votes.Count())))
+			.ForMember(x => x.CommentsCount,
+			           c => c.MapFrom(v => (v.Comments == null)
+				                          ? 0
+				                          : v.Comments.Count()))
 			.ForMember(x => x.IsBookmarked,
 			           c => c.MapFrom(v => (v.Bookmarks == null || v.Bookmarks.Count() < 1)
 				                          ? false

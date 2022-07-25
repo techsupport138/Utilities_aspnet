@@ -33,6 +33,7 @@ public class CommentRepository : ICommentRepository {
 			.Include(x=>x.LikeComments)
 			.Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Children)!.ThenInclude(x => x.Children)
+			.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
 			.Where(x => x.ProductId == id && x.ParentId == null).OrderByDescending(x => x.CreatedAt).ToListAsync();
 
 		IEnumerable<CommentReadDto>? result = _mapper.Map<IEnumerable<CommentReadDto>?>(comment);
