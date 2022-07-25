@@ -120,4 +120,17 @@ public class UserController : BaseApiController {
 			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
 		}
 	}
+	
+	[HttpDelete("DeleteFromTeam/{teamId}")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	public async Task<ActionResult<GenericResponse>> DeleteFromTeam(Guid teamId)
+	{
+		try {
+			GenericResponse i = await _userRepository.RemovalFromTeam(teamId);
+			return Result(i);
+		}
+		catch (Exception) {
+			return StatusCode(UtilitiesStatusCodes.Unhandled.Value());
+		}
+	}
 }

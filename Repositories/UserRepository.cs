@@ -17,6 +17,8 @@ public interface IUserRepository
     Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
     Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser);
     Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model);
+
+    Task<GenericResponse> RemovalFromTeam(Guid teamId);
 }
 
 public class UserRepository : IUserRepository
@@ -251,6 +253,24 @@ public class UserRepository : IUserRepository
         user.DeletedAt = DateTime.Now;
 
         _context.Set<UserEntity>().Update(user);
+        await _context.SaveChangesAsync();
+
+        return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+    }
+    
+    public async Task<GenericResponse> RemovalFromTeam(Guid teamId)
+    {
+        UserEntity? user = await _context.Set<UserEntity>()
+            .FirstOrDefaultAsync(x => x.Id == _httpContextAccessor.HttpContext.User.Identity.Name);
+
+        if (user == null)
+            return new GenericResponse(UtilitiesStatusCodes.NotFound, "User notfound");
+        TeamEntity? team = await _context.Set<TeamEntity>()
+            .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Id == teamId);
+        if (team == null)
+            return new GenericResponse(UtilitiesStatusCodes.NotFound, "Team notfound");
+
+        _context.Set<UserEntity>().Remove(team);
         await _context.SaveChangesAsync();
 
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
