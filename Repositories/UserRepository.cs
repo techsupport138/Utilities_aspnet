@@ -505,6 +505,7 @@ public class UserRepository : IUserRepository
         entity.Website = dto.Website ?? entity.Website;
         entity.ShowContactInfo = dto.ShowContactInfo ?? entity.ShowContactInfo;
         entity.State = dto.State ?? entity.State;
+        entity.Point = dto.Point ?? entity.Point;
 
         if (dto.Locations.IsNotNullOrEmpty())
         {

@@ -114,6 +114,12 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
 			await _context.Set<FollowEntity>().AddAsync(follow);
 			await _context.SaveChangesAsync();
+			UserEntity? followsUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == parameters.UserId);
+			if(followsUser!= null)
+            {
+				followsUser.Point = followsUser.Point + 1;
+				_context.SaveChanges();
+            }
 			try {
 				_notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
 					UserId = parameters.UserId, Message = "You are being followed by " + myUser.UserName, Title = "Follow",

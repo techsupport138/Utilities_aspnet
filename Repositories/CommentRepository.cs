@@ -109,6 +109,12 @@ public class CommentRepository : ICommentRepository {
 			comment.Score = comment.Score + 1;
 			await _context.AddAsync(new LikeCommentEntity {UserId = userId, CommentId = commentId});
 			await _context.SaveChangesAsync();
+			UserEntity? commectUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == comment.UserId);
+			if (commectUser != null)
+			{
+				commectUser.Point = commectUser.Point + 1;
+				_context.SaveChanges();
+			}
 		}
 
 		return await Read(comment.Id);
