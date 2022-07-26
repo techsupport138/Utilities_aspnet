@@ -15,6 +15,8 @@ public class ProductEntity : BaseEntity {
 	public string? Type { get; set; }
 	public string? UseCase { get; set; }
 	public string? Unit { get; set; }
+	public string? Packaging { get; set; }
+	public string? Port { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Length { get; set; }
@@ -24,6 +26,19 @@ public class ProductEntity : BaseEntity {
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
 	public double? Price { get; set; }
+	public double Copacity { get; set; }
+	public double Copacity1 { get; set; }
+	public double Copacity2 { get; set; }
+	public double Copacity3 { get; set; }
+	public double Copacity4 { get; set; }
+	public double Copacity5 { get; set; }
+	public double Copacity6 { get; set; }
+	public double Copacity7 { get; set; }
+	public double Copacity8 { get; set; }
+	public double Copacity9 { get; set; }
+	public double Copacity10 { get; set; }
+	public double Copacity11 { get; set; }
+	public double Copacity12 { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public int? VisitsCount { get; set; }
@@ -62,29 +77,44 @@ public class ProductReadDto {
 	public string? Type { get; set; }
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
+	public string? Packaging { get; set; }
+	public string? Port { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public bool IsBookmarked { get; set; }
-	public double? Latitude { get; set; }
-	public double? Longitude { get; set; }
 	public int? VisitsCount { get; set; }
 	public int? CommentsCount { get; set; }
 	public int? DownloadCount { get; set; }
+	public double? Latitude { get; set; }
+	public double? Longitude { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
 	public double? Score { get; set; }
 	public double? Price { get; set; }
-	public DateTime? StartDate { get; set; }
-	public DateTime? EndDate { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
 	public double? Height { get; set; }
 	public double? Weight { get; set; }
+	public double Copacity { get; set; }
+	public double Copacity1 { get; set; }
+	public double Copacity2 { get; set; }
+	public double Copacity3 { get; set; }
+	public double Copacity4 { get; set; }
+	public double Copacity5 { get; set; }
+	public double Copacity6 { get; set; }
+	public double Copacity7 { get; set; }
+	public double Copacity8 { get; set; }
+	public double Copacity9 { get; set; }
+	public double Copacity10 { get; set; }
+	public double Copacity11 { get; set; }
+	public double Copacity12 { get; set; }
+	public DateTime? StartDate { get; set; }
+	public DateTime? EndDate { get; set; }
 	public DateTime? CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
 	public DateTime? DeletedAt { get; set; }
-	public UserReadDto? User { get; set; }
 	public ProductStatus? Status { get; set; }
+	public UserReadDto? User { get; set; }
 	public IEnumerable<LocationReadDto>? Locations { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
@@ -110,28 +140,39 @@ public class ProductCreateUpdateDto {
 	public string? Type { get; set; }
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
+	public string? Packaging { get; set; }
+	public string? Port { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
+	public int? VisitsCount { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
-	public int? VisitsCount { get; set; }
 	public double? Price { get; set; }
-	public DateTime? StartDate { get; set; }
-	public DateTime? EndDate { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
 	public double? Height { get; set; }
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
+	public double Copacity { get; set; }
+	public double Copacity1 { get; set; }
+	public double Copacity2 { get; set; }
+	public double Copacity3 { get; set; }
+	public double Copacity4 { get; set; }
+	public double Copacity5 { get; set; }
+	public double Copacity6 { get; set; }
+	public double Copacity7 { get; set; }
+	public double Copacity8 { get; set; }
+	public double Copacity9 { get; set; }
+	public double Copacity10 { get; set; }
+	public double Copacity11 { get; set; }
+	public double Copacity12 { get; set; }
+	public DateTime? StartDate { get; set; }
+	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
-
 	public IEnumerable<string>? Teams { get; set; }
-	//public IEnumerable<Guid>? Forms { get; set; }
-	//public IEnumerable<string>? VoteFields { get; set; }
-	//public IEnumerable<Guid>? Reports { get; set; }
 }
 
 public class ProductFilterDto {
@@ -148,6 +189,8 @@ public class ProductFilterDto {
 	public string? Type { get; set; }
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
+	public string? Packaging { get; set; }
+	public string? Port { get; set; }
 	public bool? Enabled { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? IsBookmarked { get; set; }
@@ -170,6 +213,19 @@ public class ProductFilterDto {
 	public double? MaxOrder { get; set; }
 	public double? StartPriceRange { get; set; }
 	public double? EndPriceRange { get; set; }
+	public double Copacity { get; set; }
+	public double Copacity1 { get; set; }
+	public double Copacity2 { get; set; }
+	public double Copacity3 { get; set; }
+	public double Copacity4 { get; set; }
+	public double Copacity5 { get; set; }
+	public double Copacity6 { get; set; }
+	public double Copacity7 { get; set; }
+	public double Copacity8 { get; set; }
+	public double Copacity9 { get; set; }
+	public double Copacity10 { get; set; }
+	public double Copacity11 { get; set; }
+	public double Copacity12 { get; set; }
 	public int? VisitsCount { get; set; }
 	public int PageSize { get; set; } = 1000;
 	public int PageNumber { get; set; } = 1;
