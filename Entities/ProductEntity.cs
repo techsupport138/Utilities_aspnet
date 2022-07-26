@@ -26,19 +26,19 @@ public class ProductEntity : BaseEntity {
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
 	public double? Price { get; set; }
-	public double Copacity { get; set; }
-	public double Copacity1 { get; set; }
-	public double Copacity2 { get; set; }
-	public double Copacity3 { get; set; }
-	public double Copacity4 { get; set; }
-	public double Copacity5 { get; set; }
-	public double Copacity6 { get; set; }
-	public double Copacity7 { get; set; }
-	public double Copacity8 { get; set; }
-	public double Copacity9 { get; set; }
-	public double Copacity10 { get; set; }
-	public double Copacity11 { get; set; }
-	public double Copacity12 { get; set; }
+	public double Capacity { get; set; }
+	public double Capacity1 { get; set; }
+	public double Capacity2 { get; set; }
+	public double Capacity3 { get; set; }
+	public double Capacity4 { get; set; }
+	public double Capacity5 { get; set; }
+	public double Capacity6 { get; set; }
+	public double Capacity7 { get; set; }
+	public double Capacity8 { get; set; }
+	public double Capacity9 { get; set; }
+	public double Capacity10 { get; set; }
+	public double Capacity11 { get; set; }
+	public double Capacity12 { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public int? VisitsCount { get; set; }
@@ -95,19 +95,19 @@ public class ProductReadDto {
 	public double? Width { get; set; }
 	public double? Height { get; set; }
 	public double? Weight { get; set; }
-	public double Copacity { get; set; }
-	public double Copacity1 { get; set; }
-	public double Copacity2 { get; set; }
-	public double Copacity3 { get; set; }
-	public double Copacity4 { get; set; }
-	public double Copacity5 { get; set; }
-	public double Copacity6 { get; set; }
-	public double Copacity7 { get; set; }
-	public double Copacity8 { get; set; }
-	public double Copacity9 { get; set; }
-	public double Copacity10 { get; set; }
-	public double Copacity11 { get; set; }
-	public double Copacity12 { get; set; }
+	public double Capacity { get; set; }
+	public double Capacity1 { get; set; }
+	public double Capacity2 { get; set; }
+	public double Capacity3 { get; set; }
+	public double Capacity4 { get; set; }
+	public double Capacity5 { get; set; }
+	public double Capacity6 { get; set; }
+	public double Capacity7 { get; set; }
+	public double Capacity8 { get; set; }
+	public double Capacity9 { get; set; }
+	public double Capacity10 { get; set; }
+	public double Capacity11 { get; set; }
+	public double Capacity12 { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public DateTime? CreatedAt { get; set; }
@@ -154,19 +154,19 @@ public class ProductCreateUpdateDto {
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
-	public double Copacity { get; set; }
-	public double Copacity1 { get; set; }
-	public double Copacity2 { get; set; }
-	public double Copacity3 { get; set; }
-	public double Copacity4 { get; set; }
-	public double Copacity5 { get; set; }
-	public double Copacity6 { get; set; }
-	public double Copacity7 { get; set; }
-	public double Copacity8 { get; set; }
-	public double Copacity9 { get; set; }
-	public double Copacity10 { get; set; }
-	public double Copacity11 { get; set; }
-	public double Copacity12 { get; set; }
+	public double Capacity { get; set; }
+	public double Capacity1 { get; set; }
+	public double Capacity2 { get; set; }
+	public double Capacity3 { get; set; }
+	public double Capacity4 { get; set; }
+	public double Capacity5 { get; set; }
+	public double Capacity6 { get; set; }
+	public double Capacity7 { get; set; }
+	public double Capacity8 { get; set; }
+	public double Capacity9 { get; set; }
+	public double Capacity10 { get; set; }
+	public double Capacity11 { get; set; }
+	public double Capacity12 { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
@@ -213,19 +213,19 @@ public class ProductFilterDto {
 	public double? MaxOrder { get; set; }
 	public double? StartPriceRange { get; set; }
 	public double? EndPriceRange { get; set; }
-	public double Copacity { get; set; }
-	public double Copacity1 { get; set; }
-	public double Copacity2 { get; set; }
-	public double Copacity3 { get; set; }
-	public double Copacity4 { get; set; }
-	public double Copacity5 { get; set; }
-	public double Copacity6 { get; set; }
-	public double Copacity7 { get; set; }
-	public double Copacity8 { get; set; }
-	public double Copacity9 { get; set; }
-	public double Copacity10 { get; set; }
-	public double Copacity11 { get; set; }
-	public double Copacity12 { get; set; }
+	public double Capacity { get; set; }
+	public double Capacity1 { get; set; }
+	public double Capacity2 { get; set; }
+	public double Capacity3 { get; set; }
+	public double Capacity4 { get; set; }
+	public double Capacity5 { get; set; }
+	public double Capacity6 { get; set; }
+	public double Capacity7 { get; set; }
+	public double Capacity8 { get; set; }
+	public double Capacity9 { get; set; }
+	public double Capacity10 { get; set; }
+	public double Capacity11 { get; set; }
+	public double Capacity12 { get; set; }
 	public int? VisitsCount { get; set; }
 	public int PageSize { get; set; } = 1000;
 	public int PageNumber { get; set; } = 1;
