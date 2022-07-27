@@ -62,7 +62,8 @@ public class CommentRepository : ICommentRepository {
 			CreatedAt = DateTime.Now,
 			Comment = entity.Comment,
 			ProductId = entity.ProductId,
-			Score = entity.Score
+			Score = entity.Score,
+			ParentId = entity.ParentId
 		};
 
 		comment.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
