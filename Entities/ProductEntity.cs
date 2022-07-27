@@ -18,6 +18,8 @@ public class ProductEntity : BaseEntity {
 	public string? Packaging { get; set; }
 	public string? Shipping { get; set; }
 	public string? Port { get; set; }
+	public string? KeyValues1 { get; set; }
+	public string? KeyValues2 { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Length { get; set; }
@@ -81,6 +83,8 @@ public class ProductReadDto {
 	public string? Packaging { get; set; }
 	public string? Port { get; set; }
 	public string? Shipping { get; set; }
+	public string? KeyValues1 { get; set; }
+	public string? KeyValues2 { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public bool IsBookmarked { get; set; }
@@ -145,6 +149,8 @@ public class ProductCreateUpdateDto {
 	public string? Packaging { get; set; }
 	public string? Port { get; set; }
 	public string? Shipping { get; set; }
+	public string? KeyValues1 { get; set; }
+	public string? KeyValues2 { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Price { get; set; }
@@ -195,6 +201,8 @@ public class ProductFilterDto {
 	public string? Packaging { get; set; }
 	public string? Port { get; set; }
 	public string? Shipping { get; set; }
+	public string? KeyValues1 { get; set; }
+	public string? KeyValues2 { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
 	public double? Height { get; set; }
@@ -257,6 +265,8 @@ public class FilterProductDto {
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
 	public string? Shipping { get; set; }
+	public string? KeyValues1 { get; set; }
+	public string? KeyValues2 { get; set; }
 	public double? StartPriceRange { get; set; }
 	public double? EndPriceRange { get; set; }
 	public double? Length { get; set; }
