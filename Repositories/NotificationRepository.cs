@@ -52,8 +52,8 @@ public class NotificationRepository : INotificationRepository {
 				NotificationId = notification.Id,
 				CreatedAt = DateTime.Now,
 				FileType = type,
-				FileName = model.Media,
-				Link = model.Media
+				FileName = model.Media
+				//Link = model.Media
 			});
 			_context.SaveChanges();
 		}

@@ -75,7 +75,7 @@ public class CommentRepository : ICommentRepository {
 		{
 			ProductEntity? product = _context.Set<ProductEntity>().Include(x => x.Media)
 				.FirstOrDefault(x => x.Id == comment.ProductId);
-			string? linkMedia = product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.Link)?.FirstOrDefault();
+			string? linkMedia = product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.FileName)?.FirstOrDefault();
 			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto
 			{
 				UserId = product.UserId,

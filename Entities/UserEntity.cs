@@ -152,7 +152,7 @@ public class UserReadDto {
 	public GenderEntity? Gender { get; set; }
 	public GrowthRateReadDto? GrowthRate { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
-	public IEnumerable<LocationReadDto>? Locations { get; set; }
+	public IEnumerable<LocationReadDto>? Location { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<ProductReadDto>? Products { get; set; }
 	public IEnumerable<UserReadDto>? Followers { get; set; }
