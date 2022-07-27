@@ -10,6 +10,10 @@ public class CategoryEntity : BaseEntity {
 	public string? Link { get; set; }
 	public string? UseCase { get; set; }
 	public string? Type { get; set; }
+	public double? Latitude { get; set; }
+	public double? Longitude { get; set; }
+	public DateTime? Date1 { get; set; }
+	public DateTime? Date2 { get; set; }
 
 	public IEnumerable<MediaEntity> Media { get; set; }
 	public IEnumerable<UserEntity>? Users { get; set; }
@@ -34,6 +38,10 @@ public class CategoryReadDto {
 	public string? Link { get; set; }
 	public string? UseCase { get; set; }
 	public string? Type { get; set; }
+	public double? Latitude { get; set; }
+	public double? Longitude { get; set; }
+	public DateTime? Date1 { get; set; }
+	public DateTime? Date2 { get; set; }
 	public CategoryReadDto? Parent { get; set; }
 	public IEnumerable<CategoryReadDto>? Children { get; set; }
 	public Guid? ParentId { get; set; }
@@ -51,6 +59,10 @@ public class CategoryCreateUpdateDto {
 	public string? Color { get; set; }
 	public string? UseCase { get; set; }
 	public string? Type { get; set; }
+	public double? Latitude { get; set; }
+	public double? Longitude { get; set; }
+	public DateTime? Date1 { get; set; }
+	public DateTime? Date2 { get; set; }
 }
 
 public class SeederCategoryDto {
