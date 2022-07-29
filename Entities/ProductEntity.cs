@@ -20,6 +20,19 @@ public class ProductEntity : BaseEntity {
 	public string? Port { get; set; }
 	public string? KeyValues1 { get; set; }
 	public string? KeyValues2 { get; set; }
+	public string? Value { get; set; }
+	public string? Value1 { get; set; }
+	public string? Value2 { get; set; }
+	public string? Value3 { get; set; }
+	public string? Value4 { get; set; }
+	public string? Value5 { get; set; }
+	public string? Value6 { get; set; }
+	public string? Value7 { get; set; }
+	public string? Value8 { get; set; }
+	public string? Value9 { get; set; }
+	public string? Value10 { get; set; }
+	public string? Value11 { get; set; }
+	public string? Value12 { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Length { get; set; }
@@ -29,19 +42,6 @@ public class ProductEntity : BaseEntity {
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
 	public double? Price { get; set; }
-	public double? Capacity { get; set; }
-	public double? Capacity1 { get; set; }
-	public double? Capacity2 { get; set; }
-	public double? Capacity3 { get; set; }
-	public double? Capacity4 { get; set; }
-	public double? Capacity5 { get; set; }
-	public double? Capacity6 { get; set; }
-	public double? Capacity7 { get; set; }
-	public double? Capacity8 { get; set; }
-	public double? Capacity9 { get; set; }
-	public double? Capacity10 { get; set; }
-	public double? Capacity11 { get; set; }
-	public double? Capacity12 { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public int? VisitsCount { get; set; }
@@ -85,6 +85,19 @@ public class ProductReadDto {
 	public string? Shipping { get; set; }
 	public string? KeyValues1 { get; set; }
 	public string? KeyValues2 { get; set; }
+	public string? Value { get; set; }
+	public string? Value1 { get; set; }
+	public string? Value2 { get; set; }
+	public string? Value3 { get; set; }
+	public string? Value4 { get; set; }
+	public string? Value5 { get; set; }
+	public string? Value6 { get; set; }
+	public string? Value7 { get; set; }
+	public string? Value8 { get; set; }
+	public string? Value9 { get; set; }
+	public string? Value10 { get; set; }
+	public string? Value11 { get; set; }
+	public string? Value12 { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public bool IsBookmarked { get; set; }
@@ -101,19 +114,6 @@ public class ProductReadDto {
 	public double? Width { get; set; }
 	public double? Height { get; set; }
 	public double? Weight { get; set; }
-	public double? Capacity { get; set; }
-	public double? Capacity1 { get; set; }
-	public double? Capacity2 { get; set; }
-	public double? Capacity3 { get; set; }
-	public double? Capacity4 { get; set; }
-	public double? Capacity5 { get; set; }
-	public double? Capacity6 { get; set; }
-	public double? Capacity7 { get; set; }
-	public double? Capacity8 { get; set; }
-	public double? Capacity9 { get; set; }
-	public double? Capacity10 { get; set; }
-	public double? Capacity11 { get; set; }
-	public double? Capacity12 { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public DateTime? CreatedAt { get; set; }
@@ -151,6 +151,19 @@ public class ProductCreateUpdateDto {
 	public string? Shipping { get; set; }
 	public string? KeyValues1 { get; set; }
 	public string? KeyValues2 { get; set; }
+	public string? Value { get; set; }
+	public string? Value1 { get; set; }
+	public string? Value2 { get; set; }
+	public string? Value3 { get; set; }
+	public string? Value4 { get; set; }
+	public string? Value5 { get; set; }
+	public string? Value6 { get; set; }
+	public string? Value7 { get; set; }
+	public string? Value8 { get; set; }
+	public string? Value9 { get; set; }
+	public string? Value10 { get; set; }
+	public string? Value11 { get; set; }
+	public string? Value12 { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Price { get; set; }
@@ -160,19 +173,6 @@ public class ProductCreateUpdateDto {
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
-	public double? Capacity { get; set; }
-	public double? Capacity1 { get; set; }
-	public double? Capacity2 { get; set; }
-	public double? Capacity3 { get; set; }
-	public double? Capacity4 { get; set; }
-	public double? Capacity5 { get; set; }
-	public double? Capacity6 { get; set; }
-	public double? Capacity7 { get; set; }
-	public double? Capacity8 { get; set; }
-	public double? Capacity9 { get; set; }
-	public double? Capacity10 { get; set; }
-	public double? Capacity11 { get; set; }
-	public double? Capacity12 { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public int? VisitsCount { get; set; }
@@ -203,6 +203,19 @@ public class ProductFilterDto {
 	public string? Shipping { get; set; }
 	public string? KeyValues1 { get; set; }
 	public string? KeyValues2 { get; set; }
+	public string? Value { get; set; }
+	public string? Value1 { get; set; }
+	public string? Value2 { get; set; }
+	public string? Value3 { get; set; }
+	public string? Value4 { get; set; }
+	public string? Value5 { get; set; }
+	public string? Value6 { get; set; }
+	public string? Value7 { get; set; }
+	public string? Value8 { get; set; }
+	public string? Value9 { get; set; }
+	public string? Value10 { get; set; }
+	public string? Value11 { get; set; }
+	public string? Value12 { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
 	public double? Height { get; set; }
@@ -211,19 +224,6 @@ public class ProductFilterDto {
 	public double? MaxOrder { get; set; }
 	public double? StartPriceRange { get; set; }
 	public double? EndPriceRange { get; set; }
-	public double? Capacity { get; set; }
-	public double? Capacity1 { get; set; }
-	public double? Capacity2 { get; set; }
-	public double? Capacity3 { get; set; }
-	public double? Capacity4 { get; set; }
-	public double? Capacity5 { get; set; }
-	public double? Capacity6 { get; set; }
-	public double? Capacity7 { get; set; }
-	public double? Capacity8 { get; set; }
-	public double? Capacity9 { get; set; }
-	public double? Capacity10 { get; set; }
-	public double? Capacity11 { get; set; }
-	public double? Capacity12 { get; set; }
 	public bool? Enabled { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? IsBookmarked { get; set; }
