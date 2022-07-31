@@ -27,6 +27,7 @@ public class UserEntity : IdentityUser {
 	public DateTime? CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
 	public DateTime? DeletedAt { get; set; }
+	public string? AccessLevel { get; set; }
 
 	public int? GenderId { get; set; }
 	public GenderEntity? Gender { get; set; }
@@ -147,7 +148,9 @@ public class UserReadDto {
 	public bool IsFollowing { get; set; } = false;
 	public bool? Suspend { get; set; }
 	public int? CountFollowers { get; set; }
+	public int? CountFollowing { get; set; }
 	public int? CountProducts { get; set; }
+	public string? AccessLevel { get; set; }
 	public DateTime? BirthDate { get; set; }
 	public GenderEntity? Gender { get; set; }
 	public GrowthRateReadDto? GrowthRate { get; set; }
@@ -168,7 +171,9 @@ public class UserMinimalReadDto {
 	public string? Color { get; set; }
 	public string? State { get; set; }
 	public int? CountFollowers { get; set; }
+	public int? CountFollowing { get; set; }
 	public int? CountProducts { get; set; }
+	public string? AccessLevel { get; set; }
 	public GenderEntity? Gender { get; set; }
 	public IEnumerable<MediaDto>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
@@ -224,6 +229,7 @@ public class UserCreateUpdateDto {
 	public bool? ShowContactInfo { get; set; }
 	public DateTime? BirthDate { get; set; }
 	public int? GenderId { get; set; }
+	public string? AccessLevel { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
 }

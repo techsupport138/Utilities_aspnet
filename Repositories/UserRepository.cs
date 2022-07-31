@@ -170,6 +170,8 @@ public class UserRepository : IUserRepository
         userReadDto.CountProducts = model.Products?.Count();
         List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == model.Id).ToListAsync();
         userReadDto.CountFollowers = follower.Count;
+        List<FollowEntity> following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == model.Id).ToListAsync();
+        userReadDto.CountFollowing = following.Count;
 
         userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
         userReadDto.Token = token;
@@ -526,6 +528,7 @@ public class UserRepository : IUserRepository
         entity.ShowContactInfo = dto.ShowContactInfo ?? entity.ShowContactInfo;
         entity.State = dto.State ?? entity.State;
         entity.Point = dto.Point ?? entity.Point;
+        entity.AccessLevel = dto.AccessLevel ?? entity.AccessLevel;
 
         if (dto.Locations.IsNotNullOrEmpty())
         {
