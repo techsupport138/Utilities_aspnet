@@ -12,11 +12,12 @@ public enum Sender {
 }
 
 public class SmsPanelSettings {
-	public Sender? Sender { get; set; }
+	//public Sender? Sender { get; set; }
 	public string? LineNumber { get; set; }
 	public string? SmsApiKey { get; set; }
 	public string? SmsSecret { get; set; }
 	public int? OtpId { get; set; }
+	public string? PatternCode { get; set; }
 }
 
 public class Pushe {

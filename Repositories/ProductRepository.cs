@@ -386,8 +386,16 @@ public class ProductRepository : IProductRepository {
 	public async Task<GenericResponse> Delete(Guid id) {
 		ProductEntity? i = await _context.Set<ProductEntity>()
 			.FirstOrDefaultAsync(i => i.Id == id);
-		i.DeletedAt = DateTime.Now;
-		await _context.SaveChangesAsync();
+		if(i != null)
+        {
+			i.DeletedAt = DateTime.Now;
+			await _context.SaveChangesAsync();
+        }
+        else
+        {
+			return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
+		}
+
 		return new GenericResponse();
 	}
 }

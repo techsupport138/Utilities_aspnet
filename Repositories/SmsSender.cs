@@ -19,6 +19,20 @@ public class SmsSender : ISmsSender {
 		AppSettings appSettings = new();
 		_config.GetSection("AppSettings").Bind(appSettings);
 		SmsPanelSettings smsSetting = appSettings.SmsPanelSettings;
+
+        if (mobileNumber.Contains("+98"))
+        {
+			mobileNumber = mobileNumber.TrimStart(new[] { '+' });
+			mobileNumber = mobileNumber.TrimStart(new[] { '9' });
+			mobileNumber = mobileNumber.TrimStart(new[] { '8' });
+
+		}
+        else
+        {
+			mobileNumber = mobileNumber.TrimStart(new[] { '0' });
+		}
+
+
 		switch (Sender.FarazSms) {
 			case Sender.SmsIr:
 				// string? token = new Token()
@@ -61,12 +75,22 @@ public class SmsSender : ISmsSender {
 				request.AddHeader("Content-Type", "application/json");
 				request.AddHeader("Authorization", "AccessKey U4-OM_COTYg_NBkwWBQtYeUUv1ODRKDrXEYtmtDfyRY=");
 
+				//request.AddParameter("undefined",
+				//                     "{\"op\" : \"pattern\"" + ",\"user\" : \"Anborapp\"" + ",\"pass\":  \"Anbor:/3890\"" +
+				//                     ",\"fromNum\" : " +
+				//                     "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " +
+				//                     mobileNumber.TrimStart(new[] {'0'}) + "" +
+				//                     ",\"patternCode\": \"atd5eng0d73h5wh\"" + ",\"inputData\" : [{\"verification-code\":" +
+				//                     message +
+				//                     "}]}",
+				//                     ParameterType.RequestBody);
+				
 				request.AddParameter("undefined",
-				                     "{\"op\" : \"pattern\"" + ",\"user\" : \"Anborapp\"" + ",\"pass\":  \"Anbor:/3890\"" +
+				                     "{\"op\" : \"pattern\"" + ",\"user\" : "+ smsSetting.SmsApiKey +"" + ",\"pass\":  "+ smsSetting.SmsSecret + "" +
 				                     ",\"fromNum\" : " +
 				                     "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " +
 				                     mobileNumber.TrimStart(new[] {'0'}) + "" +
-				                     ",\"patternCode\": \"atd5eng0d73h5wh\"" + ",\"inputData\" : [{\"verification-code\":" +
+				                     ",\"patternCode\": "+ smsSetting.PatternCode + "" + ",\"inputData\" : [{\"verification-code\":" +
 				                     message +
 				                     "}]}",
 				                     ParameterType.RequestBody);
