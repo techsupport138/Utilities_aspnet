@@ -101,6 +101,7 @@ public class ProductReadDto {
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public bool IsBookmarked { get; set; }
+	public bool IsTopProduct { get; set; } = false;
 	public int? VisitsCount { get; set; }
 	public int? CommentsCount { get; set; }
 	public int? DownloadCount { get; set; }
