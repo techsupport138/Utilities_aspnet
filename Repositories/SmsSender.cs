@@ -73,7 +73,8 @@ public class SmsSender : ISmsSender {
 
 				request.AddHeader("cache-control", "no-cache");
 				request.AddHeader("Content-Type", "application/json");
-				request.AddHeader("Authorization", "AccessKey U4-OM_COTYg_NBkwWBQtYeUUv1ODRKDrXEYtmtDfyRY=");
+				request.AddHeader("Authorization", "AccessKey " + smsSetting.SmsApiKey);
+				//request.AddHeader("Authorization", "AccessKey U4-OM_COTYg_NBkwWBQtYeUUv1ODRKDrXEYtmtDfyRY=");
 
 				//request.AddParameter("undefined",
 				//                     "{\"op\" : \"pattern\"" + ",\"user\" : \"Anborapp\"" + ",\"pass\":  \"Anbor:/3890\"" +
@@ -86,7 +87,7 @@ public class SmsSender : ISmsSender {
 				//                     ParameterType.RequestBody);
 
 				request.AddParameter("undefined",
-									 "{\"op\" : \"pattern\"" + ",\"user\" : \"" + smsSetting.SmsApiKey + "\"" + ",\"pass\": \"" + smsSetting.SmsSecret + "\"" +
+									 "{\"op\" : \"pattern\"" + ",\"user\" : \"" + smsSetting.UserName + "\"" + ",\"pass\": \"" + smsSetting.SmsSecret + "\"" +
 									 ",\"fromNum\" : " +
 									 "03000505".TrimStart(new[] { '0' }) + "" + ",\"toNum\": " +
 									 mobileNumber + "" +

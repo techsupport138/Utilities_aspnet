@@ -13,6 +13,7 @@ public enum Sender {
 
 public class SmsPanelSettings {
 	//public Sender? Sender { get; set; }
+	public string? UserName { get; set; }
 	public string? LineNumber { get; set; }
 	public string? SmsApiKey { get; set; }
 	public string? SmsSecret { get; set; }
