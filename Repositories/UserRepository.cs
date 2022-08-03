@@ -52,12 +52,7 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse> CheckUserName(string userName) {
 		bool existUserName = await _context.Set<UserEntity>().AnyAsync(x => x.AppUserName == userName);
-		if (existUserName) {
-			return new GenericResponse(UtilitiesStatusCodes.BadRequest, "Username is available");
-		}
-		else {
-			return new GenericResponse();
-		}
+		return existUserName ? new GenericResponse(UtilitiesStatusCodes.BadRequest, "Username is available") : new GenericResponse();
 	}
 
 	public async Task<GenericResponse<UserReadDto?>> ReadById(string idOrUserName, string? token = null) {
@@ -65,9 +60,9 @@ public class UserRepository : IUserRepository {
 		UserEntity? model = await _context.Set<UserEntity>()
 			.AsNoTracking()
 			.Include(u => u.Media)
-			.Include(u => u.Categories)
+			.Include(u => u.Categories)!.ThenInclude(u => u.Media)
 			.Include(u => u.Location)
-			.Include(u => u.Products.Where(x => x.DeletedAt == null))!.ThenInclude(x => x.Media)
+			.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.Media)
 			.Include(u => u.Gender)
 			.FirstOrDefaultAsync(u => isUserId ? u.Id == idOrUserName : u.UserName == idOrUserName);
 
@@ -87,7 +82,7 @@ public class UserRepository : IUserRepository {
 		userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
 
 		try {
-			if (_httpContextAccessor?.HttpContext?.User?.Identity?.Name != null) {
+			if (_httpContextAccessor.HttpContext?.User.Identity?.Name != null) {
 				userReadDto.IsFollowing = await _context.Set<FollowEntity>()
 					.AnyAsync(x => x.FollowsUserId == model.Id && x.FollowerUserId == _httpContextAccessor.HttpContext.User.Identity.Name);
 			}
@@ -426,7 +421,7 @@ public class UserRepository : IUserRepository {
 		}
 	}
 
-	private async Task<GrowthRateReadDto?> GetGrowthRate(string id) {
+	private async Task<GrowthRateReadDto?> GetGrowthRate(string? id) {
 		List<CommentEntity> myComments = await _context.Set<CommentEntity>().Where(x => x.UserId == id).ToListAsync();
 		List<Guid> productIds = await _context.Set<ProductEntity>().Where(x => x.UserId == id).Select(x => x.Id).ToListAsync();
 		List<CommentEntity> comments = await _context.Set<CommentEntity>().Where(x => productIds.Contains((Guid) x.ProductId)).ToListAsync();
