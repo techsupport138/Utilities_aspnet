@@ -42,5 +42,3 @@ global using System.Diagnostics;
 global using Microsoft.EntityFrameworkCore.Query;
 global using Zarinpal;
 global using Zarinpal.Models;
-global using ElmahCore.Mvc;
-global using ElmahCore.Sql;

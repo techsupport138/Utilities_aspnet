@@ -5,8 +5,7 @@ public static class StartupExtension {
 		this WebApplicationBuilder builder,
 		string connectionStrings,
 		DatabaseType databaseType = DatabaseType.SqlServer,
-		string? redisConnectionString = null,
-		bool useElmah = false) where T : DbContext {
+		string? redisConnectionString = null) where T : DbContext {
 		builder.AddUtilitiesServices<T>(connectionStrings, databaseType);
 
 		if (redisConnectionString != null) builder.AddRedis(redisConnectionString);
@@ -21,17 +20,6 @@ public static class StartupExtension {
 			x.MultipartBodyLengthLimit = int.MaxValue;
 			x.MultipartHeadersLengthLimit = int.MaxValue;
 		});
-		builder.Services.Configure<IISServerOptions>(options => {
-			options.MaxRequestBodySize = int.MaxValue; // or your desired value
-		});
-		builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromSeconds(604800); });
-		if (useElmah)
-			builder.Services.AddElmah<SqlErrorLog>(
-				options => {
-					options.ConnectionString = connectionStrings;
-					options.SqlServerDatabaseSchemaName = "Errors";
-					options.SqlServerDatabaseTableName = "ElmahError";
-				});
 	}
 
 	private static void AddUtilitiesServices<T>(
@@ -41,8 +29,7 @@ public static class StartupExtension {
 		builder.Services.AddMemoryCache();
 		builder.Services.AddResponseCompression();
 		builder.Services.AddResponseCaching();
-		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin",
-		                                          option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 		builder.Services.AddScoped<DbContext, T>();
 		builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -62,8 +49,7 @@ public static class StartupExtension {
 
 		builder.Services.AddHttpContextAccessor();
 		builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-		builder.Services.AddSingleton<IFileProvider>(
-			new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+		builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 		builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {
 			options.SerializerSettings.ContractResolver = new DefaultContractResolver();
 			options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -72,9 +58,7 @@ public static class StartupExtension {
 			options.UseCamelCasing(true);
 		});
 
-		builder.Services.AddSignalR(i => i.EnableDetailedErrors = true);
 		builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-		builder.Services.AddMemoryCache();
 		builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 		builder.Services.AddTransient<AppSettings>();
 		builder.Services.AddTransient<ISmsSender, SmsSender>();
@@ -158,7 +142,7 @@ public static class StartupExtension {
 		});
 	}
 
-	public static void UseUtilitiesServices(this WebApplication app, bool useElmah = false) {
+	public static void UseUtilitiesServices(this WebApplication app) {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 		if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
@@ -170,8 +154,6 @@ public static class StartupExtension {
 		app.UseAuthentication();
 		app.UseRouting();
 		app.UseAuthorization();
-		app.UseEndpoints(endpoints => { endpoints.MapHub<UtilitiesHub>("/utilitiesHub"); });
-		if (useElmah) app.UseElmah();
 	}
 
 	private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
@@ -180,9 +162,5 @@ public static class StartupExtension {
 			c.DocExpansion(DocExpansion.None);
 			c.DefaultModelsExpandDepth(-1);
 		});
-	}
-
-	public class UtilitiesHub : Hub {
-		public async Task NewCallReceived(CallContext newCall) => await Clients.All.SendAsync("NewCallReceived", newCall);
 	}
 }
