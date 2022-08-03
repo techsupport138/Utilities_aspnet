@@ -22,10 +22,7 @@ public static class StartupExtension {
 		});
 	}
 
-	private static void AddUtilitiesServices<T>(
-		this WebApplicationBuilder builder,
-		string connectionStrings,
-		DatabaseType databaseType) where T : DbContext {
+	private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) where T : DbContext {
 		builder.Services.AddMemoryCache();
 		builder.Services.AddResponseCompression();
 		builder.Services.AddResponseCaching();
@@ -144,11 +141,12 @@ public static class StartupExtension {
 
 	public static void UseUtilitiesServices(this WebApplication app) {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-		if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
+		if (app.Environment.IsDevelopment()) {
+			app.UseDeveloperExceptionPage();
+			app.UseMiddleware<ResponseTimeMiddleware>();
+		}
 
 		app.UseResponseCaching();
-		app.UseMiddleware<ResponseTimeMiddleware>();
-		app.UseDeveloperExceptionPage();
 		app.UseUtilitiesSwagger();
 		app.UseStaticFiles();
 		app.UseAuthentication();

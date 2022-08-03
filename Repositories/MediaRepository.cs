@@ -1,10 +1,8 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IMediaRepository {
-	bool SaveMedia(IFormFile image, string name);
-	bool SaveMedia(IFormFile image, string name, string folder);
+	void SaveMedia(IFormFile image, string name, string folder);
 	string GetFileName(Guid guid, string ext = ".png");
-	string GetFileName(Guid guid, string folder, string ext);
 	string GetFileUrl(string name, string folder);
 }
 
@@ -13,41 +11,28 @@ public class MediaRepository : IMediaRepository {
 
 	public MediaRepository(IWebHostEnvironment env) => _env = env;
 
-	public string GetFileName(Guid guid, string folder, string ext) => folder + guid.ToString("N") + ext;
-
 	public string GetFileName(Guid guid, string ext = ".png") => guid.ToString("N") + ext;
 
 	public string GetFileUrl(string name, string folder) => Path.Combine(folder, name);
 
-	public bool SaveMedia(IFormFile image, string name, string folder) {
+	public void SaveMedia(IFormFile image, string name, string folder) {
+		string webRoot = _env.WebRootPath;
+		string nullPath = Path.Combine(webRoot, "Medias", "null.png");
+		string path = Path.Combine(webRoot, "Medias", folder, name);
+		string uploadDir = Path.Combine(webRoot, "Medias", folder);
+		if (!Directory.Exists(uploadDir))
+			Directory.CreateDirectory(uploadDir);
 		try {
-			string webRoot = _env.WebRootPath;
-			string nullPath = Path.Combine(webRoot, "Medias", "null.png");
-			string path = Path.Combine(webRoot, "Medias", folder, name);
-			string uploadDir = Path.Combine(webRoot, "Medias", folder);
-			if (!Directory.Exists(uploadDir))
-				Directory.CreateDirectory(uploadDir);
 			try {
-				try {
-					File.Delete(path);
-				}
-				catch (Exception) {
-					// ignored
-				}
+				File.Delete(path);
+			}
+			catch (Exception) { }
 
-				using FileStream stream = new(path, FileMode.Create);
-				image.CopyTo(stream);
-				return true;
-			}
-			catch {
-				File.Copy(nullPath, path);
-				return false;
-			}
+			using FileStream stream = new(path, FileMode.Create);
+			image.CopyTo(stream);
 		}
 		catch {
-			return false;
+			File.Copy(nullPath, path);
 		}
 	}
-
-	public bool SaveMedia(IFormFile image, string name) => SaveMedia(image, name, "");
 }

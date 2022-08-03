@@ -3,7 +3,6 @@
 [Table("Media")]
 public class MediaEntity : BaseEntity {
 	public string? FileName { get; set; }
-	public FileTypes? FileType { get; set; }
 	public string? UseCase { get; set; }
 	public string? Link { get; set; }
 	public string? Title { get; set; }
@@ -30,7 +29,6 @@ public class MediaEntity : BaseEntity {
 
 public class MediaDto {
 	public string Id { get; set; }
-	public FileTypes Type { get; set; }
 	public string? UseCase { get; set; }
 	public string? Link { get; set; }
 	public string? Title { get; set; }

@@ -10,10 +10,7 @@ public class UploadRepository : IUploadRepository {
 	private readonly IMapper _mapper;
 	private readonly IMediaRepository _mediaRepository;
 
-	public UploadRepository(
-		DbContext context,
-		IMediaRepository mediaRepository,
-		IMapper mapper) {
+	public UploadRepository(DbContext context, IMediaRepository mediaRepository, IMapper mapper) {
 		_mediaRepository = mediaRepository;
 		_mapper = mapper;
 		_context = context;
@@ -23,14 +20,6 @@ public class UploadRepository : IUploadRepository {
 		List<MediaEntity> medias = new();
 		if (model.Files != null)
 			foreach (IFormFile file in model.Files) {
-				FileTypes fileType = FileTypes.Image;
-
-				if (file.ContentType.ToLower().Contains("svg")) fileType = FileTypes.Svg;
-				if (file.ContentType.ToLower().Contains("mp4")) fileType = FileTypes.Video;
-				if (file.ContentType.ToLower().Contains("pdf")) fileType = FileTypes.Pdf;
-				if (file.ContentType.ToLower().Contains("audio")) fileType = FileTypes.Voice;
-				if (file.ContentType.ToLower().Contains("gif")) fileType = FileTypes.Gif;
-
 				string folder = "";
 				if (model.UserId != null) {
 					folder = "Users";
@@ -44,7 +33,6 @@ public class UploadRepository : IUploadRepository {
 				string name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(file.FileName));
 				MediaEntity media = new() {
 					FileName = _mediaRepository.GetFileUrl(name, folder),
-					FileType = fileType,
 					UserId = model.UserId,
 					ProductId = model.ProductId,
 					ContentId = model.ContentId,
@@ -65,7 +53,6 @@ public class UploadRepository : IUploadRepository {
 
 		if (model.Links != null)
 			foreach (MediaEntity media in model.Links.Select(link => new MediaEntity {
-				         FileType = FileTypes.Link,
 				         Link = link,
 				         UserId = model.UserId,
 				         ProductId = model.ProductId,

@@ -58,17 +58,6 @@ public enum DatabaseType {
 	MySql = 1
 }
 
-public enum FileTypes {
-	Image = 0,
-	Svg = 1,
-	Gif = 2,
-	Video = 3,
-	Voice = 4,
-	Pdf = 5,
-	Txt = 6,
-	Link = 7
-}
-
 public enum OrderStatuses {
 	Pending = 0,
 	Canceled = 1,
