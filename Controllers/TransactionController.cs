@@ -11,21 +11,18 @@ public class TransactionController : BaseApiController {
 	}
 
 	[HttpPost]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<TransactionReadDto>>> Create(TransactionCreateDto dto) {
 		GenericResponse<TransactionReadDto?> i = await _transactionRepository.Create(dto);
 		return Result(i);
 	}
 
 	[HttpGet]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<IEnumerable<TransactionReadDto>>>> Read() {
 		GenericResponse<IEnumerable<TransactionReadDto>> i = await _transactionRepository.Read();
 		return Result(i);
 	}
 
 	[HttpGet("Mine")]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<IEnumerable<TransactionReadDto>>>> ReadMine() {
 		GenericResponse<IEnumerable<TransactionReadDto>> i = await _transactionRepository.ReadMine();
 		return Result(i);

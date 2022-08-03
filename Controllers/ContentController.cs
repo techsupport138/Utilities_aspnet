@@ -10,14 +10,12 @@ public class ContentController : BaseApiController {
 	}
 
 	[HttpGet]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<IEnumerable<ContentReadDto>>>> Read() {
 		GenericResponse<IEnumerable<ContentReadDto>> i = await _contentRepository.Read();
 		return Result(i);
 	}
 
 	[HttpGet("{id:guid}")]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<ContentReadDto>>> ReadById(Guid id) {
 		GenericResponse<ContentReadDto> i = await _contentRepository.ReadById(id);
 		return Result(i);
@@ -25,7 +23,6 @@ public class ContentController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<ContentReadDto>>> Create(ContentCreateUpdateDto dto) {
 		GenericResponse<ContentReadDto> i = await _contentRepository.Create(dto);
 		return Result(i);
@@ -33,7 +30,6 @@ public class ContentController : BaseApiController {
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<ContentReadDto>>> Update(ContentCreateUpdateDto dto) {
 		GenericResponse<ContentReadDto> i = await _contentRepository.Update(dto);
 		return Result(i);
@@ -41,7 +37,6 @@ public class ContentController : BaseApiController {
 
 	[HttpDelete("{id:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<IActionResult> Delete(Guid id) {
 		await _contentRepository.Delete(id);
 		return Ok();

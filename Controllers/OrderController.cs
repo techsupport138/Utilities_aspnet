@@ -11,28 +11,24 @@ public class OrderController : BaseApiController {
 	}
 
 	[HttpPost]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<OrderReadDto?>>> CreateUpdate(OrderCreateUpdateDto dto) {
 		GenericResponse<OrderReadDto?> i = await _orderRepository.CreateUpdate(dto);
 		return Result(i);
 	}
 
 	[HttpGet]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<IEnumerable<OrderReadDto>>>> Read() {
 		GenericResponse<IEnumerable<OrderReadDto>> i = await _orderRepository.Read();
 		return Result(i);
 	}
 
 	[HttpGet("{id:guid}")]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<OrderReadDto?>>> ReadById(Guid id) {
 		GenericResponse<OrderReadDto?> i = await _orderRepository.ReadById(id);
 		return Result(i);
 	}
 
 	[HttpGet("Mine")]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<IEnumerable<OrderReadDto>>>> ReadMine() {
 		GenericResponse<IEnumerable<OrderReadDto>> i = await _orderRepository.ReadMine();
 		return Result(i);

@@ -10,14 +10,12 @@ public class ReportController : BaseApiController {
 	}
 
 	[HttpPost("Filter")]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<IEnumerable<ReportReadDto>>>> Read(ReportFilterDto parameters) {
 		GenericResponse<IEnumerable<ReportReadDto>> result = await _repository.Read(parameters);
 		return Result(result);
 	}
 
 	[HttpGet("{id:guid}")]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<ReportReadDto>>> ReadById(Guid id) {
 		GenericResponse<ReportReadDto?> result = await _repository.ReadById(id);
 		return Result(result);
@@ -25,7 +23,6 @@ public class ReportController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse<ReportReadDto?>>> Create(ReportCreateDto parameters) {
 		GenericResponse<ReportReadDto?> result = await _repository.Create(parameters);
 		return Result(result);
@@ -33,7 +30,6 @@ public class ReportController : BaseApiController {
 
 	[HttpDelete]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, VaryByQueryKeys = new [] {"impactlevel", "pii"})]
 	public async Task<ActionResult<GenericResponse>> Delete(Guid id) {
 		GenericResponse result = await _repository.Delete(id);
 		return Result(result);
