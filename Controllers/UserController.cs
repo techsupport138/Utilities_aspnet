@@ -45,18 +45,6 @@ public class UserController : BaseApiController {
 		return Result(i);
 	}
 
-	[HttpPost("GetMobileVerificationCodeForLogin")]
-	public async Task<ActionResult<GenericResponse>> GetMobileVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
-		GenericResponse i = await _userRepository.GetMobileVerificationCodeForLogin(dto);
-		return Result(i);
-	}
-
-	[HttpPost("VerifyMobileForLogin")]
-	public async Task<ActionResult<GenericResponse>> VerifyMobileForLogin(VerifyMobileForLoginDto dto) {
-		GenericResponse i = await _userRepository.VerifyMobileForLogin(dto);
-		return Result(i);
-	}
-
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse>> Create(UserCreateUpdateDto dto) {

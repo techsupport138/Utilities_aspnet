@@ -40,7 +40,6 @@ public class UserEntity : IdentityUser {
 	public IEnumerable<TeamEntity>? Teams { get; set; }
 
 	public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
-	//public IEnumerable<BookmarkFolderEntity>? BookmarkFolders { get; set; }
 }
 
 [Table("Otps")]
@@ -59,8 +58,7 @@ public class TeamEntity : BaseEntity {
 	public ProductEntity? Product { get; set; }
 }
 
-public class TeamReadDto
-{
+public class TeamReadDto {
 	public Guid Id { get; set; }
 	public UserMinimalReadDto? User { get; set; }
 }
@@ -75,14 +73,6 @@ public class VerifyMobileForLoginDto {
 	public string VerificationCode { get; set; }
 }
 
-public class RegisterWithEmailDto {
-	public string UserName { get; set; }
-	public string Email { get; set; }
-	public string Password { get; set; }
-	public string? ReturnUrl { get; set; }
-	public bool Keep { get; set; } = true;
-}
-
 public class RegisterDto {
 	public string? UserName { get; set; }
 	public string? FirstName { get; set; }
@@ -93,29 +83,9 @@ public class RegisterDto {
 	public bool SendSMS { get; set; }
 }
 
-public class RegisterFormWithEmailDto {
-	public string Email { get; set; }
-	public string Password { get; set; }
-	public string? ReturnUrl { get; set; }
-	public bool Keep { get; set; } = true;
-	public string ConfirmPassword { get; set; }
-}
-
-public class LoginWithEmailDto {
-	public string Email { get; set; }
-	public string Password { get; set; }
-	public string? ReturnUrl { get; set; }
-	public bool Keep { get; set; } = true;
-}
-
 public class LoginWithPasswordDto {
-	public string Email { get; set; }
-	public string Password { get; set; }
-}
-
-public class ChangePasswordDto {
-	public string OldPassword { get; set; }
-	public string NewPassword { get; set; }
+	public string? Email { get; set; }
+	public string? Password { get; set; }
 }
 
 public class UserReadDto {
