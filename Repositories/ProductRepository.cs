@@ -67,7 +67,6 @@ public class ProductRepository : IProductRepository {
 				.Include(i => i.Media)
 				.Include(i => i.Categories)
 				.Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
-
 				.Include(i => i.Locations)
 				.Include(i => i.Reports)
 				.Include(i => i.Votes)
@@ -386,13 +385,11 @@ public class ProductRepository : IProductRepository {
 	public async Task<GenericResponse> Delete(Guid id) {
 		ProductEntity? i = await _context.Set<ProductEntity>()
 			.FirstOrDefaultAsync(i => i.Id == id);
-		if(i != null)
-        {
+		if (i != null) {
 			i.DeletedAt = DateTime.Now;
 			await _context.SaveChangesAsync();
-        }
-        else
-        {
+		}
+		else {
 			return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
 		}
 

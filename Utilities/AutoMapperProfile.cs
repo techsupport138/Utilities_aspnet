@@ -41,7 +41,7 @@ public class AutoMapperProfile : Profile {
 
 		CreateMap<ContentEntity, ContentReadDto>().ReverseMap();
 		CreateMap<ContentEntity, ContentCreateUpdateDto>().ReverseMap();
-		
+
 		CreateMap<LocationEntity, LocationReadDto>()
 			.ForMember(x => x.I, c => c.MapFrom(v => v.Id))
 			.ForMember(x => x.N, c => c.MapFrom(v => v.Title))
@@ -73,9 +73,9 @@ public class AutoMapperProfile : Profile {
 		CreateMap<NotificationEntity, NotificationDto>().ReverseMap();
 		CreateMap<CommentEntity, CommentCreateUpdateDto>().ReverseMap();
 		CreateMap<CommentEntity, CommentReadDto>().ForMember(x => x.IsLiked,
-					   c => c.MapFrom(v => (v.LikeComments == null || v.LikeComments.Count() < 1)
-										  ? false
-										  : v.LikeComments.Any(x => x.UserId == Server.UserId)))
+		                                                     c => c.MapFrom(v => (v.LikeComments == null || v.LikeComments.Count() < 1)
+			                                                                    ? false
+			                                                                    : v.LikeComments.Any(x => x.UserId == Server.UserId)))
 			.ReverseMap();
 
 		CreateMap<TransactionEntity, TransactionReadDto>().ReverseMap();

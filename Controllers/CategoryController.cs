@@ -9,21 +9,17 @@ public class CategoryController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<CategoryReadDto>>> Create(CategoryCreateUpdateDto dto)
-		=> Result(await _categoryRepository.Create(dto));
+	public async Task<ActionResult<GenericResponse<CategoryReadDto>>> Create(CategoryCreateUpdateDto dto) => Result(await _categoryRepository.Create(dto));
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<CategoryReadDto>>>> Read()
-		=> Result(await _categoryRepository.Read());
+	public async Task<ActionResult<GenericResponse<IEnumerable<CategoryReadDto>>>> Read() => Result(await _categoryRepository.Read());
 
 	[HttpGet("Parent")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<CategoryReadDto>>>> ReadParent()
-		=> Result(await _categoryRepository.Read());
+	public async Task<ActionResult<GenericResponse<IEnumerable<CategoryReadDto>>>> ReadParent() => Result(await _categoryRepository.Read());
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(CategoryCreateUpdateDto dto)
-		=> Result(await _categoryRepository.Update(dto));
+	public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(CategoryCreateUpdateDto dto) => Result(await _categoryRepository.Update(dto));
 
 	[HttpDelete("{id:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

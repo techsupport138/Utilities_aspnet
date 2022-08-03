@@ -9,8 +9,7 @@ public class VoteController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse>> Create(VoteCreateUpdateDto dto)
-		=> Result(await _voteRepository.CreateUpdateVote(dto));
+	public async Task<ActionResult<GenericResponse>> Create(VoteCreateUpdateDto dto) => Result(await _voteRepository.CreateUpdateVote(dto));
 
 	[HttpPost("VoteField")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -19,6 +18,5 @@ public class VoteController : BaseApiController {
 
 	[HttpGet("VoteField/{id:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<IEnumerable<VoteReadDto>?>>> ReadVoteFields(Guid id)
-		=> Result(await _voteRepository.ReadVoteFields(id));
+	public async Task<ActionResult<GenericResponse<IEnumerable<VoteReadDto>?>>> ReadVoteFields(Guid id) => Result(await _voteRepository.ReadVoteFields(id));
 }

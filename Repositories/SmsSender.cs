@@ -20,18 +20,14 @@ public class SmsSender : ISmsSender {
 		_config.GetSection("AppSettings").Bind(appSettings);
 		SmsPanelSettings smsSetting = appSettings.SmsPanelSettings;
 
-        if (mobileNumber.Contains("+98"))
-        {
-			mobileNumber = mobileNumber.TrimStart(new[] { '+' });
-			mobileNumber = mobileNumber.TrimStart(new[] { '9' });
-			mobileNumber = mobileNumber.TrimStart(new[] { '8' });
-
+		if (mobileNumber.Contains("+98")) {
+			mobileNumber = mobileNumber.TrimStart(new[] {'+'});
+			mobileNumber = mobileNumber.TrimStart(new[] {'9'});
+			mobileNumber = mobileNumber.TrimStart(new[] {'8'});
 		}
-        else
-        {
-			mobileNumber = mobileNumber.TrimStart(new[] { '0' });
+		else {
+			mobileNumber = mobileNumber.TrimStart(new[] {'0'});
 		}
-
 
 		switch (Sender.FarazSms) {
 			case Sender.SmsIr:
@@ -87,14 +83,14 @@ public class SmsSender : ISmsSender {
 				//                     ParameterType.RequestBody);
 
 				request.AddParameter("undefined",
-									 "{\"op\" : \"pattern\"" + ",\"user\" : \"" + smsSetting.UserName + "\"" + ",\"pass\": \"" + smsSetting.SmsSecret + "\"" +
-									 ",\"fromNum\" : " +
-									 "03000505".TrimStart(new[] { '0' }) + "" + ",\"toNum\": " +
-									 mobileNumber + "" +
-									 ",\"patternCode\": \" " + smsSetting.PatternCode + "\"" + ",\"inputData\" : [{\"verification-code\":" +
-									 message +
-									 "}]}",
-									 ParameterType.RequestBody);
+				                     "{\"op\" : \"pattern\"" + ",\"user\" : \"" + smsSetting.UserName + "\"" + ",\"pass\": \"" + smsSetting.SmsSecret + "\"" +
+				                     ",\"fromNum\" : " +
+				                     "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " +
+				                     mobileNumber + "" +
+				                     ",\"patternCode\": \" " + smsSetting.PatternCode + "\"" + ",\"inputData\" : [{\"verification-code\":" +
+				                     message +
+				                     "}]}",
+				                     ParameterType.RequestBody);
 
 				//client.ExecutePostAsync(request);
 				IRestResponse response = client.Execute(request);

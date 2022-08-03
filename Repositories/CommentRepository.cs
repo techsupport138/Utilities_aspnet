@@ -30,7 +30,7 @@ public class CommentRepository : ICommentRepository {
 		IEnumerable<CommentEntity> comment = await _context.Set<CommentEntity>()
 			.AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Media)
-			.Include(x=>x.LikeComments)
+			.Include(x => x.LikeComments)
 			.Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Children)!.ThenInclude(x => x.Children)
 			.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
@@ -45,7 +45,7 @@ public class CommentRepository : ICommentRepository {
 		CommentEntity? comment = await _context.Set<CommentEntity>()
 			.AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(x => x.Media)
-			.Include(x=>x.LikeComments)
+			.Include(x => x.LikeComments)
 			.Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Where(x => x.Id == id)
 			.FirstOrDefaultAsync();
@@ -57,8 +57,7 @@ public class CommentRepository : ICommentRepository {
 
 	public async Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto entity) {
 		//CommentEntity? comment = _mapper.Map<CommentEntity>(entity);
-		CommentEntity? comment = new CommentEntity
-		{
+		CommentEntity? comment = new CommentEntity {
 			CreatedAt = DateTime.Now,
 			Comment = entity.Comment,
 			ProductId = entity.ProductId,
@@ -71,13 +70,11 @@ public class CommentRepository : ICommentRepository {
 		_context.Add(comment);
 		_context.SaveChanges();
 
-		try
-		{
+		try {
 			ProductEntity? product = _context.Set<ProductEntity>().Include(x => x.Media)
 				.FirstOrDefault(x => x.Id == comment.ProductId);
 			string? linkMedia = product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.FileName)?.FirstOrDefault();
-			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto
-			{
+			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
 				UserId = product.UserId,
 				Message = "Comment",
 				Title = "Comment",
@@ -97,10 +94,9 @@ public class CommentRepository : ICommentRepository {
 		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == commentId);
 		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>()
 			.FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
-		if(comment.Score == null)
-        {
+		if (comment.Score == null) {
 			comment.Score = 0;
-        }
+		}
 		if (oldLikeComment != null) {
 			comment.Score = comment.Score - 1;
 			_context.Set<LikeCommentEntity>().Remove(oldLikeComment);
@@ -111,8 +107,7 @@ public class CommentRepository : ICommentRepository {
 			await _context.AddAsync(new LikeCommentEntity {UserId = userId, CommentId = commentId});
 			await _context.SaveChangesAsync();
 			UserEntity? commectUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == comment.UserId);
-			if (commectUser != null)
-			{
+			if (commectUser != null) {
 				commectUser.Point = commectUser.Point + 1;
 				_context.SaveChanges();
 			}

@@ -47,13 +47,11 @@ public class AppSettingsController : BaseApiController {
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost("SeedProducts")]
-	public async Task<ActionResult<GenericResponse>> SeedProducts(SeederProductDto dto)
-		=> Result(await _productRepository.SeederProduct(dto));
+	public async Task<ActionResult<GenericResponse>> SeedProducts(SeederProductDto dto) => Result(await _productRepository.SeederProduct(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost("SeedCategories")]
-	public async Task<ActionResult<GenericResponse>> SeedCategories(SeederCategoryDto dto)
-		=> Result(await _seedRepository.SeedCategories(dto));
+	public async Task<ActionResult<GenericResponse>> SeedCategories(SeederCategoryDto dto) => Result(await _seedRepository.SeedCategories(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost("SeedUsers")]

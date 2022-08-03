@@ -21,7 +21,7 @@ public class VoteRepository : IVoteRepository {
 		foreach (VoteFieldDto item in dto.VoteFields)
 			try {
 				VoteFieldEntity? up = await _dbContext.Set<VoteFieldEntity>().FirstOrDefaultAsync(x =>
-					x.ProductId == dto.ProductId && x.Id == item.Id);
+					                                                                                  x.ProductId == dto.ProductId && x.Id == item.Id);
 				if (up != null) {
 					up.Title = item.Title;
 					await _dbContext.SaveChangesAsync();
@@ -57,7 +57,8 @@ public class VoteRepository : IVoteRepository {
 		foreach (VoteDto item in dto.Votes)
 			try {
 				VoteEntity? up = await _dbContext.Set<VoteEntity>().FirstOrDefaultAsync(x =>
-					x.ProductId == dto.ProductId && x.VoteFieldId == item.VoteFieldId && x.UserId == userId);
+					                                                                        x.ProductId == dto.ProductId && x.VoteFieldId == item.VoteFieldId &&
+					                                                                        x.UserId == userId);
 				if (up != null) {
 					up.Score = item.Score;
 					await _dbContext.SaveChangesAsync();

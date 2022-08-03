@@ -42,13 +42,11 @@ public class NotificationRepository : INotificationRepository {
 		};
 		_context.Set<NotificationEntity>().Add(notification);
 		_context.SaveChanges();
-		if (model.Media != null)
-		{
+		if (model.Media != null) {
 			FileTypes type = FileTypes.Image;
 			if (model.Media.EndsWith("svg")) type = FileTypes.Svg;
 
-			_context.Set<MediaEntity>().Add(new MediaEntity
-			{
+			_context.Set<MediaEntity>().Add(new MediaEntity {
 				NotificationId = notification.Id,
 				CreatedAt = DateTime.Now,
 				FileType = type,

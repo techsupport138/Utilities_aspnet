@@ -34,14 +34,13 @@ public class CategoryRepository : ICategoryRepository {
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		CategoryEntity? i = await _dbContext.Set<CategoryEntity>().Include(x=>x.Products).Include(x=>x.Users).Include(x=>x.Media).Include(x=>x.Children).FirstOrDefaultAsync(i => i.Id == id);
-		if (i != null)
-		{
+		CategoryEntity? i = await _dbContext.Set<CategoryEntity>().Include(x => x.Products).Include(x => x.Users).Include(x => x.Media).Include(x => x.Children)
+			.FirstOrDefaultAsync(i => i.Id == id);
+		if (i != null) {
 			_dbContext.Remove(i);
 			await _dbContext.SaveChangesAsync();
 		}
-		else
-		{
+		else {
 			return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
 		}
 

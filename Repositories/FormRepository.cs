@@ -22,9 +22,9 @@ public class FormRepository : IFormRepository {
 		foreach (CategoryCreateUpdateDto item in model.Form)
 			try {
 				FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
-					(x.ProductId == model.ProductId && model.ProductId != null ||
-					 x.UserId == model.UserId && model.UserId != null
-					) && x.FormFieldId == item.Id);
+					                                                                        (x.ProductId == model.ProductId && model.ProductId != null ||
+					                                                                         x.UserId == model.UserId && model.UserId != null
+					                                                                        ) && x.FormFieldId == item.Id);
 				if (up != null) {
 					up.Title = item.Title;
 					await _dbContext.SaveChangesAsync();
