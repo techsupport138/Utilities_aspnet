@@ -20,6 +20,7 @@ public static class StartupExtension {
 			x.MultipartBodyLengthLimit = int.MaxValue;
 			x.MultipartHeadersLengthLimit = int.MaxValue;
 		});
+		builder.Services.Configure<IISServerOptions>(options => options.MaxRequestBodySize = int.MaxValue);
 	}
 
 	private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) where T : DbContext {
