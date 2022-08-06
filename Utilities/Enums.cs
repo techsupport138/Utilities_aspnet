@@ -61,7 +61,7 @@ public enum DatabaseType {
 public enum OrderStatuses {
 	Pending = 0,
 	Canceled = 1,
-	Paid = 100
+	Paid = 2
 }
 
 public enum LocationType {
