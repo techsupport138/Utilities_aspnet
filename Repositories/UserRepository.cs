@@ -292,8 +292,6 @@ public class UserRepository : IUserRepository {
 			return new GenericResponse<string?>(otp, UtilitiesStatusCodes.Success, "Success");
 		}
 		model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == dto.Mobile);
-		if (dto.Mobile.Length <= 9 || !dto.Mobile.IsNumerical())
-			return new GenericResponse<string?>("", UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
 		if (model != null) {
 			string? otp = "9999";
 			if (dto.SendSMS) otp = SendOtp(model.Id, 4);
