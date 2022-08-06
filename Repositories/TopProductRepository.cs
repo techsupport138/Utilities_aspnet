@@ -37,7 +37,7 @@ public class TopProductRepository : ITopProductRepository {
 			entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product).ThenInclude(x => x.Media)
 				.FirstOrDefaultAsync(x => x.Id == topProduct.Id);
 			string? linkMedia = entity?.Product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.Link)?.FirstOrDefault();
-			_notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
+			await _notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
 				Link = dto.ProductId.ToString(), Title = "Your Post Is TopPost", UserId = product.UserId, UseCase = "TopProduct",
 				Media = linkMedia
 			});
@@ -50,7 +50,10 @@ public class TopProductRepository : ITopProductRepository {
 	}
 
 	public async Task<GenericResponse<TopProductReadDto?>> ReadTopProduct() {
-		TopProductEntity? entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product).ThenInclude(x => x.Media)
+		TopProductEntity? entity = await _dbContext.Set<TopProductEntity>()
+			.Include(x => x.Product).ThenInclude(x => x.Media)
+			.Include(x => x.Product).ThenInclude(x => x.Categories)
+			.Include(x => x.Product).ThenInclude(x => x.User)
 			.OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync();
 
 		return new GenericResponse<TopProductReadDto?>(_mapper.Map<TopProductReadDto>(entity));

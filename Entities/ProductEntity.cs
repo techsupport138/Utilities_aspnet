@@ -15,6 +15,7 @@ public class ProductEntity : BaseEntity {
 	public string? Type { get; set; }
 	public string? UseCase { get; set; }
 	public string? Unit { get; set; }
+	public string? State { get; set; }
 	public string? Packaging { get; set; }
 	public string? Shipping { get; set; }
 	public string? Port { get; set; }
@@ -79,6 +80,7 @@ public class ProductReadDto {
 	public string? Email { get; set; }
 	public string? Type { get; set; }
 	public string? Unit { get; set; }
+	public string? State { get; set; }
 	public string? UseCase { get; set; }
 	public string? Packaging { get; set; }
 	public string? Port { get; set; }
@@ -147,6 +149,7 @@ public class ProductCreateUpdateDto {
 	public string? Type { get; set; }
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
+	public string? State { get; set; }
 	public string? Packaging { get; set; }
 	public string? Port { get; set; }
 	public string? Shipping { get; set; }
@@ -199,6 +202,7 @@ public class ProductFilterDto {
 	public string? Type { get; set; }
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
+	public string? State { get; set; }
 	public string? Packaging { get; set; }
 	public string? Port { get; set; }
 	public string? Shipping { get; set; }

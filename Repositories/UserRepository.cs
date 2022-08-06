@@ -131,7 +131,7 @@ public class UserRepository : IUserRepository {
 		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
 		IEnumerable<UserReadDto>? readDto = _mapper.Map<IEnumerable<UserReadDto>>(entity);
 		if (_httpContextAccessor?.HttpContext?.User?.Identity?.Name != null) {
-			foreach (var item in readDto) {
+			foreach (UserReadDto item in readDto) {
 				item.IsFollowing = await _context.Set<FollowEntity>()
 					.AnyAsync(x => x.FollowsUserId == item.Id && x.FollowerUserId == _httpContextAccessor.HttpContext.User.Identity.Name);
 			}
