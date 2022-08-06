@@ -285,13 +285,14 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
-		UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == dto.Mobile);
+		string mobile = dto.Mobile.Replace("+", "");
+		UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == mobile);
 
 		if (model != null) {
 			const string? otp = "9999";
 			return new GenericResponse<string?>(otp, UtilitiesStatusCodes.Success, "Success");
 		}
-		model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == dto.Mobile);
+		model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == mobile);
 		if (model != null) {
 			string? otp = "9999";
 			if (dto.SendSMS) otp = SendOtp(model.Id, 4);
@@ -300,10 +301,10 @@ public class UserRepository : IUserRepository {
 		else {
 			UserEntity user = new() {
 				Email = "",
-				PhoneNumber = dto.Mobile,
-				UserName = dto.Mobile,
-				AppUserName = dto.Mobile,
-				AppPhoneNumber = dto.Mobile,
+				PhoneNumber = mobile,
+				UserName = mobile,
+				AppUserName = mobile,
+				AppPhoneNumber = mobile,
 				EmailConfirmed = false,
 				PhoneNumberConfirmed = false,
 				FullName = "",
@@ -326,12 +327,13 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) {
+		string mobile = dto.Mobile.Replace("+", "");
 		if (dto.VerificationCode.Length >= 6 && !dto.VerificationCode.IsNumerical())
 			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongVerificationCode,
 			                                         "کد تایید وارد شده صحیح نیست");
 
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == dto.Mobile) ??
-		                   await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == dto.Mobile);
+		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile) ??
+		                   await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile);
 
 		if (user == null)
 			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "کاربر یافت نشد");
