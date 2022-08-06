@@ -173,9 +173,6 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile) {
-		if (!mobile.IsMobileNumber())
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongMobile, "شماره موبایل وارد شده صحیح نیست");
-
 		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile);
 
 		if (user == null)
