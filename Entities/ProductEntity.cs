@@ -63,6 +63,21 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
 	public IEnumerable<CommentEntity>? Comments { get; set; }
 	public IEnumerable<TeamEntity>? Teams { get; set; }
+
+	[NotMapped]
+	public bool IsBookmarked { get; set; }
+
+	[NotMapped]
+	public bool IsTopProduct { get; set; } = false;
+
+	[NotMapped]
+	public int? CommentsCount { get; set; }
+
+	[NotMapped]
+	public int? DownloadCount { get; set; }
+
+	[NotMapped]
+	public double? Score { get; set; }
 }
 
 public class ProductReadDto {
@@ -244,7 +259,7 @@ public class ProductFilterDto {
 	public bool? ShowTeams { get; set; } = false;
 	public bool? ShowCreator { get; set; } = false;
 	public int? VisitsCount { get; set; }
-	public int PageSize { get; set; } = 1000;
+	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }

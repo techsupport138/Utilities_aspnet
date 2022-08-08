@@ -68,6 +68,7 @@ public static class StartupExtension {
 		builder.Services.AddTransient<IAppSettingRepository, AppSettingRepository>();
 		builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 		builder.Services.AddTransient<IProductRepository, ProductRepository>();
+		builder.Services.AddTransient<IProductRepositoryV2, ProductRepositoryV2>();
 		builder.Services.AddTransient<IChatRepository, ChatRepository>();
 		builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
 		builder.Services.AddTransient<IFormRepository, FormRepository>();
