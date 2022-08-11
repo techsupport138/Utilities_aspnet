@@ -23,7 +23,10 @@ public static class StartupExtension {
 		builder.Services.Configure<IISServerOptions>(options => options.MaxRequestBodySize = int.MaxValue);
 	}
 
-	private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) where T : DbContext {
+	private static void AddUtilitiesServices<T>(
+		this WebApplicationBuilder builder,
+		string connectionStrings,
+		DatabaseType databaseType) where T : DbContext {
 		builder.Services.AddMemoryCache();
 		builder.Services.AddResponseCompression();
 		builder.Services.AddResponseCaching();
@@ -34,11 +37,11 @@ public static class StartupExtension {
 		builder.Services.AddDbContext<T>(options => {
 			switch (databaseType) {
 				case DatabaseType.SqlServer:
-					options.UseSqlServer(connectionStrings).EnableSensitiveDataLogging();
+					options.UseSqlServer(connectionStrings, o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 					break;
 				case DatabaseType.MySql:
-					options.UseMySql(connectionStrings, new MySqlServerVersion(new Version(8, 0, 28)))
-						.EnableSensitiveDataLogging();
+					options.UseMySql(connectionStrings, new MySqlServerVersion(new Version(8, 0, 28)),
+					                 o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(databaseType), databaseType, null);
