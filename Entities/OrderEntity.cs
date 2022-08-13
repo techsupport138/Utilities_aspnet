@@ -16,7 +16,8 @@ public class OrderEntity : BaseEntity {
 	public string? PayNumber { get; set; }
 	public DateTime? ReceivedDate { get; set; }
 	public UserEntity? User { get; set; }
-	public string? UserId { get; set; } 
+	public string? UserId { get; set; }
+    public IEnumerable<OrderDetailEntity> OrderDetails { get; set; }
 }
 
 [Table("OrderDetail")]
@@ -52,7 +53,7 @@ public class OrderReadDto
     public string? PayNumber { get; set; }
     public DateTime? ReceivedDate { get; set; }
     public UserMinimalReadDto? User { get; set; }
-    public OrderDetailReadDto? OrderDetails { get; set; }
+    public OrderDetailReadDto OrderDetails { get; set; }
 }
 
 public class OrderCreateUpdateDto

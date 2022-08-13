@@ -119,7 +119,7 @@ public class OrderRepository : IOrderRepository
                         if (product.Stock > 0) product.Stock = product.Stock - item.SaleCount;
                         else
                             throw new ArgumentException("product's stock equals zero!");
-                     
+
                 }
 
                 oldOrderDetail.ProductId = item.ProductId;
@@ -145,13 +145,13 @@ public class OrderRepository : IOrderRepository
 
     public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
     {
-        IEnumerable<OrderEntity> model = await _dbContext.Set<OrderEntity>().ToListAsync();
+        IEnumerable<OrderEntity> model = await _dbContext.Set<OrderEntity>().Include(p => p.OrderDetails).ThenInclude(p => p.Forms).AsNoTracking().ToListAsync();
         return new GenericResponse<IEnumerable<OrderReadDto>>(_mapper.Map<IEnumerable<OrderReadDto>>(model));
     }
 
     public async Task<GenericResponse<OrderReadDto?>> ReadById(Guid id)
     {
-        OrderEntity? model = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.Id == id);
+        OrderEntity? model = await _dbContext.Set<OrderEntity>().Where(x => x.Id == id).Include(x => x.OrderDetails).ThenInclude(x => x.Forms).AsNoTracking().FirstOrDefaultAsync();
         return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto?>(model));
     }
 
@@ -160,6 +160,9 @@ public class OrderRepository : IOrderRepository
         IEnumerable<OrderEntity> model =
             await _dbContext.Set<OrderEntity>()
                 .Where(i => i.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
+                .Include(i => i.OrderDetails)
+                .ThenInclude(i => i.Forms)
+                .AsNoTracking()
                 .ToListAsync();
         return new GenericResponse<IEnumerable<OrderReadDto>>(_mapper.Map<IEnumerable<OrderReadDto>>(model));
     }
