@@ -8,7 +8,7 @@ public class OrderEntity : BaseEntity {
 	public double? TotalPrice { get; set; }
 	public double? DiscountPrice { get; set; }
 	public int? DiscountPercent { get; set; }
-	public string DiscountCode { get; set; }
+	public string? DiscountCode { get; set; }
 	public double? SendPrice { get; set; }
 	public SendType? SendType { get; set; }
 	public PayType? PayType { get; set; }
