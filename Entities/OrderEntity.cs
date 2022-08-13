@@ -53,8 +53,9 @@ public class OrderReadDto
     public string? PayNumber { get; set; }
     public DateTime? ReceivedDate { get; set; }
     public UserMinimalReadDto? User { get; set; }
-    public OrderDetailEntity? OrderDetails { get; set; }
+    public OrderDetailReadDto? OrderDetails { get; set; }
 }
+
 
 public class OrderCreateUpdateDto
 {
@@ -86,3 +87,12 @@ public class OrderDetailCreateUpdateDto
     public IEnumerable<FormDto>? Forms { get; set; }
 }
 
+
+public class OrderDetailReadDto
+{
+    public Guid? Id { get; set; }
+    public double? Price { get; set; }
+    public int? SaleCount { get; set; }
+    public ProductReadDto? Product { get; set; }
+
+}
