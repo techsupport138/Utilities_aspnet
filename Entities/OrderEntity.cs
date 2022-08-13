@@ -61,16 +61,19 @@ public class OrderCreateUpdateDto
     public string? Description { get; set; }
     public OrderStatuses? Status { get; set; }
     public DateTime? ReceivedDate { get; set; }
-    public int? DiscountPercent { get; set; }
-    public string? DiscountCode { get; set; }
-    public IEnumerable<OrderDetailCreateUpdateDto> OrderDetails { get; set; }
 
     public double? TotalPrice { get; set; }
+    public int? DiscountPercent { get; set; }
+    public string? DiscountCode { get; set; }
     public double? DiscountPrice { get; set; }
     public double? SendPrice { get; set; }
+   
     public PayType? PayType { get; set; }
     public SendType? SendType { get; set; }
 
+    public IEnumerable<OrderDetailCreateUpdateDto> OrderDetails { get; set; }
+
+    
 }
 
 public class OrderDetailCreateUpdateDto
