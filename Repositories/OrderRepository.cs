@@ -109,6 +109,19 @@ public class OrderRepository : IOrderRepository
             OrderDetailEntity? oldOrderDetail = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == item.Id);
             if (oldOrderDetail != null)
             {
+                ProductEntity? product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
+                if (product != null)
+                {
+                    if (product.Stock < item.SaleCount)
+                        throw new ArgumentException("failed request! this request is more than stock!");
+
+                    if (dto.Status == OrderStatuses.Paid)
+                        if (product.Stock > 0) product.Stock = product.Stock - item.SaleCount;
+                        else
+                            throw new ArgumentException("product's stock equals zero!");
+                     
+                }
+
                 oldOrderDetail.ProductId = item.ProductId;
                 oldOrderDetail.Price = item.Price;
                 oldOrderDetail.SaleCount = item.SaleCount;
