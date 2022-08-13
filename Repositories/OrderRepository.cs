@@ -65,7 +65,7 @@ public class OrderRepository : IOrderRepository {
                             Title = data.Title,
                             UserId = userId,
                             ProductId = orderDetailEntity.ProductId,
-                            FormFieldId = data.Id,
+                            FormFieldId = data.FormField?.Id,
                             OrderDetailId = orderDetailEntity.Id,
                         };
                         await _dbContext.Set<FormEntity>().AddAsync(formEntity);
