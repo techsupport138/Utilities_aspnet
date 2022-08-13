@@ -145,7 +145,9 @@ public class OrderRepository : IOrderRepository
 
     public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
     {
-        IEnumerable<OrderEntity> model = await _dbContext.Set<OrderEntity>().Include(p => p.OrderDetails).ThenInclude(p => p.Forms).AsNoTracking().ToListAsync();
+        IEnumerable<OrderEntity> model = await _dbContext.Set<OrderEntity>()
+            .Include(p => p.OrderDetails)
+            .ThenInclude(p => p.Forms).AsNoTracking().ToListAsync();
         return new GenericResponse<IEnumerable<OrderReadDto>>(_mapper.Map<IEnumerable<OrderReadDto>>(model));
     }
 
