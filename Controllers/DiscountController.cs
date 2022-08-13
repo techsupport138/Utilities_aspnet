@@ -26,7 +26,7 @@ public class DiscountController : BaseApiController {
 	public async Task<IActionResult> Delete(Guid id) => Result(await _discountRepository.Delete(id));
 
 
-	[HttpGet("{code:string}")]
+	[HttpGet("{code}")]
 	public async Task<ActionResult<GenericResponse<int>>> ReadDiscountCode(string code)
 	{
 		GenericResponse<int?> i = await _discountRepository.ReadDiscountCode(code);
