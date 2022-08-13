@@ -33,18 +33,6 @@ public class OrderDetailEntity : BaseEntity
 
 	public IEnumerable<FormEntity>? Forms { get; set; }
 }
-
-[Table("Discount")]
-public class DiscountEntity : BaseEntity
-{
-	public string Title { get; set; }
-	public int? DiscountPercent { get; set; }
-	public int? NumberUses { get; set; }
-	public string Code { get; set; }
-	public DateTime? StartDate { get; set; }
-	public DateTime? EndDate { get; set; }
-}
-
 public class OrderReadDto
 {
     public Guid? Id { get; set; }
@@ -54,7 +42,7 @@ public class OrderReadDto
     public double? TotalPrice { get; set; }
     public double? DiscountPrice { get; set; }
     public int? DiscountPercent { get; set; }
-    public string DiscountCode { get; set; }
+    public string? DiscountCode { get; set; }
 
     public double? SendPrice { get; set; }
     public SendType? SendType { get; set; }
@@ -74,8 +62,8 @@ public class OrderCreateUpdateDto
     public OrderStatuses? Status { get; set; }
     public DateTime? ReceivedDate { get; set; }
     public int? DiscountPercent { get; set; }
-    public string DiscountCode { get; set; }
-    public IEnumerable<OrderDetailCreateUpdateDto> OrderDetails { get; set; }
+    public string? DiscountCode { get; set; }
+    public IEnumerable<OrderDetailCreateUpdateDto>? OrderDetails { get; set; }
 
 }
 

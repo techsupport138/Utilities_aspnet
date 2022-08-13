@@ -5,7 +5,6 @@ public interface IOrderRepository {
 	Task<GenericResponse<OrderReadDto?>> ReadById(Guid id);
 	Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine();
 	Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto);
-    Task<GenericResponse<int?>> ReadDiscountCode(string code);
 }
 
 public class OrderRepository : IOrderRepository {
@@ -106,17 +105,5 @@ public class OrderRepository : IOrderRepository {
 				.ToListAsync();
 		return new GenericResponse<IEnumerable<OrderReadDto>>(_mapper.Map<IEnumerable<OrderReadDto>>(model));
 	}
-    public async Task<GenericResponse<int?>> ReadDiscountCode(string code)
-    {
-        string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
-        var discountEntity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(p => p.Code.ToLower().Trim() == code.ToLower().Trim());
-        if (discountEntity == null)
-            throw new ArgumentException("Code not found!");
-
-        var orders = await _dbContext.Set<OrderEntity>().Where(p => p.UserId == userId && p.DiscountCode == code && p.Status != OrderStatuses.Canceled).ToListAsync();
-        if (orders.Count >= discountEntity.NumberUses)
-            throw new ArgumentException("Maximum use of this code!");
-
-        return new GenericResponse<int?>(discountEntity.DiscountPercent);
-    }
+   
 }

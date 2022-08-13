@@ -32,12 +32,5 @@ public class OrderController : BaseApiController {
 	public async Task<ActionResult<GenericResponse<IEnumerable<OrderReadDto>>>> ReadMine() {
 		GenericResponse<IEnumerable<OrderReadDto>> i = await _orderRepository.ReadMine();
 		return Result(i);
-	}
-
-	[HttpGet("DiscountCode")]
-	public async Task<ActionResult<GenericResponse<int>>> ReadDiscountCode(string code)
-	{
-		GenericResponse<int?> i = await _orderRepository.ReadDiscountCode(code);
-		return Result(i);
-	}
+	}	
 }
