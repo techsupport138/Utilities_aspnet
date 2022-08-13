@@ -49,6 +49,7 @@ public class ProductEntity : BaseEntity {
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
+	public double? Stock { get; set; }
 
 	public string? UserId { get; set; }
 	public UserEntity? User { get; set; }
