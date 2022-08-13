@@ -10,6 +10,9 @@ public class FormEntity : BaseEntity {
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
 
+	public OrderDetailEntity? OrderDetail { get; set; }
+	public Guid? OrderDetailId { get; set; }
+
 	[ForeignKey(nameof(FormFieldId))]
 	[InverseProperty(nameof(FormFieldEntity.Forms))]
 	public FormFieldEntity? FormField { get; set; }

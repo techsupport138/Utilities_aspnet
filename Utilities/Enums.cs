@@ -77,3 +77,16 @@ public enum ApprovalStatus {
 	Approved = 1,
 	Rejected = 2
 }
+
+public enum PayType
+{
+	Online,
+	PayAtHome,
+}
+
+public enum SendType
+{
+	Pishtaz,
+	Custome,
+	Tipax
+}

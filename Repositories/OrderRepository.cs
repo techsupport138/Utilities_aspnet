@@ -5,6 +5,7 @@ public interface IOrderRepository {
 	Task<GenericResponse<OrderReadDto?>> ReadById(Guid id);
 	Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine();
 	Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto);
+    Task<GenericResponse<int?>> ReadDiscountCode(string code);
 }
 
 public class OrderRepository : IOrderRepository {
@@ -18,24 +19,75 @@ public class OrderRepository : IOrderRepository {
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto) {
-		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
-		OrderEntity? oldOrder =
-			await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
-		if (oldOrder == null) {
-			OrderEntity entity = new()
-				{Description = dto.Description, ProductId = dto.ProductId, ReceivedDate = dto.ReceivedDate, UserId = userId};
-			await _dbContext.Set<OrderEntity>().AddAsync(entity);
-			await _dbContext.SaveChangesAsync();
-			return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(entity));
-		}
-		oldOrder.ProductId = dto.ProductId;
-		oldOrder.Description = dto.Description;
-		oldOrder.ReceivedDate = dto.ReceivedDate;
-		await _dbContext.SaveChangesAsync();
+	public async Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto) 
+	{
+        string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
+        OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
 
-		return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(oldOrder));
-	}
+        if (oldOrder == null)
+        {
+            OrderEntity entityOrder = new()
+            {
+                Description = dto.Description,
+                ReceivedDate = dto.ReceivedDate,
+                UserId = userId,
+                TotalPrice = dto.OrderDetails.Sum(x => x.Price),
+                DiscountPercent = dto.DiscountPercent,
+                DiscountPrice = (dto.OrderDetails.Sum(x => x.Price) * dto.DiscountPercent) / 100,
+                DiscountCode = dto.DiscountCode,
+                PayType = PayType.Online,
+                SendPrice = 0,
+                SendType = SendType.Pishtaz,
+                Status = OrderStatuses.Pending,
+                PayNumber = ""
+            };
+
+
+            await _dbContext.Set<OrderEntity>().AddAsync(entityOrder);
+            await _dbContext.SaveChangesAsync();
+
+            foreach (var item in dto.OrderDetails)
+            {
+                OrderDetailEntity orderDetailEntity = new()
+                {
+                    OrderId = entityOrder.Id,
+                    ProductId = item.ProductId,
+                    Price = item.Price,
+                    SaleCount = item.SaleCount,
+                };
+                await _dbContext.Set<OrderDetailEntity>().AddAsync(orderDetailEntity);
+                await _dbContext.SaveChangesAsync();
+
+                if (item.Forms != null)
+                    foreach (var data in item.Forms)
+                    {
+                        FormEntity formEntity = new()
+                        {
+                            Title = data.Title,
+                            UserId = userId,
+                            ProductId = orderDetailEntity.ProductId,
+                            FormFieldId = data.Id,
+                            OrderDetailId = orderDetailEntity.Id,
+                        };
+                        await _dbContext.Set<FormEntity>().AddAsync(formEntity);
+                        await _dbContext.SaveChangesAsync();
+                    }
+
+            }
+
+
+            return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(entityOrder));
+        }
+
+
+        oldOrder.Description = dto.Description;
+        oldOrder.ReceivedDate = dto.ReceivedDate;
+        oldOrder.Status = dto.Status;
+
+        await _dbContext.SaveChangesAsync();
+
+        return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(oldOrder));
+    }
 
 	public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read() {
 		IEnumerable<OrderEntity> model = await _dbContext.Set<OrderEntity>().ToListAsync();
@@ -54,4 +106,17 @@ public class OrderRepository : IOrderRepository {
 				.ToListAsync();
 		return new GenericResponse<IEnumerable<OrderReadDto>>(_mapper.Map<IEnumerable<OrderReadDto>>(model));
 	}
+    public async Task<GenericResponse<int?>> ReadDiscountCode(string code)
+    {
+        string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
+        var discountEntity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(p => p.Code.ToLower().Trim() == code.ToLower().Trim());
+        if (discountEntity == null)
+            throw new ArgumentException("Code not found!");
+
+        var orders = await _dbContext.Set<OrderEntity>().Where(p => p.UserId == userId && p.DiscountCode == code && p.Status != OrderStatuses.Canceled).ToListAsync();
+        if (orders.Count >= discountEntity.NumberUses)
+            throw new ArgumentException("Maximum use of this code!");
+
+        return new GenericResponse<int?>(discountEntity.DiscountPercent);
+    }
 }
