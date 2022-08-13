@@ -10,10 +10,7 @@ public class AutoMapperProfile : Profile
         CreateMap<DiscountEntity, DiscountReadDto>().ReverseMap();
         CreateMap<DiscountEntity, DiscountCreateUpdateDto>().ReverseMap();
 
-        CreateMap<OrderEntity, OrderReadDto>()
-            .ForMember(x => x.OrderDetails,
-                      c => c.MapFrom(v => v.OrderDetails))
-            .ReverseMap();
+        CreateMap<OrderEntity, OrderReadDto>().ReverseMap();
 
         CreateMap<ProductEntity, ProductReadDto>()
             .ForMember(x => x.Score,

@@ -3,7 +3,7 @@ namespace Utilities_aspnet.Repositories;
 public interface IOrderRepository
 {
     Task<GenericResponse<IEnumerable<OrderReadDto>>> Read();
-    Task<GenericResponse<OrderReadDto?>> ReadById(Guid id);
+    Task<GenericResponse<OrderReadDto>> ReadById(Guid id);
     Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine();
     Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto);
 
@@ -145,23 +145,38 @@ public class OrderRepository : IOrderRepository
 
     public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
     {
-        IEnumerable<OrderEntity> model = await _dbContext.Set<OrderEntity>().ToListAsync();
-        return new GenericResponse<IEnumerable<OrderReadDto>>(_mapper.Map<IEnumerable<OrderReadDto>>(model));
+        IEnumerable<OrderEntity> orders = await _dbContext.Set<OrderEntity>()
+           .AsNoTracking()
+           .Include(i => i.OrderDetails)!
+           .ThenInclude(i => i.Forms)!
+           .ThenInclude(x => x.FormField)
+           .ToListAsync();
+        IEnumerable<OrderReadDto> i = _mapper.Map<IEnumerable<OrderReadDto>>(orders).ToList();
+        return new GenericResponse<IEnumerable<OrderReadDto>>(i);
     }
 
-    public async Task<GenericResponse<OrderReadDto?>> ReadById(Guid id)
+    public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id)
     {
-        OrderEntity? model = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.Id == id);
-        return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto?>(model));
+        OrderEntity? i = await _dbContext.Set<OrderEntity>().AsNoTracking()
+            .Include(i => i.OrderDetails)!
+            .ThenInclude(i => i.Forms)!
+            .ThenInclude(x => x.FormField)
+            .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
+        return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(i));
+
     }
 
     public async Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine()
     {
-        IEnumerable<OrderEntity> model =
-            await _dbContext.Set<OrderEntity>()
-                .Where(i => i.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
-                .ToListAsync();
-        return new GenericResponse<IEnumerable<OrderReadDto>>(_mapper.Map<IEnumerable<OrderReadDto>>(model));
+        IEnumerable<OrderEntity> orders = await _dbContext.Set<OrderEntity>()
+            .AsNoTracking()
+            .Include(i => i.OrderDetails)!
+            .ThenInclude(i => i.Forms)!
+            .ThenInclude(x => x.FormField)
+            .Where(x => x.DeletedAt == null && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
+            .ToListAsync();
+        IEnumerable<OrderReadDto> i = _mapper.Map<IEnumerable<OrderReadDto>>(orders).ToList();
+        return new GenericResponse<IEnumerable<OrderReadDto>>(i);
     }
     public async Task<GenericResponse> Delete(Guid id)
     {
