@@ -35,6 +35,7 @@ public class OrderDetailEntity : BaseEntity
 
     public IEnumerable<FormEntity>? Forms { get; set; }
 }
+
 public class OrderReadDto
 {
     public Guid? Id { get; set; }
@@ -54,7 +55,15 @@ public class OrderReadDto
     public string? PayNumber { get; set; }
     public DateTime? ReceivedDate { get; set; }
     public UserEntity? User { get; set; }
-    public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
+    public IEnumerable<OrderDetailReadDto>? OrderDetails { get; set; }
+}
+public class OrderDetailReadDto
+{
+    public Guid? Id { get; set; }
+    public double? Price { get; set; }
+    public int? SaleCount { get; set; }
+    public ProductEntity? Product { get; set; }
+
 }
 
 
@@ -89,11 +98,3 @@ public class OrderDetailCreateUpdateDto
 }
 
 
-//public class OrderDetailReadDto
-//{
-//    public Guid? Id { get; set; }
-//    public double? Price { get; set; }
-//    public int? SaleCount { get; set; }
-//    public ProductEntity? Product { get; set; }
-
-//}
