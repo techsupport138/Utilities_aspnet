@@ -1,11 +1,11 @@
 namespace Utilities_aspnet.Repositories;
 
 public interface IProductRepositoryV2 {
-	Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto);
+	Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct);
 	GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto);
-	Task<GenericResponse<ProductEntity>> ReadById(Guid id);
-	Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto);
-	Task<GenericResponse> Delete(Guid id);
+	Task<GenericResponse<ProductEntity>> ReadById(Guid id, CancellationToken ct);
+	Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct);
+	Task<GenericResponse> Delete(Guid id, CancellationToken ct);
 }
 
 public class ProductRepositoryV2 : IProductRepositoryV2 {
@@ -19,19 +19,19 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto) {
+	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
 
 		ProductEntity e = await entity.FillDataV2(dto, _httpContextAccessor, _context);
-		EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e);
-		await _context.SaveChangesAsync();
+		EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e, ct);
+		await _context.SaveChangesAsync(ct);
 
 		return new GenericResponse<ProductEntity>(_mapper.Map<ProductEntity>(i.Entity));
 	}
 
 	public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto) {
-		IQueryable<ProductEntity> q = _context.Set<ProductEntity>().Include(i => i.Media).AsNoTracking();
+		IQueryable<ProductEntity> q = _context.Set<ProductEntity>().Include(i => i.Media);
 
 		if (dto.ShowCategories.IsTrue())
 			q = q.Include(i => i.Categories);
@@ -52,7 +52,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.ShowVoteFields.IsTrue())
 			q = q.Include(i => i.VoteFields);
 		if (dto.ShowCreator.IsTrue())
-			q = q.Include(i => i.User).ThenInclude(x => x!.Media).AsNoTracking();
+			q = q.Include(i => i.User).ThenInclude(x => x!.Media);
 
 		if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
 		if (dto.Subtitle.IsNotNullOrEmpty()) q = q.Where(x => (x.Subtitle ?? "").Contains(dto.Subtitle!));
@@ -71,10 +71,10 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.Enabled.HasValue) q = q.Where(x => x.Enabled == dto.Enabled);
 		if (dto.IsForSale.HasValue) q = q.Where(x => x.IsForSale == dto.IsForSale);
 		if (dto.VisitsCount.HasValue) q = q.Where(x => x.VisitsCount == dto.VisitsCount);
-		if (dto.Length.HasValue) q = q.Where(x => x.Length == dto.Length);
-		if (dto.Width.HasValue) q = q.Where(x => x.Width == dto.Width);
-		if (dto.Height.HasValue) q = q.Where(x => x.Height == dto.Height);
-		if (dto.Weight.HasValue) q = q.Where(x => x.Weight == dto.Weight);
+		if (dto.Length.HasValue) q = q.Where(x => x.Length.ToInt() == dto.Length.ToInt());
+		if (dto.Width.HasValue) q = q.Where(x => x.Width.ToInt() == dto.Width.ToInt());
+		if (dto.Height.HasValue) q = q.Where(x => x.Height.ToInt() == dto.Height.ToInt());
+		if (dto.Weight.HasValue) q = q.Where(x => x.Weight.ToInt() == dto.Weight.ToInt());
 		if (dto.MinOrder.HasValue) q = q.Where(x => x.MinOrder >= dto.MinOrder);
 		if (dto.MaxOrder.HasValue) q = q.Where(x => x.MaxOrder <= dto.MaxOrder);
 		if (dto.StartDate.HasValue) q = q.Where(x => x.StartDate >= dto.StartDate);
@@ -102,8 +102,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			PageSize = dto?.PageSize
 		};
 	}
-
-	public async Task<GenericResponse<ProductEntity>> ReadById(Guid id) {
+	
+	public async Task<GenericResponse<ProductEntity>> ReadById(Guid id, CancellationToken ct) {
 		ProductEntity? i = await _context.Set<ProductEntity>()
 			.Include(i => i.Media)
 			.Include(i => i.Categories)
@@ -112,36 +112,36 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			.Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Votes)
-			.Include(i => i.User)!.ThenInclude(x => x.Media)
-			.Include(i => i.User)!.ThenInclude(x => x.Categories)
+			.Include(i => i.User).ThenInclude(x => x.Media)
+			.Include(i => i.User).ThenInclude(x => x.Categories)
 			.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
 			.Include(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
 			.AsNoTracking()
-			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
+			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
 		return new GenericResponse<ProductEntity>(_mapper.Map<ProductEntity>(i));
 	}
 
-	public async Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto) {
+	public async Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct) {
 		ProductEntity? entity = await _context.Set<ProductEntity>()
 			.Include(x => x.Categories)
-			.Include(x => x.Teams).Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
+			.Include(x => x.Teams).Where(x => x.Id == dto.Id).FirstOrDefaultAsync(ct);
 
 		if (entity == null)
 			return new GenericResponse<ProductEntity>(new ProductEntity());
 
 		ProductEntity e = await entity.FillDataV2(dto, _httpContextAccessor, _context);
 		_context.Update(e);
-		await _context.SaveChangesAsync();
+		await _context.SaveChangesAsync(ct);
 
 		return new GenericResponse<ProductEntity>(_mapper.Map<ProductEntity>(e));
 	}
 
-	public async Task<GenericResponse> Delete(Guid id) {
-		ProductEntity? i = await _context.Set<ProductEntity>().FindAsync(id);
+	public async Task<GenericResponse> Delete(Guid id, CancellationToken ct) {
+		ProductEntity? i = await _context.Set<ProductEntity>().FindAsync(id, ct);
 		if (i != null) {
 			_context.Remove(i);
-			await _context.SaveChangesAsync();
+			await _context.SaveChangesAsync(ct);
 			return new GenericResponse(message: "Deleted");
 		}
 		return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
@@ -186,7 +186,7 @@ public static class ProductEntityExtensionV2 {
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> listCategory = new();
 			foreach (Guid item in dto.Categories ?? new List<Guid>()) {
-				CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				CategoryEntity? e = await context.Set<CategoryEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
 				if (e != null) listCategory.Add(e);
 			}
 			entity.Categories = listCategory;
@@ -195,7 +195,7 @@ public static class ProductEntityExtensionV2 {
 		if (dto.Locations.IsNotNullOrEmpty()) {
 			List<LocationEntity> listLocation = new();
 			foreach (int item in dto.Locations ?? new List<int>()) {
-				LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				LocationEntity? e = await context.Set<LocationEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
 				if (e != null) listLocation.Add(e);
 			}
 			entity.Locations = listLocation;
@@ -204,7 +204,7 @@ public static class ProductEntityExtensionV2 {
 		if (dto.Teams.IsNotNullOrEmpty()) {
 			List<TeamEntity> listTeam = new();
 			foreach (string item in dto.Teams ?? new List<string>()) {
-				UserEntity? e = await context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == item);
+				UserEntity? e = await context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
 				if (e != null) {
 					TeamEntity t = new() {UserId = e.Id};
 					await context.Set<TeamEntity>().AddAsync(t);
