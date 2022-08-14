@@ -147,9 +147,8 @@ public class OrderRepository : IOrderRepository
     {
         var orders = await _dbContext.Set<OrderEntity>()
            .AsNoTracking()
-           .Include(i => i.OrderDetails)!
-           .ThenInclude(i => i.Forms)!
-           .ThenInclude(x => x.FormField)
+           .Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
+           .Include(c => c.OrderDetails)!.ThenInclude(f => f.Forms)!.ThenInclude(x => x.FormField)
            .ToListAsync();
         IEnumerable<OrderReadDto> i = _mapper.Map<IEnumerable<OrderReadDto>>(orders).ToList();
         return new GenericResponse<IEnumerable<OrderReadDto>>(i);
