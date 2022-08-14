@@ -156,10 +156,10 @@ public class OrderRepository : IOrderRepository
 
     public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id)
     {
-        OrderEntity? i = await _dbContext.Set<OrderEntity>().AsNoTracking()
-            .Include(i => i.OrderDetails)!
-            .ThenInclude(i => i.Forms)!
-            .ThenInclude(x => x.FormField)
+        OrderEntity? i = await _dbContext.Set<OrderEntity>()
+            .AsNoTracking()
+            .Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
+            .Include(c => c.OrderDetails)!.ThenInclude(f => f.Forms)!.ThenInclude(x => x.FormField)
             .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
         return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(i));
 
@@ -169,9 +169,8 @@ public class OrderRepository : IOrderRepository
     {
         IEnumerable<OrderEntity> orders = await _dbContext.Set<OrderEntity>()
             .AsNoTracking()
-            .Include(i => i.OrderDetails)!
-            .ThenInclude(i => i.Forms)!
-            .ThenInclude(x => x.FormField)
+            .Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
+            .Include(c => c.OrderDetails)!.ThenInclude(f => f.Forms)!.ThenInclude(x => x.FormField)
             .Where(x => x.DeletedAt == null && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
             .ToListAsync();
         IEnumerable<OrderReadDto> i = _mapper.Map<IEnumerable<OrderReadDto>>(orders).ToList();
