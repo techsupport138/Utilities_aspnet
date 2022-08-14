@@ -24,6 +24,7 @@ public class OrderEntity : BaseEntity
 [Table("OrderDetail")]
 public class OrderDetailEntity : BaseEntity
 {
+    [NotMapped]
     public OrderEntity? Order { get; set; }
     public Guid? OrderId { get; set; }
 
