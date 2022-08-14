@@ -64,6 +64,7 @@ public class OrderDetailReadDto
     public double? Price { get; set; }
     public int? SaleCount { get; set; }
     public ProductReadDto? Product { get; set; }
+    public IEnumerable<FormDto>? Forms { get; set; }
 
 }
 
