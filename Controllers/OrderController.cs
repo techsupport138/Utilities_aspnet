@@ -17,7 +17,7 @@ public class OrderController : BaseApiController {
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<List<OrderReadDto>>>> Read() {
+	public async Task<ActionResult<GenericResponse<ICollection<OrderReadDto>>>> Read() {
 		return Result(await _orderRepository.Read());
 	}
 
