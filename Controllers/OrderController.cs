@@ -17,9 +17,8 @@ public class OrderController : BaseApiController {
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<OrderReadDto>>>> Read() {
-		GenericResponse<IEnumerable<OrderReadDto>> i = await _orderRepository.Read();
-		return Result(i);
+	public async Task<ActionResult<GenericResponse<List<OrderReadDto>>>> Read() {
+		return Result(await _orderRepository.Read());
 	}
 
 	[HttpGet("{id:guid}")]

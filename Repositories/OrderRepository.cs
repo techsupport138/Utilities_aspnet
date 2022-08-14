@@ -2,7 +2,7 @@ namespace Utilities_aspnet.Repositories;
 
 public interface IOrderRepository
 {
-    Task<GenericResponse<IEnumerable<OrderReadDto>>> Read();
+    Task<GenericResponse<List<OrderReadDto>>> Read();
     Task<GenericResponse<OrderReadDto>> ReadById(Guid id);
     Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine();
     Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto);
@@ -143,7 +143,7 @@ public class OrderRepository : IOrderRepository
         return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(oldOrder));
     }
 
-    public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
+    public async Task<GenericResponse<List<OrderReadDto>>> Read()
     {
         var orders = await _dbContext.Set<OrderEntity>()
            .AsNoTracking()
@@ -170,7 +170,7 @@ public class OrderRepository : IOrderRepository
            })
            .ToListAsync();
 
-        return new GenericResponse<IEnumerable<OrderReadDto>>(orders);
+        return new GenericResponse<List<OrderReadDto>>(orders);
     }
 
     public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id)
