@@ -145,14 +145,32 @@ public class OrderRepository : IOrderRepository
 
     public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
     {
-        IEnumerable<OrderEntity> orders = await _dbContext.Set<OrderEntity>()
+        var orders = await _dbContext.Set<OrderEntity>()
            .AsNoTracking()
            .Include(i => i.OrderDetails)!
            .ThenInclude(i => i.Forms)!
            .ThenInclude(x => x.FormField)
+           .Select(p => new OrderReadDto
+           {
+               Id = p.Id,
+               Description = p.Description,
+               DiscountCode = p.DiscountCode,
+               DiscountPercent = p.DiscountPercent,
+               DiscountPrice = p.DiscountPrice,
+               OrderDetails = p.OrderDetails,
+               PayDateTime = p.PayDateTime,
+               PayNumber = p.PayNumber,
+               PayType = p.PayType,
+               ReceivedDate = p.ReceivedDate,
+               SendPrice = p.SendPrice,
+               SendType = p.SendType,
+               Status = p.Status,
+               TotalPrice = p.TotalPrice,
+               User = p.User,
+           })
            .ToListAsync();
-        IEnumerable<OrderReadDto> i = _mapper.Map<IEnumerable<OrderReadDto>>(orders).ToList();
-        return new GenericResponse<IEnumerable<OrderReadDto>>(i);
+
+        return new GenericResponse<IEnumerable<OrderReadDto>>(orders);
     }
 
     public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id)
