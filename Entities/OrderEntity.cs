@@ -63,7 +63,7 @@ public class OrderDetailReadDto
     public Guid? Id { get; set; }
     public double? Price { get; set; }
     public int? SaleCount { get; set; }
-    public ProductEntity? Product { get; set; }
+    public ProductReadDto? Product { get; set; }
     public IEnumerable<FormDto>? Forms { get; set; }
 
 }
