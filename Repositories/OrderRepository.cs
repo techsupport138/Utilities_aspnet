@@ -2,7 +2,7 @@ namespace Utilities_aspnet.Repositories;
 
 public interface IOrderRepository
 {
-    Task<GenericResponse<ICollection<OrderReadDto>>> Read();
+    Task<GenericResponse<IEnumerable<OrderReadDto>>> Read();
     Task<GenericResponse<OrderReadDto>> ReadById(Guid id);
     Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine();
     Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto);
@@ -143,34 +143,16 @@ public class OrderRepository : IOrderRepository
         return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(oldOrder));
     }
 
-    public async Task<GenericResponse<ICollection<OrderReadDto>>> Read()
+    public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
     {
         var orders = await _dbContext.Set<OrderEntity>()
            .AsNoTracking()
            .Include(i => i.OrderDetails)!
            .ThenInclude(i => i.Forms)!
            .ThenInclude(x => x.FormField)
-           .Select(p => new OrderReadDto
-           {
-               Id = p.Id,
-               Description = p.Description,
-               DiscountCode = p.DiscountCode,
-               DiscountPercent = p.DiscountPercent,
-               DiscountPrice = p.DiscountPrice,
-               OrderDetails = p.OrderDetails,
-               PayDateTime = p.PayDateTime,
-               PayNumber = p.PayNumber,
-               PayType = p.PayType,
-               ReceivedDate = p.ReceivedDate,
-               SendPrice = p.SendPrice,
-               SendType = p.SendType,
-               Status = p.Status,
-               TotalPrice = p.TotalPrice,
-               User = p.User,
-           })
            .ToListAsync();
-
-        return new GenericResponse<ICollection<OrderReadDto>>(orders);
+        IEnumerable<OrderReadDto> i = _mapper.Map<IEnumerable<OrderReadDto>>(orders).ToList();
+        return new GenericResponse<IEnumerable<OrderReadDto>>(i);
     }
 
     public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id)
