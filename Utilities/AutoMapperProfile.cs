@@ -10,8 +10,7 @@ public class AutoMapperProfile : Profile
         CreateMap<DiscountEntity, DiscountReadDto>().ReverseMap();
         CreateMap<DiscountEntity, DiscountCreateUpdateDto>().ReverseMap();
 
-        CreateMap<OrderEntity, OrderReadDto>().ReverseMap();
-        CreateMap<OrderDetailEntity, OrderDetailReadDto>().ReverseMap();
+        CreateMap<OrderEntity, OrderReadDto>().ReverseMap();       
 
         CreateMap<ProductEntity, ProductReadDto>()
             .ForMember(x => x.Score,
@@ -87,5 +86,7 @@ public class AutoMapperProfile : Profile
             .ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
             .ForMember(x => x.Location, y => y.Ignore())
             .ForMember(x => x.Media, y => y.Ignore());
+
+        CreateMap<OrderDetailEntity, OrderDetailReadDto>().ReverseMap();
     }
 }
