@@ -64,6 +64,7 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<BookmarkEntity>? Bookmarks { get; set; }
 	public IEnumerable<CommentEntity>? Comments { get; set; }
 	public IEnumerable<TeamEntity>? Teams { get; set; }
+	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
 
 	[NotMapped]
 	public bool IsBookmarked { get; set; }
