@@ -49,8 +49,6 @@ public class DiscountRepository : IDiscountRepository
 
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize).AsNoTracking();
 
-        IEnumerable<DiscountReadDto> readDto = _mapper.Map<IEnumerable<DiscountReadDto>>(q);
-
         return new GenericResponse<IQueryable<DiscountEntity>>(q)
         {
             TotalCount = totalCount,
