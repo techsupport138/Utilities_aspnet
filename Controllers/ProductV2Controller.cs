@@ -15,7 +15,7 @@ public class ProductV2Controller : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
-	public ActionResult<GenericResponse<IEnumerable<ProductReadDto>>> Filter(ProductFilterDto dto) => Result(_productRepository.Filter(new ProductFilterDto()));
+	public ActionResult<GenericResponse<IEnumerable<ProductReadDto>>> Filter(ProductFilterDto dto) => Result(_productRepository.Filter(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
