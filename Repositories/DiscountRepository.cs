@@ -46,7 +46,29 @@ public class DiscountRepository : IDiscountRepository
         if (dto.StartDate != null) q = q.Where(x => x.StartDate <= dto.StartDate);
         if (dto.EndDate != null) q = q.Where(x => x.EndDate >= dto.EndDate);
 
-        return new GenericResponse<IEnumerable<DiscountReadDto>>(_mapper.Map<IEnumerable<DiscountReadDto>>(q));
+        int totalCount = q.Count();
+
+        q = q.Skip((dto.PageNumber - 1) * dto.PageSize)
+            .Take(dto.PageSize);
+
+        IEnumerable<DiscountReadDto> readDto = _mapper.Map<IEnumerable<DiscountReadDto>>(q);
+
+        if (_httpContextAccessor?.HttpContext?.User.Identity == null)
+            return new GenericResponse<IEnumerable<DiscountReadDto>>(readDto)
+            {
+                TotalCount = totalCount,
+                PageCount = totalCount % dto?.PageSize == 0
+                    ? totalCount / dto?.PageSize
+                    : totalCount / dto?.PageSize + 1,
+                PageSize = dto?.PageSize
+            };
+         
+        return new GenericResponse<IEnumerable<DiscountReadDto>>(readDto)
+        {
+            TotalCount = totalCount,
+            PageCount = totalCount % dto?.PageSize == 0 ? totalCount / dto?.PageSize : totalCount / dto?.PageSize + 1,
+            PageSize = dto?.PageSize
+        };
     }
 
     public async Task<GenericResponse<DiscountReadDto?>> Update(DiscountCreateUpdateDto dto)
