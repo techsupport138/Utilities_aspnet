@@ -27,7 +27,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e, ct);
 		await _context.SaveChangesAsync(ct);
 
-		return new GenericResponse<ProductEntity>(_mapper.Map<ProductEntity>(i.Entity));
+		return new GenericResponse<ProductEntity>(i.Entity);
 	}
 
 	public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto) {
@@ -102,7 +102,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			PageSize = dto?.PageSize
 		};
 	}
-	
+
 	public async Task<GenericResponse<ProductEntity>> ReadById(Guid id, CancellationToken ct) {
 		ProductEntity? i = await _context.Set<ProductEntity>()
 			.Include(i => i.Media)
@@ -119,7 +119,9 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
-		return new GenericResponse<ProductEntity>(_mapper.Map<ProductEntity>(i));
+		return i == null
+			? new GenericResponse<ProductEntity>(new ProductEntity(), UtilitiesStatusCodes.NotFound, "Not Found")
+			: new GenericResponse<ProductEntity>(i);
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct) {
@@ -134,7 +136,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		_context.Update(e);
 		await _context.SaveChangesAsync(ct);
 
-		return new GenericResponse<ProductEntity>(_mapper.Map<ProductEntity>(e));
+		return new GenericResponse<ProductEntity>(e);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id, CancellationToken ct) {
