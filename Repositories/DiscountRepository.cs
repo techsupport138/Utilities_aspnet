@@ -3,9 +3,8 @@
 public interface IDiscountRepository
 {
     public Task<GenericResponse<DiscountReadDto>> Create(DiscountCreateUpdateDto dto);
-    public Task<GenericResponse<IEnumerable<DiscountReadDto>>> Read(DiscountFilterDto dto);
+    public GenericResponse<IQueryable<DiscountEntity>> Filter(DiscountFilterDto dto);
     public Task<GenericResponse<DiscountReadDto?>> Update(DiscountCreateUpdateDto dto);
-
     public Task<GenericResponse> Delete(Guid id);
     Task<GenericResponse<DiscountEntity>> ReadDiscountCode(string code);
 }
@@ -35,9 +34,9 @@ public class DiscountRepository : IDiscountRepository
         return new GenericResponse<DiscountReadDto>(_mapper.Map<DiscountReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<DiscountReadDto>>> Read(DiscountFilterDto dto)
+    public GenericResponse<IQueryable<DiscountEntity>> Filter(DiscountFilterDto dto)
     {
-        IQueryable<DiscountEntity> q = _dbContext.Set<DiscountEntity>().Where(x => x.DeletedAt == null);
+        IQueryable<DiscountEntity> q = _dbContext.Set<DiscountEntity>().AsNoTracking();
 
         if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
         if (dto.Code.IsNotNullOrEmpty()) q = q.Where(x => (x.Code ?? "").Contains(dto.Code!));
@@ -48,25 +47,14 @@ public class DiscountRepository : IDiscountRepository
 
         int totalCount = q.Count();
 
-        q = q.Skip((dto.PageNumber - 1) * dto.PageSize)
-            .Take(dto.PageSize);
+        q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize).AsNoTracking();
 
         IEnumerable<DiscountReadDto> readDto = _mapper.Map<IEnumerable<DiscountReadDto>>(q);
 
-        if (_httpContextAccessor?.HttpContext?.User.Identity == null)
-            return new GenericResponse<IEnumerable<DiscountReadDto>>(readDto)
-            {
-                TotalCount = totalCount,
-                PageCount = totalCount % dto?.PageSize == 0
-                    ? totalCount / dto?.PageSize
-                    : totalCount / dto?.PageSize + 1,
-                PageSize = dto?.PageSize
-            };
-         
-        return new GenericResponse<IEnumerable<DiscountReadDto>>(readDto)
+        return new GenericResponse<IQueryable<DiscountEntity>>(q)
         {
             TotalCount = totalCount,
-            PageCount = totalCount % dto?.PageSize == 0 ? totalCount / dto?.PageSize : totalCount / dto?.PageSize + 1,
+            PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto?.PageSize : totalCount / dto?.PageSize + 1,
             PageSize = dto?.PageSize
         };
     }
