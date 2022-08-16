@@ -32,3 +32,13 @@ public class DiscountCreateUpdateDto
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 }
+
+public class DiscountFilterDto
+{
+	public string? Title { get; set; }
+	public int? DiscountPercent { get; set; }
+	public int? NumberUses { get; set; }
+	public string? Code { get; set; }
+	public DateTime? StartDate { get; set; }
+	public DateTime? EndDate { get; set; }
+}

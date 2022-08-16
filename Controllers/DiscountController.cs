@@ -13,7 +13,7 @@ public class DiscountController : BaseApiController {
 
 	[HttpGet]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<IEnumerable<DiscountReadDto>>>> Read() => Result(await _discountRepository.Read());
+	public async Task<ActionResult<GenericResponse<IEnumerable<DiscountReadDto>>>> Read(DiscountFilterDto dto) => Result(await _discountRepository.Read(dto));
 
 
 	[HttpPut]
@@ -27,9 +27,9 @@ public class DiscountController : BaseApiController {
 
 
 	[HttpGet("{code}")]
-	public async Task<ActionResult<GenericResponse<int>>> ReadDiscountCode(string code)
+	public async Task<ActionResult<GenericResponse<DiscountEntity>>> ReadDiscountCode(string code)
 	{
-		GenericResponse<int?> i = await _discountRepository.ReadDiscountCode(code);
+		GenericResponse<DiscountEntity> i = await _discountRepository.ReadDiscountCode(code);
 		return Result(i);
 	}
 }
