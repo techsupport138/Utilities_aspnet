@@ -127,7 +127,7 @@ public class OrderRepository : IOrderRepository
     }
     public GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto)
     {
-        IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>().AsNoTracking();
+        IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails).AsNoTracking();
 
         if (dto.Description.IsNotNullOrEmpty()) q = q.Where(x => (x.Description ?? "").Contains(dto.Description!));
         if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
@@ -141,7 +141,7 @@ public class OrderRepository : IOrderRepository
         if (dto.PayDateTime.HasValue) q = q.Where(x => x.PayDateTime == dto.PayDateTime);
         if (dto.PayNumber.IsNotNullOrEmpty()) q = q.Where(x => (x.PayNumber ?? "").Contains(dto.PayNumber!));
         if (dto.ReceivedDate.HasValue) q = q.Where(x => x.ReceivedDate == dto.ReceivedDate);
-         
+
         if (dto.UserId.IsNotNullOrEmpty())
         {
             q = q.Where(x => x.UserId == dto.UserId);
