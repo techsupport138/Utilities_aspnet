@@ -26,6 +26,8 @@ public class OrderRepository : IOrderRepository
     public async Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto)
     {
         string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
+        double totalPrice = 0;
+
 
         //create
         OrderEntity entityOrder = new()
@@ -33,9 +35,7 @@ public class OrderRepository : IOrderRepository
             Description = dto.Description,
             ReceivedDate = dto.ReceivedDate,
             UserId = userId,
-            TotalPrice = dto.OrderDetails.Sum(x => x.Price),
             DiscountPercent = dto.DiscountPercent,
-            DiscountPrice = (dto.OrderDetails.Sum(x => x.Price) * dto.DiscountPercent) / 100,
             DiscountCode = dto.DiscountCode,
             PayType = PayType.Online,
             SendPrice = 0,
@@ -44,14 +44,13 @@ public class OrderRepository : IOrderRepository
             PayNumber = ""
         };
 
-
         await _dbContext.Set<OrderEntity>().AddAsync(entityOrder);
         await _dbContext.SaveChangesAsync();
 
         foreach (var item in dto.OrderDetails)
         {
             ProductEntity? productEntity = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
-            if (productEntity != null && productEntity.Stock < item.SaleCount)
+            if (productEntity != null && productEntity.Stock < item.Count)
             {
                 await Delete(entityOrder.Id);
                 throw new ArgumentException("failed request! this request is more than stock!");
@@ -61,28 +60,19 @@ public class OrderRepository : IOrderRepository
             {
                 OrderId = entityOrder.Id,
                 ProductId = item.ProductId,
-                Price = item.Price,
-                SaleCount = item.SaleCount,
+                Price = productEntity?.Price ?? 0,
+                SaleCount = item.Count,
             };
             await _dbContext.Set<OrderDetailEntity>().AddAsync(orderDetailEntity);
             await _dbContext.SaveChangesAsync();
 
-            if (item.Forms != null)
-                foreach (var data in item.Forms)
-                {
-                    FormEntity formEntity = new()
-                    {
-                        Title = data.Title,
-                        UserId = userId,
-                        ProductId = orderDetailEntity.ProductId,
-                        FormFieldId = data.FormField?.Id,
-                        OrderDetailId = orderDetailEntity.Id,
-                    };
-                    await _dbContext.Set<FormEntity>().AddAsync(formEntity);
-                    await _dbContext.SaveChangesAsync();
-                }
-
+            totalPrice += Convert.ToDouble(productEntity?.Price ?? 0);
         }
+
+
+        entityOrder.TotalPrice = totalPrice;
+        entityOrder.DiscountPrice = totalPrice * dto.DiscountPercent / 100;
+
 
         return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(entityOrder));
 
@@ -115,29 +105,19 @@ public class OrderRepository : IOrderRepository
                 ProductEntity? product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
                 if (product != null)
                 {
-                    if (product.Stock < item.SaleCount)
+                    if (product.Stock < item.Count)
                         throw new ArgumentException("failed request! this request is more than stock!");
 
                     if (dto.Status == OrderStatuses.Paid)
-                        if (product.Stock > 0) product.Stock = product.Stock - item.SaleCount;
+                        if (product.Stock > 0) product.Stock = product.Stock - item.Count;
                         else
                             throw new ArgumentException("product's stock equals zero!");
 
                 }
 
                 oldOrderDetail.ProductId = item.ProductId;
-                oldOrderDetail.Price = item.Price;
-                oldOrderDetail.SaleCount = item.SaleCount;
-
-                if (item.Forms != null)
-                    foreach (var data in item.Forms)
-                    {
-                        FormEntity? oldForms = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x => x.Id == data.Id);
-                        if (oldForms != null)
-                        {
-                            oldForms.Title = data.Title;
-                        }
-                    }
+                oldOrderDetail.Price = product?.Price ?? 0;
+                oldOrderDetail.SaleCount = item.Count;
             }
         }
 
