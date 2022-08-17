@@ -12,13 +12,19 @@ public class OrderController : BaseApiController {
 
 	[HttpPost]
 	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<OrderReadDto>>> Create(OrderCreateUpdateDto dto)  
-		=> Result(await _orderRepository.Create(dto));
+	public async Task<ActionResult<GenericResponse<OrderReadDto>>> Create(OrderCreateUpdateDto dto)
+    {
+		GenericResponse<OrderReadDto> i = await _orderRepository.Create(dto);
+		return Result(i);
+	}
 
 	[HttpPut]
 	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<OrderReadDto>>> Update(OrderCreateUpdateDto dto)
-	 => Result(await _orderRepository.Update(dto));
+    {
+		GenericResponse<OrderReadDto> i = await _orderRepository.Update(dto);
+		return Result(i);
+	}
 
 	[HttpGet]
 	public async Task<ActionResult<GenericResponse<IEnumerable<OrderReadDto>>>> Read() {
