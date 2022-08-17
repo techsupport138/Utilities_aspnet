@@ -35,7 +35,10 @@ public class OrderController : BaseApiController {
 		return Result(i);
 	}
 
-    [HttpGet("Mine")]
+
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
+	[HttpGet("Mine")]
     public async Task<ActionResult<GenericResponse<IEnumerable<OrderReadDto>>>> ReadMine()
     {
         GenericResponse<IEnumerable<OrderReadDto>> i = await _orderRepository.ReadMine();
