@@ -5,8 +5,8 @@ public interface IOrderRepository
     Task<GenericResponse<IEnumerable<OrderReadDto>>> Read();
     Task<GenericResponse<OrderReadDto>> ReadById(Guid id);
     Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine();
-    Task<GenericResponse<OrderReadDto>> Create(OrderCreateUpdateDto dto);
-    Task<GenericResponse<OrderReadDto>> Update(OrderCreateUpdateDto dto);
+    Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto);
+    Task<GenericResponse<OrderReadDto?>> Update(OrderCreateUpdateDto dto);
     public Task<GenericResponse> Delete(Guid id);
 }
 
@@ -23,7 +23,7 @@ public class OrderRepository : IOrderRepository
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<OrderReadDto>> Create(OrderCreateUpdateDto dto)
+    public async Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto)
     {
         string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
 
@@ -84,11 +84,11 @@ public class OrderRepository : IOrderRepository
 
         }
 
-        return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(entityOrder));
+        return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(entityOrder));
 
     }
 
-    public async Task<GenericResponse<OrderReadDto>> Update(OrderCreateUpdateDto dto)
+    public async Task<GenericResponse<OrderReadDto?>> Update(OrderCreateUpdateDto dto)
     {
         string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
         OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
@@ -143,7 +143,7 @@ public class OrderRepository : IOrderRepository
 
         await _dbContext.SaveChangesAsync();
 
-        return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(oldOrder));
+        return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(oldOrder));
 
     }
     public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
