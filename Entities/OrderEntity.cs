@@ -31,7 +31,7 @@ public class OrderDetailEntity : BaseEntity
     public Guid? ProductId { get; set; }
 
     public double? Price { get; set; }
-    public int? SaleCount { get; set; }
+    public int? Count { get; set; }
 
     public IEnumerable<FormEntity>? Forms { get; set; }
 }
@@ -62,7 +62,7 @@ public class OrderDetailReadDto
 {
     public Guid? Id { get; set; }
     public double? Price { get; set; }
-    public int? SaleCount { get; set; }
+    public int? Count { get; set; }
     public ProductReadDto? Product { get; set; }
 }
 

@@ -60,7 +60,7 @@ public class OrderRepository : IOrderRepository
                 OrderId = entityOrder.Id,
                 ProductId = item.ProductId,
                 Price = productEntity?.Price ?? 0,
-                SaleCount = item.Count,
+                Count = item.Count,
             };
             await _dbContext.Set<OrderDetailEntity>().AddAsync(orderDetailEntity);
             await _dbContext.SaveChangesAsync();
@@ -116,7 +116,7 @@ public class OrderRepository : IOrderRepository
 
                 oldOrderDetail.ProductId = item.ProductId;
                 oldOrderDetail.Price = product?.Price ?? 0;
-                oldOrderDetail.SaleCount = item.Count;
+                oldOrderDetail.Count = item.Count;
             }
         }
 
