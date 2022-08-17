@@ -64,8 +64,6 @@ public class OrderDetailReadDto
     public double? Price { get; set; }
     public int? SaleCount { get; set; }
     public ProductReadDto? Product { get; set; }
-    public IEnumerable<FormDto>? Forms { get; set; }
-
 }
 
 
@@ -96,6 +94,29 @@ public class OrderDetailCreateUpdateDto
     public Guid? ProductId { get; set; }
     public int? Count { get; set; }
      
+}
+
+public class OrderFilterDto
+{
+    public string? Description { get; set; }
+    public OrderStatuses? Status { get; set; }
+
+    public double? TotalPrice { get; set; }
+    public double? DiscountPrice { get; set; }
+    public int? DiscountPercent { get; set; }
+    public string? DiscountCode { get; set; }
+
+    public double? SendPrice { get; set; }
+    public SendType? SendType { get; set; }
+
+    public PayType? PayType { get; set; }
+    public DateTime? PayDateTime { get; set; }
+    public string? PayNumber { get; set; }
+    public DateTime? ReceivedDate { get; set; }
+    public string? UserId { get; set; }
+    public int PageSize { get; set; } = 100;
+    public int PageNumber { get; set; } = 1;
+   
 }
 
 

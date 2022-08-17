@@ -2,9 +2,8 @@ namespace Utilities_aspnet.Repositories;
 
 public interface IOrderRepository
 {
-    Task<GenericResponse<IEnumerable<OrderReadDto>>> Read();
+    GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto);
     Task<GenericResponse<OrderReadDto>> ReadById(Guid id);
-    Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine();
     Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto);
     Task<GenericResponse<OrderReadDto?>> Update(OrderCreateUpdateDto dto);
     public Task<GenericResponse> Delete(Guid id);
@@ -126,15 +125,38 @@ public class OrderRepository : IOrderRepository
         return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(oldOrder));
 
     }
-    public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
+    public GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto)
     {
-        var orders = await _dbContext.Set<OrderEntity>()
-           .AsNoTracking()
-           .Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
-           .Include(c => c.OrderDetails)!.ThenInclude(f => f.Forms)!.ThenInclude(x => x.FormField)
-           .ToListAsync();
-        IEnumerable<OrderReadDto> i = _mapper.Map<IEnumerable<OrderReadDto>>(orders).ToList();
-        return new GenericResponse<IEnumerable<OrderReadDto>>(i);
+        IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>().AsNoTracking();
+
+        if (dto.Description.IsNotNullOrEmpty()) q = q.Where(x => (x.Description ?? "").Contains(dto.Description!));
+        if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
+        if (dto.TotalPrice.HasValue) q = q.Where(x => x.TotalPrice == dto.TotalPrice);
+        if (dto.DiscountPrice.HasValue) q = q.Where(x => x.DiscountPrice == dto.DiscountPrice);
+        if (dto.DiscountPercent.HasValue) q = q.Where(x => x.DiscountPercent == dto.DiscountPercent);
+        if (dto.DiscountCode.IsNotNullOrEmpty()) q = q.Where(x => (x.DiscountCode ?? "").Contains(dto.DiscountCode!));
+        if (dto.SendPrice.HasValue) q = q.Where(x => x.SendPrice == dto.SendPrice);
+        if (dto.SendType.HasValue) q = q.Where(x => x.SendType == dto.SendType);
+        if (dto.PayType.HasValue) q = q.Where(x => x.PayType == dto.PayType);
+        if (dto.PayDateTime.HasValue) q = q.Where(x => x.PayDateTime == dto.PayDateTime);
+        if (dto.PayNumber.IsNotNullOrEmpty()) q = q.Where(x => (x.PayNumber ?? "").Contains(dto.PayNumber!));
+        if (dto.ReceivedDate.HasValue) q = q.Where(x => x.ReceivedDate == dto.ReceivedDate);
+         
+        if (dto.UserId.IsNotNullOrEmpty())
+        {
+            q = q.Where(x => x.UserId == dto.UserId);
+        }
+
+        int totalCount = q.Count();
+
+        q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize).AsNoTracking();
+
+        return new GenericResponse<IQueryable<OrderEntity>>(q)
+        {
+            TotalCount = totalCount,
+            PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto?.PageSize : totalCount / dto?.PageSize + 1,
+            PageSize = dto?.PageSize
+        };
     }
 
     public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id)
@@ -142,22 +164,9 @@ public class OrderRepository : IOrderRepository
         OrderEntity? i = await _dbContext.Set<OrderEntity>()
             .AsNoTracking()
             .Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
-            .Include(c => c.OrderDetails)!.ThenInclude(f => f.Forms)!.ThenInclude(x => x.FormField)
             .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
         return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(i));
 
-    }
-
-    public async Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine()
-    {
-        IEnumerable<OrderEntity> orders = await _dbContext.Set<OrderEntity>()
-            .AsNoTracking()
-            .Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
-            .Include(c => c.OrderDetails)!.ThenInclude(f => f.Forms)!.ThenInclude(x => x.FormField)
-            .Where(x => x.DeletedAt == null && x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
-            .ToListAsync();
-        IEnumerable<OrderReadDto> i = _mapper.Map<IEnumerable<OrderReadDto>>(orders).ToList();
-        return new GenericResponse<IEnumerable<OrderReadDto>>(i);
     }
     public async Task<GenericResponse> Delete(Guid id)
     {
