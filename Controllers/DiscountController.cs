@@ -17,7 +17,6 @@ public class DiscountController : BaseApiController {
 	public ActionResult<GenericResponse<IEnumerable<DiscountReadDto>>> Filter(DiscountFilterDto dto) 
 		=> Result(_discountRepository.Filter(dto));
 
-
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<DiscountReadDto>>> Update(DiscountCreateUpdateDto dto) => Result(await _discountRepository.Update(dto));
@@ -29,6 +28,7 @@ public class DiscountController : BaseApiController {
 
 
 	[HttpGet("{code}")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<DiscountEntity>>> ReadDiscountCode(string code)
 	{
 		GenericResponse<DiscountEntity> i = await _discountRepository.ReadDiscountCode(code);
