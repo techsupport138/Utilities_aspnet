@@ -5,8 +5,8 @@ public interface IOrderRepository
     Task<GenericResponse<IEnumerable<OrderReadDto>>> Read();
     Task<GenericResponse<OrderReadDto>> ReadById(Guid id);
     Task<GenericResponse<IEnumerable<OrderReadDto>>> ReadMine();
-    Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto);
-
+    Task<GenericResponse<OrderReadDto>> Create(OrderCreateUpdateDto dto);
+    Task<GenericResponse<OrderReadDto>> Update(OrderCreateUpdateDto dto);
     public Task<GenericResponse> Delete(Guid id);
 }
 
@@ -23,74 +23,77 @@ public class OrderRepository : IOrderRepository
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<GenericResponse<OrderReadDto?>> CreateUpdate(OrderCreateUpdateDto dto)
+    public async Task<GenericResponse<OrderReadDto>> Create(OrderCreateUpdateDto dto)
+    {
+        string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
+
+        //create
+        OrderEntity entityOrder = new()
+        {
+            Description = dto.Description,
+            ReceivedDate = dto.ReceivedDate,
+            UserId = userId,
+            TotalPrice = dto.OrderDetails.Sum(x => x.Price),
+            DiscountPercent = dto.DiscountPercent,
+            DiscountPrice = (dto.OrderDetails.Sum(x => x.Price) * dto.DiscountPercent) / 100,
+            DiscountCode = dto.DiscountCode,
+            PayType = PayType.Online,
+            SendPrice = 0,
+            SendType = SendType.Pishtaz,
+            Status = OrderStatuses.Pending,
+            PayNumber = ""
+        };
+
+
+        await _dbContext.Set<OrderEntity>().AddAsync(entityOrder);
+        await _dbContext.SaveChangesAsync();
+
+        foreach (var item in dto.OrderDetails)
+        {
+            ProductEntity? productEntity = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
+            if (productEntity != null && productEntity.Stock < item.SaleCount)
+            {
+                await Delete(entityOrder.Id);
+                throw new ArgumentException("failed request! this request is more than stock!");
+            }
+
+            OrderDetailEntity orderDetailEntity = new()
+            {
+                OrderId = entityOrder.Id,
+                ProductId = item.ProductId,
+                Price = item.Price,
+                SaleCount = item.SaleCount,
+            };
+            await _dbContext.Set<OrderDetailEntity>().AddAsync(orderDetailEntity);
+            await _dbContext.SaveChangesAsync();
+
+            if (item.Forms != null)
+                foreach (var data in item.Forms)
+                {
+                    FormEntity formEntity = new()
+                    {
+                        Title = data.Title,
+                        UserId = userId,
+                        ProductId = orderDetailEntity.ProductId,
+                        FormFieldId = data.FormField?.Id,
+                        OrderDetailId = orderDetailEntity.Id,
+                    };
+                    await _dbContext.Set<FormEntity>().AddAsync(formEntity);
+                    await _dbContext.SaveChangesAsync();
+                }
+
+        }
+
+        return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(entityOrder));
+
+    }
+
+    public async Task<GenericResponse<OrderReadDto>> Update(OrderCreateUpdateDto dto)
     {
         string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
         OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
-
         if (oldOrder == null)
-        {
-            //create
-            OrderEntity entityOrder = new()
-            {
-                Description = dto.Description,
-                ReceivedDate = dto.ReceivedDate,
-                UserId = userId,
-                TotalPrice = dto.OrderDetails.Sum(x => x.Price),
-                DiscountPercent = dto.DiscountPercent,
-                DiscountPrice = (dto.OrderDetails.Sum(x => x.Price) * dto.DiscountPercent) / 100,
-                DiscountCode = dto.DiscountCode,
-                PayType = PayType.Online,
-                SendPrice = 0,
-                SendType = SendType.Pishtaz,
-                Status = OrderStatuses.Pending,
-                PayNumber = ""
-            };
-
-
-            await _dbContext.Set<OrderEntity>().AddAsync(entityOrder);
-            await _dbContext.SaveChangesAsync();
-
-            foreach (var item in dto.OrderDetails)
-            {
-                ProductEntity? productEntity = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
-                if (productEntity != null && productEntity.Stock < item.SaleCount)
-                {
-                    await Delete(entityOrder.Id);
-                    throw new ArgumentException("failed request! this request is more than stock!");
-                }
-
-                OrderDetailEntity orderDetailEntity = new()
-                {
-                    OrderId = entityOrder.Id,
-                    ProductId = item.ProductId,
-                    Price = item.Price,
-                    SaleCount = item.SaleCount,
-                };
-                await _dbContext.Set<OrderDetailEntity>().AddAsync(orderDetailEntity);
-                await _dbContext.SaveChangesAsync();
-
-                if (item.Forms != null)
-                    foreach (var data in item.Forms)
-                    {
-                        FormEntity formEntity = new()
-                        {
-                            Title = data.Title,
-                            UserId = userId,
-                            ProductId = orderDetailEntity.ProductId,
-                            FormFieldId = data.FormField?.Id,
-                            OrderDetailId = orderDetailEntity.Id,
-                        };
-                        await _dbContext.Set<FormEntity>().AddAsync(formEntity);
-                        await _dbContext.SaveChangesAsync();
-                    }
-
-            }
-
-
-            return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(entityOrder));
-        }
-
+            throw new ArgumentException("not found!");
 
         //edit order
         oldOrder.Description = dto.Description;
@@ -140,9 +143,9 @@ public class OrderRepository : IOrderRepository
 
         await _dbContext.SaveChangesAsync();
 
-        return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(oldOrder));
-    }
+        return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(oldOrder));
 
+    }
     public async Task<GenericResponse<IEnumerable<OrderReadDto>>> Read()
     {
         var orders = await _dbContext.Set<OrderEntity>()
