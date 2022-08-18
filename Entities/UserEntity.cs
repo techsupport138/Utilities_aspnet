@@ -29,6 +29,31 @@ public class UserEntity : IdentityUser {
 	public DateTime? DeletedAt { get; set; }
 	public string? AccessLevel { get; set; }
 
+	public string? Dribble { get; set; }
+	public string? SoundCloud { get; set; }
+	public string? Pinterest { get; set; }
+
+	[NotMapped]
+	public bool IsFollowing { get; set; } = false;
+
+	[NotMapped]
+	public int? CountProducts { get; set; }
+
+	[NotMapped]
+	public int? CountFollowers { get; set; }
+
+	[NotMapped]
+	public int? CountFollowing { get; set; }
+
+	[NotMapped]
+	public bool IsAdmin { get; set; }
+
+	[NotMapped]
+	public string? Token { get; set; }
+
+	[NotMapped]
+	public GrowthRateReadDto? GrowthRate { get; set; }
+
 	public int? GenderId { get; set; }
 	public GenderEntity? Gender { get; set; }
 	public IEnumerable<LocationEntity>? Location { get; set; }
@@ -102,6 +127,11 @@ public class UserReadDto {
 	public string? Telegram { get; set; }
 	public string? Whatsapp { get; set; }
 	public string? LinkedIn { get; set; }
+
+	public string? Dribble { get; set; }
+	public string? SoundCloud { get; set; }
+	public string? Pinterest { get; set; }
+
 	public string? Color { get; set; }
 	public string? State { get; set; }
 	public string? Type { get; set; }
@@ -188,6 +218,11 @@ public class UserCreateUpdateDto {
 	public string? Telegram { get; set; }
 	public string? WhatsApp { get; set; }
 	public string? LinkedIn { get; set; }
+
+	public string? Dribble { get; set; }
+	public string? SoundCloud { get; set; }
+	public string? Pinterest { get; set; }
+
 	public string? Type { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }

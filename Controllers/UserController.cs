@@ -55,23 +55,23 @@ public class UserController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<UserReadDto>>>> Filter(UserFilterDto dto) {
-		GenericResponse i = await _userRepository.Read(dto);
+	public async Task<ActionResult<GenericResponse<IEnumerable<UserEntity>>>> Filter(UserFilterDto dto) {
+		GenericResponse i = await _userRepository.Filter(dto);
 		return Result(i);
 	}
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpGet("{id}")]
-	public async Task<ActionResult<GenericResponse<UserReadDto?>>> ReadById(string id) {
+	public async Task<ActionResult<GenericResponse<UserEntity?>>> ReadById(string id) {
 		GenericResponse i = await _userRepository.ReadById(id);
 		return Result(i);
 	}
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<UserReadDto>>> Update(UserCreateUpdateDto dto) {
-		GenericResponse<UserReadDto?> i = await _userRepository.Update(dto);
+	public async Task<ActionResult<GenericResponse<UserEntity>>> Update(UserCreateUpdateDto dto) {
+		GenericResponse<UserEntity?> i = await _userRepository.Update(dto);
 		return Result(i);
 	}
 
