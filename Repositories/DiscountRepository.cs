@@ -3,11 +3,10 @@
 public interface IDiscountRepository
 {
     public Task<GenericResponse<DiscountReadDto>> Create(DiscountCreateUpdateDto dto);
-    public Task<GenericResponse<IEnumerable<DiscountReadDto>>> Read();
+    public GenericResponse<IQueryable<DiscountEntity>> Filter(DiscountFilterDto dto);
     public Task<GenericResponse<DiscountReadDto?>> Update(DiscountCreateUpdateDto dto);
-
     public Task<GenericResponse> Delete(Guid id);
-    Task<GenericResponse<int?>> ReadDiscountCode(string code);
+    Task<GenericResponse<DiscountEntity>> ReadDiscountCode(string code);
 }
 
 public class DiscountRepository : IDiscountRepository
@@ -35,13 +34,27 @@ public class DiscountRepository : IDiscountRepository
         return new GenericResponse<DiscountReadDto>(_mapper.Map<DiscountReadDto>(i.Entity));
     }
 
-    public async Task<GenericResponse<IEnumerable<DiscountReadDto>>> Read()
+    public GenericResponse<IQueryable<DiscountEntity>> Filter(DiscountFilterDto dto)
     {
-        IEnumerable<DiscountEntity> i = await _dbContext.Set<DiscountEntity>()
-            .AsNoTracking()
-            .ToListAsync();
+        IQueryable<DiscountEntity> q = _dbContext.Set<DiscountEntity>().AsNoTracking();
 
-        return new GenericResponse<IEnumerable<DiscountReadDto>>(_mapper.Map<IEnumerable<DiscountReadDto>>(i));
+        if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
+        if (dto.Code.IsNotNullOrEmpty()) q = q.Where(x => (x.Code ?? "").Contains(dto.Code!));
+        if (dto.DiscountPercent != null) q = q.Where(x => x.DiscountPercent == dto.DiscountPercent);
+        if (dto.NumberUses != null) q = q.Where(x => x.NumberUses == dto.NumberUses);
+        if (dto.StartDate != null) q = q.Where(x => x.StartDate <= dto.StartDate);
+        if (dto.EndDate != null) q = q.Where(x => x.EndDate >= dto.EndDate);
+
+        int totalCount = q.Count();
+
+        q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize).AsNoTracking();
+
+        return new GenericResponse<IQueryable<DiscountEntity>>(q)
+        {
+            TotalCount = totalCount,
+            PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto?.PageSize : totalCount / dto?.PageSize + 1,
+            PageSize = dto?.PageSize
+        };
     }
 
     public async Task<GenericResponse<DiscountReadDto?>> Update(DiscountCreateUpdateDto dto)
@@ -77,7 +90,7 @@ public class DiscountRepository : IDiscountRepository
         return new GenericResponse();
     }
 
-    public async Task<GenericResponse<int?>> ReadDiscountCode(string code)
+    public async Task<GenericResponse<DiscountEntity>> ReadDiscountCode(string code)
     {
         string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
         var discountEntity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(p => p.Code.ToLower().Trim() == code.ToLower().Trim());
@@ -88,6 +101,6 @@ public class DiscountRepository : IDiscountRepository
         if (orders.Count >= discountEntity.NumberUses)
             throw new ArgumentException("Maximum use of this code!");
 
-        return new GenericResponse<int?>(discountEntity.DiscountPercent);
+        return new GenericResponse<DiscountEntity>(discountEntity);
     }
 }
