@@ -25,6 +25,8 @@ public class MediaEntity : BaseEntity {
 	public Guid? NotificationId { get; set; }
 	public CategoryEntity? Category { get; set; }
 	public Guid? CategoryId { get; set; }
+
+    public string? Size { get; set; }
 }
 
 public class MediaDto {
@@ -40,6 +42,7 @@ public class UploadDto {
 	public IEnumerable<IFormFile>? Files { get; set; }
 	public IEnumerable<string>? Links { get; set; }
 	public string? Title { get; set; }
+	public string? Size { get; set; }
 	public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
 	public Guid? ProductId { get; set; }
 	public Guid? ContentId { get; set; }
