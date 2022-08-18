@@ -9,29 +9,22 @@ public class DiscountController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<DiscountReadDto>>> Create(DiscountCreateUpdateDto dto) => Result(await _discountRepository.Create(dto));
+	public async Task<ActionResult<GenericResponse<DiscountEntity>>> Create(DiscountCreateUpdateDto dto) => Result(await _discountRepository.Create(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
-	public ActionResult<GenericResponse<IEnumerable<DiscountReadDto>>> Filter(DiscountFilterDto dto) 
-		=> Result(_discountRepository.Filter(dto));
+	public ActionResult<GenericResponse<IEnumerable<DiscountEntity>>> Filter(DiscountFilterDto dto) => Result(_discountRepository.Filter(dto));
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<DiscountReadDto>>> Update(DiscountCreateUpdateDto dto) => Result(await _discountRepository.Update(dto));
-
+	public async Task<ActionResult<GenericResponse<DiscountEntity>>> Update(DiscountCreateUpdateDto dto) => Result(await _discountRepository.Update(dto));
 
 	[HttpDelete("{id:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<IActionResult> Delete(Guid id) => Result(await _discountRepository.Delete(id));
 
-
 	[HttpGet("{code}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<DiscountEntity>>> ReadDiscountCode(string code)
-	{
-		GenericResponse<DiscountEntity> i = await _discountRepository.ReadDiscountCode(code);
-		return Result(i);
-	}
+	public async Task<ActionResult<GenericResponse<DiscountEntity>>> ReadDiscountCode(string code) => Result(await _discountRepository.ReadDiscountCode(code));
 }

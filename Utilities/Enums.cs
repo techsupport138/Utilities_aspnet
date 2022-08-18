@@ -78,14 +78,12 @@ public enum ApprovalStatus {
 	Rejected = 2
 }
 
-public enum PayType
-{
+public enum PayType {
 	Online,
 	PayAtHome,
 }
 
-public enum SendType
-{
+public enum SendType {
 	Pishtaz,
 	Custome,
 	Tipax
