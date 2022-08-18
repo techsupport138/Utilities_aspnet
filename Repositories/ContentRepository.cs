@@ -1,49 +1,43 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IContentRepository {
-	Task<GenericResponse<ContentReadDto>> Create(ContentCreateUpdateDto dto);
-	Task<GenericResponse<IEnumerable<ContentReadDto>>> Read();
-	Task<GenericResponse<ContentReadDto>> ReadById(Guid id);
-	Task<GenericResponse<ContentReadDto>> Update(ContentCreateUpdateDto dto);
+	Task<GenericResponse<ContentEntity>> Create(ContentEntity dto);
+	Task<GenericResponse<IEnumerable<ContentEntity>>> Read();
+	Task<GenericResponse<ContentEntity>> ReadById(Guid id);
+	Task<GenericResponse<ContentEntity>> Update(ContentEntity dto);
 	Task<GenericResponse> Delete(Guid id);
 }
 
 public class ContentRepository : IContentRepository {
 	private readonly DbContext _context;
-	private readonly IMapper _mapper;
 
-	public ContentRepository(DbContext context, IMapper mapper) {
+	public ContentRepository(DbContext context) {
 		_context = context;
-		_mapper = mapper;
 	}
 
-	public async Task<GenericResponse<ContentReadDto>> Create(ContentCreateUpdateDto dto) {
+	public async Task<GenericResponse<ContentEntity>> Create(ContentEntity dto) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
-		EntityEntry<ContentEntity> i = await _context.Set<ContentEntity>().AddAsync(_mapper.Map<ContentEntity>(dto));
+		EntityEntry<ContentEntity> i = await _context.Set<ContentEntity>().AddAsync(dto);
 		await _context.SaveChangesAsync();
-		return new GenericResponse<ContentReadDto>(_mapper.Map<ContentReadDto>(i.Entity));
+		return new GenericResponse<ContentEntity>(i.Entity);
 	}
 
-	public async Task<GenericResponse<IEnumerable<ContentReadDto>>> Read() {
+	public async Task<GenericResponse<IEnumerable<ContentEntity>>> Read() {
 		IEnumerable<ContentEntity> i = await _context.Set<ContentEntity>().Include(x => x.Media).AsNoTracking().ToListAsync();
-		return new GenericResponse<IEnumerable<ContentReadDto>>(_mapper.Map<IEnumerable<ContentReadDto>>(i));
+		return new GenericResponse<IEnumerable<ContentEntity>>(i);
 	}
 
-	public async Task<GenericResponse<ContentReadDto>> ReadById(Guid id) {
-		ContentEntity? i = await _context.Set<ContentEntity>().AsNoTracking().Include(x => x.Media)
-			.FirstOrDefaultAsync(i => i.Id == id);
-		return new GenericResponse<ContentReadDto>(_mapper.Map<ContentReadDto>(i));
+	public async Task<GenericResponse<ContentEntity>> ReadById(Guid id) {
+		ContentEntity? i = await _context.Set<ContentEntity>().AsNoTracking().Include(x => x.Media).FirstOrDefaultAsync(i => i.Id == id);
+		return new GenericResponse<ContentEntity>(i);
 	}
 
-	public async Task<GenericResponse<ContentReadDto>> Update(ContentCreateUpdateDto dto) {
+	public async Task<GenericResponse<ContentEntity>> Update(ContentEntity dto) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
-		ContentEntity? entity = await _context.Set<ContentEntity>()
-			.AsNoTracking()
-			.Where(x => x.Id == dto.Id)
-			.FirstOrDefaultAsync();
+		ContentEntity? entity = await _context.Set<ContentEntity>().AsNoTracking().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
 
 		if (entity == null)
-			return new GenericResponse<ContentReadDto>(new ContentReadDto());
+			return new GenericResponse<ContentEntity>(new ContentEntity());
 
 		entity.UseCase = dto.UseCase;
 		entity.Title = dto.Title;
@@ -52,12 +46,12 @@ public class ContentRepository : IContentRepository {
 		_context.Update(entity);
 		await _context.SaveChangesAsync();
 
-		return new GenericResponse<ContentReadDto>(_mapper.Map<ContentReadDto>(entity));
+		return new GenericResponse<ContentEntity>(entity);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		GenericResponse<ContentReadDto> i = await ReadById(id);
-		_context.Set<ContentEntity>().Remove(_mapper.Map<ContentEntity>(i.Result));
+		GenericResponse<ContentEntity> i = await ReadById(id);
+		_context.Set<ContentEntity>().Remove(i.Result);
 		await _context.SaveChangesAsync();
 		return new GenericResponse();
 	}

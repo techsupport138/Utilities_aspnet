@@ -33,9 +33,6 @@ public class AutoMapperProfile : Profile {
 		                                             c => c.MapFrom(
 			                                             v => v.Link ?? $"{Server.ServerAddress}/Medias/{v.FileName}")).ReverseMap();
 
-		CreateMap<ContentEntity, ContentReadDto>().ReverseMap();
-		CreateMap<ContentEntity, ContentCreateUpdateDto>().ReverseMap();
-
 		CreateMap<LocationEntity, LocationReadDto>()
 			.ForMember(x => x.I, c => c.MapFrom(v => v.Id))
 			.ForMember(x => x.N, c => c.MapFrom(v => v.Title))

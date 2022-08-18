@@ -39,7 +39,7 @@ public class DiscountRepository : IDiscountRepository {
 
 		return new GenericResponse<IQueryable<DiscountEntity>>(q) {
 			TotalCount = totalCount,
-			PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto?.PageSize : totalCount / dto.PageSize + 1,
+			PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto.PageSize : totalCount / dto.PageSize + 1,
 			PageSize = dto?.PageSize
 		};
 	}
@@ -74,7 +74,7 @@ public class DiscountRepository : IDiscountRepository {
 
 	public async Task<GenericResponse<DiscountEntity?>> ReadDiscountCode(string code) {
 		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
-		DiscountEntity? discountEntity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(p => p.Code.ToLower().Trim() == code.ToLower().Trim());
+		DiscountEntity? discountEntity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(p => p.Code!.ToLower().Trim() == code.ToLower().Trim());
 		if (discountEntity == null) throw new ArgumentException("Code not found!");
 
 		IQueryable<OrderEntity> orders = _dbContext.Set<OrderEntity>()
