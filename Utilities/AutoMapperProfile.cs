@@ -5,8 +5,6 @@ public class AutoMapperProfile : Profile {
 		CreateMap<CategoryEntity, CategoryReadDto>().ReverseMap();
 		CreateMap<CategoryEntity, CategoryCreateUpdateDto>().ReverseMap();
 
-		CreateMap<DiscountEntity, DiscountCreateUpdateDto>().ReverseMap();
-
 		CreateMap<OrderEntity, OrderReadDto>().ReverseMap();
 
 		CreateMap<ProductEntity, ProductReadDto>()

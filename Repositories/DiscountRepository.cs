@@ -1,31 +1,24 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IDiscountRepository {
-	public Task<GenericResponse<DiscountEntity>> Create(DiscountCreateUpdateDto dto);
+	public Task<GenericResponse<DiscountEntity>> Create(DiscountEntity dto);
 	public GenericResponse<IQueryable<DiscountEntity>> Filter(DiscountFilterDto dto);
-	public Task<GenericResponse<DiscountEntity?>> Update(DiscountCreateUpdateDto dto);
+	public Task<GenericResponse<DiscountEntity?>> Update(DiscountEntity dto);
 	public Task<GenericResponse> Delete(Guid id);
 	Task<GenericResponse<DiscountEntity?>> ReadDiscountCode(string code);
 }
 
 public class DiscountRepository : IDiscountRepository {
 	private readonly DbContext _dbContext;
-	private readonly IMapper _mapper;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public DiscountRepository(
-		DbContext dbContext,
-		IMapper mapper,
-		IHttpContextAccessor httpContextAccessor) {
+	public DiscountRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = dbContext;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<DiscountEntity>> Create(DiscountCreateUpdateDto dto) {
-		DiscountEntity entity = _mapper.Map<DiscountEntity>(dto);
-
-		EntityEntry<DiscountEntity> i = await _dbContext.AddAsync(entity);
+	public async Task<GenericResponse<DiscountEntity>> Create(DiscountEntity dto) {
+		EntityEntry<DiscountEntity> i = await _dbContext.AddAsync(dto);
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse<DiscountEntity>(i.Entity);
 	}
@@ -51,8 +44,8 @@ public class DiscountRepository : IDiscountRepository {
 		};
 	}
 
-	public async Task<GenericResponse<DiscountEntity?>> Update(DiscountCreateUpdateDto dto) {
-		DiscountEntity? entity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(item => item.Id == dto.Id);
+	public async Task<GenericResponse<DiscountEntity?>> Update(DiscountEntity dto) {
+		DiscountEntity? entity = await _dbContext.Set<DiscountEntity>().FindAsync(dto.Id);
 
 		if (entity == null) return new GenericResponse<DiscountEntity?>(null, UtilitiesStatusCodes.NotFound);
 		entity.Title = dto.Title ?? entity.Title;
@@ -81,10 +74,8 @@ public class DiscountRepository : IDiscountRepository {
 
 	public async Task<GenericResponse<DiscountEntity?>> ReadDiscountCode(string code) {
 		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
-		DiscountEntity? discountEntity = await _dbContext.Set<DiscountEntity>()
-			.FirstOrDefaultAsync(p => p.Code.ToLower().Trim() == code.ToLower().Trim());
-		if (discountEntity == null)
-			throw new ArgumentException("Code not found!");
+		DiscountEntity? discountEntity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(p => p.Code.ToLower().Trim() == code.ToLower().Trim());
+		if (discountEntity == null) throw new ArgumentException("Code not found!");
 
 		IQueryable<OrderEntity> orders = _dbContext.Set<OrderEntity>()
 			.Where(p => p.UserId == userId && p.DiscountCode == code && p.Status != OrderStatuses.Canceled);
