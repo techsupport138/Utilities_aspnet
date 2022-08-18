@@ -1,24 +1,22 @@
 namespace Utilities_aspnet.Repositories;
 
 public interface IReportRepository {
-	Task<GenericResponse<ReportReadDto?>> Create(ReportCreateDto dto);
-	Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto);
-	Task<GenericResponse<ReportReadDto?>> ReadById(Guid id);
+	Task<GenericResponse<ReportEntity?>> Create(ReportEntity dto);
+	Task<GenericResponse<IEnumerable<ReportEntity>>> Read(ReportFilterDto dto);
+	Task<GenericResponse<ReportEntity?>> ReadById(Guid id);
 	Task<GenericResponse> Delete(Guid id);
 }
 
 public class ReportRepository : IReportRepository {
 	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IMapper _mapper;
 
-	public ReportRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public ReportRepository(DbContext context, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = context;
 		_httpContextAccessor = httpContextAccessor;
-		_mapper = mapper;
 	}
 
-	public async Task<GenericResponse<ReportReadDto?>> Create(ReportCreateDto dto) {
+	public async Task<GenericResponse<ReportEntity?>> Create(ReportEntity dto) {
 		ReportEntity entity = new() {
 			CreatorUserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!,
 			Title = dto.Title,
@@ -34,18 +32,18 @@ public class ReportRepository : IReportRepository {
 		return await ReadById(entity.Id);
 	}
 
-	public async Task<GenericResponse<IEnumerable<ReportReadDto>>> Read(ReportFilterDto dto) {
+	public async Task<GenericResponse<IEnumerable<ReportEntity>>> Read(ReportFilterDto dto) {
 		IQueryable<ReportEntity> entities = _dbContext.Set<ReportEntity>().AsNoTracking();
 
 		if (dto.User == true)
-			entities = entities.Include(x => x.User)!.ThenInclude(x => x.Media);
+			entities = entities.Include(x => x.User).ThenInclude(x => x!.Media);
 
 		if (dto.Product == true)
-			entities = entities.Include(x => x.Product)!.ThenInclude(x => x.Media);
+			entities = entities.Include(x => x.Product).ThenInclude(x => x!.Media);
 
 		IEnumerable<ReportEntity> result = await entities.ToListAsync();
 
-		return new GenericResponse<IEnumerable<ReportReadDto>>(_mapper.Map<IEnumerable<ReportReadDto>>(result));
+		return new GenericResponse<IEnumerable<ReportEntity>>(result);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
@@ -62,13 +60,12 @@ public class ReportRepository : IReportRepository {
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
-	public async Task<GenericResponse<ReportReadDto?>> ReadById(Guid id) {
-		ReportEntity? entity = await _dbContext.Set<ReportEntity>()
-			.AsNoTracking()
-			.Include(x => x.User)!.ThenInclude(x => x.Media)
-			.Include(x => x.Product)!.ThenInclude(x => x.Media)
+	public async Task<GenericResponse<ReportEntity?>> ReadById(Guid id) {
+		ReportEntity? entity = await _dbContext.Set<ReportEntity>().AsNoTracking()
+			.Include(x => x.User)
+			.Include(x => x.Product)
 			.FirstOrDefaultAsync(x => x.Id == id);
 
-		return new GenericResponse<ReportReadDto?>(_mapper.Map<ReportReadDto>(entity));
+		return new GenericResponse<ReportEntity?>(entity);
 	}
 }

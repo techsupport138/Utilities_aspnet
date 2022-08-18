@@ -68,7 +68,6 @@ public class AutoMapperProfile : Profile {
 
 		CreateMap<TransactionEntity, TransactionReadDto>().ReverseMap();
 		CreateMap<TransactionEntity, TransactionCreateDto>().ReverseMap();
-		CreateMap<ReportEntity, ReportReadDto>().ReverseMap();
 		CreateMap<BookmarkEntity, BookmarkReadDto>().ReverseMap();
 		CreateMap<UserEntity, UserMinimalReadDto>().ReverseMap();
 		CreateMap<TopProductEntity, TopProductReadDto>().ReverseMap();
