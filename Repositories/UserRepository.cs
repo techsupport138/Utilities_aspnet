@@ -1,18 +1,18 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
-	Task<GenericResponse<UserReadDto?>> Create(UserCreateUpdateDto parameter);
-	Task<GenericResponse<IEnumerable<UserReadDto>>> Read(UserFilterDto dto);
-	Task<GenericResponse<UserReadDto?>> ReadById(string idOrUserName, string? token = null);
-	Task<GenericResponse<UserReadDto?>> Update(UserCreateUpdateDto dto);
+	Task<GenericResponse<UserEntity?>> Create(UserCreateUpdateDto parameter);
+	Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto);
+	Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null);
+	Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto);
 	Task<GenericResponse> Delete(string id);
 	Task<GenericResponse> SeedUser(SeederUserDto dto);
-	Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile);
+	Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile);
 	Task<GenericResponse> CheckUserName(string userName);
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
-	Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
-	Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser);
-	Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model);
+	Task<GenericResponse<UserEntity?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
+	Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser);
+	Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model);
 	Task<GenericResponse> RemovalFromTeam(Guid teamId);
 }
 
@@ -55,9 +55,9 @@ public class UserRepository : IUserRepository {
 		return existUserName ? new GenericResponse(UtilitiesStatusCodes.BadRequest, "Username is available") : new GenericResponse();
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> ReadById(string idOrUserName, string? token = null) {
+	public async Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null) {
 		bool isUserId = Guid.TryParse(idOrUserName, out _);
-		UserEntity? model = await _context.Set<UserEntity>()
+		UserEntity? entity = await _context.Set<UserEntity>()
 			.AsNoTracking()
 			.Include(u => u.Media)
 			.Include(u => u.Categories)!.ThenInclude(u => u.Media)
@@ -66,47 +66,47 @@ public class UserRepository : IUserRepository {
 			.Include(u => u.Gender)
 			.FirstOrDefaultAsync(u => isUserId ? u.Id == idOrUserName : u.UserName == idOrUserName);
 
-		if (model == null)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound,
+		if (entity == null)
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound,
 			                                         $"User: {idOrUserName} Not Found");
 
-		UserReadDto? userReadDto = _mapper.Map<UserReadDto>(model);
-		userReadDto.CountProducts = model.Products?.Count();
-		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == model.Id).ToListAsync();
-		userReadDto.CountFollowers = follower.Count;
-		List<FollowEntity> following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == model.Id).ToListAsync();
-		userReadDto.CountFollowing = following.Count;
+		 
+		entity.CountProducts = entity.Products?.Count();
+		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
+		entity.CountFollowers = follower.Count;
+		List<FollowEntity> following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == entity.Id).ToListAsync();
+		entity.CountFollowing = following.Count;
 
-		userReadDto.IsAdmin = await _userManager.IsInRoleAsync(model, "Admin");
-		userReadDto.Token = token;
-		userReadDto.GrowthRate = GetGrowthRate(userReadDto.Id).Result;
+		entity.IsAdmin = await _userManager.IsInRoleAsync(entity, "Admin");
+		entity.Token = token;
+		entity.GrowthRate = GetGrowthRate(entity.Id).Result;
 
 		try {
 			if (_httpContextAccessor.HttpContext?.User.Identity?.Name != null) {
-				userReadDto.IsFollowing = await _context.Set<FollowEntity>()
-					.AnyAsync(x => x.FollowsUserId == model.Id && x.FollowerUserId == _httpContextAccessor.HttpContext.User.Identity.Name);
+				entity.IsFollowing = await _context.Set<FollowEntity>()
+					.AnyAsync(x => x.FollowsUserId == entity.Id && x.FollowerUserId == _httpContextAccessor.HttpContext.User.Identity.Name);
 			}
 		}
 		catch { }
 
-		return new GenericResponse<UserReadDto?>(userReadDto, UtilitiesStatusCodes.Success, "Success");
+		return new GenericResponse<UserEntity?>(entity, UtilitiesStatusCodes.Success, "Success");
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> Update(UserCreateUpdateDto dto) {
+	public async Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto) {
 		UserEntity? entity = _context.Set<UserEntity>().Include(x => x.Location).Include(x => x.Categories)
 			.FirstOrDefault(x => x.Id == dto.Id);
 
 		if (entity == null)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
 		FillUserData(dto, entity);
 
 		await _context.SaveChangesAsync();
-		GenericResponse<UserReadDto?> readDto = await ReadById(entity.Id, "");
-		return readDto;
+		 
+		return new GenericResponse<UserEntity?>(entity);
 	}
 
-	public async Task<GenericResponse<IEnumerable<UserReadDto>>> Read(UserFilterDto dto) {
+	public async Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto) {
 		IIncludableQueryable<UserEntity, object?> dbSet = _context.Set<UserEntity>().Include(u => u.Media);
 
 		if (dto.ShowGender.IsTrue()) dbSet = dbSet.Include(u => u.Gender);
@@ -129,15 +129,15 @@ public class UserRepository : IUserRepository {
 		if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
 
 		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
-		IEnumerable<UserReadDto>? readDto = _mapper.Map<IEnumerable<UserReadDto>>(entity);
+		 
 		if (_httpContextAccessor?.HttpContext?.User?.Identity?.Name != null) {
-			foreach (UserReadDto item in readDto) {
+			foreach (UserEntity item in entity) {
 				item.IsFollowing = await _context.Set<FollowEntity>()
 					.AnyAsync(x => x.FollowsUserId == item.Id && x.FollowerUserId == _httpContextAccessor.HttpContext.User.Identity.Name);
 			}
 		}
 
-		return new GenericResponse<IEnumerable<UserReadDto>>(readDto);
+		return new GenericResponse<IEnumerable<UserEntity>>(entity);
 	}
 
 	public async Task<GenericResponse> Delete(string id) {
@@ -172,30 +172,30 @@ public class UserRepository : IUserRepository {
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> GetTokenForTest(string mobile) {
+	public async Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile) {
 		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile);
 
 		if (user == null)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
 
 		if (user.Suspend)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
 
 		JwtSecurityToken token = await CreateToken(user);
-		return new GenericResponse<UserReadDto?>(
+		return new GenericResponse<UserEntity?>(
 			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 			UtilitiesStatusCodes.Success, "Success"
 		);
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> Create(UserCreateUpdateDto dto) {
+	public async Task<GenericResponse<UserEntity?>> Create(UserCreateUpdateDto dto) {
 		UserEntity? entity = _mapper.Map<UserEntity>(dto);
 
 		FillUserData(dto, entity);
 
 		IdentityResult? result = await _userManager.CreateAsync(entity, dto.Password);
 		if (!result.Succeeded)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.Unhandled,
 			                                         "The information was not entered correctly");
 		return await ReadById(entity.Id);
 	}
@@ -221,32 +221,32 @@ public class UserRepository : IUserRepository {
 
 	#region New Login Register
 
-	public async Task<GenericResponse<UserReadDto?>> LoginWithPassword(LoginWithPasswordDto model) {
+	public async Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model) {
 		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
 		if (user == null) user = await _userManager.FindByNameAsync(model.Email);
 		if (user == null) {
 			user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
 		}
 
-		if (user == null) return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "User not found");
+		if (user == null) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "User not found");
 
 		bool result = await _userManager.CheckPasswordAsync(user, model.Password);
 		if (!result)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
 		JwtSecurityToken token = await CreateToken(user);
 
-		return new GenericResponse<UserReadDto?>(
+		return new GenericResponse<UserEntity?>(
 			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 			UtilitiesStatusCodes.Success, "Success");
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> Register(RegisterDto aspNetUser) {
+	public async Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser) {
 		UserEntity? model = _context.Set<UserEntity>()
 			.FirstOrDefault(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email ||
 			                     x.PhoneNumber == aspNetUser.PhoneNumber);
 		if (model != null)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest,
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest,
 			                                         "This email or username already exists");
 
 		UserEntity user = new() {
@@ -264,7 +264,7 @@ public class UserRepository : IUserRepository {
 
 		IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
 		if (!result.Succeeded)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.Unhandled,
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.Unhandled,
 			                                         "The information was not entered correctly");
 
 		JwtSecurityToken token = await CreateToken(user);
@@ -279,7 +279,7 @@ public class UserRepository : IUserRepository {
 			}
 		}
 
-		return new GenericResponse<UserReadDto?>(
+		return new GenericResponse<UserEntity?>(
 			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 			UtilitiesStatusCodes.Success, "Success");
 	}
@@ -326,32 +326,32 @@ public class UserRepository : IUserRepository {
 		}
 	}
 
-	public async Task<GenericResponse<UserReadDto?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) {
+	public async Task<GenericResponse<UserEntity?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) {
 		string mobile = dto.Mobile.Replace("+", "");
 		if (dto.VerificationCode.Length >= 6 && !dto.VerificationCode.IsNumerical())
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.WrongVerificationCode,
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.WrongVerificationCode,
 			                                         "کد تایید وارد شده صحیح نیست");
 
 		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile) ??
 		                   await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile);
 
 		if (user == null)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.NotFound, "کاربر یافت نشد");
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "کاربر یافت نشد");
 
 		if (user.Suspend)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
 
 		JwtSecurityToken token = await CreateToken(user);
 		if (dto.VerificationCode == "9999")
-			return new GenericResponse<UserReadDto?>(
+			return new GenericResponse<UserEntity?>(
 				ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 				UtilitiesStatusCodes.Success, "Success"
 			);
 
 		if (Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
-			return new GenericResponse<UserReadDto?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
-		return new GenericResponse<UserReadDto?>(
+		return new GenericResponse<UserEntity?>(
 			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 			UtilitiesStatusCodes.Success, "Success"
 		);
