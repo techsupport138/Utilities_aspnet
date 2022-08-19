@@ -3,7 +3,6 @@ namespace Utilities_aspnet.Utilities;
 public class AutoMapperProfile : Profile {
 	public AutoMapperProfile() {
 		CreateMap<CategoryEntity, CategoryReadDto>().ReverseMap();
-		CreateMap<CategoryEntity, CategoryCreateUpdateDto>().ReverseMap();
 
 		CreateMap<OrderEntity, OrderReadDto>().ReverseMap();
 
