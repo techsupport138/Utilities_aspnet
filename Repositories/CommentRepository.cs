@@ -164,9 +164,8 @@ public class CommentRepository : ICommentRepository
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (comment == null)
-            if (comment == null)
-                return new GenericResponse(UtilitiesStatusCodes.NotFound, "Comment notfound");
-
+            return new GenericResponse(UtilitiesStatusCodes.NotFound, "Comment notfound");
+ 
         _context.Set<CommentEntity>().Remove(comment);
         await _context.SaveChangesAsync();
 
