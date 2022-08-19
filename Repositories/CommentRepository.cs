@@ -161,12 +161,14 @@ public class CommentRepository : ICommentRepository
     {
         CommentEntity? comment = await _context.Set<CommentEntity>()
             .AsNoTracking()
+            .Include(p => p.Children)
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (comment == null)
             return new GenericResponse(UtilitiesStatusCodes.NotFound, "Comment notfound");
- 
+
         _context.Set<CommentEntity>().Remove(comment);
+
         await _context.SaveChangesAsync();
 
         return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
