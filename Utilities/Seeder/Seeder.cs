@@ -76,7 +76,7 @@ public class SeedRepository : ISeedRepository {
 
 	public async Task<GenericResponse> SeedCategories(SeederCategoryDto dto) {
 		try {
-			foreach (CategoryCreateUpdateDto? item in dto.Categories) {
+			foreach (CategoryEntity? item in dto.Categories) {
 				CategoryEntity entity = _mapper.Map<CategoryEntity>(item);
 
 				await _context.AddAsync(entity);
