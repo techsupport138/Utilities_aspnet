@@ -21,7 +21,7 @@ public class CategoryEntity : BaseEntity {
 	[InverseProperty("Parent")]
 	public IEnumerable<CategoryEntity>? Children { get; set; }
 
-	public IEnumerable<MediaEntity> Media { get; set; }
+	public IEnumerable<MediaEntity>? Media { get; set; }
 
 	[System.Text.Json.Serialization.JsonIgnore]
 	public IEnumerable<UserEntity>? Users { get; set; }
@@ -31,9 +31,6 @@ public class CategoryEntity : BaseEntity {
 
 	[System.Text.Json.Serialization.JsonIgnore]
 	public IEnumerable<FormEntity>? FormFields { get; set; }
-
-	[NotMapped]
-	public int? SecondaryId { get; set; }
 }
 
 public class CategoryReadDto {
