@@ -21,18 +21,6 @@ public class AppSettingRepository : IAppSettingRepository {
 		IEnumerable<CategoryReadDto> transactionStatus = EnumExtension.GetValues<TransactionStatus>();
 		model.FormFieldType = formFieldType;
 		model.TransactionStatuses = transactionStatus;
-
-		model.Categories = _context.Set<CategoryEntity>()
-			.Include(x => x.Media)
-			.Include(x => x.Parent)
-			.OrderBy(x => x.UseCase)
-			.Select(w =>
-				        new CategoryReadDto {
-					        Id = w.Id,
-					        Title = w.Title,
-					        UseCase = w.UseCase,
-					        ParentId = w.ParentId
-				        }).ToList();
 		model.Genders = _context.Set<GenderEntity>().ToList();
 
 		return Task.FromResult(new GenericResponse<EnumDto?>(model, UtilitiesStatusCodes.Success, "Success"));

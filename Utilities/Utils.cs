@@ -149,7 +149,6 @@ public static class StartupExtension {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 		if (app.Environment.IsDevelopment()) {
 			app.UseDeveloperExceptionPage();
-			app.UseMiddleware<ResponseTimeMiddleware>();
 		}
 
 		app.UseResponseCaching();

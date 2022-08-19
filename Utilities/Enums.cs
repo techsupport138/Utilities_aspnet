@@ -25,25 +25,15 @@ public enum OtpResult {
 }
 
 public static class UtilitiesStatusCodesExtension {
-	public static bool IsSuccessful(this UtilitiesStatusCodes statusCode) {
-		return statusCode == UtilitiesStatusCodes.Success;
-	}
+	public static bool IsSuccessful(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Success;
 
-	public static bool IsBadRequest(this UtilitiesStatusCodes statusCode) {
-		return statusCode == UtilitiesStatusCodes.BadRequest;
-	}
+	public static bool IsBadRequest(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.BadRequest;
 
-	public static bool IsForbidden(this UtilitiesStatusCodes statusCode) {
-		return statusCode == UtilitiesStatusCodes.Forbidden;
-	}
+	public static bool IsForbidden(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Forbidden;
 
-	public static bool IsNotFound(this UtilitiesStatusCodes statusCode) {
-		return statusCode == UtilitiesStatusCodes.NotFound;
-	}
+	public static bool IsNotFound(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.NotFound;
 
-	public static int Value(this UtilitiesStatusCodes statusCode) {
-		return (int) statusCode;
-	}
+	public static int Value(this UtilitiesStatusCodes statusCode) => (int) statusCode;
 }
 
 public enum VisibilityType {
