@@ -84,6 +84,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.Locations.IsNotNullOrEmpty()) q = q.Where(x => x.Locations != null && x.Locations.Any(y => dto.Locations.Contains(y.Id)));
 		if (dto.Categories.IsNotNullOrEmpty()) q = q.Where(x => x.Categories != null && x.Categories.Any(y => dto.Categories.Contains(y.Id)));
 
+		int totalCount = q.Count();
+
 		if (dto.FilterOrder.HasValue)
 			q = dto.FilterOrder switch {
 				ProductFilterOrder.LowPrice => q.OrderBy(x => x.Price),
@@ -94,8 +96,6 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			};
 
 		q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize).AsNoTracking();
-
-		int totalCount = q.Count();
 
 		return new GenericResponse<IQueryable<ProductEntity>>(q) {
 			TotalCount = totalCount,
