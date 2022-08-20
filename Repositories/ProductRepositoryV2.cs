@@ -89,7 +89,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2
         if (dto.Locations.IsNotNullOrEmpty()) q = q.Where(x => x.Locations != null && x.Locations.Any(y => dto.Locations.Contains(y.Id)));
         if (dto.Categories.IsNotNullOrEmpty()) q = q.Where(x => x.Categories != null && x.Categories.Any(y => dto.Categories.Contains(y.Id)));
          
-        int totalCount = q.Count();
+        int totalCount = q.ToList().Count();
 
         if (dto.FilterOrder.HasValue)
             q = dto.FilterOrder switch
