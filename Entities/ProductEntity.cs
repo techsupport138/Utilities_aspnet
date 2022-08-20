@@ -238,6 +238,7 @@ public class ProductFilterDto {
 	public string? Value10 { get; set; }
 	public string? Value11 { get; set; }
 	public string? Value12 { get; set; }
+	public string? UserId { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
 	public double? Height { get; set; }

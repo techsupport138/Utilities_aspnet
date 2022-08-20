@@ -66,6 +66,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.Unit.IsNotNullOrEmpty()) q = q.Where(x => x.Unit == dto.Unit);
 		if (dto.UseCase.IsNotNullOrEmpty()) q = q.Where(x => x.UseCase == dto.UseCase);
 		if (dto.State.IsNotNullOrEmpty()) q = q.Where(x => x.State == dto.State);
+		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 		if (dto.StartPriceRange.HasValue) q = q.Where(x => x.Price >= dto.StartPriceRange.Value);
 		if (dto.EndPriceRange.HasValue) q = q.Where(x => x.Price <= dto.EndPriceRange.Value);
 		if (dto.Enabled.HasValue) q = q.Where(x => x.Enabled == dto.Enabled);
