@@ -3,7 +3,7 @@ namespace Utilities_aspnet.Repositories;
 public interface IProductRepositoryV2
 {
     Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct);
-    GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto);
+    GenericResponse<IEnumerable<ProductEntity>> Filter(ProductFilterDto dto);
     Task<GenericResponse<ProductEntity>> ReadById(Guid id, CancellationToken ct);
     Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct);
     Task<GenericResponse> Delete(Guid id, CancellationToken ct);
@@ -34,7 +34,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2
         return new GenericResponse<ProductEntity>(i.Entity);
     }
 
-    public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto)
+    public GenericResponse<IEnumerable<ProductEntity>> Filter(ProductFilterDto dto)
     {
         IQueryable<ProductEntity> q = _context.Set<ProductEntity>().Include(i => i.Media);
 
@@ -87,9 +87,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2
         if (dto.EndDate.HasValue) q = q.Where(x => x.EndDate <= dto.EndDate);
 
         if (dto.Locations.IsNotNullOrEmpty()) q = q.Where(x => x.Locations != null && x.Locations.Any(y => dto.Locations.Contains(y.Id)));
-        //if (dto.Categories.IsNotNullOrEmpty()) q = q.Where(x => x.Categories != null && x.Categories.Any(y => dto.Categories.Contains(y.Id)));
-        if (dto.Categories.IsNotNullOrEmpty()) q = q.Where(x => x.Categories != null && x.Categories.Where(y => dto.Categories.Contains(y.Id)).Count() > 0);
-
+        if (dto.Categories.IsNotNullOrEmpty()) q = q.Where(x => x.Categories != null && x.Categories.Any(y => dto.Categories.Contains(y.Id)));
+         
         int totalCount = q.Count();
 
         if (dto.FilterOrder.HasValue)
@@ -104,7 +103,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2
 
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize).AsNoTracking();
 
-        return new GenericResponse<IQueryable<ProductEntity>>(q)
+        return new GenericResponse<IEnumerable<ProductEntity>>(q)
         {
             TotalCount = totalCount,
             PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto?.PageSize : totalCount / dto?.PageSize + 1,
