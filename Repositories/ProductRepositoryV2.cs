@@ -86,8 +86,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2
         if (dto.StartDate.HasValue) q = q.Where(x => x.StartDate >= dto.StartDate);
         if (dto.EndDate.HasValue) q = q.Where(x => x.EndDate <= dto.EndDate);
 
-        if (dto.Locations != null && dto.Locations.Any()) q = q.Where(x => x.Locations != null && x.Locations.Any(y => dto.Locations.Contains(y.Id)));
-        if (dto.Categories != null && dto.Categories.Any()) q = q.Where(x => x.Categories != null && x.Categories.Any(y => dto.Categories.Contains(y.Id)));
+        if (dto.Locations != null && dto.Locations.Any()) q = q.AsEnumerable().Where(x => x.Locations != null && x.Locations.Any(y => dto.Locations.Contains(y.Id))).AsQueryable();
+        if (dto.Categories != null && dto.Categories.Any()) q = q.AsEnumerable().Where(x => x.Categories != null && x.Categories.Any(y => dto.Categories.Contains(y.Id))).AsQueryable();
          
         int totalCount = q.Count();
 
