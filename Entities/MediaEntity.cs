@@ -6,6 +6,7 @@ public class MediaEntity : BaseEntity {
 	public string? UseCase { get; set; }
 	public string? Link { get; set; }
 	public string? Title { get; set; }
+	public string? Size { get; set; }
 	public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
 
 	[NotMapped]
@@ -52,8 +53,6 @@ public class MediaEntity : BaseEntity {
 
 	[System.Text.Json.Serialization.JsonIgnore]
 	public Guid? CategoryId { get; set; }
-
-    public string? Size { get; set; }
 }
 
 public class MediaDto {
@@ -61,6 +60,7 @@ public class MediaDto {
 	public string? UseCase { get; set; }
 	public string? Link { get; set; }
 	public string? Title { get; set; }
+	public string? Size { get; set; }
 }
 
 public class UploadDto {
