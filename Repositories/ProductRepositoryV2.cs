@@ -204,7 +204,7 @@ public static class ProductEntityExtensionV2
             List<CategoryEntity> listCategory = new();
             foreach (Guid item in dto.Categories ?? new List<Guid>())
             {
-                CategoryEntity? e = await context.Set<CategoryEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
+                CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) listCategory.Add(e);
             }
             entity.Categories = listCategory;
@@ -215,7 +215,7 @@ public static class ProductEntityExtensionV2
             List<LocationEntity> listLocation = new();
             foreach (int item in dto.Locations ?? new List<int>())
             {
-                LocationEntity? e = await context.Set<LocationEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
+                LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null) listLocation.Add(e);
             }
             entity.Locations = listLocation;
@@ -226,7 +226,7 @@ public static class ProductEntityExtensionV2
             List<TeamEntity> listTeam = new();
             foreach (string item in dto.Teams ?? new List<string>())
             {
-                UserEntity? e = await context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
+                UserEntity? e = await context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == item);
                 if (e != null)
                 {
                     TeamEntity t = new() { UserId = e.Id };
