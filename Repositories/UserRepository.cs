@@ -93,7 +93,10 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto) {
-		UserEntity? entity = _context.Set<UserEntity>().Include(x => x.Location).Include(x => x.Categories)
+		UserEntity? entity = _context.Set<UserEntity>()
+			.Include(x => x.Location)
+			.Include(x => x.Categories)
+			.Include(x => x.Media)
 			.FirstOrDefault(x => x.Id == dto.Id);
 
 		if (entity == null)
