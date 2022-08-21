@@ -14,6 +14,9 @@ public class UserEntity : IdentityUser {
 	public string? Telegram { get; set; }
 	public string? WhatsApp { get; set; }
 	public string? LinkedIn { get; set; }
+	public string? Dribble { get; set; }
+	public string? SoundCloud { get; set; }
+	public string? Pinterest { get; set; }
 	public string? Website { get; set; }
 	public string? Type { get; set; }
 	public string? Region { get; set; }
@@ -28,10 +31,6 @@ public class UserEntity : IdentityUser {
 	public DateTime? UpdatedAt { get; set; }
 	public DateTime? DeletedAt { get; set; }
 	public string? AccessLevel { get; set; }
-
-	public string? Dribble { get; set; }
-	public string? SoundCloud { get; set; }
-	public string? Pinterest { get; set; }
 
 	[NotMapped]
 	public bool IsFollowing { get; set; } = false;
@@ -125,13 +124,11 @@ public class UserReadDto {
 	public string? AppEmail { get; set; }
 	public string? Instagram { get; set; }
 	public string? Telegram { get; set; }
-	public string? Whatsapp { get; set; }
+	public string? WhatsApp { get; set; }
 	public string? LinkedIn { get; set; }
-
 	public string? Dribble { get; set; }
 	public string? SoundCloud { get; set; }
 	public string? Pinterest { get; set; }
-
 	public string? Color { get; set; }
 	public string? State { get; set; }
 	public string? Type { get; set; }
@@ -218,11 +215,9 @@ public class UserCreateUpdateDto {
 	public string? Telegram { get; set; }
 	public string? WhatsApp { get; set; }
 	public string? LinkedIn { get; set; }
-
 	public string? Dribble { get; set; }
 	public string? SoundCloud { get; set; }
 	public string? Pinterest { get; set; }
-
 	public string? Type { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
