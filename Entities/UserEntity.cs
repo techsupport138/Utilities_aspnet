@@ -33,6 +33,7 @@ public class UserEntity : IdentityUser
     public DateTime? DeletedAt { get; set; }
     public string? AccessLevel { get; set; }
     public string? Access { get; set; }
+    public string? Badge { get; set; }
 
     [NotMapped]
     public bool IsFollowing { get; set; } = false;
@@ -158,6 +159,7 @@ public class UserReadDto
     public int? CountProducts { get; set; }
     public string? AccessLevel { get; set; }
     public string? Access { get; set; }
+    public string? Badge { get; set; }
     public DateTime? BirthDate { get; set; }
     public GenderEntity? Gender { get; set; }
     public GrowthRateReadDto? GrowthRate { get; set; }
@@ -182,6 +184,7 @@ public class UserMinimalReadDto
     public int? CountProducts { get; set; }
     public string? AccessLevel { get; set; }
     public string? Access { get; set; }
+    public string? Badge { get; set; }
     public GenderEntity? Gender { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<CategoryReadDto>? Categories { get; set; }
@@ -244,6 +247,7 @@ public class UserCreateUpdateDto
     public int? GenderId { get; set; }
     public string? AccessLevel { get; set; }
     public string? Access { get; set; }
+    public string? Badge { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<int>? Locations { get; set; }
 }
