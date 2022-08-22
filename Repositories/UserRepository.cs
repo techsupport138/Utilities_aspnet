@@ -368,7 +368,10 @@ public class UserRepository : IUserRepository {
 		entity.Instagram = dto.Instagram ?? entity.Instagram;
 		entity.Telegram = dto.Telegram ?? entity.Telegram;
 		entity.WhatsApp = dto.WhatsApp ?? entity.WhatsApp;
-		entity.LinkedIn = dto.LinkedIn ?? entity.LinkedIn;
+		entity.LinkedIn = dto.LinkedIn ?? entity.LinkedIn;		
+		entity.Dribble = dto.Dribble ?? entity.Dribble;
+		entity.SoundCloud = dto.SoundCloud ?? entity.SoundCloud;
+		entity.Pinterest = dto.Pinterest ?? entity.Pinterest;
 		entity.AppEmail = dto.AppEmail ?? entity.AppEmail;
 		entity.Region = dto.Region ?? entity.Region;
 		entity.Activity = dto.Activity ?? entity.Activity;
@@ -387,6 +390,7 @@ public class UserRepository : IUserRepository {
 		entity.State = dto.State ?? entity.State;
 		entity.Point = dto.Point ?? entity.Point;
 		entity.AccessLevel = dto.AccessLevel ?? entity.AccessLevel;
+		entity.Access = dto.Access ?? entity.Access;
 
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> list = new();
