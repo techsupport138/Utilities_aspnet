@@ -8,6 +8,9 @@ public class MediaEntity : BaseEntity {
 	public string? Title { get; set; }
 	public string? Size { get; set; }
 	public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
+	
+	[NotMapped]
+	public string Url => $"{Server.ServerAddress}/Medias/{FileName}";
 
 	[System.Text.Json.Serialization.JsonIgnore]
 	public ContentEntity? Content { get; set; }
