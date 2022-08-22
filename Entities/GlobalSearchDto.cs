@@ -8,6 +8,7 @@ public class GlobalSearchDto {
 
 public class GlobalSearchParams {
 	public string Title { get; set; } = "";
+	public string Query { get; set; } = "";
 	public IEnumerable<Guid>? Categories { get; set; }
 	public int PageSize { get; set; } = 1000;
 	public int PageNumber { get; set; } = 1;
