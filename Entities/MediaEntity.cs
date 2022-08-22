@@ -9,9 +9,6 @@ public class MediaEntity : BaseEntity {
 	public string? Size { get; set; }
 	public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
 
-	[NotMapped]
-	public string Url => $"{Server.ServerAddress}/Medias/{FileName}";
-
 	[System.Text.Json.Serialization.JsonIgnore]
 	public ContentEntity? Content { get; set; }
 
@@ -53,14 +50,6 @@ public class MediaEntity : BaseEntity {
 
 	[System.Text.Json.Serialization.JsonIgnore]
 	public Guid? CategoryId { get; set; }
-}
-
-public class MediaDto {
-	public string Id { get; set; }
-	public string? UseCase { get; set; }
-	public string? Link { get; set; }
-	public string? Title { get; set; }
-	public string? Size { get; set; }
 }
 
 public class UploadDto {

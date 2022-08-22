@@ -60,8 +60,10 @@ public class TopProductRepository : ITopProductRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<TopProductReadDto>?>> Read() {
-		IEnumerable<TopProductEntity> entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product)
-			.ThenInclude(x => x.Media).OrderByDescending(x => x.CreatedAt).ToListAsync();
+		IEnumerable<TopProductEntity> entity = await _dbContext.Set<TopProductEntity>()
+			.Include(x => x.Product)
+			.ThenInclude(x => x.Media)
+			.OrderByDescending(x => x.CreatedAt).ToListAsync();
 
 		return new GenericResponse<IEnumerable<TopProductReadDto>?>(_mapper.Map<IEnumerable<TopProductReadDto>?>(entity));
 	}

@@ -28,10 +28,6 @@ public class AutoMapperProfile : Profile {
 			.ForMember(x => x.Categories, y => y.Ignore())
 			.ForMember(x => x.Teams, y => y.Ignore());
 
-		CreateMap<MediaEntity, MediaDto>().ForMember(x => x.Link,
-		                                             c => c.MapFrom(
-			                                             v => v.Link ?? $"{Server.ServerAddress}/Medias/{v.FileName}")).ReverseMap();
-
 		CreateMap<LocationEntity, LocationReadDto>()
 			.ForMember(x => x.I, c => c.MapFrom(v => v.Id))
 			.ForMember(x => x.N, c => c.MapFrom(v => v.Title))

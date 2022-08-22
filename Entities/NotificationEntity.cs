@@ -29,7 +29,7 @@ public class NotificationDto {
 	public bool Visited { get; set; }
 	public string? UseCase { get; set; }
 	public UserReadDto? CreatorUser { get; set; }
-	public IEnumerable<MediaDto>? Media { get; set; }
+	public IEnumerable<MediaEntity>? Media { get; set; }
 }
 
 public class NotificationCreateUpdateDto {

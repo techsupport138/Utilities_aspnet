@@ -51,7 +51,7 @@ public class CategoryReadDto {
 	public CategoryReadDto? Parent { get; set; }
 	public IEnumerable<CategoryReadDto>? Children { get; set; }
 	public Guid? ParentId { get; set; }
-	public IEnumerable<MediaDto>? Media { get; set; }
+	public IEnumerable<MediaEntity>? Media { get; set; }
 }
 
 public class SeederCategoryDto {

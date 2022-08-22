@@ -68,9 +68,8 @@ public class UserRepository : IUserRepository {
 
 		if (entity == null)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound,
-			                                         $"User: {idOrUserName} Not Found");
+			                                        $"User: {idOrUserName} Not Found");
 
-		 
 		entity.CountProducts = entity.Products?.Count();
 		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
 		entity.CountFollowers = follower.Count;
@@ -105,7 +104,7 @@ public class UserRepository : IUserRepository {
 		FillUserData(dto, entity);
 
 		await _context.SaveChangesAsync();
-		 
+
 		return new GenericResponse<UserEntity?>(entity);
 	}
 
@@ -132,7 +131,7 @@ public class UserRepository : IUserRepository {
 		if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
 
 		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
-		 
+
 		if (_httpContextAccessor?.HttpContext?.User?.Identity?.Name != null) {
 			foreach (UserEntity item in entity) {
 				item.IsFollowing = await _context.Set<FollowEntity>()
@@ -199,7 +198,7 @@ public class UserRepository : IUserRepository {
 		IdentityResult? result = await _userManager.CreateAsync(entity, dto.Password);
 		if (!result.Succeeded)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.Unhandled,
-			                                         "The information was not entered correctly");
+			                                        "The information was not entered correctly");
 		return await ReadById(entity.Id);
 	}
 
@@ -250,7 +249,7 @@ public class UserRepository : IUserRepository {
 			                     x.PhoneNumber == aspNetUser.PhoneNumber);
 		if (model != null)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest,
-			                                         "This email or username already exists");
+			                                        "This email or username already exists");
 
 		UserEntity user = new() {
 			Email = aspNetUser.Email ?? "",
@@ -268,7 +267,7 @@ public class UserRepository : IUserRepository {
 		IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
 		if (!result.Succeeded)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.Unhandled,
-			                                         "The information was not entered correctly");
+			                                        "The information was not entered correctly");
 
 		JwtSecurityToken token = await CreateToken(user);
 
@@ -333,7 +332,7 @@ public class UserRepository : IUserRepository {
 		string mobile = dto.Mobile.Replace("+", "");
 		if (dto.VerificationCode.Length >= 6 && !dto.VerificationCode.IsNumerical())
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.WrongVerificationCode,
-			                                         "کد تایید وارد شده صحیح نیست");
+			                                        "کد تایید وارد شده صحیح نیست");
 
 		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile) ??
 		                   await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile);

@@ -142,7 +142,7 @@ public class ProductReadDto {
 	public ProductStatus? Status { get; set; }
 	public UserReadDto? User { get; set; }
 	public IEnumerable<LocationReadDto>? Locations { get; set; }
-	public IEnumerable<MediaDto>? Media { get; set; }
+	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }
 	public IEnumerable<MyVoteReadDto>? MyVotes { get; set; }
