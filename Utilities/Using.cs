@@ -34,7 +34,6 @@ global using Microsoft.AspNetCore.Hosting;
 global using RestSharp;
 global using Swashbuckle.AspNetCore.SwaggerUI;
 global using Microsoft.AspNetCore.Authorization;
-global using Utilities_aspnet.Utilities.Seeder;
 global using Utilities_aspnet.Entities;
 global using Utilities_aspnet.Repositories;
 global using Microsoft.EntityFrameworkCore.Query;

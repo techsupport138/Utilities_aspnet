@@ -70,13 +70,11 @@ public static class StartupExtension {
 		builder.Services.AddTransient<IFollowBookmarkRepository, FollowBookmarkRepository>();
 		builder.Services.AddTransient<IAppSettingRepository, AppSettingRepository>();
 		builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
-		builder.Services.AddTransient<IProductRepository, ProductRepository>();
 		builder.Services.AddTransient<IProductRepositoryV2, ProductRepositoryV2>();
 		builder.Services.AddTransient<IChatRepository, ChatRepository>();
 		builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
 		builder.Services.AddTransient<IFormRepository, FormRepository>();
 		builder.Services.AddTransient<ICommentRepository, CommentRepository>();
-		builder.Services.AddTransient<ISeedRepository, SeedRepository>();
 		builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 		builder.Services.AddTransient<IContentRepository, ContentRepository>();
 		builder.Services.AddTransient<IVoteRepository, VoteRepository>();

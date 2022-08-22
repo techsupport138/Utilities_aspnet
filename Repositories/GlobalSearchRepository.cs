@@ -7,19 +7,13 @@ public interface IGlobalSearchRepository {
 public class GlobalSearchRepository : IGlobalSearchRepository {
 	private readonly DbContext _context;
 	private readonly IMapper _mapper;
-	private readonly IProductRepository _productRepository;
-	private readonly ICategoryRepository _categoryRepository;
 
 	public GlobalSearchRepository(
 		DbContext context,
-		IMapper mapper,
-		IProductRepository productRepository,
-		ICategoryRepository categoryRepository) {
+		IMapper mapper) {
 		_context = context;
 		_mapper = mapper;
 		_mapper = mapper;
-		_productRepository = productRepository;
-		_categoryRepository = categoryRepository;
 	}
 
 	public async Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string userId) {
@@ -40,7 +34,6 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 		else
 			userList = userList.Include(u => u.Media)
 				.Include(u => u.Categories)
-				.Include(u => u.Location)
 				.Include(u => u.Products)
 				.OrderByDescending(x => x.CreatedAt);
 
@@ -51,7 +44,6 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 		if (filter.Minimal)
 			productList = productList.Include(i => i.Media)
 				.Include(i => i.Categories)
-				.Include(i => i.Locations)
 				.Include(i => i.User).ThenInclude(x => x.Media)
 				.Include(i => i.User).ThenInclude(x => x.Categories)
 				.Include(i => i.Bookmarks);
@@ -62,7 +54,6 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 				.Include(i => i.Categories)
 				.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children)
 				.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Media)
-				.Include(i => i.Locations)
 				.Include(i => i.Reports)
 				.Include(i => i.Votes)
 				.Include(i => i.User)!.ThenInclude(x => x.Media)

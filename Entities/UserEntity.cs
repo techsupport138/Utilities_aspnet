@@ -55,7 +55,6 @@ public class UserEntity : IdentityUser {
 
 	public int? GenderId { get; set; }
 	public GenderEntity? Gender { get; set; }
-	public IEnumerable<LocationEntity>? Location { get; set; }
 	public IEnumerable<FormEntity>? FormBuilders { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<ProductEntity>? Products { get; set; }
@@ -152,7 +151,6 @@ public class UserReadDto {
 	public GenderEntity? Gender { get; set; }
 	public GrowthRateReadDto? GrowthRate { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
-	public IEnumerable<LocationReadDto>? Location { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<ProductReadDto>? Products { get; set; }
 	public IEnumerable<UserReadDto>? Followers { get; set; }

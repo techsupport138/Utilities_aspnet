@@ -24,17 +24,8 @@ public class AutoMapperProfile : Profile {
 				                          : null))
 			.ReverseMap();
 		CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap()
-			.ForMember(x => x.Locations, y => y.Ignore())
 			.ForMember(x => x.Categories, y => y.Ignore())
 			.ForMember(x => x.Teams, y => y.Ignore());
-
-		CreateMap<LocationEntity, LocationReadDto>()
-			.ForMember(x => x.I, c => c.MapFrom(v => v.Id))
-			.ForMember(x => x.N, c => c.MapFrom(v => v.Title))
-			.ForMember(x => x.Lat, c => c.MapFrom(v => v.Latitude))
-			.ForMember(x => x.Lon, c => c.MapFrom(v => v.Longitude))
-			.ForMember(x => x.Ch, c => c.MapFrom(v => v.Children))
-			.ReverseMap();
 
 		CreateMap<VoteFieldEntity, VoteReadDto>()
 			.ForMember(x => x.Score,
@@ -70,7 +61,6 @@ public class AutoMapperProfile : Profile {
 
 		CreateMap<UserCreateUpdateDto, UserEntity>()
 			.ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
-			.ForMember(x => x.Location, y => y.Ignore())
 			.ForMember(x => x.Media, y => y.Ignore());
 
 		CreateMap<OrderDetailEntity, OrderDetailReadDto>().ReverseMap();

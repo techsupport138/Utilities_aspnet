@@ -59,7 +59,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			.ThenInclude(x => x.FormField)
 			.Include(x => x.Product).ThenInclude(i => i.Categories).Include(x => x.Product)
 			.ThenInclude(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children)
-			.Include(x => x.Product).ThenInclude(i => i.Locations).Include(x => x.Product).ThenInclude(i => i.Reports)
+			.Include(x => x.Product).Include(x => x.Product).ThenInclude(i => i.Reports)
 			.Include(x => x.Product).ThenInclude(i => i.Teams)!
 			.ThenInclude(x => x.User)!.ThenInclude(x => x.Media).ToListAsync();
 

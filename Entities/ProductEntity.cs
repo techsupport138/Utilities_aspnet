@@ -54,7 +54,6 @@ public class ProductEntity : BaseEntity {
 	public string? UserId { get; set; }
 	public UserEntity? User { get; set; }
 
-	public IEnumerable<LocationEntity>? Locations { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<FormEntity>? Forms { get; set; }
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
@@ -141,7 +140,6 @@ public class ProductReadDto {
 	public DateTime? DeletedAt { get; set; }
 	public ProductStatus? Status { get; set; }
 	public UserReadDto? User { get; set; }
-	public IEnumerable<LocationReadDto>? Locations { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }

@@ -61,7 +61,6 @@ public class UserRepository : IUserRepository {
 			.AsNoTracking()
 			.Include(u => u.Media)
 			.Include(u => u.Categories)!.ThenInclude(u => u.Media)
-			.Include(u => u.Location)
 			.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.Media)
 			.Include(u => u.Gender)
 			.FirstOrDefaultAsync(u => isUserId ? u.Id == idOrUserName : u.UserName == idOrUserName);
@@ -93,7 +92,6 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto) {
 		UserEntity? entity = _context.Set<UserEntity>()
-			.Include(x => x.Location)
 			.Include(x => x.Categories)
 			.Include(x => x.Media)
 			.FirstOrDefault(x => x.Id == dto.Id);
@@ -114,7 +112,6 @@ public class UserRepository : IUserRepository {
 		if (dto.ShowGender.IsTrue()) dbSet = dbSet.Include(u => u.Gender);
 		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(u => u.Categories);
 		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
-		if (dto.ShowLocations.IsTrue()) dbSet = dbSet.Include(u => u.Location);
 		if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
 		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products.Where(x => x.DeletedAt == null)).ThenInclude(u => u.Media);
 
@@ -390,16 +387,6 @@ public class UserRepository : IUserRepository {
 		entity.State = dto.State ?? entity.State;
 		entity.Point = dto.Point ?? entity.Point;
 		entity.AccessLevel = dto.AccessLevel ?? entity.AccessLevel;
-
-		if (dto.Locations.IsNotNullOrEmpty()) {
-			List<LocationEntity> list = new();
-			foreach (int item in dto.Locations ?? new List<int>()) {
-				LocationEntity? e = _context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item).Result;
-				if (e != null) list.Add(e);
-			}
-
-			entity.Location = list;
-		}
 
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> list = new();
