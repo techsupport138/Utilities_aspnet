@@ -153,72 +153,81 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	}
 }
 
-public static class ProductEntityExtensionV2 {
-	public static async Task<ProductEntity> FillDataV2(
-		this ProductEntity entity,
-		ProductCreateUpdateDto dto,
-		IHttpContextAccessor httpContextAccessor,
-		DbContext context) {
-		entity.UserId = httpContextAccessor.HttpContext?.User.Identity?.Name;
-		entity.Title = dto.Title ?? entity.Title;
-		entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
-		entity.Details = dto.Details ?? entity.Details;
-		entity.Author = dto.Author ?? entity.Author;
-		entity.PhoneNumber = dto.PhoneNumber ?? entity.PhoneNumber;
-		entity.Link = dto.Link ?? entity.Link;
-		entity.Website = dto.Website ?? entity.Website;
-		entity.Email = dto.Email ?? entity.Email;
-		entity.Latitude = dto.Latitude ?? entity.Latitude;
-		entity.Longitude = dto.Longitude ?? entity.Longitude;
-		entity.Description = dto.Description ?? entity.Description;
-		entity.UseCase = dto.UseCase ?? entity.UseCase;
-		entity.Price = dto.Price ?? entity.Price;
-		entity.IsForSale = dto.IsForSale ?? entity.IsForSale;
-		entity.Enabled = dto.Enabled ?? entity.Enabled;
-		entity.VisitsCount = dto.VisitsCount ?? entity.VisitsCount;
-		entity.Length = dto.Length ?? entity.Length;
-		entity.Width = dto.Width ?? entity.Width;
-		entity.Height = dto.Height ?? entity.Height;
-		entity.Weight = dto.Weight ?? entity.Weight;
-		entity.MinOrder = dto.MinOrder ?? entity.MinOrder;
-		entity.MaxOrder = dto.MaxOrder ?? entity.MaxOrder;
-		entity.Unit = dto.Unit ?? entity.Unit;
-		entity.Address = dto.Address ?? entity.Address;
-		entity.StartDate = dto.StartDate ?? entity.StartDate;
-		entity.EndDate = dto.EndDate ?? entity.EndDate;
-		entity.Status = dto.Status ?? entity.Status;
+public static class ProductEntityExtensionV2
+{
+    public static async Task<ProductEntity> FillDataV2(
+        this ProductEntity entity,
+        ProductCreateUpdateDto dto,
+        IHttpContextAccessor httpContextAccessor,
+        DbContext context)
+    {
+        entity.UserId = httpContextAccessor.HttpContext?.User.Identity?.Name;
+        entity.Title = dto.Title ?? entity.Title;
+        entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
+        entity.Details = dto.Details ?? entity.Details;
+        entity.Author = dto.Author ?? entity.Author;
+        entity.PhoneNumber = dto.PhoneNumber ?? entity.PhoneNumber;
+        entity.Link = dto.Link ?? entity.Link;
+        entity.Website = dto.Website ?? entity.Website;
+        entity.Email = dto.Email ?? entity.Email;
+        entity.Latitude = dto.Latitude ?? entity.Latitude;
+        entity.Longitude = dto.Longitude ?? entity.Longitude;
+        entity.Description = dto.Description ?? entity.Description;
+        entity.UseCase = dto.UseCase ?? entity.UseCase;
+        entity.Price = dto.Price ?? entity.Price;
+        entity.IsForSale = dto.IsForSale ?? entity.IsForSale;
+        entity.Enabled = dto.Enabled ?? entity.Enabled;
+        entity.VisitsCount = dto.VisitsCount ?? entity.VisitsCount;
+        entity.Length = dto.Length ?? entity.Length;
+        entity.Width = dto.Width ?? entity.Width;
+        entity.Height = dto.Height ?? entity.Height;
+        entity.Weight = dto.Weight ?? entity.Weight;
+        entity.MinOrder = dto.MinOrder ?? entity.MinOrder;
+        entity.MaxOrder = dto.MaxOrder ?? entity.MaxOrder;
+        entity.Unit = dto.Unit ?? entity.Unit;
+        entity.Address = dto.Address ?? entity.Address;
+        entity.StartDate = dto.StartDate ?? entity.StartDate;
+        entity.EndDate = dto.EndDate ?? entity.EndDate;
+        entity.Status = dto.Status ?? entity.Status;
 
-		if (dto.Categories.IsNotNullOrEmpty()) {
-			List<CategoryEntity> listCategory = new();
-			foreach (Guid item in dto.Categories ?? new List<Guid>()) {
-				CategoryEntity? e = await context.Set<CategoryEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) listCategory.Add(e);
-			}
-			entity.Categories = listCategory;
-		}
+        if (dto.Categories.IsNotNullOrEmpty())
+        {
+            List<CategoryEntity> listCategory = new();
+            foreach (Guid item in dto.Categories ?? new List<Guid>())
+            {
+                CategoryEntity? e = await context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) listCategory.Add(e);
+            }
+            entity.Categories = listCategory;
+        }
 
-		if (dto.Locations.IsNotNullOrEmpty()) {
-			List<LocationEntity> listLocation = new();
-			foreach (int item in dto.Locations ?? new List<int>()) {
-				LocationEntity? e = await context.Set<LocationEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) listLocation.Add(e);
-			}
-			entity.Locations = listLocation;
-		}
+        if (dto.Locations.IsNotNullOrEmpty())
+        {
+            List<LocationEntity> listLocation = new();
+            foreach (int item in dto.Locations ?? new List<int>())
+            {
+                LocationEntity? e = await context.Set<LocationEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null) listLocation.Add(e);
+            }
+            entity.Locations = listLocation;
+        }
 
-		if (dto.Teams.IsNotNullOrEmpty()) {
-			List<TeamEntity> listTeam = new();
-			foreach (string item in dto.Teams ?? new List<string>()) {
-				UserEntity? e = await context.Set<UserEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == item);
-				if (e != null) {
-					TeamEntity t = new() {UserId = e.Id};
-					await context.Set<TeamEntity>().AddAsync(t);
-					listTeam.Add(t);
-				}
-			}
-			entity.Teams = listTeam;
-		}
+        if (dto.Teams.IsNotNullOrEmpty())
+        {
+            List<TeamEntity> listTeam = new();
+            foreach (string item in dto.Teams ?? new List<string>())
+            {
+                UserEntity? e = await context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == item);
+                if (e != null)
+                {
+                    TeamEntity t = new() { UserId = e.Id };
+                    await context.Set<TeamEntity>().AddAsync(t);
+                    listTeam.Add(t);
+                }
+            }
+            entity.Teams = listTeam;
+        }
 
-		return entity;
-	}
+        return entity;
+    }
 }
