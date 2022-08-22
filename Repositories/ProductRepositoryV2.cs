@@ -82,6 +82,9 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.Categories != null && dto.Categories.Any())
 			q = q.AsEnumerable().Where(x => x.Categories != null && x.Categories.Any(y => dto.Categories.Contains(y.Id))).AsQueryable();
 
+		if (dto.Query.IsNotNullOrEmpty())
+			q = q.Where(x => (x.Title ?? "").Contains(dto.Query!) || (x.Subtitle ?? "").Contains(dto.Query!) || (x.Description ?? "").Contains(dto.Query!));
+
 		int totalCount = q.Count();
 
 		if (dto.FilterOrder.HasValue)

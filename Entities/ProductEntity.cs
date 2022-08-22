@@ -267,8 +267,8 @@ public class ProductFilterDto {
 	public ProductStatus? Status { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
-
 	public ProductFilterOrder? FilterOrder { get; set; } = ProductFilterOrder.AToZ;
+	public string? Query { get; set; }
 }
 
 public class FilterProductDto {
