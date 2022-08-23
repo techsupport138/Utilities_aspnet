@@ -260,6 +260,7 @@ public class UserFilterDto
     public bool? ShowProducts { get; set; }
     public bool? ShowTransactions { get; set; }
     public bool? ShowFollowings { get; set; }
+    public bool? ShowSuspend { get; set; }
 }
 
 public class SeederUserDto
