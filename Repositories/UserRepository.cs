@@ -142,25 +142,25 @@ public class UserRepository : IUserRepository
         if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
         if (dto.ShowSuspend.IsTrue()) q = q.Where(x => x.Suspend == true);
 
+        List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
+
         if (dto.FilterOrder.HasValue)
         {
             if (dto.FilterOrder.Value == UserFilterOrder.LowGrowthRate || dto.FilterOrder.Value == UserFilterOrder.HighGrowthRate)
-                foreach (var item in q)
+                foreach (var item in entity)
                 {
                     item.GrowthRate = GetGrowthRate(item.Id).Result;
                 }
 
-            q = dto.FilterOrder switch
+            entity = dto.FilterOrder switch
             {
-                UserFilterOrder.LowGrowthRate => q.OrderBy(x => x.GrowthRate).AsQueryable(),
-                UserFilterOrder.HighGrowthRate => q.OrderByDescending(x => x.GrowthRate).AsQueryable(),
-                UserFilterOrder.AToZ => q.OrderBy(x => x.FullName),
-                UserFilterOrder.ZToA => q.OrderByDescending(x => x.FullName),
-                _ => q.OrderBy(x => x.CreatedAt)
+                UserFilterOrder.LowGrowthRate => entity.OrderBy(x => x.GrowthRate).ToList(),
+                UserFilterOrder.HighGrowthRate => entity.OrderByDescending(x => x.GrowthRate).ToList(),
+                UserFilterOrder.AToZ => entity.OrderBy(x => x.FullName).ToList(),
+                UserFilterOrder.ZToA => entity.OrderByDescending(x => x.FullName).ToList(),
+                _ => entity.OrderBy(x => x.CreatedAt).ToList(),
             };
         }
-
-        List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
 
         if (userId != null)
         {
