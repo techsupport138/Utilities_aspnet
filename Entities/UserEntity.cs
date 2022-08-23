@@ -261,6 +261,7 @@ public class UserFilterDto
     public bool? ShowTransactions { get; set; }
     public bool? ShowFollowings { get; set; }
     public bool? ShowSuspend { get; set; }
+    public UserFilterOrder? FilterOrder { get; set; } = UserFilterOrder.AToZ;
 }
 
 public class SeederUserDto

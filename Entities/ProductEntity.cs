@@ -331,3 +331,11 @@ public enum ProductStatus {
 	InQueue,
 	Deleted
 }
+
+public enum UserFilterOrder
+{
+	LowGrowthRate,
+	HighGrowthRate,
+	AToZ,
+	ZToA
+}

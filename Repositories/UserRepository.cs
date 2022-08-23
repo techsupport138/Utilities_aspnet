@@ -142,6 +142,18 @@ public class UserRepository : IUserRepository
         if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
         if (dto.ShowSuspend.IsTrue()) q = q.Where(x => x.Suspend == true);
 
+        if (dto.FilterOrder.HasValue)
+        {
+            q = dto.FilterOrder switch
+            {
+                UserFilterOrder.LowGrowthRate => q.OrderBy(x => x.GrowthRate),
+                UserFilterOrder.HighGrowthRate => q.OrderByDescending(x => x.GrowthRate),
+                UserFilterOrder.AToZ => q.OrderBy(x => x.FullName),
+                UserFilterOrder.ZToA => q.OrderByDescending(x => x.FullName),
+                _ => q.OrderBy(x => x.CreatedAt)
+            };
+        }
+
         List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
 
         if (userId != null)
