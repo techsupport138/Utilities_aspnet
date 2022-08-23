@@ -144,10 +144,11 @@ public class UserRepository : IUserRepository
 
         if (dto.FilterOrder.HasValue)
         {
-            foreach (var item in q)
-            {
-                item.GrowthRate = GetGrowthRate(item.Id).Result;
-            }
+            if (dto.FilterOrder.Value == UserFilterOrder.LowGrowthRate || dto.FilterOrder.Value == UserFilterOrder.HighGrowthRate)
+                foreach (var item in q)
+                {
+                    item.GrowthRate = GetGrowthRate(item.Id).Result;
+                }
 
             q = dto.FilterOrder switch
             {
