@@ -129,7 +129,7 @@ public class UserRepository : IUserRepository
         if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products.Where(x => x.DeletedAt == null)).ThenInclude(u => u.Media);
 
         IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
-        
+
         var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
 
         if (dto.ShowFollowings.IsTrue())
@@ -144,10 +144,15 @@ public class UserRepository : IUserRepository
 
         if (dto.FilterOrder.HasValue)
         {
+            foreach (var item in q)
+            {
+                item.GrowthRate = GetGrowthRate(item.Id).Result;
+            }
+
             q = dto.FilterOrder switch
             {
-                UserFilterOrder.LowGrowthRate => q.AsEnumerable().OrderBy(x => x.GrowthRate).AsQueryable(),
-                UserFilterOrder.HighGrowthRate => q.AsEnumerable().OrderByDescending(x => x.GrowthRate).AsQueryable(),
+                UserFilterOrder.LowGrowthRate => q.OrderBy(x => x.GrowthRate).AsQueryable(),
+                UserFilterOrder.HighGrowthRate => q.OrderByDescending(x => x.GrowthRate).AsQueryable(),
                 UserFilterOrder.AToZ => q.OrderBy(x => x.FullName),
                 UserFilterOrder.ZToA => q.OrderByDescending(x => x.FullName),
                 _ => q.OrderBy(x => x.CreatedAt)
