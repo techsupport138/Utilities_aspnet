@@ -146,8 +146,8 @@ public class UserRepository : IUserRepository
         {
             q = dto.FilterOrder switch
             {
-                UserFilterOrder.LowGrowthRate => q.OrderBy(x => x.GrowthRate),
-                UserFilterOrder.HighGrowthRate => q.OrderByDescending(x => x.GrowthRate),
+                UserFilterOrder.LowGrowthRate => q.AsEnumerable().OrderBy(x => x.GrowthRate).AsQueryable(),
+                UserFilterOrder.HighGrowthRate => q.AsEnumerable().OrderByDescending(x => x.GrowthRate).AsQueryable(),
                 UserFilterOrder.AToZ => q.OrderBy(x => x.FullName),
                 UserFilterOrder.ZToA => q.OrderByDescending(x => x.FullName),
                 _ => q.OrderBy(x => x.CreatedAt)
