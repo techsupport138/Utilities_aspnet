@@ -390,7 +390,6 @@ public class UserRepository : IUserRepository {
 		entity.State = dto.State ?? entity.State;
 		entity.Point = dto.Point ?? entity.Point;
 		entity.AccessLevel = dto.AccessLevel ?? entity.AccessLevel;
-		entity.Access = dto.Access ?? entity.Access;
 		entity.Badge = dto.Badge ?? entity.Badge;
 
 		if (dto.Categories.IsNotNullOrEmpty()) {
