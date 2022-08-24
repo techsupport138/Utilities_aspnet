@@ -247,9 +247,6 @@ public class ProductFilterDto {
 	public double? EndPriceRange { get; set; }
 	public bool? Enabled { get; set; }
 	public bool? IsForSale { get; set; }
-	public bool? IsBookmarked { get; set; }
-	public bool? IsFollowing { get; set; }
-	public bool? ShowLocation { get; set; } = false;
 	public bool? ShowMedia { get; set; } = false;
 	public bool? ShowForms { get; set; } = false;
 	public bool? ShowCategories { get; set; } = false;
@@ -265,7 +262,6 @@ public class ProductFilterDto {
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
-	public IEnumerable<int>? Locations { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 	public ProductFilterOrder? FilterOrder { get; set; } = ProductFilterOrder.AToZ;
 	public string? Query { get; set; }
