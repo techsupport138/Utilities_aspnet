@@ -88,7 +88,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2
 
         int totalCount = q.Count();
 
-        List<ProductEntity> products = q.ToList();
+        List<ProductEntity> products = q.AsNoTracking().ToList();
 
         if (dto.Categories != null && dto.Categories.Any())
             products = products.Where(x => x.Categories != null && x.Categories.Any(y => dto.Categories.Contains(y.Id))).ToList();
