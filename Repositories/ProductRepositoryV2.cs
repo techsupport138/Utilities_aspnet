@@ -83,11 +83,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			q = q.Where(x => (x.Title ?? "").Contains(dto.Query!) || (x.Subtitle ?? "").Contains(dto.Query!) || (x.Description ?? "").Contains(dto.Query!));
 
 		int totalCount = q.Count();
-
-		if (dto.Categories != null && dto.Categories.Any())
-			q = from num in q
-				where num.Categories.Any(y => dto.Categories.Contains(y.Id))
-				select num;
+		
+		if (dto.Categories != null && dto.Categories.Any()) q = q.Where(x => x.Categories.Any(y => dto.Categories.ToList().Contains(y.Id)));
 
 		if (dto.FilterOrder.HasValue)
 			q = dto.FilterOrder switch {
@@ -122,9 +119,9 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
-		return i == null
-			? new GenericResponse<ProductEntity>(new ProductEntity(), UtilitiesStatusCodes.NotFound, "Not Found")
-			: new GenericResponse<ProductEntity>(i);
+		if (i == null) return new GenericResponse<ProductEntity>(new ProductEntity(), UtilitiesStatusCodes.NotFound, "Not Found");
+		await Update(new ProductCreateUpdateDto {Id = i.Id, VisitsCount = i.VisitsCount}, ct);
+		return new GenericResponse<ProductEntity>(i);
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct) {

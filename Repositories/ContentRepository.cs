@@ -28,6 +28,9 @@ public class ContentRepository : IContentRepository {
 				Title = x.Title,
 				SubTitle = x.SubTitle,
 				UseCase = x.UseCase,
+				CreatedAt = x.CreatedAt,
+				UpdatedAt = x.UpdatedAt,
+				DeletedAt = x.DeletedAt,
 				Media = x.Media!.Select(y => new MediaEntity {
 					Id = y.Id,
 					Link = y.Link,
@@ -36,6 +39,9 @@ public class ContentRepository : IContentRepository {
 					FileName = y.FileName,
 					Visibility = y.Visibility,
 					UseCase = y.UseCase,
+					CreatedAt = y.CreatedAt,
+					UpdatedAt = y.UpdatedAt,
+					DeletedAt = y.DeletedAt
 				})
 			}).AsNoTracking();
 		return new GenericResponse<IQueryable<ContentEntity>>(i);
