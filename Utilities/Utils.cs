@@ -23,10 +23,7 @@ public static class StartupExtension {
 		builder.Services.Configure<IISServerOptions>(options => options.MaxRequestBodySize = int.MaxValue);
 	}
 
-	private static void AddUtilitiesServices<T>(
-		this WebApplicationBuilder builder,
-		string connectionStrings,
-		DatabaseType databaseType) where T : DbContext {
+	private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) where T : DbContext {
 		builder.Services.AddMemoryCache();
 		builder.Services.AddResponseCompression();
 		builder.Services.AddResponseCaching();
@@ -103,8 +100,7 @@ public static class StartupExtension {
 
 			c.AddSecurityRequirement(new OpenApiSecurityRequirement {
 				{
-					new OpenApiSecurityScheme
-						{Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "Bearer"}},
+					new OpenApiSecurityScheme {Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "Bearer"}},
 					Array.Empty<string>()
 				}
 			});
@@ -115,8 +111,8 @@ public static class StartupExtension {
 		=> builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(connectionString));
 
 	public static void AddUtilitiesIdentity(this WebApplicationBuilder builder) {
-		builder.Services.AddIdentity<UserEntity, IdentityRole>(options => { options.SignIn.RequireConfirmedAccount = false; })
-			.AddRoles<IdentityRole>().AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
+		builder.Services.AddIdentity<UserEntity, IdentityRole>(options => { options.SignIn.RequireConfirmedAccount = false; }).AddRoles<IdentityRole>()
+			.AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
 		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions => {
 			jwtBearerOptions.RequireHttpsMetadata = false;
 			jwtBearerOptions.SaveToken = true;
@@ -146,7 +142,7 @@ public static class StartupExtension {
 	public static void UseUtilitiesServices(this WebApplication app) {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 		// if (app.Environment.IsDevelopment()) {
-			app.UseDeveloperExceptionPage();
+		app.UseDeveloperExceptionPage();
 		// }
 
 		app.UseResponseCaching();

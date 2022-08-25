@@ -21,29 +21,28 @@ public class ContentRepository : IContentRepository {
 	}
 
 	public GenericResponse<IQueryable<ContentEntity>> Read() {
-		IQueryable<ContentEntity> i = _context.Set<ContentEntity>()
-			.Select(x => new ContentEntity {
-				Id = x.Id,
-				Description = x.Description,
-				Title = x.Title,
-				SubTitle = x.SubTitle,
-				UseCase = x.UseCase,
-				CreatedAt = x.CreatedAt,
-				UpdatedAt = x.UpdatedAt,
-				DeletedAt = x.DeletedAt,
-				Media = x.Media!.Select(y => new MediaEntity {
-					Id = y.Id,
-					Link = y.Link,
-					Title = y.Title,
-					Size = y.Size,
-					FileName = y.FileName,
-					Visibility = y.Visibility,
-					UseCase = y.UseCase,
-					CreatedAt = y.CreatedAt,
-					UpdatedAt = y.UpdatedAt,
-					DeletedAt = y.DeletedAt
-				})
-			}).AsNoTracking();
+		IQueryable<ContentEntity> i = _context.Set<ContentEntity>().Select(x => new ContentEntity {
+			Id = x.Id,
+			Description = x.Description,
+			Title = x.Title,
+			SubTitle = x.SubTitle,
+			UseCase = x.UseCase,
+			CreatedAt = x.CreatedAt,
+			UpdatedAt = x.UpdatedAt,
+			DeletedAt = x.DeletedAt,
+			Media = x.Media!.Select(y => new MediaEntity {
+				Id = y.Id,
+				Link = y.Link,
+				Title = y.Title,
+				Size = y.Size,
+				FileName = y.FileName,
+				Visibility = y.Visibility,
+				UseCase = y.UseCase,
+				CreatedAt = y.CreatedAt,
+				UpdatedAt = y.UpdatedAt,
+				DeletedAt = y.DeletedAt
+			})
+		}).AsNoTracking();
 		return new GenericResponse<IQueryable<ContentEntity>>(i);
 	}
 

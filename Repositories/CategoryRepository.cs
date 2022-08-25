@@ -19,19 +19,13 @@ public class CategoryRepository : ICategoryRepository {
 	}
 
 	public GenericResponse<IQueryable<CategoryEntity>> Read() {
-		IQueryable<CategoryEntity> i = _dbContext.Set<CategoryEntity>()
-			.Include(i => i.Media)
-			.Include(i => i.Children)!.ThenInclude(i => i.Media).Where(x => x.ParentId == null)
-			.AsNoTracking();
+		IQueryable<CategoryEntity> i = _dbContext.Set<CategoryEntity>().Include(i => i.Media).Include(i => i.Children)!.ThenInclude(i => i.Media)
+			.Where(x => x.ParentId == null).AsNoTracking();
 		return new GenericResponse<IQueryable<CategoryEntity>>(i);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		CategoryEntity? i = await _dbContext.Set<CategoryEntity>()
-			.Include(x => x.Products)
-			.Include(x => x.Users)
-			.Include(x => x.Media)
-			.Include(x => x.Children)
+		CategoryEntity? i = await _dbContext.Set<CategoryEntity>().Include(x => x.Products).Include(x => x.Users).Include(x => x.Media).Include(x => x.Children)
 			.FirstOrDefaultAsync(i => i.Id == id);
 		if (i != null) {
 			_dbContext.Remove(i);

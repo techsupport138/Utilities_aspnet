@@ -29,10 +29,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
 	public async Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto) {
 		BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
-			.FirstOrDefault(x => (
-				                ((x.ProductId != null && x.ProductId == dto.ProductId) ||
-				                 (x.CategoryId != null && x.CategoryId == dto.CategoryId)) &&
-				                x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
+			.FirstOrDefault(x => (((x.ProductId != null && x.ProductId == dto.ProductId) || (x.CategoryId != null && x.CategoryId == dto.CategoryId)) &&
+			                      x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!));
 		if (oldBookmark == null) {
 			BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
@@ -51,30 +49,21 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<BookmarkReadDto>?>> ReadBookmarks() {
-		IEnumerable<BookmarkEntity> bookmark = await _context.Set<BookmarkEntity>()
-			.Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
-			.Include(x => x.Product).ThenInclude(x => x.Media).Include(x => x.Product).ThenInclude(i => i.Votes)
-			.Include(x => x.Product).ThenInclude(i => i.User)!.ThenInclude(x => x.Media)
-			.Include(x => x.Product).ThenInclude(i => i.Bookmarks).Include(x => x.Product).ThenInclude(i => i.Forms)!
-			.ThenInclude(x => x.FormField)
-			.Include(x => x.Product).ThenInclude(i => i.Categories).Include(x => x.Product)
-			.ThenInclude(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children)
-			.Include(x => x.Product).Include(x => x.Product).ThenInclude(i => i.Reports)
-			.Include(x => x.Product).ThenInclude(i => i.Teams)!
-			.ThenInclude(x => x.User)!.ThenInclude(x => x.Media).ToListAsync();
+		IEnumerable<BookmarkEntity> bookmark =
+			await _context.Set<BookmarkEntity>().Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!).Include(x => x.Product)
+				.ThenInclude(x => x.Media).Include(x => x.Product).ThenInclude(i => i.Votes).Include(x => x.Product).ThenInclude(i => i.User)!
+				.ThenInclude(x => x.Media).Include(x => x.Product).ThenInclude(i => i.Bookmarks).Include(x => x.Product).ThenInclude(i => i.Forms)!
+				.ThenInclude(x => x.FormField).Include(x => x.Product).ThenInclude(i => i.Categories).Include(x => x.Product)
+				.ThenInclude(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children).Include(x => x.Product).Include(x => x.Product)
+				.ThenInclude(i => i.Reports).Include(x => x.Product).ThenInclude(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
+				.ToListAsync();
 
 		return new GenericResponse<IEnumerable<BookmarkReadDto>?>(_mapper.Map<IEnumerable<BookmarkReadDto>>(bookmark));
 	}
 
 	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetFollowers(string id) {
-		IEnumerable<UserEntity?> followers = await _context.Set<FollowEntity>()
-			.AsNoTracking()
-			.Where(x => x.FollowsUserId == id)
-			.Include(x => x.FollowerUser)
-			.ThenInclude(x => x.Media)
-			.Include(x => x.FollowerUser)
-			.ThenInclude(x => x.Categories).ThenInclude(x => x.Media)
-			.Select(x => x.FollowerUser)
+		IEnumerable<UserEntity?> followers = await _context.Set<FollowEntity>().AsNoTracking().Where(x => x.FollowsUserId == id).Include(x => x.FollowerUser)
+			.ThenInclude(x => x.Media).Include(x => x.FollowerUser).ThenInclude(x => x.Categories).ThenInclude(x => x.Media).Select(x => x.FollowerUser)
 			.ToListAsync();
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followers);
@@ -83,14 +72,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<UserReadDto>>> GetFollowing(string id) {
-		IEnumerable<UserEntity?> followings = await _context.Set<FollowEntity>()
-			.AsNoTracking()
-			.Where(x => x.FollowerUserId == id)
-			.Include(x => x.FollowsUser)
-			.ThenInclude(x => x.Media)
-			.Include(x => x.FollowsUser)
-			.ThenInclude(x => x.Categories).ThenInclude(x => x.Media)
-			.Select(x => x.FollowsUser)
+		IEnumerable<UserEntity?> followings = await _context.Set<FollowEntity>().AsNoTracking().Where(x => x.FollowerUserId == id).Include(x => x.FollowsUser)
+			.ThenInclude(x => x.Media).Include(x => x.FollowsUser).ThenInclude(x => x.Categories).ThenInclude(x => x.Media).Select(x => x.FollowsUser)
 			.ToListAsync();
 
 		IEnumerable<UserReadDto>? users = _mapper.Map<IEnumerable<UserReadDto>>(followings);
@@ -140,8 +123,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	}
 
 	public async Task<GenericResponse> RemoveFollowings(string userId, FollowCreateDto parameters) {
-		FollowEntity? following = await _context.Set<FollowEntity>()
-			.Where(x => x.FollowerUserId == parameters.UserId && x.FollowsUserId == userId)
+		FollowEntity? following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == parameters.UserId && x.FollowsUserId == userId)
 			.FirstOrDefaultAsync();
 		if (following != null) {
 			_context.Set<FollowEntity>().Remove(following);

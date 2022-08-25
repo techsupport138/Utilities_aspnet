@@ -21,12 +21,9 @@ public class FormRepository : IFormRepository {
 	public async Task<GenericResponse<IEnumerable<FormFieldDto>>> UpdateForm(FormCreateDto model) {
 		foreach (FormTitleDto item in model.Form)
 			try {
-				FormEntity? up = await _dbContext.Set<FormEntity>().FirstOrDefaultAsync(x =>
-					                                                                        (x.ProductId == model.ProductId && model.ProductId != null ||
-					                                                                         x.UserId == model.UserId && model.UserId != null ||
-					                                                                         x.OrderDetailId == model.OrderDetailId &&
-					                                                                         model.OrderDetailId != null
-					                                                                        ) && x.FormFieldId == item.Id);
+				FormEntity? up = await _dbContext.Set<FormEntity>()
+					.FirstOrDefaultAsync(x => (x.ProductId == model.ProductId && model.ProductId != null || x.UserId == model.UserId && model.UserId != null ||
+					                           x.OrderDetailId == model.OrderDetailId && model.OrderDetailId != null) && x.FormFieldId == item.Id);
 				if (up != null) {
 					up.Title = item.Title ?? "";
 					await _dbContext.SaveChangesAsync();
@@ -47,13 +44,9 @@ public class FormRepository : IFormRepository {
 				// ignored
 			}
 
-		IEnumerable<FormEntity> entity = await _dbContext.Set<FormEntity>().Where(x =>
-			                                                                          x.ProductId == model.ProductId &&
-			                                                                          model.ProductId != null ||
-			                                                                          x.UserId == model.UserId &&
-			                                                                          model.UserId != null ||
-			                                                                          x.OrderDetailId == model.OrderDetailId &&
-			                                                                          model.OrderDetailId != null).ToListAsync();
+		IEnumerable<FormEntity> entity = await _dbContext.Set<FormEntity>()
+			.Where(x => x.ProductId == model.ProductId && model.ProductId != null || x.UserId == model.UserId && model.UserId != null ||
+			            x.OrderDetailId == model.OrderDetailId && model.OrderDetailId != null).ToListAsync();
 
 		return new GenericResponse<IEnumerable<FormFieldDto>>(_mapper.Map<IEnumerable<FormFieldDto>>(entity));
 	}
@@ -98,14 +91,12 @@ public class FormRepository : IFormRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<FormFieldDto>>> ReadFormFields(Guid categoryId) {
-		IEnumerable<FormFieldEntity> model =
-			await _dbContext.Set<FormFieldEntity>().Where(x => x.CategoryId == categoryId).ToListAsync();
+		IEnumerable<FormFieldEntity> model = await _dbContext.Set<FormFieldEntity>().Where(x => x.CategoryId == categoryId).ToListAsync();
 		return new GenericResponse<IEnumerable<FormFieldDto>>(_mapper.Map<IEnumerable<FormFieldDto>>(model));
 	}
 
 	public async Task<GenericResponse> DeleteFormField(Guid id) {
-		FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().Include(x => x.Forms).AsNoTracking()
-			.FirstOrDefaultAsync(i => i.Id == id);
+		FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().Include(x => x.Forms).AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
 		if (entity == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 
 		_dbContext.Remove(entity);
@@ -114,8 +105,7 @@ public class FormRepository : IFormRepository {
 	}
 
 	public async Task<GenericResponse> DeleteFormBuilder(Guid id) {
-		FormEntity? entity = await _dbContext.Set<FormEntity>().Include(x => x.Product)
-			.Include(x => x.User).AsNoTracking()
+		FormEntity? entity = await _dbContext.Set<FormEntity>().Include(x => x.Product).Include(x => x.User).AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id);
 		if (entity == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 

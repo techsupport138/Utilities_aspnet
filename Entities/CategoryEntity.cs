@@ -2,14 +2,30 @@ namespace Utilities_aspnet.Entities;
 
 [Table("Categories")]
 public class CategoryEntity : BaseEntity {
+	[MaxLength(100)]
 	public string? Title { get; set; }
+
+	[MaxLength(100)]
 	public string? TitleTr1 { get; set; }
+
+	[MaxLength(100)]
 	public string? TitleTr2 { get; set; }
+
+	[MaxLength(100)]
 	public string? Subtitle { get; set; }
+
+	[MaxLength(100)]
 	public string? Color { get; set; }
+
+	[MaxLength(1000)]
 	public string? Link { get; set; }
+
+	[MaxLength(100)]
 	public string? UseCase { get; set; }
+
+	[MaxLength(100)]
 	public string? Type { get; set; }
+
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public DateTime? Date1 { get; set; }

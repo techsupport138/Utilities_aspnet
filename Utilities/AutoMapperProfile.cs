@@ -7,31 +7,17 @@ public class AutoMapperProfile : Profile {
 		CreateMap<OrderEntity, OrderReadDto>().ReverseMap();
 
 		CreateMap<ProductEntity, ProductReadDto>()
-			.ForMember(x => x.Score,
-			           c => c.MapFrom(v => (v.Votes == null || !v.Votes.Any())
-				                          ? 0
-				                          : (v.Votes.Sum(x => x.Score) / v.Votes.Count())))
-			.ForMember(x => x.CommentsCount,
-			           c => c.MapFrom(v => (v.Comments == null)
-				                          ? 0
-				                          : v.Comments.Count()))
-			.ForMember(x => x.IsBookmarked,
-			           c => c.MapFrom(v => (v.Bookmarks != null && v.Bookmarks.Any()) && v.Bookmarks.Any(x => x.UserId == Server.UserId)))
+			.ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || !v.Votes.Any()) ? 0 : (v.Votes.Sum(x => x.Score) / v.Votes.Count())))
+			.ForMember(x => x.CommentsCount, c => c.MapFrom(v => (v.Comments == null) ? 0 : v.Comments.Count()))
+			.ForMember(x => x.IsBookmarked, c => c.MapFrom(v => (v.Bookmarks != null && v.Bookmarks.Any()) && v.Bookmarks.Any(x => x.UserId == Server.UserId)))
 			.ForMember(x => x.MyVotes,
 			           c => c.MapFrom(v => v.VoteFields != null
-				                          ? v.VoteFields.Where(c => c.Votes != null && c.Votes.Any(
-					                                               b => b.UserId == Server.UserId && b.ProductId == v.Id))
-				                          : null))
-			.ReverseMap();
-		CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap()
-			.ForMember(x => x.Categories, y => y.Ignore())
-			.ForMember(x => x.Teams, y => y.Ignore());
+				                          ? v.VoteFields.Where(c => c.Votes != null && c.Votes.Any(b => b.UserId == Server.UserId && b.ProductId == v.Id))
+				                          : null)).ReverseMap();
+		CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap().ForMember(x => x.Categories, y => y.Ignore()).ForMember(x => x.Teams, y => y.Ignore());
 
 		CreateMap<VoteFieldEntity, VoteReadDto>()
-			.ForMember(x => x.Score,
-			           c => c.MapFrom(v => (v.Votes == null || !v.Votes.Any())
-				                          ? 0
-				                          : v.Votes.Sum(x => x.Score) / v.Votes.Count())).ReverseMap();
+			.ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || !v.Votes.Any()) ? 0 : v.Votes.Sum(x => x.Score) / v.Votes.Count())).ReverseMap();
 
 		CreateMap<VoteFieldEntity, MyVoteReadDto>()
 			.ForMember(x => x.Score,
@@ -39,8 +25,7 @@ public class AutoMapperProfile : Profile {
 				                          ? 0
 				                          : (v.Votes.FirstOrDefault(x => x.UserId == Server.UserId) != null
 					                          ? v.Votes.FirstOrDefault(x => x.UserId == Server.UserId).Score ?? 0
-					                          : 0)))
-			.ReverseMap();
+					                          : 0))).ReverseMap();
 
 		CreateMap<UserEntity, UserReadDto>().ReverseMap();
 		CreateMap<FormEntity, FormDto>().ReverseMap();
@@ -59,9 +44,7 @@ public class AutoMapperProfile : Profile {
 		CreateMap<TopProductEntity, TopProductReadDto>().ReverseMap();
 		CreateMap<TeamEntity, TeamReadDto>().ReverseMap();
 
-		CreateMap<UserCreateUpdateDto, UserEntity>()
-			.ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password))
-			.ForMember(x => x.Media, y => y.Ignore());
+		CreateMap<UserCreateUpdateDto, UserEntity>().ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password)).ForMember(x => x.Media, y => y.Ignore());
 
 		CreateMap<OrderDetailEntity, OrderDetailReadDto>().ReverseMap();
 	}

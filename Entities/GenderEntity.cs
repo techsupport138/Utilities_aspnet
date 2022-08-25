@@ -6,9 +6,9 @@ public class GenderEntity {
 	public int Id { get; set; }
 
 	[Required]
-	[StringLength(200)]
+	[MaxLength(100)]
 	public string Title { get; set; } = null!;
 
-	[StringLength(200)]
+	[MaxLength(100)]
 	public string? TitleTr1 { get; set; }
 }

@@ -3,6 +3,8 @@
 [Table("Comment")]
 public class CommentEntity : BaseEntity {
 	public double? Score { get; set; } = 0;
+
+	[MaxLength(2000)]
 	public string? Comment { get; set; }
 
 	public Guid? ParentId { get; set; }

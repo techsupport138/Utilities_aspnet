@@ -3,15 +3,23 @@
 [Table("Transactions")]
 public class TransactionEntity : BaseEntity {
 	public double? Amount { get; set; }
+
+	[MaxLength(1000)]
 	public string? Descriptions { get; set; }
+
 	public TransactionStatus? StatusId { get; set; } = TransactionStatus.Pending;
 	public string? PaymentId { get; set; }
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
+
+	[MaxLength(1000)]
 	public string? Authority { get; set; }
+
+	[MaxLength(1000)]
 	public string? GatewayName { get; set; }
+
 	public long? RefId { get; set; }
 }
 

@@ -84,13 +84,8 @@ public class SmsSender : ISmsSender {
 
 				request.AddParameter("undefined",
 				                     "{\"op\" : \"pattern\"" + ",\"user\" : \"" + smsSetting.UserName + "\"" + ",\"pass\": \"" + smsSetting.SmsSecret + "\"" +
-				                     ",\"fromNum\" : " +
-				                     "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " +
-				                     mobileNumber + "" +
-				                     ",\"patternCode\": \" " + smsSetting.PatternCode + "\"" + ",\"inputData\" : [{\"verification-code\":" +
-				                     message +
-				                     "}]}",
-				                     ParameterType.RequestBody);
+				                     ",\"fromNum\" : " + "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " + mobileNumber + "" + ",\"patternCode\": \" " +
+				                     smsSetting.PatternCode + "\"" + ",\"inputData\" : [{\"verification-code\":" + message + "}]}", ParameterType.RequestBody);
 
 				//client.ExecutePostAsync(request);
 				IRestResponse response = client.Execute(request);

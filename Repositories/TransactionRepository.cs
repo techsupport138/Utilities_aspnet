@@ -27,15 +27,13 @@ public class TransactionRepository : ITransactionRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<TransactionReadDto>>> Read() {
-		IEnumerable<TransactionEntity> model =
-			await _dbContext.Set<TransactionEntity>().ToListAsync();
+		IEnumerable<TransactionEntity> model = await _dbContext.Set<TransactionEntity>().ToListAsync();
 		return new GenericResponse<IEnumerable<TransactionReadDto>>(_mapper.Map<IEnumerable<TransactionReadDto>>(model));
 	}
 
 	public async Task<GenericResponse<IEnumerable<TransactionReadDto>>> ReadMine() {
-		IEnumerable<TransactionEntity> model =
-			await _dbContext.Set<TransactionEntity>().Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name)
-				.ToListAsync();
+		IEnumerable<TransactionEntity> model = await _dbContext.Set<TransactionEntity>()
+			.Where(i => i.UserId == _httpContextAccessor.HttpContext.User.Identity.Name).ToListAsync();
 		return new GenericResponse<IEnumerable<TransactionReadDto>>(_mapper.Map<IEnumerable<TransactionReadDto>>(model));
 	}
 }

@@ -140,9 +140,7 @@ public class OrderRepository : IOrderRepository {
 	}
 
 	public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id) {
-		OrderEntity? i = await _dbContext.Set<OrderEntity>()
-			.AsNoTracking()
-			.Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
+		OrderEntity? i = await _dbContext.Set<OrderEntity>().AsNoTracking().Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
 		return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(i));
 	}

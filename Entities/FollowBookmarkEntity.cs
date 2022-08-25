@@ -13,6 +13,8 @@ public class FollowEntity : BaseEntity {
 public class BookmarkEntity : BaseEntity {
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
+
+	[MaxLength(100)]
 	public string? FolderName { get; set; }
 
 	public ProductEntity? Product { get; set; }

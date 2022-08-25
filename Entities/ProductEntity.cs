@@ -2,38 +2,102 @@ namespace Utilities_aspnet.Entities;
 
 [Table("Products")]
 public class ProductEntity : BaseEntity {
+	[MaxLength(100)]
 	public string? Title { get; set; }
+
+	[MaxLength(100)]
 	public string? Subtitle { get; set; }
+
+	[MaxLength(1000)]
 	public string? Description { get; set; }
+
+	[MaxLength(1000)]
 	public string? Details { get; set; }
+
+	[MaxLength(100)]
 	public string? Address { get; set; }
+
+	[MaxLength(100)]
 	public string? Author { get; set; }
+
+	[MaxLength(100)]
 	public string? PhoneNumber { get; set; }
+
+	[MaxLength(1000)]
 	public string? Link { get; set; }
+
+	[MaxLength(1000)]
 	public string? Website { get; set; }
+
+	[MaxLength(100)]
 	public string? Email { get; set; }
+
+	[MaxLength(100)]
 	public string? Type { get; set; }
+
+	[MaxLength(100)]
 	public string? UseCase { get; set; }
+
+	[MaxLength(100)]
 	public string? Unit { get; set; }
+
+	[MaxLength(100)]
 	public string? State { get; set; }
+
+	[MaxLength(100)]
 	public string? Packaging { get; set; }
+
+	[MaxLength(100)]
 	public string? Shipping { get; set; }
+
+	[MaxLength(100)]
 	public string? Port { get; set; }
+
+	[MaxLength(2000)]
 	public string? KeyValues1 { get; set; }
+
+	[MaxLength(2000)]
 	public string? KeyValues2 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value { get; set; }
+
+	[MaxLength(100)]
 	public string? Value1 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value2 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value3 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value4 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value5 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value6 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value7 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value8 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value9 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value10 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value11 { get; set; }
+
+	[MaxLength(100)]
 	public string? Value12 { get; set; }
+
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Length { get; set; }

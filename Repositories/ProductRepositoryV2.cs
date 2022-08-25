@@ -83,7 +83,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			q = q.Where(x => (x.Title ?? "").Contains(dto.Query!) || (x.Subtitle ?? "").Contains(dto.Query!) || (x.Description ?? "").Contains(dto.Query!));
 
 		int totalCount = q.Count();
-		
+
 		if (dto.Categories != null && dto.Categories.Any()) q = q.Where(x => x.Categories.Any(y => dto.Categories.ToList().Contains(y.Id)));
 
 		if (dto.FilterOrder.HasValue)
@@ -105,29 +105,20 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	}
 
 	public async Task<GenericResponse<ProductEntity>> ReadById(Guid id, CancellationToken ct) {
-		ProductEntity? i = await _context.Set<ProductEntity>()
-			.Include(i => i.Media)
-			.Include(i => i.Categories)
-			.Include(i => i.Reports)
-			.Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
-			.Include(i => i.Bookmarks)
-			.Include(i => i.Votes)
-			.Include(i => i.User).ThenInclude(x => x.Media)
-			.Include(i => i.User).ThenInclude(x => x.Categories)
-			.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
-			.Include(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
-			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
-			.AsNoTracking()
-			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
+		ProductEntity? i =
+			await _context.Set<ProductEntity>().Include(i => i.Media).Include(i => i.Categories).Include(i => i.Reports).Include(i => i.Comments)!
+				.ThenInclude(x => x.LikeComments).Include(i => i.Bookmarks).Include(i => i.Votes).Include(i => i.User).ThenInclude(x => x.Media)
+				.Include(i => i.User).ThenInclude(x => x.Categories).Include(i => i.Forms)!.ThenInclude(x => x.FormField).Include(i => i.Teams)!
+				.ThenInclude(x => x.User)!.ThenInclude(x => x.Media).Include(i => i.VoteFields)!.ThenInclude(x => x.Votes).AsNoTracking()
+				.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
 		if (i == null) return new GenericResponse<ProductEntity>(new ProductEntity(), UtilitiesStatusCodes.NotFound, "Not Found");
 		await Update(new ProductCreateUpdateDto {Id = i.Id, VisitsCount = i.VisitsCount}, ct);
 		return new GenericResponse<ProductEntity>(i);
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct) {
-		ProductEntity? entity = await _context.Set<ProductEntity>()
-			.Include(x => x.Categories)
-			.Include(x => x.Teams).Where(x => x.Id == dto.Id).FirstOrDefaultAsync(ct);
+		ProductEntity? entity = await _context.Set<ProductEntity>().Include(x => x.Categories).Include(x => x.Teams).Where(x => x.Id == dto.Id)
+			.FirstOrDefaultAsync(ct);
 
 		if (entity == null)
 			return new GenericResponse<ProductEntity>(new ProductEntity());

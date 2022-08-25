@@ -12,7 +12,9 @@ public class ChatEntity : BaseEntity {
 
 	public UserEntity ToUser { get; set; } = null!;
 
+	[MaxLength(2000)]
 	public string MessageText { get; set; } = null!;
+
 	public bool ReadMessage { get; set; } = false;
 	public IEnumerable<MediaEntity>? Media { get; set; }
 }

@@ -20,8 +20,7 @@ public class VoteRepository : IVoteRepository {
 	public async Task<GenericResponse<IEnumerable<VoteReadDto>?>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto) {
 		foreach (VoteFieldDto item in dto.VoteFields)
 			try {
-				VoteFieldEntity? up = await _dbContext.Set<VoteFieldEntity>().FirstOrDefaultAsync(x =>
-					                                                                                  x.ProductId == dto.ProductId && x.Id == item.Id);
+				VoteFieldEntity? up = await _dbContext.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.Id == item.Id);
 				if (up != null) {
 					up.Title = item.Title;
 					await _dbContext.SaveChangesAsync();
@@ -39,15 +38,13 @@ public class VoteRepository : IVoteRepository {
 				// ignored
 			}
 
-		IEnumerable<VoteFieldEntity> entity =
-			await _dbContext.Set<VoteFieldEntity>().Where(x => x.ProductId == dto.ProductId).ToListAsync();
+		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x => x.ProductId == dto.ProductId).ToListAsync();
 
 		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
 	}
 
 	public async Task<GenericResponse<IEnumerable<VoteReadDto>?>> ReadVoteFields(Guid id) {
-		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x => x.ProductId == id)
-			.Include(x => x.Votes).ToListAsync();
+		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x => x.ProductId == id).Include(x => x.Votes).ToListAsync();
 
 		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
 	}
@@ -56,9 +53,8 @@ public class VoteRepository : IVoteRepository {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 		foreach (VoteDto item in dto.Votes)
 			try {
-				VoteEntity? up = await _dbContext.Set<VoteEntity>().FirstOrDefaultAsync(x =>
-					                                                                        x.ProductId == dto.ProductId && x.VoteFieldId == item.VoteFieldId &&
-					                                                                        x.UserId == userId);
+				VoteEntity? up = await _dbContext.Set<VoteEntity>()
+					.FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.VoteFieldId == item.VoteFieldId && x.UserId == userId);
 				if (up != null) {
 					up.Score = item.Score;
 					await _dbContext.SaveChangesAsync();

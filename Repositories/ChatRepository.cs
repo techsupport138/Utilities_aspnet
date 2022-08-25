@@ -44,8 +44,7 @@ public class ChatRepository : IChatRepository {
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		UserEntity? user = await _context.Set<UserEntity>().Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
 		if (user == null) return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.BadRequest);
-		List<ChatEntity> conversation = await _context.Set<ChatEntity>()
-			.Where(c => c.ToUserId == userId && c.FromUserId == id).ToListAsync();
+		List<ChatEntity> conversation = await _context.Set<ChatEntity>().Where(c => c.ToUserId == userId && c.FromUserId == id).ToListAsync();
 
 		foreach (ChatEntity? item in conversation) {
 			if (item.ReadMessage == false) {
@@ -54,8 +53,7 @@ public class ChatRepository : IChatRepository {
 			}
 		}
 
-		IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>()
-			.Where(x => x.FromUserId == userId && x.ToUserId == id).ToListAsync();
+		IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>().Where(x => x.FromUserId == userId && x.ToUserId == id).ToListAsync();
 
 		conversation.AddRange(conversationToUser);
 		List<ChatReadDto> conversations = conversation.Select(x => new ChatReadDto {
@@ -76,10 +74,8 @@ public class ChatRepository : IChatRepository {
 
 	public async Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read() {
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-		List<string> toUserId = await _context.Set<ChatEntity>().Where(x => x.FromUserId == userId)
-			.Select(x => x.ToUserId).ToListAsync();
-		List<string> fromUserId = await _context.Set<ChatEntity>().Where(x => x.ToUserId == userId)
-			.Select(x => x.FromUserId).ToListAsync();
+		List<string> toUserId = await _context.Set<ChatEntity>().Where(x => x.FromUserId == userId).Select(x => x.ToUserId).ToListAsync();
+		List<string> fromUserId = await _context.Set<ChatEntity>().Where(x => x.ToUserId == userId).Select(x => x.FromUserId).ToListAsync();
 		toUserId.AddRange(fromUserId);
 		List<ChatReadDto> conversations = new();
 		IEnumerable<string> userIds = toUserId.Distinct();
@@ -88,11 +84,9 @@ public class ChatRepository : IChatRepository {
 			var user = await _context.Set<UserEntity>().Include(x => x.Media).Select(x => new {x.Id, x.FullName, x.PhoneNumber})
 				.FirstOrDefaultAsync(x => x.Id == item);
 			ChatEntity? conversation = await _context.Set<ChatEntity>()
-				.Where(c => c.FromUserId == item && c.ToUserId == userId || c.FromUserId == userId && c.ToUserId == item)
-				.OrderByDescending(c => c.CreatedAt).Take(1).FirstOrDefaultAsync();
-			int? countUnReadMessage = _context.Set<ChatEntity>()
-				.Where(c => c.FromUserId == item && c.ToUserId == userId)
-				.Count(x => x.ReadMessage == false);
+				.Where(c => c.FromUserId == item && c.ToUserId == userId || c.FromUserId == userId && c.ToUserId == item).OrderByDescending(c => c.CreatedAt)
+				.Take(1).FirstOrDefaultAsync();
+			int? countUnReadMessage = _context.Set<ChatEntity>().Where(c => c.FromUserId == item && c.ToUserId == userId).Count(x => x.ReadMessage == false);
 			conversations.Add(new ChatReadDto {
 				Id = conversation!.Id,
 				DateTime = conversation.CreatedAt,
