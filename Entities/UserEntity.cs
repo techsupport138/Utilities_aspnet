@@ -3,67 +3,67 @@
 public class UserEntity : IdentityUser {
 	public bool Suspend { get; set; } = false;
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? FirstName { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? LastName { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? FullName { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Headline { get; set; }
 
-	[MaxLength(1000)]
+	[StringLength(1000)]
 	public string? Bio { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? AppUserName { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? AppPhoneNumber { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? AppEmail { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Instagram { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Telegram { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? WhatsApp { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? LinkedIn { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Dribble { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? SoundCloud { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Pinterest { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Website { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Type { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Region { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Activity { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Color { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? State { get; set; }
 
 	public double? Wallet { get; set; } = 0;

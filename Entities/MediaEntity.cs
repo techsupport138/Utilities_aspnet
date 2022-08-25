@@ -2,19 +2,19 @@
 
 [Table("Media")]
 public class MediaEntity : BaseEntity {
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? FileName { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? UseCase { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Link { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Title { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Size { get; set; }
 
 	public VisibilityType? Visibility { get; set; } = VisibilityType.Public;

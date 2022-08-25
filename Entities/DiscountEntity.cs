@@ -6,7 +6,7 @@ public class DiscountEntity : BaseEntity {
 	public int? DiscountPercent { get; set; }
 	public int? NumberUses { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Code { get; set; }
 
 	public DateTime? StartDate { get; set; }

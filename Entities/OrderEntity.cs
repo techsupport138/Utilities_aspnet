@@ -2,7 +2,7 @@
 
 [Table("Order")]
 public class OrderEntity : BaseEntity {
-	[MaxLength(1000)]
+	[StringLength(1000)]
 	public string? Description { get; set; }
 
 	public OrderStatuses? Status { get; set; }
@@ -10,7 +10,7 @@ public class OrderEntity : BaseEntity {
 	public double? DiscountPrice { get; set; }
 	public int? DiscountPercent { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? DiscountCode { get; set; }
 
 	public double? SendPrice { get; set; }
@@ -18,7 +18,7 @@ public class OrderEntity : BaseEntity {
 	public PayType? PayType { get; set; }
 	public DateTime? PayDateTime { get; set; }
 
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? PayNumber { get; set; }
 
 	public DateTime? ReceivedDate { get; set; }

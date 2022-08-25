@@ -2,7 +2,7 @@
 
 [Table("Forms")]
 public class FormEntity : BaseEntity {
-	[MaxLength(2000)]
+	[StringLength(2000)]
 	public string Title { get; set; }
 
 	public UserEntity? User { get; set; }
@@ -23,12 +23,12 @@ public class FormEntity : BaseEntity {
 
 [Table("FormFields")]
 public class FormFieldEntity : BaseEntity {
-	[MaxLength(500)]
+	[StringLength(500)]
 	public string? Label { get; set; }
 
 	public bool? IsRequired { get; set; } = false;
 
-	[MaxLength(1000)]
+	[StringLength(1000)]
 	public string? OptionList { get; set; }
 
 	public FormFieldType? Type { get; set; }
