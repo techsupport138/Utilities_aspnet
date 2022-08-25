@@ -14,7 +14,7 @@ public class BookmarkEntity : BaseEntity {
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
 
-	[MaxLength(100)]
+	[MaxLength(500)]
 	public string? FolderName { get; set; }
 
 	public ProductEntity? Product { get; set; }

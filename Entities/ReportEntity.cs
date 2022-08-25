@@ -2,10 +2,10 @@ namespace Utilities_aspnet.Entities;
 
 [Table("Reports")]
 public class ReportEntity : BaseEntity {
-	[MaxLength(1000)]
+	[MaxLength(500)]
 	public string? Title { get; set; }
 
-	[MaxLength(1000)]
+	[MaxLength(500)]
 	public string? Description { get; set; }
 
 	public string? UserId { get; set; }

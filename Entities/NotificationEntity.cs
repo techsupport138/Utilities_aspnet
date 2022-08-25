@@ -2,16 +2,16 @@
 
 [Table("Notifications")]
 public class NotificationEntity : BaseEntity {
-	[MaxLength(100)]
+	[MaxLength(500)]
 	public string? Title { get; set; } = null!;
 
 	[MaxLength(1000)]
 	public string? Message { get; set; }
 
-	[MaxLength(1000)]
+	[MaxLength(500)]
 	public string? Link { get; set; }
 
-	[MaxLength(100)]
+	[MaxLength(500)]
 	public string? UseCase { get; set; }
 
 	public bool? Visited { get; set; }

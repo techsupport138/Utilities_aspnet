@@ -10,7 +10,7 @@ public class OrderEntity : BaseEntity {
 	public double? DiscountPrice { get; set; }
 	public int? DiscountPercent { get; set; }
 
-	[MaxLength(100)]
+	[MaxLength(500)]
 	public string? DiscountCode { get; set; }
 
 	public double? SendPrice { get; set; }
@@ -18,7 +18,7 @@ public class OrderEntity : BaseEntity {
 	public PayType? PayType { get; set; }
 	public DateTime? PayDateTime { get; set; }
 
-	[MaxLength(100)]
+	[MaxLength(500)]
 	public string? PayNumber { get; set; }
 
 	public DateTime? ReceivedDate { get; set; }
