@@ -8,7 +8,7 @@ public class ContentController : BaseApiController {
 	public ContentController(IContentRepository contentRepository) => _contentRepository = contentRepository;
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<ContentEntity>>>> Read() => Result(await _contentRepository.Read());
+	public ActionResult<GenericResponse<IQueryable<ContentEntity>>> Read() => Result(_contentRepository.Read());
 
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<ContentEntity>>> ReadById(Guid id) => Result(await _contentRepository.ReadById(id));
