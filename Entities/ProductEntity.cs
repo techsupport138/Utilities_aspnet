@@ -107,6 +107,7 @@ public class ProductEntity : BaseEntity {
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
 	public double? Price { get; set; }
+	public double? VoteCount { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public int? VisitsCount { get; set; }
@@ -140,9 +141,6 @@ public class ProductEntity : BaseEntity {
 
 	[NotMapped]
 	public int? DownloadCount { get; set; }
-
-	[NotMapped]
-	public double? Score { get; set; }
 }
 
 public class ProductReadDto {
@@ -256,6 +254,8 @@ public class ProductCreateUpdateDto {
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
+	public double? ScorePlus { get; set; }
+	public double? ScoreMinus { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public int? VisitsCount { get; set; }
@@ -320,6 +320,9 @@ public class ProductFilterDto {
 	public bool? ShowComments { get; set; } = false;
 	public bool? ShowTeams { get; set; } = false;
 	public bool? ShowCreator { get; set; } = false;
+	public bool? OrderByVotes { get; set; } = false;
+	public bool? OrderByAtoZ { get; set; } = false;
+	public bool? OrderByZtoA { get; set; } = false;
 	public int? VisitsCount { get; set; }
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;

@@ -26,7 +26,7 @@ public class TopProductRepository : ITopProductRepository {
 	public async Task<GenericResponse<TopProductReadDto?>> Create(TopProductCreateDto dto) {
 		TopProductEntity? entity = null;
 
-		var product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == dto.ProductId);
+		ProductEntity? product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == dto.ProductId);
 		TopProductEntity topProduct = new() {
 			ProductId = dto.ProductId,
 			CreatedAt = DateTime.Now,

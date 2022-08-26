@@ -57,8 +57,8 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null) {
 		bool isUserId = Guid.TryParse(idOrUserName, out _);
-		UserEntity? entity = await _context.Set<UserEntity>().AsNoTracking().Include(u => u.Media).Include(u => u.Categories)!.ThenInclude(u => u.Media)
-			.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.Media).Include(u => u.Gender)
+		UserEntity? entity = await _context.Set<UserEntity>().AsNoTracking().Include(u => u.Media).Include(u => u.Gender).Include(u => u.Categories)!
+			.ThenInclude(u => u.Media).Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.Media)
 			.FirstOrDefaultAsync(u => isUserId ? u.Id == idOrUserName : u.UserName == idOrUserName);
 
 		if (entity == null)
@@ -109,7 +109,7 @@ public class UserRepository : IUserRepository {
 
 		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
 
-		var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
+		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
 		if (dto.ShowFollowings.IsTrue()) {
 			List<string?> follows = _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId).Select(x => x.FollowsUserId).ToList();
@@ -124,7 +124,7 @@ public class UserRepository : IUserRepository {
 
 		if (dto.FilterOrder.HasValue) {
 			if (dto.FilterOrder.Value == UserFilterOrder.LowGrowthRate || dto.FilterOrder.Value == UserFilterOrder.HighGrowthRate)
-				foreach (var item in entity) {
+				foreach (UserEntity item in entity) {
 					item.GrowthRate = GetGrowthRate(item.Id).Result;
 				}
 
