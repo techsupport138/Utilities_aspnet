@@ -45,7 +45,6 @@ public class NotificationDto {
 }
 
 public class NotificationCreateUpdateDto {
-	public Guid? Id { get; set; } = null!;
 	public string? Title { get; set; } = null!;
 	public string? UserId { get; set; }
 	public string? CreatorUserId { get; set; }

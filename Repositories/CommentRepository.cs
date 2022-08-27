@@ -1,10 +1,10 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface ICommentRepository {
-	Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto entity);
+	Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto dto);
 	Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId);
 	Task<GenericResponse<CommentReadDto?>> Read(Guid id);
-	Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id);
+	GenericResponse<IQueryable<CommentReadDto>?> ReadByProductId(Guid id);
 	Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity);
 	Task<GenericResponse> Delete(Guid id);
 }
@@ -26,16 +26,18 @@ public class CommentRepository : ICommentRepository {
 		_notificationRepository = notificationRepository;
 	}
 
-	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
-		IEnumerable<CommentEntity> comment =
-			await _context.Set<CommentEntity>().AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media).Include(x => x.Media)
-				.Include(x => x.LikeComments).Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media).Include(x => x.Children)!
-				.ThenInclude(x => x.Children).Include(x => x.Children)!.ThenInclude(x => x.LikeComments).Where(x => x.ProductId == id && x.ParentId == null)
-				.OrderByDescending(x => x.CreatedAt).ThenByDescending(x => x.Id).ToListAsync();
-
-		IEnumerable<CommentReadDto>? result = _mapper.Map<IEnumerable<CommentReadDto>?>(comment);
-
-		return new GenericResponse<IEnumerable<CommentReadDto>?>(result);
+	public GenericResponse<IQueryable<CommentReadDto>?> ReadByProductId(Guid id) {
+		IQueryable<CommentEntity> comment = _context.Set<CommentEntity>()
+			.Include(x => x.User).ThenInclude(x => x.Media)
+			.Include(x => x.Media)
+			.Include(x => x.LikeComments)
+			.Include(x => x.Children)!.ThenInclude(x => x.Children)
+			.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
+			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
+			.Where(x => x.ProductId == id && x.ParentId == null)
+			.OrderByDescending(x => x.CreatedAt).ThenByDescending(x => x.Id).AsNoTracking();
+		
+		return new GenericResponse<IQueryable<CommentReadDto>?>(_mapper.Map<IQueryable<CommentReadDto>?>(comment));
 	}
 
 	public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
@@ -49,29 +51,32 @@ public class CommentRepository : ICommentRepository {
 		return new GenericResponse<CommentReadDto?>(result);
 	}
 
-	public async Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto entity) {
+	public async Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto dto) {
 		string userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
 
-		CommentEntity? comment = new CommentEntity {
+		CommentEntity comment = new() {
 			CreatedAt = DateTime.Now,
-			Comment = entity.Comment,
-			ProductId = entity.ProductId,
-			Score = entity.Score,
-			ParentId = entity.ParentId,
+			Comment = dto.Comment,
+			ProductId = dto.ProductId,
+			Score = dto.Score,
+			ParentId = dto.ParentId,
 			UserId = userId,
 		};
 		_context.Add(comment);
-		_context.SaveChanges();
+		await _context.SaveChangesAsync();
 
 		try {
-			ProductEntity? product = _context.Set<ProductEntity>().Include(x => x.Media).Include(x => x.User).FirstOrDefault(x => x.Id == comment.ProductId);
+			ProductEntity? product = _context.Set<ProductEntity>()
+				.Include(x => x.Media)
+				.Include(x => x.User)
+				.FirstOrDefault(x => x.Id == comment.ProductId);
 
 			if (product != null && product.UserId != userId) {
 				string? linkMedia = product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.FileName)?.FirstOrDefault();
 
 				await _notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
 					UserId = product?.UserId,
-					Message = "Comment",
+					Message = dto.Comment ?? "",
 					Title = "Comment",
 					UseCase = "Comment",
 					CreatorUserId = comment.UserId,
@@ -88,12 +93,11 @@ public class CommentRepository : ICommentRepository {
 	public async Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId) {
 		string userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
 		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == commentId);
-		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>().FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
-		if (comment.Score == null) {
-			comment.Score = 0;
-		}
+		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>()
+			.FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
+		comment.Score ??= 0;
 		if (oldLikeComment != null) {
-			comment.Score = comment.Score - 1;
+			comment.Score -= 1;
 			_context.Set<LikeCommentEntity>().Remove(oldLikeComment);
 			await _context.SaveChangesAsync();
 		}
@@ -103,8 +107,8 @@ public class CommentRepository : ICommentRepository {
 			await _context.SaveChangesAsync();
 			UserEntity? commectUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == comment.UserId);
 			if (commectUser != null) {
-				commectUser.Point = commectUser.Point + 1;
-				_context.SaveChanges();
+				commectUser.Point += 1;
+				await _context.SaveChangesAsync();
 			}
 		}
 
