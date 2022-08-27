@@ -77,8 +77,8 @@ public class DiscountRepository : IDiscountRepository {
 		DiscountEntity? discountEntity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(p => p.Code!.ToLower().Trim() == code.ToLower().Trim());
 		if (discountEntity == null) throw new ArgumentException("Code not found!");
 
-		IQueryable<OrderEntity> orders = _dbContext.Set<OrderEntity>()
-			.Where(p => p.UserId == userId && p.DiscountCode == code && p.Status != OrderStatuses.Canceled);
+		IQueryable<OrderEntity> orders =
+			_dbContext.Set<OrderEntity>().Where(p => p.UserId == userId && p.DiscountCode == code && p.Status != OrderStatuses.Canceled);
 		return orders.Count() >= discountEntity.NumberUses
 			? new GenericResponse<DiscountEntity?>(null, UtilitiesStatusCodes.Forbidden, "Maximum use of this code!")
 			: new GenericResponse<DiscountEntity?>(discountEntity);

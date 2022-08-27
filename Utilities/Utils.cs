@@ -141,10 +141,7 @@ public static class StartupExtension {
 
 	public static void UseUtilitiesServices(this WebApplication app) {
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-		// if (app.Environment.IsDevelopment()) {
 		app.UseDeveloperExceptionPage();
-		// }
-
 		app.UseResponseCaching();
 		app.UseUtilitiesSwagger();
 		app.UseStaticFiles();

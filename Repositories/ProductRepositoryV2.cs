@@ -138,8 +138,10 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	public async Task<GenericResponse> Delete(Guid id, CancellationToken ct) {
 		ProductEntity? i = await _context.Set<ProductEntity>().FindAsync(id, ct);
 		if (i != null) {
-			_context.Remove(i);
-			await _context.SaveChangesAsync(ct);
+			await Update(new ProductCreateUpdateDto {
+				Id = id,
+				DeletedAt = DateTime.Now,
+			}, ct);
 			return new GenericResponse(message: "Deleted");
 		}
 		return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
@@ -182,6 +184,7 @@ public static class ProductEntityExtensionV2 {
 		entity.StartDate = dto.StartDate ?? entity.StartDate;
 		entity.EndDate = dto.EndDate ?? entity.EndDate;
 		entity.Status = dto.Status ?? entity.Status;
+		entity.DeletedAt = dto.DeletedAt ?? entity.DeletedAt;
 
 		if (dto.ScorePlus.HasValue) entity.VoteCount += dto.ScorePlus;
 		if (dto.ScoreMinus.HasValue) entity.VoteCount -= dto.ScorePlus;

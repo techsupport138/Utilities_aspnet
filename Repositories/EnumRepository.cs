@@ -6,12 +6,8 @@ public interface IAppSettingRepository {
 
 public class AppSettingRepository : IAppSettingRepository {
 	private readonly DbContext _context;
-	private readonly IMapper _mapper;
 
-	public AppSettingRepository(DbContext context, IMapper mapper) {
-		_context = context;
-		_mapper = mapper;
-	}
+	public AppSettingRepository(DbContext context) => _context = context;
 
 	public Task<GenericResponse<EnumDto?>> Read() {
 		EnumDto model = new();
@@ -21,7 +17,6 @@ public class AppSettingRepository : IAppSettingRepository {
 		model.FormFieldType = formFieldType;
 		model.TransactionStatuses = transactionStatus;
 		model.Genders = _context.Set<GenderEntity>().ToList();
-
 		return Task.FromResult(new GenericResponse<EnumDto?>(model, UtilitiesStatusCodes.Success, "Success"));
 	}
 }

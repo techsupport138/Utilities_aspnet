@@ -267,6 +267,7 @@ public class ProductCreateUpdateDto {
 	public int? VisitsCount { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
+	public DateTime? DeletedAt { get; set; }
 	public ProductStatus? Status { get; set; }
 	public IEnumerable<int>? Locations { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
