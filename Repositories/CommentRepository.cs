@@ -4,7 +4,7 @@ public interface ICommentRepository {
 	Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto dto);
 	Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId);
 	Task<GenericResponse<CommentReadDto?>> Read(Guid id);
-	GenericResponse<IQueryable<CommentReadDto>?> ReadByProductId(Guid id);
+	Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id);
 	Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity);
 	Task<GenericResponse> Delete(Guid id);
 }
@@ -26,24 +26,30 @@ public class CommentRepository : ICommentRepository {
 		_notificationRepository = notificationRepository;
 	}
 
-	public GenericResponse<IQueryable<CommentReadDto>?> ReadByProductId(Guid id) {
-		IQueryable<CommentEntity> comment = _context.Set<CommentEntity>()
-			.Include(x => x.User).ThenInclude(x => x.Media)
-			.Include(x => x.Media)
-			.Include(x => x.LikeComments)
-			.Include(x => x.Children)!.ThenInclude(x => x.Children)
-			.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
-			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
-			.Where(x => x.ProductId == id && x.ParentId == null)
-			.OrderByDescending(x => x.CreatedAt).ThenByDescending(x => x.Id).AsNoTracking();
+	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
+		IEnumerable<CommentEntity> comment =
+			await _context.Set<CommentEntity>()
+				.Include(x => x.User).ThenInclude(x => x.Media)
+				.Include(x => x.Media)
+				.Include(x => x.LikeComments)
+				.Include(x => x.Children)!.ThenInclude(x => x.Children)
+				.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
+				.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
+				.Where(x => x.ProductId == id && x.ParentId == null)
+				.OrderByDescending(x => x.CreatedAt).ThenByDescending(x => x.Id).AsNoTracking().ToListAsync();
 		
-		return new GenericResponse<IQueryable<CommentReadDto>?>(_mapper.Map<IQueryable<CommentReadDto>?>(comment));
+		return new GenericResponse<IEnumerable<CommentReadDto>?>(_mapper.Map<IEnumerable<CommentReadDto>?>(comment));
 	}
 
 	public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
 		CommentEntity? comment =
-			await _context.Set<CommentEntity>().AsNoTracking().Include(x => x.User)!.ThenInclude(x => x.Media).Include(x => x.Media)
-				.Include(x => x.LikeComments).Include(x => x.Children)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media).Where(x => x.Id == id)
+			await _context.Set<CommentEntity>()
+				.Include(x => x.User).ThenInclude(x => x.Media)
+				.Include(x => x.Media)
+				.Include(x => x.LikeComments)
+				.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
+				.Where(x => x.Id == id)
+				.AsNoTracking()
 				.FirstOrDefaultAsync();
 
 		CommentReadDto? result = _mapper.Map<CommentReadDto>(comment);

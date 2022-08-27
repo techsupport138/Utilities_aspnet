@@ -16,7 +16,7 @@ public class CommentController : BaseApiController {
 	}
 
 	[HttpGet("ReadByProductId/{id:guid}")]
-	public ActionResult<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) => Result(_repository.ReadByProductId(id));
+	public async Task<ActionResult<GenericResponse<IEnumerable<CommentReadDto>?>>> ReadByProductId(Guid id) => Result(await _repository.ReadByProductId(id));
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
