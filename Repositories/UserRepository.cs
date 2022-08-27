@@ -6,7 +6,6 @@ public interface IUserRepository {
 	Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null);
 	Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto);
 	Task<GenericResponse> Delete(string id);
-	Task<GenericResponse> SeedUser(SeederUserDto dto);
 	Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile);
 	Task<GenericResponse> CheckUserName(string userName);
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
@@ -34,20 +33,6 @@ public class UserRepository : IUserRepository {
 		_mapper = mapper;
 		_sms = sms;
 		_httpContextAccessor = httpContextAccessor;
-	}
-
-	public async Task<GenericResponse> SeedUser(SeederUserDto dto) {
-		try {
-			foreach (UserCreateUpdateDto item in dto.Users) {
-				UserEntity? entity = _mapper.Map<UserEntity>(item);
-				FillUserData(item, entity);
-				await _userManager.CreateAsync(entity, item.Password);
-			}
-			return new GenericResponse();
-		}
-		catch {
-			return new GenericResponse(UtilitiesStatusCodes.Unhandled, "The information was not entered correctly");
-		}
 	}
 
 	public async Task<GenericResponse> CheckUserName(string userName) {
@@ -86,7 +71,10 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto) {
-		UserEntity? entity = _context.Set<UserEntity>().Include(x => x.Categories).Include(x => x.Media).FirstOrDefault(x => x.Id == dto.Id);
+		UserEntity? entity = _context.Set<UserEntity>()
+			.Include(x => x.Categories)
+			.Include(x => x.Media)
+			.FirstOrDefault(x => x.Id == dto.Id);
 
 		if (entity == null)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
@@ -234,8 +222,9 @@ public class UserRepository : IUserRepository {
 
 		JwtSecurityToken token = await CreateToken(user);
 
-		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
-		                                        "Success");
+		return new GenericResponse<UserEntity?>(
+			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success, "Success"
+			);
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser) {
@@ -273,8 +262,9 @@ public class UserRepository : IUserRepository {
 			}
 		}
 
-		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
-		                                        "Success");
+		return new GenericResponse<UserEntity?>(
+			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success, "Success"
+			);
 	}
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {

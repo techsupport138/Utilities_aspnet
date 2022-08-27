@@ -68,6 +68,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.Weight.HasValue) q = q.Where(x => x.Weight.ToInt() == dto.Weight.ToInt());
 		if (dto.MinOrder.HasValue) q = q.Where(x => x.MinOrder >= dto.MinOrder);
 		if (dto.MaxOrder.HasValue) q = q.Where(x => x.MaxOrder <= dto.MaxOrder);
+		if (dto.MinPrice.HasValue) q = q.Where(x => x.MinPrice <= dto.MinPrice);
+		if (dto.MaxPrice.HasValue) q = q.Where(x => x.MaxPrice <= dto.MaxPrice);
 		if (dto.StartDate.HasValue) q = q.Where(x => x.StartDate >= dto.StartDate);
 		if (dto.EndDate.HasValue) q = q.Where(x => x.EndDate <= dto.EndDate);
 		if (dto.Query.IsNotNullOrEmpty())
@@ -173,6 +175,8 @@ public static class ProductEntityExtensionV2 {
 		entity.Weight = dto.Weight ?? entity.Weight;
 		entity.MinOrder = dto.MinOrder ?? entity.MinOrder;
 		entity.MaxOrder = dto.MaxOrder ?? entity.MaxOrder;
+		entity.MinPrice = dto.MinPrice ?? entity.MinPrice;
+		entity.MaxPrice = dto.MaxPrice ?? entity.MaxPrice;
 		entity.Unit = dto.Unit ?? entity.Unit;
 		entity.Address = dto.Address ?? entity.Address;
 		entity.StartDate = dto.StartDate ?? entity.StartDate;

@@ -106,6 +106,8 @@ public class ProductEntity : BaseEntity {
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
+	public double? MaxPrice { get; set; }
+	public double? MinPrice { get; set; }
 	public double? Price { get; set; }
 	public double? VoteCount { get; set; }
 	public bool? IsForSale { get; set; }
@@ -189,6 +191,8 @@ public class ProductReadDto {
 	public double? Longitude { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
+	public double? MaxPrice { get; set; }
+	public double? MinPrice { get; set; }
 	public double? Score { get; set; }
 	public double? Price { get; set; }
 	public double? Length { get; set; }
@@ -254,6 +258,8 @@ public class ProductCreateUpdateDto {
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
+	public double? MaxPrice { get; set; }
+	public double? MinPrice { get; set; }
 	public double? ScorePlus { get; set; }
 	public double? ScoreMinus { get; set; }
 	public bool? IsForSale { get; set; }
@@ -307,6 +313,8 @@ public class ProductFilterDto {
 	public double? Weight { get; set; }
 	public double? MinOrder { get; set; }
 	public double? MaxOrder { get; set; }
+	public double? MaxPrice { get; set; }
+	public double? MinPrice { get; set; }
 	public double? StartPriceRange { get; set; }
 	public double? EndPriceRange { get; set; }
 	public bool? Enabled { get; set; }
