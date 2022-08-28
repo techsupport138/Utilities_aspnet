@@ -265,6 +265,7 @@ public class ProductCreateUpdateDto {
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public int? VisitsCount { get; set; }
+	public int? VisitsCountPlus { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public DateTime? DeletedAt { get; set; }

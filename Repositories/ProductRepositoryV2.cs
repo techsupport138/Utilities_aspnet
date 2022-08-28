@@ -5,7 +5,7 @@ namespace Utilities_aspnet.Repositories;
 public interface IProductRepositoryV2 {
 	Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct);
 	GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto);
-	Task<GenericResponse<ProductEntity>> ReadById(Guid id, CancellationToken ct);
+	Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct);
 	Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct);
 	Task<GenericResponse> Delete(Guid id, CancellationToken ct);
 }
@@ -111,7 +111,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		};
 	}
 
-	public async Task<GenericResponse<ProductEntity>> ReadById(Guid id, CancellationToken ct) {
+	public async Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct) {
 		ProductEntity? i = await _context.Set<ProductEntity>()
 			.Include(i => i.Media)
 			.Include(i => i.Categories)
@@ -126,13 +126,15 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
-		if (i == null) return new GenericResponse<ProductEntity>(new ProductEntity(), UtilitiesStatusCodes.NotFound, "Not Found");
-		await Update(new ProductCreateUpdateDto {Id = i.Id, VisitsCount = i.VisitsCount}, ct);
-		return new GenericResponse<ProductEntity>(i);
+		if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
+		await Update(new ProductCreateUpdateDto {Id = i.Id, VisitsCountPlus = 1}, ct);
+		return new GenericResponse<ProductEntity?>(i);
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct) {
-		ProductEntity? entity = await _context.Set<ProductEntity>().Include(x => x.Categories).Include(x => x.Teams).Where(x => x.Id == dto.Id)
+		ProductEntity? entity = await _context.Set<ProductEntity>()
+			.Include(x => x.Categories)
+			.Include(x => x.Teams).Where(x => x.Id == dto.Id)
 			.FirstOrDefaultAsync(ct);
 
 		if (entity == null)
@@ -195,7 +197,8 @@ public static class ProductEntityExtensionV2 {
 		entity.EndDate = dto.EndDate ?? entity.EndDate;
 		entity.Status = dto.Status ?? entity.Status;
 		entity.DeletedAt = dto.DeletedAt ?? entity.DeletedAt;
-
+		
+		if (dto.VisitsCountPlus.HasValue) entity.VisitsCount += dto.VisitsCountPlus;
 		if (dto.ScorePlus.HasValue) entity.VoteCount += dto.ScorePlus;
 		if (dto.ScoreMinus.HasValue) entity.VoteCount -= dto.ScorePlus;
 
