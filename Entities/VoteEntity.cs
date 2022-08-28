@@ -12,6 +12,9 @@ public class VoteEntity : BaseEntity {
 
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
+
+	[NotMapped]
+	public string? Title { get; set; }
 }
 
 [Table("VoteFields")]

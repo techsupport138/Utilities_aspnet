@@ -4,6 +4,7 @@ public interface IVoteRepository {
 	Task<GenericResponse> CreateUpdateVote(VoteCreateUpdateDto dto);
 	Task<GenericResponse<IEnumerable<VoteReadDto>>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto);
 	Task<GenericResponse<IEnumerable<VoteReadDto>>> ReadVoteFields(Guid id);
+	GenericResponse<IQueryable<VoteEntity>> ReadProductVote(Guid productId, string userId);
 }
 
 public class VoteRepository : IVoteRepository {
@@ -48,9 +49,20 @@ public class VoteRepository : IVoteRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<VoteReadDto>>> ReadVoteFields(Guid id) {
-		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>().Where(x => x.ProductId == id).Include(x => x.Votes).ToListAsync();
+		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>()
+			.Where(x => x.ProductId == id)
+			.Include(x => x.Votes).ToListAsync();
 
 		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
+	}
+
+	public GenericResponse<IQueryable<VoteEntity>> ReadProductVote(Guid productId, string userId) {
+		IQueryable<VoteEntity> i = _dbContext.Set<VoteEntity>()
+			.Include(x => x.Product)
+			.Include(x => x.VoteField)
+			.Where(x => x.ProductId == productId && x.UserId == userId);
+
+		return new GenericResponse<IQueryable<VoteEntity>>(i);
 	}
 
 	public async Task<GenericResponse> CreateUpdateVote(VoteCreateUpdateDto dto) {
@@ -88,9 +100,5 @@ public class VoteRepository : IVoteRepository {
 			}
 
 		return new GenericResponse();
-
-		void UpdateProductScore() {
-			
-		}
 	}
 }

@@ -1,3 +1,5 @@
+using AutoMapper.QueryableExtensions;
+
 namespace Utilities_aspnet.Repositories;
 
 public interface IProductRepositoryV2 {
@@ -12,11 +14,16 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IMapper _mapper;
+	private readonly ICategoryRepository _categoryRepository;
 
-	public ProductRepositoryV2(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public ProductRepositoryV2(DbContext context,
+		IMapper mapper,
+		IHttpContextAccessor httpContextAccessor,
+		ICategoryRepository categoryRepository) {
 		_context = context;
 		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
+		_categoryRepository = categoryRepository;
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
@@ -73,7 +80,10 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.StartDate.HasValue) q = q.Where(x => x.StartDate >= dto.StartDate);
 		if (dto.EndDate.HasValue) q = q.Where(x => x.EndDate <= dto.EndDate);
 		if (dto.Query.IsNotNullOrEmpty())
-			q = q.Where(x => (x.Title ?? "").Contains(dto.Query!) || (x.Subtitle ?? "").Contains(dto.Query!) || (x.Description ?? "").Contains(dto.Query!));
+			q = q.Where(x => (x.Title ?? "")
+				            .Contains(dto.Query!) || (x.Subtitle ?? "")
+				            .Contains(dto.Query!) || (x.Description ?? "")
+				            .Contains(dto.Query!));
 
 		int totalCount = q.Count();
 
