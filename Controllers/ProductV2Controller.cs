@@ -9,23 +9,23 @@ public class ProductV2Controller : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<ProductReadDto>>> Create(ProductCreateUpdateDto dto, CancellationToken ct)
+	public async Task<ActionResult<GenericResponse<ProductEntity>>> Create(ProductCreateUpdateDto dto, CancellationToken ct)
 		=> Result(await _productRepository.Create(dto, ct));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
-	public ActionResult<GenericResponse<IQueryable<ProductReadDto>>> Filter(ProductFilterDto dto) => Result(_productRepository.Filter(dto));
+	public ActionResult<GenericResponse<IQueryable<ProductEntity>>> Filter(ProductFilterDto dto) => Result(_productRepository.Filter(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpGet("{id:guid}")]
-	public async Task<ActionResult<GenericResponse<ProductReadDto>>> ReadById(Guid id, CancellationToken ct)
+	public async Task<ActionResult<GenericResponse<ProductEntity>>> ReadById(Guid id, CancellationToken ct)
 		=> Result(await _productRepository.ReadById(id, ct));
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(ProductCreateUpdateDto dto, CancellationToken ct)
+	public async Task<ActionResult<GenericResponse<ProductEntity>>> Update(ProductCreateUpdateDto dto, CancellationToken ct)
 		=> Result(await _productRepository.Update(dto, ct));
 
 	[HttpDelete("{id:guid}")]
