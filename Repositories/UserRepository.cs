@@ -21,6 +21,7 @@ public class UserRepository : IUserRepository {
 	private readonly UserManager<UserEntity> _userManager;
 	private readonly ISmsSender _sms;
 	private readonly IHttpContextAccessor _httpContextAccessor;
+	
 
 	public UserRepository(
 		DbContext context,
@@ -252,7 +253,7 @@ public class UserRepository : IUserRepository {
 
 		JwtSecurityToken token = await CreateToken(user);
 
-		string? otp = "9999";
+		string? otp = "1375";
 		if (aspNetUser.SendSMS) {
 			if (aspNetUser.Email != null && aspNetUser.Email.IsEmail()) {
 				//ToDo_AddEmailSender
@@ -272,14 +273,14 @@ public class UserRepository : IUserRepository {
 		UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == mobile);
 
 		if (model != null) {
-			const string? otp = "9999";
+			const string? otp = "1375";
 			return new GenericResponse<string?>(otp, UtilitiesStatusCodes.Success, "Success");
 		}
 		model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == mobile);
 		if (model != null) {
-			string? otp = "9999";
+			string? otp = "1375";
 			if (dto.SendSMS) otp = SendOtp(model.Id, 4);
-			return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
+			return new GenericResponse<string?>(otp ?? "1375", UtilitiesStatusCodes.Success, "Success");
 		}
 		else {
 			UserEntity user = new() {
@@ -299,12 +300,12 @@ public class UserRepository : IUserRepository {
 			if (!result.Succeeded)
 				return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, "The information was not entered correctly");
 
-			string? otp = "9999";
+			string? otp = "1375";
 			if (dto.SendSMS) {
 				otp = SendOtp(user.Id, 4);
 			}
 
-			return new GenericResponse<string?>(otp ?? "9999", UtilitiesStatusCodes.Success, "Success");
+			return new GenericResponse<string?>(otp ?? "1375", UtilitiesStatusCodes.Success, "Success");
 		}
 	}
 

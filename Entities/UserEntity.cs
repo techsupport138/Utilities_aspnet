@@ -293,7 +293,3 @@ public class UserFilterDto {
 	public bool? ShowSuspend { get; set; }
 	public UserFilterOrder? FilterOrder { get; set; } = UserFilterOrder.AToZ;
 }
-
-public class SeederUserDto {
-	public List<UserCreateUpdateDto> Users { get; set; }
-}

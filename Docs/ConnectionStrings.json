@@ -1,9 +1,0 @@
-{
-  "LocalHostMySql": "Server=127.0.0.1;Database=DatabaseName;Uid=User;Pwd=Password;",
-  "Redis": "127.0.0.1:6379",
-  "MongoDbLocalHost": {
-    "ConnectionString": "mongodb://localhost:27017",
-    "DatabaseName": "DatabaseName",
-    "CollectionName": "CollectionName"
-  }
-}

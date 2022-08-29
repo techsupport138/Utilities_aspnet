@@ -9,8 +9,11 @@ public class NotificationRepository : INotificationRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IMapper _mapper;
-
-	public NotificationRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	
+	public NotificationRepository(
+		DbContext context,
+		IMapper mapper,
+		IHttpContextAccessor httpContextAccessor) {
 		_context = context;
 		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
@@ -36,8 +39,6 @@ public class NotificationRepository : INotificationRepository {
 	public async Task<GenericResponse> CreateNotification(NotificationCreateUpdateDto model) {
 		NotificationEntity notification = new() {
 			UseCase = model.UseCase,
-			CreatedAt = DateTime.Now,
-			UpdatedAt = DateTime.Now,
 			Link = model.Link,
 			Message = model.Message,
 			Title = model.Title,

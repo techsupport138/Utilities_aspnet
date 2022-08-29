@@ -29,32 +29,30 @@ public class CommentRepository : ICommentRepository {
 	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
 		IEnumerable<CommentEntity> comment =
 			await _context.Set<CommentEntity>()
-				.Include(x => x.User).ThenInclude(x => x.Media)
+				.Include(x => x.User).ThenInclude(x => x!.Media)
 				.Include(x => x.Media)
 				.Include(x => x.LikeComments)
 				.Include(x => x.Children)!.ThenInclude(x => x.Children)
 				.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
-				.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
+				.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
 				.Where(x => x.ProductId == id && x.ParentId == null)
-				.OrderByDescending(x => x.CreatedAt).ThenByDescending(x => x.Id).AsNoTracking().ToListAsync();
-		
+				.OrderByDescending(x => x.CreatedAt).AsNoTracking().ToListAsync();
+
 		return new GenericResponse<IEnumerable<CommentReadDto>?>(_mapper.Map<IEnumerable<CommentReadDto>?>(comment));
 	}
 
 	public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
-		CommentEntity? comment =
-			await _context.Set<CommentEntity>()
-				.Include(x => x.User).ThenInclude(x => x.Media)
-				.Include(x => x.Media)
-				.Include(x => x.LikeComments)
-				.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
-				.Where(x => x.Id == id)
-				.AsNoTracking()
-				.FirstOrDefaultAsync();
+		CommentEntity? comment = await _context.Set<CommentEntity>()
+			.Include(x => x.User).ThenInclude(x => x!.Media)
+			.Include(x => x.Media)
+			.Include(x => x.LikeComments)
+			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
+			.Where(x => x.Id == id)
+			.OrderByDescending(x => x.CreatedAt)
+			.AsNoTracking()
+			.FirstOrDefaultAsync();
 
-		CommentReadDto? result = _mapper.Map<CommentReadDto>(comment);
-
-		return new GenericResponse<CommentReadDto?>(result);
+		return new GenericResponse<CommentReadDto?>(_mapper.Map<CommentReadDto>(comment));
 	}
 
 	public async Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto dto) {
@@ -78,16 +76,16 @@ public class CommentRepository : ICommentRepository {
 				.FirstOrDefault(x => x.Id == comment.ProductId);
 
 			if (product != null && product.UserId != userId) {
-				string? linkMedia = product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.FileName)?.FirstOrDefault();
+				string? linkMedia = product.Media?.OrderBy(x => x.CreatedAt).Select(x => x.FileName).FirstOrDefault();
 
 				await _notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
-					UserId = product?.UserId,
+					UserId = product.UserId,
 					Message = dto.Comment ?? "",
 					Title = "Comment",
 					UseCase = "Comment",
 					CreatorUserId = comment.UserId,
 					Media = linkMedia,
-					Link = product?.Id.ToString()
+					Link = product.Id.ToString()
 				});
 			}
 		}
@@ -108,7 +106,7 @@ public class CommentRepository : ICommentRepository {
 			await _context.SaveChangesAsync();
 		}
 		else {
-			comment.Score = comment.Score + 1;
+			comment.Score += 1;
 			await _context.AddAsync(new LikeCommentEntity {UserId = userId, CommentId = commentId});
 			await _context.SaveChangesAsync();
 			UserEntity? commectUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == comment.UserId);
