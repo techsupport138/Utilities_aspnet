@@ -67,7 +67,7 @@ public class ChatRepository : IChatRepository {
 			Send = x.ToUserId == id
 		}).OrderByDescending(x => x.DateTime).ToList();
 
-		return conversations.Count < 1
+		return !conversations.Any()
 			? new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.NotFound)
 			: new GenericResponse<IEnumerable<ChatReadDto>?>(conversations);
 	}

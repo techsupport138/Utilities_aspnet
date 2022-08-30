@@ -25,7 +25,7 @@ public class UploadRepository : IUploadRepository {
 				if (model.UserId != null) {
 					folder = "Users";
 					List<MediaEntity> userMedia = _context.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
-					if (userMedia.Count > 0) {
+					if (userMedia.Any()) {
 						_context.Set<MediaEntity>().RemoveRange(userMedia);
 						await _context.SaveChangesAsync();
 					}

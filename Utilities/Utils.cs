@@ -1,4 +1,7 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using System.IO.Compression;
+using Microsoft.AspNetCore.ResponseCompression;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
 	public static void SetupUtilities<T>(
@@ -26,7 +29,13 @@ public static class StartupExtension {
 	private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) where T : DbContext {
 		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 		builder.Services.AddMemoryCache();
-		builder.Services.AddResponseCompression();
+		builder.Services.Configure<BrotliCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
+		builder.Services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
+		builder.Services.AddResponseCompression(options => {
+			options.EnableForHttps = true;
+			options.Providers.Add<BrotliCompressionProvider>();
+			options.Providers.Add<GzipCompressionProvider>();
+		});
 		builder.Services.AddResponseCaching();
 		builder.Services.AddScoped<DbContext, T>();
 		builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -120,10 +129,10 @@ public static class StartupExtension {
 	public static void AddUtilitiesIdentity(this WebApplicationBuilder builder) {
 		builder.Services.AddIdentity<UserEntity, IdentityRole>(options => { options.SignIn.RequireConfirmedAccount = false; }).AddRoles<IdentityRole>()
 			.AddEntityFrameworkStores<DbContext>().AddDefaultTokenProviders();
-		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions => {
-			jwtBearerOptions.RequireHttpsMetadata = false;
-			jwtBearerOptions.SaveToken = true;
-			jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters {
+		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+			options.RequireHttpsMetadata = false;
+			options.SaveToken = true;
+			options.TokenValidationParameters = new TokenValidationParameters {
 				RequireSignedTokens = true,
 				ValidateIssuerSigningKey = true,
 				ValidateIssuer = true,

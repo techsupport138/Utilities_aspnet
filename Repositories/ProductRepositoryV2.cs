@@ -175,6 +175,8 @@ public static class ProductEntityExtensionV2 {
 		entity.Link = dto.Link ?? entity.Link;
 		entity.Website = dto.Website ?? entity.Website;
 		entity.Email = dto.Email ?? entity.Email;
+		entity.Type = dto.Type ?? entity.Type;
+		entity.State = dto.State ?? entity.State;
 		entity.Latitude = dto.Latitude ?? entity.Latitude;
 		entity.Longitude = dto.Longitude ?? entity.Longitude;
 		entity.Description = dto.Description ?? entity.Description;

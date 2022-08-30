@@ -92,7 +92,7 @@ public class OrderRepository : IOrderRepository {
 						throw new ArgumentException("failed request! this request is more than stock!");
 
 					if (dto.Status == OrderStatuses.Paid)
-						if (product.Stock > 0) product.Stock = product.Stock - item.Count;
+						if (product.Stock > 0) product.Stock -= item.Count;
 						else
 							throw new ArgumentException("product's stock equals zero!");
 				}
