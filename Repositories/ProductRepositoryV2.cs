@@ -1,5 +1,3 @@
-using AutoMapper.QueryableExtensions;
-
 namespace Utilities_aspnet.Repositories;
 
 public interface IProductRepositoryV2 {
@@ -14,21 +12,17 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IMapper _mapper;
-	private readonly ICategoryRepository _categoryRepository;
 
 	public ProductRepositoryV2(
 		DbContext context,
 		IMapper mapper,
-		IHttpContextAccessor httpContextAccessor,
-		ICategoryRepository categoryRepository) {
+		IHttpContextAccessor httpContextAccessor) {
 		_context = context;
 		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
-		_categoryRepository = categoryRepository;
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
-		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
 
 		ProductEntity e = await entity.FillDataV2(dto, _httpContextAccessor, _context);
@@ -46,7 +40,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.ShowForms.IsTrue()) q = q.Include(i => i.Forms);
 		if (dto.ShowMedia.IsTrue()) q = q.Include(i => i.Media);
 		if (dto.ShowReports.IsTrue()) q = q.Include(i => i.Reports);
-		if (dto.ShowTeams.IsTrue()) q = q.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media);
+		if (dto.ShowTeams.IsTrue()) q = q.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media);
 		if (dto.ShowVotes.IsTrue()) q = q.Include(i => i.Votes);
 		if (dto.ShowVoteFields.IsTrue()) q = q.Include(i => i.VoteFields);
 		if (dto.ShowCreator.IsTrue()) q = q.Include(i => i.User).ThenInclude(x => x!.Media);
@@ -119,12 +113,12 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			.Include(i => i.Reports)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Votes)
-			.Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
-			.Include(i => i.User).ThenInclude(x => x.Media)
-			.Include(i => i.User).ThenInclude(x => x.Categories)
-			.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
-			.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
-			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
+			.Include(i => i.Comments)
+			.Include(i => i.User)
+			.Include(i => i.User)
+			.Include(i => i.Forms)
+			.Include(i => i.Teams)
+			.Include(i => i.VoteFields)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
 		if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
@@ -135,7 +129,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	public async Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct) {
 		ProductEntity? entity = await _context.Set<ProductEntity>()
 			.Include(x => x.Categories)
-			.Include(x => x.Teams).Where(x => x.Id == dto.Id)
+			.Include(x => x.Teams)
+			.Where(x => x.Id == dto.Id)
 			.FirstOrDefaultAsync(ct);
 
 		if (entity == null)
@@ -199,17 +194,20 @@ public static class ProductEntityExtensionV2 {
 		entity.Status = dto.Status ?? entity.Status;
 		entity.DeletedAt = dto.DeletedAt ?? entity.DeletedAt;
 
-		if (dto.VisitsCountPlus.HasValue)
-			if (entity.VisitsCount == null) entity.VisitsCount = dto.VisitsCountPlus;
+		if (dto.VisitsCountPlus.HasValue) {
+			if (entity.VisitsCount == null) entity.VisitsCount = 1;
 			else entity.VisitsCount += dto.VisitsCountPlus;
+		}
 
-		if (dto.ScorePlus.HasValue)
-			if (entity.VoteCount == null) entity.VoteCount = dto.ScorePlus;
+		if (dto.ScorePlus.HasValue) {
+			if (entity.VoteCount == null) entity.VoteCount = 1;
 			else entity.VoteCount += dto.ScorePlus;
+		}
 
-		if (dto.ScoreMinus.HasValue)
-			if (entity.VoteCount == null) entity.VoteCount = dto.ScoreMinus;
-			else entity.VoteCount -= dto.ScorePlus;
+		if (dto.ScoreMinus.HasValue) {
+			if (entity.VoteCount == null) entity.VoteCount = 1;
+			else entity.VoteCount -= dto.ScoreMinus;
+		}
 
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> listCategory = new();
