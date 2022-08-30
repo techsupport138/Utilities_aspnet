@@ -33,7 +33,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	}
 
 	public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto) {
-		IQueryable<ProductEntity> q = _context.Set<ProductEntity>().Include(i => i.Media);
+		IQueryable<ProductEntity> q = _context.Set<ProductEntity>();
 
 		if (dto.ShowCategories.IsTrue()) q = q.Include(i => i.Categories);
 		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments);
@@ -96,6 +96,10 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.OrderByVotes.IsTrue()) q = q.OrderBy(x => x.VoteCount);
 		if (dto.OrderByAtoZ.IsTrue()) q = q.OrderBy(x => x.Title);
 		if (dto.OrderByZtoA.IsTrue()) q = q.OrderByDescending(x => x.Title);
+		if (dto.OrderByPriceAccending.IsTrue()) q = q.OrderBy(x => x.Price);
+		if (dto.OrderByPriceDecending.IsTrue()) q = q.OrderByDescending(x => x.Price);
+		if (dto.OrderByCreatedDate.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
+		if (dto.OrderByCreaedDateDecending.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
 
 		q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
 

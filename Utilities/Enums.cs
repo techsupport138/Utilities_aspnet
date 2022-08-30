@@ -54,20 +54,6 @@ public enum OrderStatuses {
 	Paid = 2
 }
 
-public enum LocationType {
-	Planet = 0,
-	Continent = 1,
-	Country = 2,
-	City = 3,
-	Region = 4
-}
-
-public enum ApprovalStatus {
-	Pending = 0,
-	Approved = 1,
-	Rejected = 2
-}
-
 public enum PayType {
 	Online,
 	PayAtHome,

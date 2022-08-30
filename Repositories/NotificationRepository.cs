@@ -9,7 +9,7 @@ public class NotificationRepository : INotificationRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IMapper _mapper;
-	
+
 	public NotificationRepository(
 		DbContext context,
 		IMapper mapper,

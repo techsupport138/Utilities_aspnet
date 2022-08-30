@@ -21,7 +21,6 @@ public class UserRepository : IUserRepository {
 	private readonly UserManager<UserEntity> _userManager;
 	private readonly ISmsSender _sms;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	
 
 	public UserRepository(
 		DbContext context,
@@ -150,7 +149,7 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse> RemovalFromTeam(Guid teamId) {
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == _httpContextAccessor.HttpContext.User.Identity.Name);
+		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name);
 
 		if (user == null)
 			return new GenericResponse(UtilitiesStatusCodes.NotFound, "User notfound");
@@ -209,11 +208,8 @@ public class UserRepository : IUserRepository {
 	#region New Login Register
 
 	public async Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model) {
-		UserEntity? user = await _userManager.FindByEmailAsync(model.Email);
-		if (user == null) user = await _userManager.FindByNameAsync(model.Email);
-		if (user == null) {
-			user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
-		}
+		UserEntity? user = (await _userManager.FindByEmailAsync(model.Email) ?? await _userManager.FindByNameAsync(model.Email))
+		                   ?? await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
 
 		if (user == null) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "User not found");
 
@@ -225,7 +221,7 @@ public class UserRepository : IUserRepository {
 
 		return new GenericResponse<UserEntity?>(
 			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success, "Success"
-			);
+		);
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser) {
@@ -265,7 +261,7 @@ public class UserRepository : IUserRepository {
 
 		return new GenericResponse<UserEntity?>(
 			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success, "Success"
-			);
+		);
 	}
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
@@ -398,19 +394,19 @@ public class UserRepository : IUserRepository {
 		DateTime thursday = DateTime.Today.AddDays(-(int) DateTime.Today.DayOfWeek + (int) DayOfWeek.Thursday);
 
 		GrowthRateReadDto entity = new() {
-			InterActive1 = myComments.Count(x => x.CreatedAt.Value.Date == saturday) + following.Count(x => x.CreatedAt.Value.Date == saturday),
-			InterActive2 = myComments.Count(x => x.CreatedAt.Value.Date == sunday) + following.Count(x => x.CreatedAt.Value.Date == sunday),
-			InterActive3 = myComments.Count(x => x.CreatedAt.Value.Date == monday) + following.Count(x => x.CreatedAt.Value.Date == monday),
-			InterActive4 = myComments.Count(x => x.CreatedAt.Value.Date == tuesday) + following.Count(x => x.CreatedAt.Value.Date == tuesday),
-			InterActive5 = myComments.Count(x => x.CreatedAt.Value.Date == wednesday) + following.Count(x => x.CreatedAt.Value.Date == wednesday),
-			InterActive6 = myComments.Count(x => x.CreatedAt.Value.Date == thursday) + following.Count(x => x.CreatedAt.Value.Date == thursday),
+			InterActive1 = myComments.Count(x => x.CreatedAt.Date == saturday) + following.Count(x => x.CreatedAt.Date == saturday),
+			InterActive2 = myComments.Count(x => x.CreatedAt.Date == sunday) + following.Count(x => x.CreatedAt.Date == sunday),
+			InterActive3 = myComments.Count(x => x.CreatedAt.Date == monday) + following.Count(x => x.CreatedAt.Date == monday),
+			InterActive4 = myComments.Count(x => x.CreatedAt.Date == tuesday) + following.Count(x => x.CreatedAt.Date == tuesday),
+			InterActive5 = myComments.Count(x => x.CreatedAt.Date == wednesday) + following.Count(x => x.CreatedAt.Date == wednesday),
+			InterActive6 = myComments.Count(x => x.CreatedAt.Date == thursday) + following.Count(x => x.CreatedAt.Date == thursday),
 			InterActive7 = 0,
-			Feedback1 = comments.Count(x => x.CreatedAt.Value.Date == saturday) + follower.Count(x => x.CreatedAt.Value.Date == saturday),
-			Feedback2 = comments.Count(x => x.CreatedAt.Value.Date == sunday) + follower.Count(x => x.CreatedAt.Value.Date == sunday),
-			Feedback3 = comments.Count(x => x.CreatedAt.Value.Date == monday) + follower.Count(x => x.CreatedAt.Value.Date == monday),
-			Feedback4 = comments.Count(x => x.CreatedAt.Value.Date == tuesday) + follower.Count(x => x.CreatedAt.Value.Date == tuesday),
-			Feedback5 = comments.Count(x => x.CreatedAt.Value.Date == wednesday) + follower.Count(x => x.CreatedAt.Value.Date == wednesday),
-			Feedback6 = comments.Count(x => x.CreatedAt.Value.Date == thursday) + follower.Count(x => x.CreatedAt.Value.Date == thursday),
+			Feedback1 = comments.Count(x => x.CreatedAt.Date == saturday) + follower.Count(x => x.CreatedAt.Date == saturday),
+			Feedback2 = comments.Count(x => x.CreatedAt.Date == sunday) + follower.Count(x => x.CreatedAt.Date == sunday),
+			Feedback3 = comments.Count(x => x.CreatedAt.Date == monday) + follower.Count(x => x.CreatedAt.Date == monday),
+			Feedback4 = comments.Count(x => x.CreatedAt.Date == tuesday) + follower.Count(x => x.CreatedAt.Date == tuesday),
+			Feedback5 = comments.Count(x => x.CreatedAt.Date == wednesday) + follower.Count(x => x.CreatedAt.Date == wednesday),
+			Feedback6 = comments.Count(x => x.CreatedAt.Date == thursday) + follower.Count(x => x.CreatedAt.Date == thursday),
 			Feedback7 = 0,
 			Id = id
 		};

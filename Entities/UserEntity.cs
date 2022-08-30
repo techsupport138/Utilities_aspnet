@@ -125,6 +125,21 @@ public class TeamEntity : BaseEntity {
 	public ProductEntity? Product { get; set; }
 }
 
+[Table("Gender")]
+public class GenderEntity {
+	[Key]
+	public int Id { get; set; }
+
+	[StringLength(500)]
+	public string Title { get; set; } = null!;
+
+	[StringLength(500)]
+	public string? TitleTr1 { get; set; }
+
+	[StringLength(500)]
+	public string? TitleTr2 { get; set; }
+}
+
 public class TeamReadDto {
 	public Guid Id { get; set; }
 	public UserMinimalReadDto? User { get; set; }
@@ -276,7 +291,6 @@ public class UserCreateUpdateDto {
 	public string? AccessLevel { get; set; }
 	public string? Badge { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
-	public IEnumerable<int>? Locations { get; set; }
 }
 
 public class UserFilterDto {
@@ -285,7 +299,6 @@ public class UserFilterDto {
 	public bool? ShowGender { get; set; }
 	public bool? ShowMedia { get; set; }
 	public bool? ShowCategories { get; set; }
-	public bool? ShowLocations { get; set; }
 	public bool? ShowForms { get; set; }
 	public bool? ShowProducts { get; set; }
 	public bool? ShowTransactions { get; set; }

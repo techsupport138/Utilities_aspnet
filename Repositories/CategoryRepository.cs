@@ -35,7 +35,7 @@ public class CategoryRepository : ICategoryRepository {
 			.AsNoTracking().FirstOrDefault(x => x.Id == id);
 		return i == null ? new GenericResponse<CategoryEntity?>(null, UtilitiesStatusCodes.NotFound) : new GenericResponse<CategoryEntity?>(i);
 	}
-	
+
 	public GenericResponse<IQueryable<CategoryEntity>> ReadByIds(IEnumerable<Guid> ids) {
 		IQueryable<CategoryEntity>? i = _dbContext.Set<CategoryEntity>()
 			.Include(i => i.Media)

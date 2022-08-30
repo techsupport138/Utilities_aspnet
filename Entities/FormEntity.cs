@@ -76,5 +76,8 @@ public enum FormFieldType {
 	Bool,
 	Number,
 	File,
-	Image
+	Image,
+	CarPlack,
+	PhoneNumber,
+	Password,
 }

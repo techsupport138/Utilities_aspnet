@@ -209,7 +209,6 @@ public class ProductReadDto {
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }
-	public IEnumerable<MyVoteReadDto>? MyVotes { get; set; }
 	public IEnumerable<FormDto>? Forms { get; set; }
 	public IEnumerable<CommentReadDto>? Comments { get; set; }
 	public IEnumerable<TeamReadDto>? Teams { get; set; }
@@ -270,7 +269,6 @@ public class ProductCreateUpdateDto {
 	public DateTime? EndDate { get; set; }
 	public DateTime? DeletedAt { get; set; }
 	public ProductStatus? Status { get; set; }
-	public IEnumerable<int>? Locations { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 	public IEnumerable<string>? Teams { get; set; }
 }
@@ -333,6 +331,10 @@ public class ProductFilterDto {
 	public bool? OrderByVotes { get; set; } = false;
 	public bool? OrderByAtoZ { get; set; } = false;
 	public bool? OrderByZtoA { get; set; } = false;
+	public bool? OrderByPriceAccending { get; set; } = false;
+	public bool? OrderByPriceDecending { get; set; } = false;
+	public bool? OrderByCreatedDate { get; set; } = false;
+	public bool? OrderByCreaedDateDecending { get; set; } = false;
 	public int? VisitsCount { get; set; }
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
