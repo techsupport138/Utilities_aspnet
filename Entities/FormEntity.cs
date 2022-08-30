@@ -28,7 +28,7 @@ public class FormFieldEntity : BaseEntity {
 
 	public bool? IsRequired { get; set; } = false;
 
-	[StringLength(1000)]
+	[StringLength(2000)]
 	public string? OptionList { get; set; }
 
 	public FormFieldType? Type { get; set; }
@@ -66,18 +66,4 @@ public class FormCreateDto {
 public class FormTitleDto {
 	public Guid? Id { get; set; }
 	public string? Title { get; set; }
-}
-
-public enum FormFieldType {
-	SingleLineText,
-	MultiLineText,
-	MultiSelect,
-	SingleSelect,
-	Bool,
-	Number,
-	File,
-	Image,
-	CarPlack,
-	PhoneNumber,
-	Password,
 }

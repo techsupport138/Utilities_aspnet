@@ -17,8 +17,6 @@ public class MediaEntity : BaseEntity {
 	[StringLength(500)]
 	public string? Size { get; set; }
 
-	public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
-
 	[NotMapped]
 	public string Url => $"{Server.ServerAddress}/Medias/{FileName}";
 
@@ -72,7 +70,6 @@ public class UploadDto {
 	public IEnumerable<string>? Links { get; set; }
 	public string? Title { get; set; }
 	public string? Size { get; set; }
-	public VisibilityType? Visibility { get; set; } = VisibilityType.Public;
 	public Guid? ProductId { get; set; }
 	public Guid? ContentId { get; set; }
 	public Guid? CategoryId { get; set; }

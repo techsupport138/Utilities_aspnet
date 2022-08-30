@@ -36,7 +36,6 @@ public class ContentRepository : IContentRepository {
 				Title = y.Title,
 				Size = y.Size,
 				FileName = y.FileName,
-				Visibility = y.Visibility,
 				UseCase = y.UseCase,
 				CreatedAt = y.CreatedAt,
 				UpdatedAt = y.UpdatedAt,

@@ -24,10 +24,10 @@ public static class StartupExtension {
 	}
 
 	private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) where T : DbContext {
+		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 		builder.Services.AddMemoryCache();
 		builder.Services.AddResponseCompression();
 		builder.Services.AddResponseCaching();
-		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 		builder.Services.AddScoped<DbContext, T>();
 		builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -48,7 +48,14 @@ public static class StartupExtension {
 		builder.Services.AddHttpContextAccessor();
 		builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 		builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
-		builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson(options => {
+		builder.Services.AddControllersWithViews(option => {
+			option.EnableEndpointRouting = false; 
+			option.CacheProfiles.Add("default", new CacheProfile {
+				Duration = 10,
+				Location = ResponseCacheLocation.Any
+			});
+			
+		}).AddNewtonsoftJson(options => {
 			options.SerializerSettings.ContractResolver = new DefaultContractResolver();
 			options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 			options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;

@@ -7,14 +7,20 @@ public static class EnumExtension {
 	}
 }
 
+public static class UtilitiesStatusCodesExtension {
+	public static bool IsSuccessful(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Success;
+	public static bool IsBadRequest(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.BadRequest;
+	public static bool IsForbidden(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Forbidden;
+	public static bool IsNotFound(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.NotFound;
+	public static int Value(this UtilitiesStatusCodes statusCode) => (int) statusCode;
+}
+
 public enum UtilitiesStatusCodes {
 	Success = 200,
 	BadRequest = 400,
 	Forbidden = 403,
 	NotFound = 404,
 	Unhandled = 900,
-	New = 499,
-	WrongMobile = 601,
 	WrongVerificationCode = 602
 }
 
@@ -22,25 +28,6 @@ public enum OtpResult {
 	Ok = 1,
 	Incorrect = 2,
 	TimeOut = 3
-}
-
-public static class UtilitiesStatusCodesExtension {
-	public static bool IsSuccessful(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Success;
-
-	public static bool IsBadRequest(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.BadRequest;
-
-	public static bool IsForbidden(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Forbidden;
-
-	public static bool IsNotFound(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.NotFound;
-
-	public static int Value(this UtilitiesStatusCodes statusCode) => (int) statusCode;
-}
-
-public enum VisibilityType {
-	Public = 0,
-	Private = 1,
-	UsersOnly = 2,
-	Followers = 3
 }
 
 public enum DatabaseType {
@@ -56,11 +43,57 @@ public enum OrderStatuses {
 
 public enum PayType {
 	Online,
-	PayAtHome,
+	PayAtHome
 }
 
 public enum SendType {
 	Pishtaz,
 	Custome,
 	Tipax
+}
+
+public enum FormFieldType {
+	SingleLineText,
+	MultiLineText,
+	MultiSelect,
+	SingleSelect,
+	Bool,
+	Number,
+	File,
+	Image,
+	CarPlack,
+	PhoneNumber,
+	Password,
+}
+
+public enum TransactionStatus {
+	Fail = -1,
+	Pending = 0,
+	Success = 100
+}
+
+public enum ProductFilterOrder {
+	LowPrice,
+	HighPrice,
+	AToZ,
+	ZToA
+}
+
+public enum ProductStatus {
+	Released,
+	Expired,
+	InQueue,
+	Deleted
+}
+
+public enum UserFilterOrder {
+	LowGrowthRate,
+	HighGrowthRate,
+	AToZ,
+	ZToA
+}
+
+public enum Sender {
+	SmsIr,
+	Faraz
 }

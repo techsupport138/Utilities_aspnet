@@ -29,7 +29,7 @@ public class SmsSender : ISmsSender {
 			mobileNumber = mobileNumber.TrimStart(new[] {'0'});
 		}
 
-		switch (Sender.FarazSms) {
+		switch (Sender.Faraz) {
 			case Sender.SmsIr:
 				// string? token = new Token()
 				//     .GetToken(smsSetting.SmsApiKey, smsSetting.SmsSecret);
@@ -59,7 +59,7 @@ public class SmsSender : ISmsSender {
 				// else
 				// return -1;
 				break;
-			case Sender.FarazSms:
+			case Sender.Faraz:
 
 				#region FarazSMS
 

@@ -2,7 +2,7 @@
 
 [Table("Order")]
 public class OrderEntity : BaseEntity {
-	[StringLength(1000)]
+	[StringLength(2000)]
 	public string? Description { get; set; }
 
 	public OrderStatuses? Status { get; set; }

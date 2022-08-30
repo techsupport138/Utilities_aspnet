@@ -8,10 +8,10 @@ public class ProductEntity : BaseEntity {
 	[StringLength(500)]
 	public string? Subtitle { get; set; }
 
-	[StringLength(1000)]
+	[StringLength(2000)]
 	public string? Description { get; set; }
 
-	[StringLength(1000)]
+	[StringLength(2000)]
 	public string? Details { get; set; }
 
 	[StringLength(500)]
@@ -346,23 +346,3 @@ public class ProductFilterDto {
 	public string? Query { get; set; }
 }
 
-public enum ProductFilterOrder {
-	LowPrice,
-	HighPrice,
-	AToZ,
-	ZToA
-}
-
-public enum ProductStatus {
-	Released,
-	Expired,
-	InQueue,
-	Deleted
-}
-
-public enum UserFilterOrder {
-	LowGrowthRate,
-	HighGrowthRate,
-	AToZ,
-	ZToA
-}

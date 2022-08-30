@@ -5,7 +5,7 @@ public class NotificationEntity : BaseEntity {
 	[StringLength(500)]
 	public string? Title { get; set; } = null!;
 
-	[StringLength(1000)]
+	[StringLength(2000)]
 	public string? Message { get; set; }
 
 	[StringLength(500)]

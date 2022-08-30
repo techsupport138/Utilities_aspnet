@@ -11,20 +11,20 @@ public class TransactionController : BaseApiController {
 	}
 
 	[HttpPost]
-	public async Task<ActionResult<GenericResponse<TransactionReadDto>>> Create(TransactionCreateDto dto) {
-		GenericResponse<TransactionReadDto?> i = await _transactionRepository.Create(dto);
+	public async Task<ActionResult<GenericResponse<TransactionEntity>>> Create(TransactionCreateDto dto) {
+		GenericResponse<TransactionEntity?> i = await _transactionRepository.Create(dto);
 		return Result(i);
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<TransactionReadDto>>>> Read() {
-		GenericResponse<IEnumerable<TransactionReadDto>> i = await _transactionRepository.Read();
+	public async Task<ActionResult<GenericResponse<IEnumerable<TransactionEntity>>>> Read() {
+		GenericResponse<IEnumerable<TransactionEntity>> i = await _transactionRepository.Read();
 		return Result(i);
 	}
 
 	[HttpGet("Mine")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<TransactionReadDto>>>> ReadMine() {
-		GenericResponse<IEnumerable<TransactionReadDto>> i = await _transactionRepository.ReadMine();
+	public async Task<ActionResult<GenericResponse<IEnumerable<TransactionEntity>>>> ReadMine() {
+		GenericResponse<IEnumerable<TransactionEntity>> i = await _transactionRepository.ReadMine();
 		return Result(i);
 	}
 }

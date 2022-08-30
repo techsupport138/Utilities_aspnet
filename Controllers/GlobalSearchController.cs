@@ -13,7 +13,7 @@ public class GlobalSearchController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost]
 	public async Task<ActionResult<GenericResponse<GlobalSearchDto>>> Create(GlobalSearchParams filter) {
-		GenericResponse<GlobalSearchDto> i = await _globalSearchRepository.Filter(filter, User?.Identity?.Name);
+		GenericResponse<GlobalSearchDto> i = await _globalSearchRepository.Filter(filter, User.Identity?.Name);
 		return Result(i);
 	}
 }

@@ -3,12 +3,6 @@
 public class AppSettings {
 	public SmsPanelSettings? SmsPanelSettings { get; set; }
 	public Pushe? Pushe { get; set; }
-	public SeoSetting? SeoSetting { get; set; }
-}
-
-public enum Sender {
-	SmsIr,
-	FarazSms
 }
 
 public class SmsPanelSettings {
@@ -23,9 +17,4 @@ public class SmsPanelSettings {
 public class Pushe {
 	public string? AccessToken { get; set; }
 	public string? Applications { get; set; }
-}
-
-public class SeoSetting {
-	public string? GoogleAnalyticsCode { get; set; }
-	public string? AlexaCode { get; set; }
 }

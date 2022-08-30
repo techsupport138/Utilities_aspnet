@@ -42,7 +42,6 @@ public class UploadRepository : IUploadRepository {
 					CommentId = model.CommentId,
 					CreatedAt = DateTime.Now,
 					UseCase = model.UseCase,
-					Visibility = model.Visibility,
 					Title = model.Title,
 					Size = model.Size,
 					NotificationId = model.NotificationId
@@ -65,7 +64,6 @@ public class UploadRepository : IUploadRepository {
 				         CommentId = model.CommentId,
 				         CreatedAt = DateTime.Now,
 				         UseCase = model.UseCase,
-				         Visibility = model.Visibility,
 				         Title = model.Title,
 				         Size = model.Size,
 				         NotificationId = model.NotificationId

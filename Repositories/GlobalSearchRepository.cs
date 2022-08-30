@@ -1,7 +1,7 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IGlobalSearchRepository {
-	Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string userId);
+	Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string? userId);
 }
 
 public class GlobalSearchRepository : IGlobalSearchRepository {
@@ -14,10 +14,11 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 		_mapper = mapper;
 	}
 
-	public async Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string userId) {
+	public async Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string? userId) {
 		GlobalSearchDto model = new();
 
-		IEnumerable<CategoryEntity> categoryList = await _context.Set<CategoryEntity>().Include(x => x.Users).Include(x => x.Media).Include(i => i.Media)
+		IEnumerable<CategoryEntity> categoryList = await _context.Set<CategoryEntity>()
+			.Include(x => x.Media)
 			.Where(x => x.Title.Contains(filter.Title) && filter.Category && x.DeletedAt == null && (x.Title.Contains(filter.Query) ||
 			                                                                                         x.Subtitle.Contains(filter.Query) ||
 			                                                                                         x.TitleTr1.Contains(filter.Query) ||
@@ -70,7 +71,6 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 
 		if (filter.IsMine) {
 			productList = productList.Where(x => x.UserId == userId);
-			categoryList = categoryList.Where(x => x.Users.Any(x => x.Id == userId));
 			userList = userList.Where(x => x.Id == userId);
 		}
 

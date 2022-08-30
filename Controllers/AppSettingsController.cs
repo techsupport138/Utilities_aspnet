@@ -12,6 +12,7 @@ public class AppSettingsController : BaseApiController {
 	}
 
 	[HttpGet]
+	[ResponseCache(CacheProfileName = "default")]
 	public async Task<ActionResult<GenericResponse<EnumDto>>> Read() => Result(await _appSettingRepository.Read());
 
 	[HttpPost("Gender")]
