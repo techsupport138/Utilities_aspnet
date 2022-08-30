@@ -16,7 +16,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	private readonly IMapper _mapper;
 	private readonly ICategoryRepository _categoryRepository;
 
-	public ProductRepositoryV2(DbContext context,
+	public ProductRepositoryV2(
+		DbContext context,
 		IMapper mapper,
 		IHttpContextAccessor httpContextAccessor,
 		ICategoryRepository categoryRepository) {
@@ -197,10 +198,18 @@ public static class ProductEntityExtensionV2 {
 		entity.EndDate = dto.EndDate ?? entity.EndDate;
 		entity.Status = dto.Status ?? entity.Status;
 		entity.DeletedAt = dto.DeletedAt ?? entity.DeletedAt;
-		
-		if (dto.VisitsCountPlus.HasValue) entity.VisitsCount += dto.VisitsCountPlus;
-		if (dto.ScorePlus.HasValue) entity.VoteCount += dto.ScorePlus;
-		if (dto.ScoreMinus.HasValue) entity.VoteCount -= dto.ScorePlus;
+
+		if (dto.VisitsCountPlus.HasValue)
+			if (entity.VisitsCount == null) entity.VisitsCount = dto.VisitsCountPlus;
+			else entity.VisitsCount += dto.VisitsCountPlus;
+
+		if (dto.ScorePlus.HasValue)
+			if (entity.VoteCount == null) entity.VoteCount = dto.ScorePlus;
+			else entity.VoteCount += dto.ScorePlus;
+
+		if (dto.ScoreMinus.HasValue)
+			if (entity.VoteCount == null) entity.VoteCount = dto.ScoreMinus;
+			else entity.VoteCount -= dto.ScorePlus;
 
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> listCategory = new();

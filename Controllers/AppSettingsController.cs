@@ -12,15 +12,13 @@ public class AppSettingsController : BaseApiController {
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<EnumDto>>> Read() {
-		GenericResponse i = await _appSettingRepository.Read();
-		return Ok(i);
-	}
+	public async Task<ActionResult<GenericResponse<EnumDto>>> Read() => Result(await _appSettingRepository.Read());
 
 	[HttpPost("Gender")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse>> CreateGender(GenderEntity gender) {
 		await _dbContext.Set<GenderEntity>().AddAsync(gender);
+		await _dbContext.SaveChangesAsync();
 		return Ok();
 	}
 }

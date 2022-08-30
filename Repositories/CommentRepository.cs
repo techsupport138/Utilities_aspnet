@@ -46,7 +46,7 @@ public class CommentRepository : ICommentRepository {
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
 			.Include(x => x.LikeComments)
-			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
+			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media).OrderByDescending(x => x.CreatedAt)
 			.Where(x => x.Id == id)
 			.OrderByDescending(x => x.CreatedAt)
 			.AsNoTracking()
@@ -122,17 +122,10 @@ public class CommentRepository : ICommentRepository {
 	public async Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity) {
 		CommentEntity? comment = await _context.Set<CommentEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
-		if (comment == null)
-			return new GenericResponse<CommentReadDto?>(null);
-
-		if (!string.IsNullOrEmpty(entity.Comment))
-			comment.Comment = entity.Comment;
-
-		if (entity.Score.HasValue)
-			comment.Score = entity.Score;
-
-		if (entity.ProductId.HasValue)
-			comment.ProductId = entity.ProductId;
+		if (comment == null) return new GenericResponse<CommentReadDto?>(null);
+		if (!string.IsNullOrEmpty(entity.Comment)) comment.Comment = entity.Comment;
+		if (entity.Score.HasValue) comment.Score = entity.Score;
+		if (entity.ProductId.HasValue) comment.ProductId = entity.ProductId;
 
 		_context.Set<CommentEntity>().Update(comment);
 		await _context.SaveChangesAsync();
@@ -142,14 +135,9 @@ public class CommentRepository : ICommentRepository {
 
 	public async Task<GenericResponse> Delete(Guid id) {
 		CommentEntity? comment = await _context.Set<CommentEntity>().AsNoTracking().Include(p => p.Children).FirstOrDefaultAsync(x => x.Id == id);
-
-		if (comment == null)
-			return new GenericResponse(UtilitiesStatusCodes.NotFound, "Comment notfound");
-
+		if (comment == null) return new GenericResponse(UtilitiesStatusCodes.NotFound, "Comment notfound");
 		_context.Set<CommentEntity>().Remove(comment);
-
 		await _context.SaveChangesAsync();
-
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 }
