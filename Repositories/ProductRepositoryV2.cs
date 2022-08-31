@@ -117,12 +117,12 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			.Include(i => i.Reports)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Votes)
-			.Include(i => i.Comments)
-			.Include(i => i.User)
-			.Include(i => i.User)
-			.Include(i => i.Forms)
-			.Include(i => i.Teams)
-			.Include(i => i.VoteFields)
+			.Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
+			.Include(i => i.User).ThenInclude(x => x.Media)
+			.Include(i => i.User).ThenInclude(x => x.Categories)
+			.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
+			.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
+			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
 		if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
