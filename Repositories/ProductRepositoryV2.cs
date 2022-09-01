@@ -21,10 +21,10 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 
 	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
-		entity.VisitsCount = 1;
-		entity.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
 
 		ProductEntity e = await entity.FillDataV2(dto, _context);
+		e.VisitsCount = 1;
+		e.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
 		EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e, ct);
 		await _context.SaveChangesAsync(ct);
 
