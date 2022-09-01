@@ -45,7 +45,7 @@ public class DiscountRepository : IDiscountRepository {
 	}
 
 	public async Task<GenericResponse<DiscountEntity?>> Update(DiscountEntity dto) {
-		DiscountEntity? entity = await _dbContext.Set<DiscountEntity>().FindAsync(dto.Id);
+		DiscountEntity? entity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
 
 		if (entity == null) return new GenericResponse<DiscountEntity?>(null, UtilitiesStatusCodes.NotFound);
 		entity.Title = dto.Title ?? entity.Title;
@@ -60,7 +60,7 @@ public class DiscountRepository : IDiscountRepository {
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		DiscountEntity? i = await _dbContext.Set<DiscountEntity>().FindAsync(id);
+		DiscountEntity? i = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(x => x.Id == id);
 
 		if (i != null) {
 			_dbContext.Remove(i);

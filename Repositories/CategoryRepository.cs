@@ -46,7 +46,7 @@ public class CategoryRepository : ICategoryRepository {
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		CategoryEntity? i = await _dbContext.Set<CategoryEntity>().FindAsync(id);
+		CategoryEntity? i = await _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == id);
 		if (i != null) {
 			_dbContext.Remove(i);
 			await _dbContext.SaveChangesAsync();
@@ -57,7 +57,7 @@ public class CategoryRepository : ICategoryRepository {
 	}
 
 	public async Task<GenericResponse<CategoryEntity?>> Update(CategoryEntity dto) {
-		CategoryEntity? entity = await _dbContext.Set<CategoryEntity>().FindAsync(dto.Id);
+		CategoryEntity? entity = await _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
 
 		if (entity == null) return new GenericResponse<CategoryEntity?>(null, UtilitiesStatusCodes.NotFound);
 		entity.Title = dto.Title ?? entity.Title;
