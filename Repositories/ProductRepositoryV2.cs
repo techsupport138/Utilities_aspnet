@@ -10,16 +10,19 @@ public interface IProductRepositoryV2 {
 
 public class ProductRepositoryV2 : IProductRepositoryV2 {
 	private readonly DbContext _context;
+	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IMapper _mapper;
 
-	public ProductRepositoryV2(DbContext context, IMapper mapper) {
+	public ProductRepositoryV2(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
 		_context = context;
 		_mapper = mapper;
+		_httpContextAccessor = httpContextAccessor;
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
 		entity.VisitsCount = 1;
+		entity.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
 
 		ProductEntity e = await entity.FillDataV2(dto, _context);
 		EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e, ct);
