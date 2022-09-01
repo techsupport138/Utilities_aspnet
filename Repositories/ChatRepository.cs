@@ -30,7 +30,7 @@ public class ChatRepository : IChatRepository {
 		await _context.SaveChangesAsync();
 		ChatReadDto conversations = new() {
 			Id = conversation.Id,
-			DateTime = (DateTime) conversation.CreatedAt,
+			DateTime = conversation.CreatedAt,
 			MessageText = conversation.MessageText,
 			FullName = user.FullName,
 			ProfileImage = "",
@@ -62,6 +62,7 @@ public class ChatRepository : IChatRepository {
 			MessageText = x.MessageText,
 			FullName = user.FullName,
 			PhoneNumber = user.PhoneNumber,
+			AppUserName = user.AppUserName,
 			ProfileImage = "",
 			UserId = id,
 			Send = x.ToUserId == id

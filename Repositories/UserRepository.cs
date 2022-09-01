@@ -327,8 +327,8 @@ public class UserRepository : IUserRepository {
 		if (Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
-		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
-		                                        "Success");
+		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
+		                                        UtilitiesStatusCodes.Success, "Success");
 	}
 
 	#endregion
@@ -379,12 +379,12 @@ public class UserRepository : IUserRepository {
 	}
 
 	private async Task<GrowthRateReadDto?> GetGrowthRate(string? id) {
-		List<CommentEntity> myComments = await _context.Set<CommentEntity>().Where(x => x.UserId == id).ToListAsync();
-		List<Guid> productIds = await _context.Set<ProductEntity>().Where(x => x.UserId == id).Select(x => x.Id).ToListAsync();
-		List<CommentEntity> comments = await _context.Set<CommentEntity>().Where(x => productIds.Contains((Guid) x.ProductId)).ToListAsync();
+		IEnumerable<CommentEntity> myComments = await _context.Set<CommentEntity>().Where(x => x.UserId == id).ToListAsync();
+		IEnumerable<Guid> productIds = await _context.Set<ProductEntity>().Where(x => x.UserId == id).Select(x => x.Id).ToListAsync();
+		IEnumerable<CommentEntity> comments = await _context.Set<CommentEntity>().Where(x => productIds.Contains(x.ProductId ?? Guid.Empty)).ToListAsync();
 
-		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
-		List<FollowEntity> following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == id).ToListAsync();
+		IEnumerable<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
+		IEnumerable<FollowEntity> following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == id).ToListAsync();
 
 		DateTime saturday = DateTime.Today.AddDays(-(int) DateTime.Today.DayOfWeek + (int) DayOfWeek.Saturday);
 		DateTime sunday = DateTime.Today.AddDays(-(int) DateTime.Today.DayOfWeek);
@@ -393,7 +393,7 @@ public class UserRepository : IUserRepository {
 		DateTime wednesday = DateTime.Today.AddDays(-(int) DateTime.Today.DayOfWeek + (int) DayOfWeek.Wednesday);
 		DateTime thursday = DateTime.Today.AddDays(-(int) DateTime.Today.DayOfWeek + (int) DayOfWeek.Thursday);
 
-		GrowthRateReadDto entity = new() {
+		GrowthRateReadDto dto = new() {
 			InterActive1 = myComments.Count(x => x.CreatedAt.Date == saturday) + following.Count(x => x.CreatedAt.Date == saturday),
 			InterActive2 = myComments.Count(x => x.CreatedAt.Date == sunday) + following.Count(x => x.CreatedAt.Date == sunday),
 			InterActive3 = myComments.Count(x => x.CreatedAt.Date == monday) + following.Count(x => x.CreatedAt.Date == monday),
@@ -410,16 +410,25 @@ public class UserRepository : IUserRepository {
 			Feedback7 = 0,
 			Id = id
 		};
-		double totalInteractive = entity.InterActive1 + entity.InterActive2 + entity.InterActive3 + entity.InterActive4 + entity.InterActive5 +
-		                          entity.InterActive6;
-		double totalFeedback = entity.Feedback1 + entity.Feedback2 + entity.Feedback3 + entity.Feedback4 + entity.Feedback5 + entity.Feedback6;
+		double totalInteractive = dto.InterActive1 +
+		                          dto.InterActive2 +
+		                          dto.InterActive3 +
+		                          dto.InterActive4 +
+		                          dto.InterActive5 +
+		                          dto.InterActive6;
+		double totalFeedback = dto.Feedback1 +
+		                       dto.Feedback2 +
+		                       dto.Feedback3 +
+		                       dto.Feedback4 +
+		                       dto.Feedback5 +
+		                       dto.Feedback6;
 		double total = totalInteractive + totalFeedback;
 		if (total > 0) {
-			entity.TotalInterActive = ((totalInteractive / total) * 100);
-			entity.TotalFeedback = ((totalFeedback / total) * 100);
+			dto.TotalInterActive = (totalInteractive / total) * 100;
+			dto.TotalFeedback = (totalFeedback / total) * 100;
 		}
 
-		return entity;
+		return dto;
 	}
 
 	private string? SendOtp(string userId, int codeLength) {

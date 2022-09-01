@@ -25,6 +25,7 @@ public class ChatReadDto {
 	public string? MessageText { get; set; }
 	public string? FullName { get; set; }
 	public string? PhoneNumber { get; set; }
+	public string? AppUserName { get; set; }
 	public DateTime? DateTime { get; set; }
 	public string? ProfileImage { get; set; }
 	public bool Send { get; set; }
