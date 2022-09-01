@@ -10,22 +10,18 @@ public interface IProductRepositoryV2 {
 
 public class ProductRepositoryV2 : IProductRepositoryV2 {
 	private readonly DbContext _context;
-	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly IMapper _mapper;
 
-	public ProductRepositoryV2(
-		DbContext context,
-		IMapper mapper,
-		IHttpContextAccessor httpContextAccessor) {
+	public ProductRepositoryV2(DbContext context, IMapper mapper) {
 		_context = context;
 		_mapper = mapper;
-		_httpContextAccessor = httpContextAccessor;
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
 		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
+		entity.VisitsCount = 1;
 
-		ProductEntity e = await entity.FillDataV2(dto, _httpContextAccessor, _context);
+		ProductEntity e = await entity.FillDataV2(dto, _context);
 		EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e, ct);
 		await _context.SaveChangesAsync(ct);
 
@@ -123,10 +119,14 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
 			.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
 			.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
-			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
 		if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
-		await Update(new ProductCreateUpdateDto {Id = i.Id, VisitsCountPlus = 1}, ct);
+
+		if (i.VisitsCount == null) i.VisitsCount = 1;
+		else i.VisitsCount += 1;
+		_context.Update(i);
+		await _context.SaveChangesAsync(ct);
+
 		return new GenericResponse<ProductEntity?>(i);
 	}
 
@@ -140,7 +140,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (entity == null)
 			return new GenericResponse<ProductEntity>(new ProductEntity());
 
-		ProductEntity e = await entity.FillDataV2(dto, _httpContextAccessor, _context);
+		ProductEntity e = await entity.FillDataV2(dto, _context);
 		_context.Update(e);
 		await _context.SaveChangesAsync(ct);
 
@@ -164,7 +164,6 @@ public static class ProductEntityExtensionV2 {
 	public static async Task<ProductEntity> FillDataV2(
 		this ProductEntity entity,
 		ProductCreateUpdateDto dto,
-		IHttpContextAccessor httpContextAccessor,
 		DbContext context) {
 		entity.Title = dto.Title ?? entity.Title;
 		entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
