@@ -166,7 +166,6 @@ public static class ProductEntityExtensionV2 {
 		ProductCreateUpdateDto dto,
 		IHttpContextAccessor httpContextAccessor,
 		DbContext context) {
-		entity.UserId = httpContextAccessor.HttpContext?.User.Identity?.Name;
 		entity.Title = dto.Title ?? entity.Title;
 		entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
 		entity.Details = dto.Details ?? entity.Details;
