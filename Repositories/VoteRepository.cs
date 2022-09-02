@@ -67,37 +67,31 @@ public class VoteRepository : IVoteRepository {
 
 	public async Task<GenericResponse> CreateUpdateVote(VoteCreateUpdateDto dto) {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
-		foreach (VoteDto item in dto.Votes)
-			try {
-				VoteEntity? update = await _dbContext.Set<VoteEntity>()
-					.FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.VoteFieldId == item.VoteFieldId && x.UserId == userId);
-				if (update != null) {
-					update.Score = item.Score;
-					await _dbContext.SaveChangesAsync();
-					await _productRepositoryV2.Update(new ProductCreateUpdateDto {
-						Id = dto.ProductId,
-						ScoreMinus = update.Score > item.Score ? item.Score : 0,
-						ScorePlus = update.Score < item.Score ? item.Score : 0,
-					}, CancellationToken.None);
-				}
-				else {
-					_dbContext.Set<VoteEntity>().Add(new VoteEntity {
-						ProductId = dto.ProductId,
-						Score = item.Score,
-						VoteFieldId = item.VoteFieldId,
-						UserId = userId
-					});
-					await _productRepositoryV2.Update(new ProductCreateUpdateDto {
-						Id = dto.ProductId,
-						ScoreMinus = update.Score > item.Score ? item.Score : 0,
-						ScorePlus = update.Score < item.Score ? item.Score : 0,
-					}, CancellationToken.None);
-					await _dbContext.SaveChangesAsync();
-				}
+		foreach (VoteDto item in dto.Votes) {
+			VoteEntity? update = await _dbContext.Set<VoteEntity>()
+				.FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.VoteFieldId == item.VoteFieldId && x.UserId == userId);
+			if (update != null) {
+				update.Score = item.Score;
+				ProductEntity pp = (await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == dto.ProductId))!;
+				if (pp.VoteCount == null) pp.VoteCount = item.Score;
+				else pp.VoteCount = pp.VoteCount += item.Score;
+				_dbContext.Update(pp);
+				await _dbContext.SaveChangesAsync();
 			}
-			catch {
-				return new GenericResponse(UtilitiesStatusCodes.BadRequest);
+			else {
+				await _dbContext.Set<VoteEntity>().AddAsync(new VoteEntity {
+					ProductId = dto.ProductId,
+					Score = item.Score,
+					VoteFieldId = item.VoteFieldId,
+					UserId = userId
+				});
+				ProductEntity pp = (await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == dto.ProductId))!;
+				if (pp.VoteCount == null) pp.VoteCount = item.Score;
+				else pp.VoteCount = pp.VoteCount += item.Score;
+				_dbContext.Update(pp);
+				await _dbContext.SaveChangesAsync();
 			}
+		}
 
 		return new GenericResponse();
 	}

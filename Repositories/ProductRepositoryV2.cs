@@ -163,10 +163,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 }
 
 public static class ProductEntityExtensionV2 {
-	public static async Task<ProductEntity> FillDataV2(
-		this ProductEntity entity,
-		ProductCreateUpdateDto dto,
-		DbContext context) {
+	public static async Task<ProductEntity> FillDataV2(this ProductEntity entity, ProductCreateUpdateDto dto, DbContext context) {
 		entity.Title = dto.Title ?? entity.Title;
 		entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
 		entity.Details = dto.Details ?? entity.Details;
