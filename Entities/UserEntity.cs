@@ -230,6 +230,30 @@ public class UserMinimalReadDto {
 	public int? CountProducts { get; set; }
 	public string? AccessLevel { get; set; }
 	public string? Badge { get; set; }
+	public string? Token { get; set; }
+	public string? Bio { get; set; }
+	public string? AppUserName { get; set; }
+	public string? AppPhoneNumber { get; set; }
+	public string? AppEmail { get; set; }
+	public string? Instagram { get; set; }
+	public string? Telegram { get; set; }
+	public string? WhatsApp { get; set; }
+	public string? LinkedIn { get; set; }
+	public string? Dribble { get; set; }
+	public string? SoundCloud { get; set; }
+	public string? Pinterest { get; set; }
+	public string? Type { get; set; }
+	public string? Headline { get; set; }
+	public string? Website { get; set; }
+	public string? Region { get; set; }
+	public string? Activity { get; set; }
+	public double? Wallet { get; set; }
+	public double? Point { get; set; } = 0;
+	public bool? ShowContactInfo { get; set; }
+	public bool IsAdmin { get; set; }
+	public bool IsFollowing { get; set; } = false;
+	public bool? Suspend { get; set; }
+
 	public GenderEntity? Gender { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
