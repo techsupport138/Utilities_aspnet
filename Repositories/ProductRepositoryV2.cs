@@ -33,16 +33,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 
 	public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto) {
 		IQueryable<ProductEntity> q = _context.Set<ProductEntity>();
-
-		if (dto.ShowCategories.IsTrue()) q = q.Include(i => i.Categories);
-		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments);
-		if (dto.ShowForms.IsTrue()) q = q.Include(i => i.Forms);
-		if (dto.ShowMedia.IsTrue()) q = q.Include(i => i.Media);
-		if (dto.ShowReports.IsTrue()) q = q.Include(i => i.Reports);
-		if (dto.ShowTeams.IsTrue()) q = q.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media);
-		if (dto.ShowVotes.IsTrue()) q = q.Include(i => i.Votes);
-		if (dto.ShowVoteFields.IsTrue()) q = q.Include(i => i.VoteFields);
-		if (dto.ShowCreator.IsTrue()) q = q.Include(i => i.User).ThenInclude(x => x!.Media);
+		q = q.Where(x => x.DeletedAt == null);
 
 		if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
 		if (dto.Subtitle.IsNotNullOrEmpty()) q = q.Where(x => (x.Subtitle ?? "").Contains(dto.Subtitle!));
@@ -74,10 +65,17 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.StartDate.HasValue) q = q.Where(x => x.StartDate >= dto.StartDate);
 		if (dto.EndDate.HasValue) q = q.Where(x => x.EndDate <= dto.EndDate);
 		if (dto.Query.IsNotNullOrEmpty())
-			q = q.Where(x => (x.Title ?? "")
-				            .Contains(dto.Query!) || (x.Subtitle ?? "")
-				            .Contains(dto.Query!) || (x.Description ?? "")
-				            .Contains(dto.Query!));
+			q = q.Where(x => (x.Title ?? "").Contains(dto.Query!) || (x.Subtitle ?? "").Contains(dto.Query!) || (x.Description ?? "").Contains(dto.Query!));
+
+		if (dto.ShowCategories.IsTrue()) q = q.Include(i => i.Categories);
+		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments);
+		if (dto.ShowForms.IsTrue()) q = q.Include(i => i.Forms);
+		if (dto.ShowMedia.IsTrue()) q = q.Include(i => i.Media);
+		if (dto.ShowReports.IsTrue()) q = q.Include(i => i.Reports);
+		if (dto.ShowTeams.IsTrue()) q = q.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media);
+		if (dto.ShowVotes.IsTrue()) q = q.Include(i => i.Votes);
+		if (dto.ShowVoteFields.IsTrue()) q = q.Include(i => i.VoteFields);
+		if (dto.ShowCreator.IsTrue()) q = q.Include(i => i.User).ThenInclude(x => x!.Media);
 
 		int totalCount = q.Count();
 
