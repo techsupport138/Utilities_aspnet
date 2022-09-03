@@ -44,16 +44,36 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 			.OrderByDescending(x => x.CreatedAt).AsNoTracking();
 
 		if (filter.Minimal)
-			productList = productList.Include(i => i.Media).Include(i => i.Categories).Include(i => i.User).ThenInclude(x => x.Media).Include(i => i.User)
-				.ThenInclude(x => x.Categories).Include(i => i.Bookmarks);
+			productList = productList
+				.Include(i => i.Media)
+				.Include(i => i.Categories)
+				.Include(i => i.User).ThenInclude(x => x.Media)
+				.Include(i => i.User).ThenInclude(x => x.Categories)
+				.Include(i => i.Bookmarks)
+				.Where(x => x.DeletedAt == null);
 		else
 			productList =
-				_context.Set<ProductEntity>().Where(x => x.Title.Contains(filter.Title) && filter.Product && x.DeletedAt == null).Include(i => i.Media)
-					.Include(i => i.Categories).Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Children)
-					.Include(i => i.Comments.Where(x => x.ParentId == null))!.ThenInclude(x => x.Media).Include(i => i.Reports).Include(i => i.Votes)
-					.Include(i => i.User)!.ThenInclude(x => x.Media).Include(i => i.User)!.ThenInclude(x => x.Categories).Include(i => i.Bookmarks)
-					.Include(i => i.Forms)!.ThenInclude(x => x.FormField).Include(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
-					.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes).OrderByDescending(x => x.CreatedAt);
+				_context.Set<ProductEntity>().Where(x => x.Title.Contains(filter.Title) && filter.Product && x.DeletedAt == null)
+					.Include(i => i.Media)
+					.Include(i => i.Categories)
+					.Include(i => i.Comments.Where(x => x.ParentId == null)).ThenInclude(x => x.Children)
+					.Include(i => i.Comments.Where(x => x.ParentId == null)).ThenInclude(x => x.Media)
+					.Include(i => i.Reports)
+					.Include(i => i.Votes)
+					.Include(i => i.User).ThenInclude(x => x.Media)
+					.Include(i => i.User).ThenInclude(x => x.Categories)
+					.Include(i => i.Bookmarks)
+					.Include(i => i.Forms)!.ThenInclude(x => x.FormField)
+					.Include(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
+					.Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
+					.OrderByDescending(x => x.CreatedAt)
+					.Where(x => x.DeletedAt == null);
+
+		if (filter.Categories.IsNotNullOrEmpty()) {
+			productList = productList.Where(x => x.Categories.Any(x => filter.Categories.Contains(x.Id) && x.DeletedAt == null));
+			categoryList = categoryList.Where(x => filter.Categories.Contains(x.Id) && x.DeletedAt == null);
+			userList = userList.Where(x => x.Categories.Any(x => filter.Categories.Contains(x.Id)) && x.DeletedAt == null);
+		}
 
 		if (filter.IsFollowing) {
 			List<string?> userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId).Select(x => x.FollowsUserId).ToListAsync();
@@ -72,12 +92,6 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 		if (filter.IsMine) {
 			productList = productList.Where(x => x.UserId == userId);
 			userList = userList.Where(x => x.Id == userId);
-		}
-
-		if (filter.Categories.IsNotNullOrEmpty()) {
-			productList = productList.Where(x => x.Categories.Any(x => filter.Categories.Contains(x.Id)));
-			categoryList = categoryList.Where(x => filter.Categories.Contains(x.Id));
-			userList = userList.Where(x => x.Categories.Any(x => filter.Categories.Contains(x.Id)));
 		}
 
 		model.Categories = _mapper.Map<IEnumerable<CategoryReadDto>>(categoryList);
