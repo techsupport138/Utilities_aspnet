@@ -20,7 +20,6 @@ public class AutoMapperProfile : Profile {
 		CreateMap<CommentEntity, CommentReadDto>()
 			.ForMember(x => x.IsLiked,
 			           c => c.MapFrom(v => v.LikeComments != null && v.LikeComments.Any() && v.LikeComments.Any(x => x.UserId == Server.UserId))).ReverseMap();
-		CreateMap<TransactionEntity, TransactionCreateDto>().ReverseMap();
 		CreateMap<BookmarkEntity, BookmarkReadDto>().ReverseMap();
 		CreateMap<UserEntity, UserMinimalReadDto>().ReverseMap();
 		CreateMap<TopProductEntity, TopProductReadDto>().ReverseMap();

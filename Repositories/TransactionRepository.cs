@@ -1,39 +1,32 @@
 namespace Utilities_aspnet.Repositories;
 
 public interface ITransactionRepository {
-	Task<GenericResponse<IEnumerable<TransactionEntity>>> Read();
-	Task<GenericResponse<IEnumerable<TransactionEntity>>> ReadMine();
-	Task<GenericResponse<TransactionEntity?>> Create(TransactionCreateDto dto);
+	GenericResponse<IQueryable<TransactionEntity>> Read();
+	GenericResponse<IQueryable<TransactionEntity>> ReadMine();
+	Task<GenericResponse<TransactionEntity>> Create(TransactionEntity dto);
 }
 
 public class TransactionRepository : ITransactionRepository {
 	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IMapper _mapper;
 
-	public TransactionRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public TransactionRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = dbContext;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<TransactionEntity?>> Create(TransactionCreateDto dto) {
-		dto.UserId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
-		TransactionEntity entity = _mapper.Map<TransactionEntity>(dto);
+	public async Task<GenericResponse<TransactionEntity>> Create(TransactionEntity entity) {
+		entity.UserId ??= _httpContextAccessor.HttpContext?.User.Identity?.Name;
 		await _dbContext.Set<TransactionEntity>().AddAsync(entity);
 		await _dbContext.SaveChangesAsync();
-
-		return new GenericResponse<TransactionEntity?>(_mapper.Map<TransactionEntity>(entity));
+		return new GenericResponse<TransactionEntity>(entity);
 	}
 
-	public async Task<GenericResponse<IEnumerable<TransactionEntity>>> Read() {
-		IEnumerable<TransactionEntity> model = await _dbContext.Set<TransactionEntity>().ToListAsync();
-		return new GenericResponse<IEnumerable<TransactionEntity>>(_mapper.Map<IEnumerable<TransactionEntity>>(model));
-	}
+	public GenericResponse<IQueryable<TransactionEntity>> Read() => new(_dbContext.Set<TransactionEntity>());
 
-	public async Task<GenericResponse<IEnumerable<TransactionEntity>>> ReadMine() {
-		IEnumerable<TransactionEntity> model = await _dbContext.Set<TransactionEntity>()
-			.Where(i => i.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name).ToListAsync();
-		return new GenericResponse<IEnumerable<TransactionEntity>>(_mapper.Map<IEnumerable<TransactionEntity>>(model));
+	public GenericResponse<IQueryable<TransactionEntity>> ReadMine() {
+		IQueryable<TransactionEntity> i = _dbContext.Set<TransactionEntity>()
+			.Where(i => i.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name);
+		return new GenericResponse<IQueryable<TransactionEntity>>(i);
 	}
 }

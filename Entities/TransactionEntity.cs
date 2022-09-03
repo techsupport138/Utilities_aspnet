@@ -25,12 +25,3 @@ public class TransactionEntity : BaseEntity {
 	public ProductEntity? Product { get; set; }
 	public Guid? ProductId { get; set; }
 }
-
-public class TransactionCreateDto {
-	public double? Amount { get; set; }
-	public string? UserId { get; set; }
-	public string? Descriptions { get; set; }
-	public TransactionStatus? StatusId { get; set; } = TransactionStatus.Pending;
-	public string? PaymentId { get; set; }
-	public Guid? ProductId { get; set; }
-}

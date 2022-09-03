@@ -6,25 +6,14 @@ namespace Utilities_aspnet.Controllers;
 public class TransactionController : BaseApiController {
 	private readonly ITransactionRepository _transactionRepository;
 
-	public TransactionController(ITransactionRepository transactionRepository) {
-		_transactionRepository = transactionRepository;
-	}
+	public TransactionController(ITransactionRepository transactionRepository) => _transactionRepository = transactionRepository;
 
 	[HttpPost]
-	public async Task<ActionResult<GenericResponse<TransactionEntity>>> Create(TransactionCreateDto dto) {
-		GenericResponse<TransactionEntity?> i = await _transactionRepository.Create(dto);
-		return Result(i);
-	}
+	public async Task<ActionResult<GenericResponse<TransactionEntity>>> Create(TransactionEntity dto) => Result(await _transactionRepository.Create(dto));
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<TransactionEntity>>>> Read() {
-		GenericResponse<IEnumerable<TransactionEntity>> i = await _transactionRepository.Read();
-		return Result(i);
-	}
+	public ActionResult<GenericResponse<IQueryable<TransactionEntity>>> Read() => Result(_transactionRepository.Read());
 
 	[HttpGet("Mine")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<TransactionEntity>>>> ReadMine() {
-		GenericResponse<IEnumerable<TransactionEntity>> i = await _transactionRepository.ReadMine();
-		return Result(i);
-	}
+	public ActionResult<GenericResponse<IQueryable<TransactionEntity>>> ReadMine() => Result(_transactionRepository.ReadMine());
 }

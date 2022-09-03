@@ -11,17 +11,11 @@ public class VoteRepository : IVoteRepository {
 	private readonly DbContext _dbContext;
 	private readonly IMapper _mapper;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IProductRepositoryV2 _productRepositoryV2;
-
-	public VoteRepository(
-		DbContext dbContext,
-		IMapper mapper,
-		IHttpContextAccessor httpContextAccessor,
-		IProductRepositoryV2 productRepositoryV2) {
+	
+	public VoteRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = dbContext;
 		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
-		_productRepositoryV2 = productRepositoryV2;
 	}
 
 	public async Task<GenericResponse<IEnumerable<VoteReadDto>>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto) {
