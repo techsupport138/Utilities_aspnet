@@ -11,16 +11,14 @@ public interface IProductRepositoryV2 {
 public class ProductRepositoryV2 : IProductRepositoryV2 {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IMapper _mapper;
 
-	public ProductRepositoryV2(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public ProductRepositoryV2(DbContext context, IHttpContextAccessor httpContextAccessor) {
 		_context = context;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
-		ProductEntity entity = _mapper.Map<ProductEntity>(dto);
+		ProductEntity entity = new();
 
 		ProductEntity e = await entity.FillDataV2(dto, _context);
 		e.VisitsCount = 1;
@@ -65,7 +63,11 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.StartDate.HasValue) q = q.Where(x => x.StartDate >= dto.StartDate);
 		if (dto.EndDate.HasValue) q = q.Where(x => x.EndDate <= dto.EndDate);
 		if (dto.Query.IsNotNullOrEmpty())
-			q = q.Where(x => (x.Title ?? "").Contains(dto.Query!) || (x.Subtitle ?? "").Contains(dto.Query!) || (x.Description ?? "").Contains(dto.Query!));
+			q = q.Where(x => (x.Title ?? "").Contains(dto.Query!) ||
+			                 (x.Subtitle ?? "").Contains(dto.Query!) ||
+			                 (x.Author ?? "").Contains(dto.Query!) ||
+			                 (x.Details ?? "").Contains(dto.Query!) ||
+			                 (x.Description ?? "").Contains(dto.Query!));
 
 		if (dto.ShowCategories.IsTrue()) q = q.Include(i => i.Categories);
 		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments);
@@ -189,6 +191,7 @@ public static class ProductEntityExtensionV2 {
 		entity.MinPrice = dto.MinPrice ?? entity.MinPrice;
 		entity.MaxPrice = dto.MaxPrice ?? entity.MaxPrice;
 		entity.Unit = dto.Unit ?? entity.Unit;
+		entity.Stock = dto.Stock ?? entity.Stock;
 		entity.Address = dto.Address ?? entity.Address;
 		entity.StartDate = dto.StartDate ?? entity.StartDate;
 		entity.EndDate = dto.EndDate ?? entity.EndDate;

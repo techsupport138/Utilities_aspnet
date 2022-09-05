@@ -263,6 +263,7 @@ public class ProductCreateUpdateDto {
 	public double? ScoreMinus { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
+	public int? Stock { get; set; }
 	public int? VisitsCount { get; set; }
 	public int? VisitsCountPlus { get; set; }
 	public DateTime? StartDate { get; set; }
@@ -278,8 +279,6 @@ public class ProductFilterDto {
 	public string? Subtitle { get; set; }
 	public string? Description { get; set; }
 	public string? Details { get; set; }
-	public string? Link { get; set; }
-	public string? Website { get; set; }
 	public string? Address { get; set; }
 	public string? Author { get; set; }
 	public string? PhoneNumber { get; set; }
@@ -288,24 +287,6 @@ public class ProductFilterDto {
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
 	public string? State { get; set; }
-	public string? Packaging { get; set; }
-	public string? Port { get; set; }
-	public string? Shipping { get; set; }
-	public string? KeyValues1 { get; set; }
-	public string? KeyValues2 { get; set; }
-	public string? Value { get; set; }
-	public string? Value1 { get; set; }
-	public string? Value2 { get; set; }
-	public string? Value3 { get; set; }
-	public string? Value4 { get; set; }
-	public string? Value5 { get; set; }
-	public string? Value6 { get; set; }
-	public string? Value7 { get; set; }
-	public string? Value8 { get; set; }
-	public string? Value9 { get; set; }
-	public string? Value10 { get; set; }
-	public string? Value11 { get; set; }
-	public string? Value12 { get; set; }
 	public string? UserId { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
