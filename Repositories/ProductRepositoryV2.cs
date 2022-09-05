@@ -23,6 +23,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		ProductEntity e = await entity.FillDataV2(dto, _context);
 		e.VisitsCount = 1;
 		e.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+		e.CreatedAt = DateTime.Now;
 		EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e, ct);
 		await _context.SaveChangesAsync(ct);
 
@@ -197,6 +198,7 @@ public static class ProductEntityExtensionV2 {
 		entity.EndDate = dto.EndDate ?? entity.EndDate;
 		entity.Status = dto.Status ?? entity.Status;
 		entity.DeletedAt = dto.DeletedAt ?? entity.DeletedAt;
+		entity.UpdatedAt = DateTime.Now;
 
 		if (dto.VisitsCountPlus.HasValue) {
 			if (entity.VisitsCount == null) entity.VisitsCount = 1;

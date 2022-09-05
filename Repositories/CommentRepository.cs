@@ -27,16 +27,15 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
-		IEnumerable<CommentEntity> comment =
-			await _context.Set<CommentEntity>()
-				.Include(x => x.User).ThenInclude(x => x!.Media)
-				.Include(x => x.Media)
-				.Include(x => x.LikeComments)
-				.Include(x => x.Children)!.ThenInclude(x => x.Children)
-				.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
-				.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
-				.Where(x => x.ProductId == id && x.ParentId == null)
-				.OrderByDescending(x => x.CreatedAt).AsNoTracking().ToListAsync();
+		IEnumerable<CommentEntity> comment = await _context.Set<CommentEntity>()
+			.Include(x => x.User).ThenInclude(x => x!.Media)
+			.Include(x => x.Media)
+			.Include(x => x.LikeComments)
+			.Include(x => x.Children)!.ThenInclude(x => x.Children)
+			.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
+			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
+			.Where(x => x.ProductId == id && x.ParentId == null && x.DeletedAt == null)
+			.OrderByDescending(x => x.CreatedAt).AsNoTracking().ToListAsync();
 
 		return new GenericResponse<IEnumerable<CommentReadDto>?>(_mapper.Map<IEnumerable<CommentReadDto>?>(comment));
 	}
@@ -47,7 +46,7 @@ public class CommentRepository : ICommentRepository {
 			.Include(x => x.Media)
 			.Include(x => x.LikeComments)
 			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media).OrderByDescending(x => x.CreatedAt)
-			.Where(x => x.Id == id)
+			.Where(x => x.Id == id && x.DeletedAt == null)
 			.OrderByDescending(x => x.CreatedAt)
 			.AsNoTracking()
 			.FirstOrDefaultAsync();
@@ -60,6 +59,7 @@ public class CommentRepository : ICommentRepository {
 
 		CommentEntity comment = new() {
 			CreatedAt = DateTime.Now,
+			UpdatedAt = DateTime.Now,
 			Comment = dto.Comment,
 			ProductId = dto.ProductId,
 			Score = dto.Score,
@@ -127,6 +127,7 @@ public class CommentRepository : ICommentRepository {
 		if (entity.Score.HasValue) comment.Score = entity.Score;
 		if (entity.ProductId.HasValue) comment.ProductId = entity.ProductId;
 
+		comment.UpdatedAt = DateTime.Now;
 		_context.Set<CommentEntity>().Update(comment);
 		await _context.SaveChangesAsync();
 

@@ -21,6 +21,7 @@ public class ChatRepository : IChatRepository {
 		if (user == null) return new GenericResponse<ChatReadDto?>(null, UtilitiesStatusCodes.BadRequest);
 		ChatEntity conversation = new() {
 			CreatedAt = DateTime.Now,
+			UpdatedAt = DateTime.Now,
 			FromUserId = userId!,
 			ToUserId = model.UserId,
 			MessageText = model.MessageText,
