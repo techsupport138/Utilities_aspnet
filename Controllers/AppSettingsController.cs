@@ -3,23 +3,22 @@
 [ApiController]
 [Route("api/[controller]")]
 public class AppSettingsController : BaseApiController {
-	private readonly IAppSettingRepository _appSettingRepository;
-	private readonly DbContext _dbContext;
-
-	public AppSettingsController(IAppSettingRepository appSettingRepository, DbContext dbContext) {
-		_appSettingRepository = appSettingRepository;
-		_dbContext = dbContext;
-	}
 
 	[HttpGet]
 	[ResponseCache(CacheProfileName = "default")]
-	public async Task<ActionResult<GenericResponse<EnumDto>>> Read() => Result(await _appSettingRepository.Read());
-
-	[HttpPost("Gender")]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse>> CreateGender(GenderEntity gender) {
-		await _dbContext.Set<GenderEntity>().AddAsync(gender);
-		await _dbContext.SaveChangesAsync();
-		return Ok();
+	public ActionResult<GenericResponse<EnumDto>> Read() {
+		EnumDto model = new() {
+			FormFieldType = EnumExtension.GetValues<FormFieldType>(),
+			TransactionStatuses = EnumExtension.GetValues<TransactionStatus>(),
+			UtilitiesStatusCodes = EnumExtension.GetValues<UtilitiesStatusCodes>(),
+			OtpResult = EnumExtension.GetValues<OtpResult>(),
+			DatabaseType = EnumExtension.GetValues<DatabaseType>(),
+			OrderStatuses = EnumExtension.GetValues<OrderStatuses>(),
+			PayType = EnumExtension.GetValues<PayType>(),
+			SendType = EnumExtension.GetValues<SendType>(),
+			ProductStatus = EnumExtension.GetValues<ProductStatus>(),
+			Sender = EnumExtension.GetValues<Sender>()
+		};
+		return Result(new GenericResponse<EnumDto?>(model, UtilitiesStatusCodes.Success, "Success"));
 	}
 }

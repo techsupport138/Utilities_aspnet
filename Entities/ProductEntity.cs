@@ -43,7 +43,13 @@ public class ProductEntity : BaseEntity {
 
 	[StringLength(500)]
 	public string? State { get; set; }
-
+	
+	[StringLength(500)]
+	public string? StateTr1 { get; set; }
+	
+	[StringLength(500)]
+	public string? StateTr2 { get; set; }
+	
 	[StringLength(500)]
 	public string? Packaging { get; set; }
 
@@ -161,6 +167,8 @@ public class ProductReadDto {
 	public string? Type { get; set; }
 	public string? Unit { get; set; }
 	public string? State { get; set; }
+	public string? StateTr1 { get; set; }
+	public string? StateTr2 { get; set; }
 	public string? UseCase { get; set; }
 	public string? Packaging { get; set; }
 	public string? Port { get; set; }
@@ -230,6 +238,8 @@ public class ProductCreateUpdateDto {
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
 	public string? State { get; set; }
+	public string? StateTr1 { get; set; }
+	public string? StateTr2 { get; set; }
 	public string? Packaging { get; set; }
 	public string? Port { get; set; }
 	public string? Shipping { get; set; }
@@ -287,6 +297,8 @@ public class ProductFilterDto {
 	public string? Unit { get; set; }
 	public string? UseCase { get; set; }
 	public string? State { get; set; }
+	public string? StateTr1 { get; set; }
+	public string? StateTr2 { get; set; }
 	public string? UserId { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
@@ -323,7 +335,6 @@ public class ProductFilterDto {
 	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
-	public ProductFilterOrder? FilterOrder { get; set; } = ProductFilterOrder.AToZ;
 	public string? Query { get; set; }
 }
 

@@ -65,6 +65,21 @@ public class UserEntity : IdentityUser {
 
 	[StringLength(500)]
 	public string? State { get; set; }
+	
+	[StringLength(500)]
+	public string? StateTr1 { get; set; }
+	
+	[StringLength(500)]
+	public string? StateTr2 { get; set; }
+	
+	[StringLength(500)]
+	public string Gender { get; set; } = null!;
+
+	[StringLength(500)]
+	public string? GenderTr1 { get; set; }
+
+	[StringLength(500)]
+	public string? GenderTr2 { get; set; }
 
 	public double? Wallet { get; set; } = 0;
 	public double? Point { get; set; } = 0;
@@ -98,7 +113,6 @@ public class UserEntity : IdentityUser {
 	public GrowthRateReadDto? GrowthRate { get; set; }
 
 	public int? GenderId { get; set; }
-	public GenderEntity? Gender { get; set; }
 	public IEnumerable<FormEntity>? FormBuilders { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<ProductEntity>? Products { get; set; }
@@ -123,21 +137,6 @@ public class TeamEntity : BaseEntity {
 	public UserEntity? User { get; set; }
 	public Guid? ProductId { get; set; }
 	public ProductEntity? Product { get; set; }
-}
-
-[Table("Gender")]
-public class GenderEntity {
-	[Key]
-	public int Id { get; set; }
-
-	[StringLength(500)]
-	public string Title { get; set; } = null!;
-
-	[StringLength(500)]
-	public string? TitleTr1 { get; set; }
-
-	[StringLength(500)]
-	public string? TitleTr2 { get; set; }
 }
 
 public class TeamReadDto {
@@ -189,6 +188,8 @@ public class UserReadDto {
 	public string? Pinterest { get; set; }
 	public string? Color { get; set; }
 	public string? State { get; set; }
+	public string? StateTr1 { get; set; }
+	public string? StateTr2 { get; set; }
 	public string? Type { get; set; }
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
@@ -196,6 +197,9 @@ public class UserReadDto {
 	public string? Website { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
+	public string Gender { get; set; } = null!;
+	public string? GenderTr1 { get; set; }
+	public string? GenderTr2 { get; set; }
 	public double? Wallet { get; set; }
 	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
@@ -208,7 +212,7 @@ public class UserReadDto {
 	public string? AccessLevel { get; set; }
 	public string? Badge { get; set; }
 	public DateTime? BirthDate { get; set; }
-	public GenderEntity? Gender { get; set; }
+	
 	public GrowthRateReadDto? GrowthRate { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
@@ -225,6 +229,8 @@ public class UserMinimalReadDto {
 	public string? LastName { get; set; }
 	public string? Color { get; set; }
 	public string? State { get; set; }
+	public string? StateTr1 { get; set; }
+	public string? StateTr2 { get; set; }
 	public int? CountFollowers { get; set; }
 	public int? CountFollowing { get; set; }
 	public int? CountProducts { get; set; }
@@ -247,14 +253,15 @@ public class UserMinimalReadDto {
 	public string? Website { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
+	public string Gender { get; set; } = null!;
+	public string? GenderTr1 { get; set; }
+	public string? GenderTr2 { get; set; }
 	public double? Wallet { get; set; }
 	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
 	public bool IsAdmin { get; set; }
 	public bool IsFollowing { get; set; } = false;
 	public bool? Suspend { get; set; }
-
-	public GenderEntity? Gender { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 }
@@ -306,6 +313,8 @@ public class UserCreateUpdateDto {
 	public string? Activity { get; set; }
 	public string? Color { get; set; }
 	public string? State { get; set; }
+	public string? StateTr1 { get; set; }
+	public string? StateTr2 { get; set; }
 	public bool? Suspend { get; set; }
 	public double? Wallet { get; set; }
 	public double? Point { get; set; } = 0;
@@ -328,5 +337,4 @@ public class UserFilterDto {
 	public bool? ShowTransactions { get; set; }
 	public bool? ShowFollowings { get; set; }
 	public bool? ShowSuspend { get; set; }
-	public UserFilterOrder? FilterOrder { get; set; } = UserFilterOrder.AToZ;
 }

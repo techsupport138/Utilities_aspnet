@@ -72,25 +72,11 @@ public enum TransactionStatus {
 	Success = 100
 }
 
-public enum ProductFilterOrder {
-	LowPrice,
-	HighPrice,
-	AToZ,
-	ZToA
-}
-
 public enum ProductStatus {
 	Released,
 	Expired,
 	InQueue,
 	Deleted
-}
-
-public enum UserFilterOrder {
-	LowGrowthRate,
-	HighGrowthRate,
-	AToZ,
-	ZToA
 }
 
 public enum Sender {

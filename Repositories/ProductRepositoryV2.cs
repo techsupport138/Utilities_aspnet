@@ -84,15 +84,6 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 
 		if (dto.Categories != null && dto.Categories.Any()) q = q.Where(x => x.Categories.Any(y => dto.Categories.ToList().Contains(y.Id)));
 
-		if (dto.FilterOrder.HasValue)
-			q = dto.FilterOrder switch {
-				ProductFilterOrder.LowPrice => q.OrderBy(x => x.Price),
-				ProductFilterOrder.HighPrice => q.OrderByDescending(x => x.Price),
-				ProductFilterOrder.AToZ => q.OrderBy(x => x.Title),
-				ProductFilterOrder.ZToA => q.OrderByDescending(x => x.Title),
-				_ => q.OrderBy(x => x.CreatedAt)
-			};
-
 		if (dto.OrderByVotes.IsTrue()) q = q.OrderBy(x => x.VoteCount);
 		if (dto.OrderByAtoZ.IsTrue()) q = q.OrderBy(x => x.Title);
 		if (dto.OrderByZtoA.IsTrue()) q = q.OrderByDescending(x => x.Title);
@@ -175,6 +166,8 @@ public static class ProductEntityExtensionV2 {
 		entity.Email = dto.Email ?? entity.Email;
 		entity.Type = dto.Type ?? entity.Type;
 		entity.State = dto.State ?? entity.State;
+		entity.StateTr1 = dto.StateTr1 ?? entity.StateTr1;
+		entity.StateTr2 = dto.StateTr2 ?? entity.StateTr2;
 		entity.Latitude = dto.Latitude ?? entity.Latitude;
 		entity.Longitude = dto.Longitude ?? entity.Longitude;
 		entity.Description = dto.Description ?? entity.Description;

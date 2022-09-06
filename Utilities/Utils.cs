@@ -81,7 +81,6 @@ public static class StartupExtension {
 		builder.Services.AddTransient<IMediaRepository, MediaRepository>();
 		builder.Services.AddTransient<IUploadRepository, UploadRepository>();
 		builder.Services.AddTransient<IFollowBookmarkRepository, FollowBookmarkRepository>();
-		builder.Services.AddTransient<IAppSettingRepository, AppSettingRepository>();
 		builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 		builder.Services.AddTransient<IProductRepositoryV2, ProductRepositoryV2>();
 		builder.Services.AddTransient<IChatRepository, ChatRepository>();

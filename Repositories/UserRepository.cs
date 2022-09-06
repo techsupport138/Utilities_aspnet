@@ -110,21 +110,6 @@ public class UserRepository : IUserRepository {
 
 		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
 
-		if (dto.FilterOrder.HasValue) {
-			if (dto.FilterOrder.Value == UserFilterOrder.LowGrowthRate || dto.FilterOrder.Value == UserFilterOrder.HighGrowthRate)
-				foreach (UserEntity item in entity) {
-					item.GrowthRate = GetGrowthRate(item.Id).Result;
-				}
-
-			entity = dto.FilterOrder switch {
-				UserFilterOrder.LowGrowthRate => entity.OrderBy(x => x.GrowthRate).ToList(),
-				UserFilterOrder.HighGrowthRate => entity.OrderByDescending(x => x.GrowthRate).ToList(),
-				UserFilterOrder.AToZ => entity.OrderBy(x => x.FullName).ToList(),
-				UserFilterOrder.ZToA => entity.OrderByDescending(x => x.FullName).ToList(),
-				_ => entity.OrderBy(x => x.CreatedAt).ToList(),
-			};
-		}
-
 		if (userId != null) {
 			foreach (UserEntity item in entity) {
 				item.IsFollowing = await _context.Set<FollowEntity>().AnyAsync(x => x.FollowsUserId == item.Id && x.FollowerUserId == userId);
