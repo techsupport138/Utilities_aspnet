@@ -54,6 +54,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.IsForSale.HasValue) q = q.Where(x => x.IsForSale == dto.IsForSale);
 		if (dto.VisitsCount.HasValue) q = q.Where(x => x.VisitsCount == dto.VisitsCount);
 		if (dto.Length.HasValue) q = q.Where(x => x.Length.ToInt() == dto.Length.ToInt());
+		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
 		if (dto.Width.HasValue) q = q.Where(x => x.Width.ToInt() == dto.Width.ToInt());
 		if (dto.Height.HasValue) q = q.Where(x => x.Height.ToInt() == dto.Height.ToInt());
 		if (dto.Weight.HasValue) q = q.Where(x => x.Weight.ToInt() == dto.Weight.ToInt());

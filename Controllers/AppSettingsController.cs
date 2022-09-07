@@ -5,8 +5,7 @@
 public class AppSettingsController : BaseApiController {
 
 	[HttpGet]
-	[ResponseCache(CacheProfileName = "default")]
-	public ActionResult<GenericResponse<EnumDto>> Read() {
+	public static ActionResult<GenericResponse<EnumDto>> Read() {
 		EnumDto model = new() {
 			FormFieldType = EnumExtension.GetValues<FormFieldType>(),
 			TransactionStatuses = EnumExtension.GetValues<TransactionStatus>(),
@@ -19,6 +18,6 @@ public class AppSettingsController : BaseApiController {
 			ProductStatus = EnumExtension.GetValues<ProductStatus>(),
 			Sender = EnumExtension.GetValues<Sender>()
 		};
-		return Result(new GenericResponse<EnumDto?>(model, UtilitiesStatusCodes.Success, "Success"));
+		return Result(new GenericResponse<EnumDto?>(model));
 	}
 }
