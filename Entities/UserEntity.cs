@@ -73,7 +73,7 @@ public class UserEntity : IdentityUser {
 	public string? StateTr2 { get; set; }
 	
 	[StringLength(500)]
-	public string Gender { get; set; } = null!;
+	public string? Gender { get; set; } = null!;
 
 	[StringLength(500)]
 	public string? GenderTr1 { get; set; }
@@ -197,7 +197,7 @@ public class UserReadDto {
 	public string? Website { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
-	public string Gender { get; set; } = null!;
+	public string? Gender { get; set; } = null!;
 	public string? GenderTr1 { get; set; }
 	public string? GenderTr2 { get; set; }
 	public double? Wallet { get; set; }
@@ -253,7 +253,7 @@ public class UserMinimalReadDto {
 	public string? Website { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
-	public string Gender { get; set; } = null!;
+	public string? Gender { get; set; } = null!;
 	public string? GenderTr1 { get; set; }
 	public string? GenderTr2 { get; set; }
 	public double? Wallet { get; set; }
