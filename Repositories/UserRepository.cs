@@ -89,7 +89,6 @@ public class UserRepository : IUserRepository {
 	public async Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto) {
 		IIncludableQueryable<UserEntity, object?> dbSet = _context.Set<UserEntity>().Include(u => u.Media);
 
-		if (dto.ShowGender.IsTrue()) dbSet = dbSet.Include(u => u.Gender);
 		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(u => u.Categories);
 		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
 		if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);

@@ -329,7 +329,6 @@ public class UserCreateUpdateDto {
 public class UserFilterDto {
 	public string? UserId { get; set; }
 	public string? UserName { get; set; }
-	public bool? ShowGender { get; set; }
 	public bool? ShowMedia { get; set; }
 	public bool? ShowCategories { get; set; }
 	public bool? ShowForms { get; set; }
