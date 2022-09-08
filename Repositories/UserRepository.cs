@@ -250,24 +250,18 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
 		string mobile = dto.Mobile.Replace("+", "");
-		UserEntity? model = _context.Set<UserEntity>().FirstOrDefault(x => x.Email == mobile);
+		UserEntity? model = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile || x.PhoneNumber == mobile);
 
 		if (model != null) {
-			const string? otp = "1375";
-			return new GenericResponse<string?>(otp, UtilitiesStatusCodes.Success, "Success");
-		}
-		model = _context.Set<UserEntity>().FirstOrDefault(x => x.PhoneNumber == mobile);
-		if (model != null) {
 			string? otp = "1375";
-			if (dto.SendSMS) otp = SendOtp(model.Id, 4);
-			return new GenericResponse<string?>(otp ?? "1375", UtilitiesStatusCodes.Success, "Success");
+			if (dto.SendSMS) otp = await SendOtp(model.Id, 4);
+			return new GenericResponse<string?>(otp ?? "1375");
 		}
 		else {
 			UserEntity user = new() {
 				Email = "",
 				PhoneNumber = mobile,
 				UserName = mobile,
-				AppUserName = mobile,
 				AppPhoneNumber = mobile,
 				EmailConfirmed = false,
 				PhoneNumberConfirmed = false,
@@ -278,14 +272,12 @@ public class UserRepository : IUserRepository {
 
 			IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
 			if (!result.Succeeded)
-				return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, "The information was not entered correctly");
+				return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, result.Errors.First().Description);
 
 			string? otp = "1375";
-			if (dto.SendSMS) {
-				otp = SendOtp(user.Id, 4);
-			}
+			if (dto.SendSMS) otp = await SendOtp(user.Id, 4);
 
-			return new GenericResponse<string?>(otp ?? "1375", UtilitiesStatusCodes.Success, "Success");
+			return new GenericResponse<string?>(otp ?? "1375");
 		}
 	}
 
@@ -415,14 +407,14 @@ public class UserRepository : IUserRepository {
 		return dto;
 	}
 
-	private string? SendOtp(string userId, int codeLength) {
+	private async Task<string?> SendOtp(string userId, int codeLength) {
 		DateTime dd = DateTime.Now.AddMinutes(-3);
 		bool oldOtp = _context.Set<OtpEntity>().Any(x => x.UserId == userId && x.CreatedAt > dd);
 		if (oldOtp) return null;
 
 		string newOtp = Utils.Random(codeLength).ToString();
 		_context.Set<OtpEntity>().Add(new OtpEntity {UserId = userId, OtpCode = newOtp});
-		UserEntity? user = _context.Set<UserEntity>().FirstOrDefault(x => x.Id == userId);
+		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 		_sms.SendSms(user?.PhoneNumber!, newOtp);
 		_context.SaveChanges();
 		return newOtp;
