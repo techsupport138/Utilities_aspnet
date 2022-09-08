@@ -67,7 +67,7 @@ public class UserRepository : IUserRepository {
 		}
 		catch { }
 
-		return new GenericResponse<UserEntity?>(entity, UtilitiesStatusCodes.Success, "Success");
+		return new GenericResponse<UserEntity?>(entity);
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto) {
@@ -92,7 +92,7 @@ public class UserRepository : IUserRepository {
 		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(u => u.Categories);
 		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
 		if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
-		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products.Where(x => x.DeletedAt == null)).ThenInclude(u => u.Media);
+		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(u => u.Media);
 
 		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
 
@@ -129,7 +129,7 @@ public class UserRepository : IUserRepository {
 		_context.Set<UserEntity>().Update(user);
 		await _context.SaveChangesAsync();
 
-		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+		return new GenericResponse();
 	}
 
 	public async Task<GenericResponse> RemovalFromTeam(Guid teamId) {
@@ -144,7 +144,7 @@ public class UserRepository : IUserRepository {
 		_context.Set<TeamEntity>().Remove(team);
 		await _context.SaveChangesAsync();
 
-		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+		return new GenericResponse();
 	}
 
 	public async Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile) {
@@ -157,8 +157,7 @@ public class UserRepository : IUserRepository {
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
 
 		JwtSecurityToken token = await CreateToken(user);
-		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
-		                                        "Success");
+		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result);
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Create(UserCreateUpdateDto dto) {
@@ -203,9 +202,7 @@ public class UserRepository : IUserRepository {
 
 		JwtSecurityToken token = await CreateToken(user);
 
-		return new GenericResponse<UserEntity?>(
-			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success, "Success"
-		);
+		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result);
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser) {
@@ -233,29 +230,25 @@ public class UserRepository : IUserRepository {
 
 		JwtSecurityToken token = await CreateToken(user);
 
-		string? otp = "1375";
 		if (aspNetUser.SendSMS) {
-			if (aspNetUser.Email != null && aspNetUser.Email.IsEmail()) {
-				//ToDo_AddEmailSender
-			}
-			else {
-				SendOtp(user.Id, 4);
-			}
+			if (aspNetUser.Email != null && aspNetUser.Email.IsEmail()) { }
+			else await SendOtp(user.Id, 4);
 		}
 
-		return new GenericResponse<UserEntity?>(
-			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success, "Success"
-		);
+		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result);
 	}
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
 		string mobile = dto.Mobile.Replace("+", "");
-		UserEntity? model = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile || x.PhoneNumber == mobile);
-
+		UserEntity? model = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
+		                                                                              x.PhoneNumber == mobile ||
+		                                                                              x.AppUserName == mobile ||
+		                                                                              x.AppPhoneNumber == mobile ||
+		                                                                              x.UserName == mobile);
 		if (model != null) {
 			string? otp = "1375";
 			if (dto.SendSMS) otp = await SendOtp(model.Id, 4);
-			return new GenericResponse<string?>(otp ?? "1375");
+			return new GenericResponse<string?>(otp);
 		}
 		else {
 			UserEntity user = new() {
@@ -297,14 +290,12 @@ public class UserRepository : IUserRepository {
 
 		JwtSecurityToken token = await CreateToken(user);
 		if (dto.VerificationCode == "1375")
-			return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-			                                        UtilitiesStatusCodes.Success, "Success");
+			return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result);
 
 		if (Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
 
-		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
-		                                        UtilitiesStatusCodes.Success, "Success");
+		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result);
 	}
 
 	#endregion
