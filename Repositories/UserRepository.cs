@@ -3,7 +3,7 @@
 public interface IUserRepository {
 	Task<GenericResponse<UserEntity?>> Create(UserCreateUpdateDto parameter);
 	Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto);
-	Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null);
+	Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null, bool showVotes = false);
 	Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto);
 	Task<GenericResponse> Delete(string id);
 	Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile);
@@ -40,10 +40,14 @@ public class UserRepository : IUserRepository {
 		return existUserName ? new GenericResponse(UtilitiesStatusCodes.BadRequest, "Username is available") : new GenericResponse();
 	}
 
-	public async Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null) {
+	public async Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null, bool showVotes = false) {
 		bool isUserId = Guid.TryParse(idOrUserName, out _);
-		UserEntity? entity = await _context.Set<UserEntity>().AsNoTracking().Include(u => u.Media).Include(u => u.Categories)!
-			.ThenInclude(u => u.Media).Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.Media)
+		UserEntity? entity = await _context.Set<UserEntity>()
+			.Include(u => u.Media)
+			.Include(u => u.Categories)!.ThenInclude(u => u.Media)
+			.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.Media)
+			.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.Votes)
+			.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.VoteFields)
 			.FirstOrDefaultAsync(u => isUserId ? u.Id == idOrUserName : u.UserName == idOrUserName);
 
 		if (entity == null)
@@ -274,7 +278,7 @@ public class UserRepository : IUserRepository {
 
 			IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
 			if (!result.Succeeded)
-				return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, result.Errors.First().Code + result.Errors.First().Description );
+				return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, result.Errors.First().Code + result.Errors.First().Description);
 
 			string? otp = "1375";
 			if (dto.SendSMS) otp = await SendOtp(user.Id, 4);

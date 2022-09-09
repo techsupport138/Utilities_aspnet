@@ -38,7 +38,8 @@ public class UserController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpGet("{id}")]
-	public async Task<ActionResult<GenericResponse<UserEntity?>>> ReadById(string id) => Result(await _userRepository.ReadById(id));
+	public async Task<ActionResult<GenericResponse<UserEntity?>>> ReadById(string id, bool showVotes = false)
+		=> Result(await _userRepository.ReadById(id, showVotes: showVotes));
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -88,6 +88,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.Categories != null && dto.Categories.Any()) q = q.Where(x => x.Categories.Any(y => dto.Categories.ToList().Contains(y.Id)));
 
 		if (dto.OrderByVotes.IsTrue()) q = q.OrderBy(x => x.VoteCount);
+		if (dto.OrderByVotesDecending.IsTrue()) q = q.OrderByDescending(x => x.VoteCount);
 		if (dto.OrderByAtoZ.IsTrue()) q = q.OrderBy(x => x.Title);
 		if (dto.OrderByZtoA.IsTrue()) q = q.OrderByDescending(x => x.Title);
 		if (dto.OrderByPriceAccending.IsTrue()) q = q.OrderBy(x => x.Price);

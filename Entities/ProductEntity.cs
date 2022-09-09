@@ -310,6 +310,7 @@ public class ProductFilterDto {
 	public bool? ShowTeams { get; set; } = false;
 	public bool? ShowCreator { get; set; } = false;
 	public bool? OrderByVotes { get; set; } = false;
+	public bool? OrderByVotesDecending { get; set; } = false;
 	public bool? OrderByAtoZ { get; set; } = false;
 	public bool? OrderByZtoA { get; set; } = false;
 	public bool? OrderByPriceAccending { get; set; } = false;

@@ -97,9 +97,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 		model.Categories = _mapper.Map<IEnumerable<CategoryReadDto>>(categoryList);
 		model.Users = _mapper.Map<IEnumerable<UserReadDto>>(userList);
 		model.Products = _mapper.Map<IEnumerable<ProductReadDto>>(productList);
-		if (filter.IsBookmark) {
-			model.Products = model.Products.Where(x => x.IsBookmarked).ToList();
-		}
+		if (filter.IsBookmark) model.Products = model.Products.Where(x => x.IsBookmarked).ToList();
 		return new GenericResponse<GlobalSearchDto>(model);
 	}
 }
