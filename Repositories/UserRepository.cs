@@ -330,7 +330,9 @@ public class UserRepository : IUserRepository {
 		entity.AppPhoneNumber = dto.AppPhoneNumber ?? entity.AppPhoneNumber;
 		entity.Birthdate = dto.BirthDate ?? entity.Birthdate;
 		entity.Wallet = dto.Wallet ?? entity.Wallet;
-		entity.GenderId = dto.GenderId ?? entity.GenderId;
+		entity.Gender = dto.Gender ?? entity.Gender;
+		entity.GenderTr1 = dto.GenderTr1 ?? entity.GenderTr1;
+		entity.GenderTr2 = dto.GenderTr2 ?? entity.GenderTr2;
 		entity.UserName = dto.UserName ?? entity.UserName;
 		entity.Email = dto.Email ?? entity.Email;
 		entity.PhoneNumber = dto.PhoneNumber ?? entity.PhoneNumber;

@@ -112,7 +112,6 @@ public class UserEntity : IdentityUser {
 	[NotMapped]
 	public GrowthRateReadDto? GrowthRate { get; set; }
 
-	public int? GenderId { get; set; }
 	public IEnumerable<FormEntity>? FormBuilders { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<ProductEntity>? Products { get; set; }
@@ -308,6 +307,9 @@ public class UserCreateUpdateDto {
 	public string? Dribble { get; set; }
 	public string? SoundCloud { get; set; }
 	public string? Pinterest { get; set; }
+	public string? Gender { get; set; } = null!;
+	public string? GenderTr1 { get; set; }
+	public string? GenderTr2 { get; set; }
 	public string? Type { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
@@ -320,7 +322,6 @@ public class UserCreateUpdateDto {
 	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
 	public DateTime? BirthDate { get; set; }
-	public int? GenderId { get; set; }
 	public string? AccessLevel { get; set; }
 	public string? Badge { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
