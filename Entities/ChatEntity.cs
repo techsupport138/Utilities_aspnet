@@ -15,7 +15,7 @@ public class ChatEntity : BaseEntity {
 	[StringLength(2000)]
 	public string MessageText { get; set; } = null!;
 
-	public bool ReadMessage { get; set; } = false;
+	public bool ReadMessage { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 }
 

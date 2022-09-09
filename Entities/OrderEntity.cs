@@ -84,7 +84,7 @@ public class OrderCreateUpdateDto {
 	public PayType? PayType { get; set; }
 	public SendType? SendType { get; set; }
 
-	public IEnumerable<OrderDetailCreateUpdateDto> OrderDetails { get; set; }
+	public IEnumerable<OrderDetailCreateUpdateDto>? OrderDetails { get; set; }
 }
 
 public class OrderDetailCreateUpdateDto {

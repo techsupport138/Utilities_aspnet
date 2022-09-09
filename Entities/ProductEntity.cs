@@ -137,18 +137,6 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<CommentEntity>? Comments { get; set; }
 	public IEnumerable<TeamEntity>? Teams { get; set; }
 	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
-
-	[NotMapped]
-	public bool IsBookmarked { get; set; }
-
-	[NotMapped]
-	public bool IsTopProduct { get; set; } = false;
-
-	[NotMapped]
-	public int? CommentsCount { get; set; }
-
-	[NotMapped]
-	public int? DownloadCount { get; set; }
 }
 
 public class ProductReadDto {
@@ -191,7 +179,7 @@ public class ProductReadDto {
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public bool IsBookmarked { get; set; }
-	public bool IsTopProduct { get; set; } = false;
+	public bool IsTopProduct { get; set; }
 	public int? VisitsCount { get; set; }
 	public int? CommentsCount { get; set; }
 	public int? DownloadCount { get; set; }

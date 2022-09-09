@@ -66,8 +66,6 @@ public class MediaEntity : BaseEntity {
 public class UploadDto {
 	public string? UseCase { get; set; }
 	public string? UserId { get; set; }
-	public IEnumerable<IFormFile>? Files { get; set; }
-	public IEnumerable<string>? Links { get; set; }
 	public string? Title { get; set; }
 	public string? Size { get; set; }
 	public Guid? ProductId { get; set; }
@@ -76,4 +74,6 @@ public class UploadDto {
 	public Guid? NotificationId { get; set; }
 	public Guid? CommentId { get; set; }
 	public Guid? ChatId { get; set; }
+	public IEnumerable<string>? Links { get; set; }
+	public IEnumerable<IFormFile>? Files { get; set; }
 }

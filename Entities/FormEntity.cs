@@ -3,7 +3,7 @@
 [Table("Forms")]
 public class FormEntity : BaseEntity {
 	[StringLength(2000)]
-	public string Title { get; set; }
+	public string? Title { get; set; }
 
 	public UserEntity? User { get; set; }
 	public string? UserId { get; set; }
@@ -42,7 +42,7 @@ public class FormFieldEntity : BaseEntity {
 
 public class FormDto {
 	public Guid? Id { get; set; }
-	public string Title { get; set; }
+	public string? Title { get; set; }
 	public FormFieldDto? FormField { get; set; }
 }
 
@@ -60,7 +60,7 @@ public class FormCreateDto {
 	public string? UserId { get; set; }
 	public Guid? ProductId { get; set; }
 	public Guid? OrderDetailId { get; set; }
-	public IEnumerable<FormTitleDto> Form { get; set; }
+	public IEnumerable<FormTitleDto>? Form { get; set; }
 }
 
 public class FormTitleDto {

@@ -3,7 +3,7 @@
 [Table("Notifications")]
 public class NotificationEntity : BaseEntity {
 	[StringLength(500)]
-	public string? Title { get; set; } = null!;
+	public string? Title { get; set; }
 
 	[StringLength(2000)]
 	public string? Message { get; set; }
@@ -28,7 +28,7 @@ public class NotificationEntity : BaseEntity {
 	public UserEntity? CreatorUser { get; set; }
 
 	[NotMapped]
-	public bool IsFollowing { get; set; } = false;
+	public bool IsFollowing { get; set; }
 }
 
 public class NotificationDto {
@@ -41,11 +41,11 @@ public class NotificationDto {
 	public string? UseCase { get; set; }
 	public UserReadDto? CreatorUser { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
-	public bool IsFollowing { get; set; } = false;
+	public bool IsFollowing { get; set; }
 }
 
 public class NotificationCreateUpdateDto {
-	public string? Title { get; set; } = null!;
+	public string? Title { get; set; }
 	public string? UserId { get; set; }
 	public string? CreatorUserId { get; set; }
 	public string? Message { get; set; }

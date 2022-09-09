@@ -46,6 +46,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.Unit.IsNotNullOrEmpty()) q = q.Where(x => x.Unit == dto.Unit);
 		if (dto.UseCase.IsNotNullOrEmpty()) q = q.Where(x => x.UseCase == dto.UseCase);
 		if (dto.State.IsNotNullOrEmpty()) q = q.Where(x => x.State == dto.State);
+		if (dto.StateTr1.IsNotNullOrEmpty()) q = q.Where(x => x.StateTr1 == dto.StateTr2);
+		if (dto.StateTr2.IsNotNullOrEmpty()) q = q.Where(x => x.StateTr2 == dto.StateTr2);
 		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 		if (dto.StartPriceRange.HasValue) q = q.Where(x => x.Price >= dto.StartPriceRange);
 		if (dto.Status.HasValue) q = q.Where(x => x.Status >= dto.Status);
@@ -184,6 +186,11 @@ public static class ProductEntityExtensionV2 {
 		entity.MinOrder = dto.MinOrder ?? entity.MinOrder;
 		entity.MaxOrder = dto.MaxOrder ?? entity.MaxOrder;
 		entity.MinPrice = dto.MinPrice ?? entity.MinPrice;
+		entity.Shipping = dto.Shipping ?? entity.Shipping;
+		entity.Port = dto.Port ?? entity.Port;
+		entity.KeyValues1 = dto.KeyValues1 ?? entity.KeyValues1;
+		entity.KeyValues2 = dto.KeyValues2 ?? entity.KeyValues2;
+		entity.Packaging = dto.Packaging ?? entity.Packaging;
 		entity.MaxPrice = dto.MaxPrice ?? entity.MaxPrice;
 		entity.Unit = dto.Unit ?? entity.Unit;
 		entity.Stock = dto.Stock ?? entity.Stock;
