@@ -35,6 +35,8 @@ public class NotificationRepository : INotificationRepository {
 			Title = model.Title,
 			UserId = model.UserId,
 			CreatorUserId = model.CreatorUserId,
+			CreatedAt = DateTime.Now,
+			UpdatedAt = DateTime.Now,
 			Visited = false
 		};
 		_context.Set<NotificationEntity>().Add(notification);
