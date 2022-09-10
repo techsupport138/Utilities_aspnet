@@ -3,10 +3,15 @@
 [ApiController]
 [Route("api/[controller]")]
 public class AppSettingsController : BaseApiController {
+	private readonly IConfiguration _config;
+
+	public AppSettingsController(IConfiguration config) => _config = config;
 
 	[HttpGet]
 	public ActionResult<GenericResponse<EnumDto>> Read() {
-		EnumDto model = new() {
+		AppSettings appSettings = new();
+		_config.GetSection("AppSettings").Bind(appSettings);
+		return Result(new GenericResponse<EnumDto?>(new EnumDto {
 			FormFieldType = EnumExtension.GetValues<FormFieldType>(),
 			TransactionStatuses = EnumExtension.GetValues<TransactionStatus>(),
 			UtilitiesStatusCodes = EnumExtension.GetValues<UtilitiesStatusCodes>(),
@@ -16,8 +21,8 @@ public class AppSettingsController : BaseApiController {
 			PayType = EnumExtension.GetValues<PayType>(),
 			SendType = EnumExtension.GetValues<SendType>(),
 			ProductStatus = EnumExtension.GetValues<ProductStatus>(),
-			Sender = EnumExtension.GetValues<Sender>()
-		};
-		return Result(new GenericResponse<EnumDto?>(model));
+			Sender = EnumExtension.GetValues<Sender>(),
+			AppSettings = appSettings
+		}));
 	}
 }

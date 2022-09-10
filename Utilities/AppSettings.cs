@@ -3,6 +3,10 @@
 public class AppSettings {
 	public SmsPanelSettings? SmsPanelSettings { get; set; }
 	public Pushe? Pushe { get; set; }
+	public string? AndroidMinimumVersion { get; set; }
+	public string? AndroidLatestVersion { get; set; }
+	public string? IosMinimumVersion { get; set; }
+	public string? IosLatestVersion { get; set; }
 }
 
 public class SmsPanelSettings {

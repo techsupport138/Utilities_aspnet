@@ -6,14 +6,8 @@ public interface ISmsSender {
 
 public class SmsSender : ISmsSender {
 	private readonly IConfiguration _config;
-	private readonly DbContext _context;
-	private readonly AppSettings _setting;
 
-	public SmsSender(IConfiguration config, AppSettings setting, DbContext context) {
-		_config = config;
-		_setting = setting;
-		_context = context;
-	}
+	public SmsSender(IConfiguration config) => _config = config;
 
 	public long SendSms(string mobileNumber, string message) {
 		AppSettings appSettings = new();
