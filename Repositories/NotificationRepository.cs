@@ -1,39 +1,34 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface INotificationRepository {
-	Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications();
+	Task<GenericResponse<IQueryable<NotificationEntity>>> GetNotifications();
 	Task<GenericResponse> CreateNotification(NotificationCreateUpdateDto model);
 }
 
 public class NotificationRepository : INotificationRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IMapper _mapper;
 
-	public NotificationRepository(
-		DbContext context,
-		IMapper mapper,
-		IHttpContextAccessor httpContextAccessor) {
+	public NotificationRepository(DbContext context, IHttpContextAccessor httpContextAccessor) {
 		_context = context;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<IEnumerable<NotificationDto>>> GetNotifications() {
+	public async Task<GenericResponse<IQueryable<NotificationEntity>>> GetNotifications() {
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-		IEnumerable<NotificationEntity> model = await _context.Set<NotificationEntity>().Include(x => x.Media).Include(x => x.CreatorUser)
-			.ThenInclude(x => x.Media).Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
-			.Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt).ToListAsync();
+		IQueryable<NotificationEntity> model = _context.Set<NotificationEntity>()
+			.Include(x => x.Media)
+			.Include(x => x.CreatorUser).ThenInclude(x => x.Media)
+			.Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
+			.Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt).AsNoTracking();
 
 		if (userId != null) {
-			foreach (NotificationEntity item in model) {
+			foreach (NotificationEntity item in model)
 				item.IsFollowing = await _context.Set<FollowEntity>().AnyAsync(x => x.FollowsUserId == item.UserId && x.FollowerUserId == userId);
-			}
 		}
 
-		IEnumerable<NotificationDto> notificationDtos = _mapper.Map<IEnumerable<NotificationDto>>(model);
-		return new GenericResponse<IEnumerable<NotificationDto>>(notificationDtos);
+		return new GenericResponse<IQueryable<NotificationEntity>>(model);
 	}
 
 	public async Task<GenericResponse> CreateNotification(NotificationCreateUpdateDto model) {

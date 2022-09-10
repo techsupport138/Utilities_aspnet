@@ -15,7 +15,6 @@ public class AutoMapperProfile : Profile {
 		CreateMap<FormEntity, FormDto>().ReverseMap();
 		CreateMap<FormEntity, FormFieldDto>().ReverseMap();
 		CreateMap<FormFieldEntity, FormFieldDto>().ReverseMap();
-		CreateMap<NotificationEntity, NotificationDto>().ReverseMap();
 		CreateMap<CommentEntity, CommentCreateUpdateDto>().ReverseMap();
 		CreateMap<CommentEntity, CommentReadDto>()
 			.ForMember(x => x.IsLiked,
