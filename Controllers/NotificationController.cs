@@ -12,12 +12,12 @@ public class NotificationController : BaseApiController {
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IQueryable<NotificationEntity>>>> Read() => Result(await _notificationRepository.GetNotifications());
+	public ActionResult<GenericResponse<IQueryable<NotificationEntity>>> Read() => Result(_notificationRepository.Read());
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[HttpPost]
 	public async Task<ActionResult<GenericResponse>> Create(NotificationCreateUpdateDto model) {
-		GenericResponse i = await _notificationRepository.CreateNotification(model);
+		GenericResponse i = await _notificationRepository.Create(model);
 		return Result(i);
 	}
 }

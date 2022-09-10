@@ -39,7 +39,7 @@ public class TopProductRepository : ITopProductRepository {
 
 		string? linkMedia = entity?.Product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.Link)?.FirstOrDefault();
 
-		await _notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
+		await _notificationRepository.Create(new NotificationCreateUpdateDto {
 			Link = dto.ProductId.ToString(),
 			Title = "Your Post Is TopPost",
 			UserId = product?.UserId,

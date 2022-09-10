@@ -1,8 +1,8 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface INotificationRepository {
-	Task<GenericResponse<IQueryable<NotificationEntity>>> GetNotifications();
-	Task<GenericResponse> CreateNotification(NotificationCreateUpdateDto model);
+	Task<GenericResponse> Create(NotificationCreateUpdateDto model);
+	GenericResponse<IQueryable<NotificationEntity>> Read();
 }
 
 public class NotificationRepository : INotificationRepository {
@@ -14,24 +14,20 @@ public class NotificationRepository : INotificationRepository {
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<IQueryable<NotificationEntity>>> GetNotifications() {
-		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
+	public GenericResponse<IQueryable<NotificationEntity>> Read() {
 		IQueryable<NotificationEntity> model = _context.Set<NotificationEntity>()
 			.Include(x => x.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
-			.Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt).AsNoTracking().Take(100);
-
-		if (userId != null) {
-			foreach (NotificationEntity item in model)
-				item.IsFollowing = await _context.Set<FollowEntity>().AnyAsync(x => x.FollowsUserId == item.UserId && x.FollowerUserId == userId);
-		}
+			.Where(x => (x.UserId == null || x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name) && x.DeletedAt == null)
+			.OrderByDescending(x => x.CreatedAt)
+			.AsNoTracking()
+			.Take(100);
 
 		return new GenericResponse<IQueryable<NotificationEntity>>(model);
 	}
 
-	public async Task<GenericResponse> CreateNotification(NotificationCreateUpdateDto model) {
+	public async Task<GenericResponse> Create(NotificationCreateUpdateDto model) {
 		NotificationEntity notification = new() {
 			UseCase = model.UseCase,
 			Link = model.Link,

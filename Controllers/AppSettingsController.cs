@@ -5,7 +5,7 @@
 public class AppSettingsController : BaseApiController {
 
 	[HttpGet]
-	public static ActionResult<GenericResponse<EnumDto>> Read() {
+	public ActionResult<GenericResponse<EnumDto>> Read() {
 		EnumDto model = new() {
 			FormFieldType = EnumExtension.GetValues<FormFieldType>(),
 			TransactionStatuses = EnumExtension.GetValues<TransactionStatus>(),

@@ -108,7 +108,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			}
 
 			try {
-				await _notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
+				await _notificationRepository.Create(new NotificationCreateUpdateDto {
 					UserId = parameters.UserId,
 					Message = "You are being followed by " + myUser?.UserName,
 					Title = "Follow",

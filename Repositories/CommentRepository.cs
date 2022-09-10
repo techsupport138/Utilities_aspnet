@@ -78,7 +78,7 @@ public class CommentRepository : ICommentRepository {
 			if (product != null && product.UserId != userId) {
 				string? linkMedia = product.Media?.OrderBy(x => x.CreatedAt).Select(x => x.FileName).FirstOrDefault();
 
-				await _notificationRepository.CreateNotification(new NotificationCreateUpdateDto {
+				await _notificationRepository.Create(new NotificationCreateUpdateDto {
 					UserId = product.UserId,
 					Message = dto.Comment ?? "",
 					Title = "Comment",
