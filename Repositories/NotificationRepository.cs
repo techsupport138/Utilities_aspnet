@@ -21,7 +21,7 @@ public class NotificationRepository : INotificationRepository {
 			.Include(x => x.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
-			.Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt).AsNoTracking();
+			.Where(x => (x.UserId == null || x.UserId == userId) && x.DeletedAt == null).OrderByDescending(x => x.CreatedAt).AsNoTracking().Take(100);
 
 		if (userId != null) {
 			foreach (NotificationEntity item in model)
