@@ -7,6 +7,10 @@ public class AppSettings {
 	public string? AndroidLatestVersion { get; set; }
 	public string? IosMinimumVersion { get; set; }
 	public string? IosLatestVersion { get; set; }
+	public string? AndroidDownloadLink1 { get; set; }
+	public string? AndroidDownloadLink2 { get; set; }
+	public string? IosDownloadLink1 { get; set; }
+	public string? IosDownloadLink2 { get; set; }
 }
 
 public class SmsPanelSettings {
