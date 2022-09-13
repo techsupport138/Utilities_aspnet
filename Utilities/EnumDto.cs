@@ -11,5 +11,6 @@ public class EnumDto {
 	public IEnumerable<CategoryReadDto>? SendType { get; set; }
 	public IEnumerable<CategoryReadDto>? ProductStatus { get; set; }
 	public IEnumerable<CategoryReadDto>? Sender { get; set; }
+	public IEnumerable<CategoryReadDto>? Currency { get; set; }
 	public AppSettings? AppSettings { get; set; }
 }

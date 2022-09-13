@@ -22,6 +22,7 @@ public class AppSettingsController : BaseApiController {
 			SendType = EnumExtension.GetValues<SendType>(),
 			ProductStatus = EnumExtension.GetValues<ProductStatus>(),
 			Sender = EnumExtension.GetValues<Sender>(),
+			Currency = EnumExtension.GetValues<Currency>(),
 			AppSettings = appSettings
 		}));
 	}

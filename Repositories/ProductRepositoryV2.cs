@@ -50,7 +50,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.StateTr2.IsNotNullOrEmpty()) q = q.Where(x => x.StateTr2 == dto.StateTr2);
 		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 		if (dto.StartPriceRange.HasValue) q = q.Where(x => x.Price >= dto.StartPriceRange);
-		if (dto.Status.HasValue) q = q.Where(x => x.Status >= dto.Status);
+		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
+		if (dto.Currency.HasValue) q = q.Where(x => x.Currency == dto.Currency);
 		if (dto.EndPriceRange.HasValue) q = q.Where(x => x.Price <= dto.EndPriceRange);
 		if (dto.Enabled.HasValue) q = q.Where(x => x.Enabled == dto.Enabled);
 		if (dto.IsForSale.HasValue) q = q.Where(x => x.IsForSale == dto.IsForSale);
@@ -199,6 +200,7 @@ public static class ProductEntityExtensionV2 {
 		entity.StartDate = dto.StartDate ?? entity.StartDate;
 		entity.EndDate = dto.EndDate ?? entity.EndDate;
 		entity.Status = dto.Status ?? entity.Status;
+		entity.Currency = dto.Currency ?? entity.Currency;
 		entity.DeletedAt = dto.DeletedAt ?? entity.DeletedAt;
 		entity.UpdatedAt = DateTime.Now;
 

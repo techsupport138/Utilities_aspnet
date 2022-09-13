@@ -83,3 +83,11 @@ public enum Sender {
 	SmsIr,
 	Faraz
 }
+
+public enum Currency {
+	Rial = 100,
+	Dolor = 101,
+	Lira = 102,
+	Euro = 103,
+	Btc = 200
+}

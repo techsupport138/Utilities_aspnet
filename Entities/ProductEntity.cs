@@ -122,6 +122,7 @@ public class ProductEntity : BaseEntity {
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
+	public Currency? Currency { get; set; }
 	public double? Stock { get; set; }
 
 	public string? UserId { get; set; }
@@ -201,6 +202,7 @@ public class ProductReadDto {
 	public DateTime? UpdatedAt { get; set; }
 	public DateTime? DeletedAt { get; set; }
 	public ProductStatus? Status { get; set; }
+	public Currency? Currency { get; set; }
 	public UserReadDto? User { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
@@ -268,6 +270,7 @@ public class ProductCreateUpdateDto {
 	public DateTime? EndDate { get; set; }
 	public DateTime? DeletedAt { get; set; }
 	public ProductStatus? Status { get; set; }
+	public Currency? Currency { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 	public IEnumerable<string>? Teams { get; set; }
 }
@@ -323,6 +326,7 @@ public class ProductFilterDto {
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
+	public Currency? Currency { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 	public string? Query { get; set; }
 }
