@@ -97,5 +97,5 @@ public enum SeenStatus {
 	Seen = 101,
 	SeenDetail = 102,
 	Ignored = 103,
-	Deleted = 1034,
+	Deleted = 104,
 }
