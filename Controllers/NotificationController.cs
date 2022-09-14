@@ -17,7 +17,7 @@ public class NotificationController : BaseApiController {
 	public async Task<ActionResult<GenericResponse>> Create(NotificationCreateUpdateDto model) => Result(await _notificationRepository.Create(model));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	[HttpPost]
+	[HttpPost("UpdateSeenStatus")]
 	public async Task<ActionResult<GenericResponse>> UpdateSeenStatus(IEnumerable<Guid> ids, SeenStatus seenStatus)
 		=> Result(await _notificationRepository.UpdateSeenStatus(ids, seenStatus));
 }
