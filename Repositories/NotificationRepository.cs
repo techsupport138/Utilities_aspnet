@@ -15,7 +15,7 @@ public class NotificationRepository : INotificationRepository {
 	}
 
 	public GenericResponse<IQueryable<NotificationEntity>> Read() {
-		IQueryable<NotificationEntity> model = _context.Set<NotificationEntity>()
+		IQueryable<NotificationEntity> i = _context.Set<NotificationEntity>()
 			.Include(x => x.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
@@ -24,7 +24,10 @@ public class NotificationRepository : INotificationRepository {
 			.AsNoTracking()
 			.Take(100);
 
-		return new GenericResponse<IQueryable<NotificationEntity>>(model);
+		foreach (NotificationEntity? item in i) item.SeenStatus = SeenStatus.Seen;
+		_context.SaveChanges();
+
+		return new GenericResponse<IQueryable<NotificationEntity>>(i);
 	}
 
 	public async Task<GenericResponse> Create(NotificationCreateUpdateDto model) {

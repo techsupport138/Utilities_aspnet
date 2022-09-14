@@ -91,3 +91,11 @@ public enum Currency {
 	Euro = 103,
 	Btc = 200
 }
+
+public enum SeenStatus {
+	UnSeen = 100,
+	Seen = 101,
+	SeenDetail = 102,
+	Ignored = 103,
+	Deleted = 1034,
+}

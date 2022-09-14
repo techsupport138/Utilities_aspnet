@@ -13,6 +13,8 @@ public class NotificationEntity : BaseEntity {
 
 	[StringLength(500)]
 	public string? UseCase { get; set; }
+	
+	public SeenStatus? SeenStatus { get; set; }
 
 	public bool? Visited { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
@@ -26,23 +28,8 @@ public class NotificationEntity : BaseEntity {
 
 	[ForeignKey(nameof(CreatorUserId))]
 	public UserEntity? CreatorUser { get; set; }
-
-	[NotMapped]
-	public bool IsFollowing { get; set; }
+	
 }
-
-// public class NotificationDto {
-// 	public Guid? Id { get; set; }
-// 	public string? Title { get; set; }
-// 	public string? Message { get; set; }
-// 	public string? Link { get; set; }
-// 	public DateTime CreatedAt { get; set; }
-// 	public bool Visited { get; set; }
-// 	public string? UseCase { get; set; }
-// 	public UserReadDto? CreatorUser { get; set; }
-// 	public IEnumerable<MediaEntity>? Media { get; set; }
-// 	public bool IsFollowing { get; set; }
-// }
 
 public class NotificationCreateUpdateDto {
 	public string? Title { get; set; }
