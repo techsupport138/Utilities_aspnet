@@ -23,6 +23,7 @@ public class AppSettingsController : BaseApiController {
 			ProductStatus = EnumExtension.GetValues<ProductStatus>(),
 			Sender = EnumExtension.GetValues<Sender>(),
 			Currency = EnumExtension.GetValues<Currency>(),
+			SeenStatus = EnumExtension.GetValues<SeenStatus>(),
 			AppSettings = appSettings
 		}));
 	}
