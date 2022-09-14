@@ -3,6 +3,7 @@
 public interface INotificationRepository {
 	Task<GenericResponse> Create(NotificationCreateUpdateDto model);
 	GenericResponse<IQueryable<NotificationEntity>> Read();
+	Task<GenericResponse> UpdateSeenStatus(IEnumerable<Guid> ids, SeenStatus seenStatus);
 }
 
 public class NotificationRepository : INotificationRepository {
@@ -24,10 +25,22 @@ public class NotificationRepository : INotificationRepository {
 			.AsNoTracking()
 			.Take(100);
 
-		foreach (NotificationEntity? item in i) item.SeenStatus = SeenStatus.Seen;
-		_context.SaveChanges();
-
 		return new GenericResponse<IQueryable<NotificationEntity>>(i);
+	}
+
+	public async Task<GenericResponse> UpdateSeenStatus(IEnumerable<Guid> ids, SeenStatus seenStatus) {
+		IQueryable<NotificationEntity> i = _context.Set<NotificationEntity>()
+			.Include(x => x.Media)
+			.Include(x => x.CreatorUser).ThenInclude(x => x.Media)
+			.Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
+			.Where(x => (x.UserId == null || x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name) && x.DeletedAt == null)
+			.Where(x => ids.Contains(x.Id))
+			.OrderByDescending(x => x.CreatedAt)
+			.AsNoTracking();
+
+		foreach (NotificationEntity e in i) e.SeenStatus = seenStatus;
+		await _context.SaveChangesAsync();
+		return new GenericResponse();
 	}
 
 	public async Task<GenericResponse> Create(NotificationCreateUpdateDto model) {
