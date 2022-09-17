@@ -38,6 +38,7 @@ public class OrderDetailEntity : BaseEntity {
 	public double? Price { get; set; }
 	public int? Count { get; set; }
 
+	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<FormEntity>? Forms { get; set; }
 }
 
@@ -67,6 +68,7 @@ public class OrderDetailReadDto {
 	public double? Price { get; set; }
 	public int? Count { get; set; }
 	public ProductReadDto? Product { get; set; }
+	public IEnumerable<CategoryEntity>? Categories { get; set; }
 }
 
 public class OrderCreateUpdateDto {
@@ -91,6 +93,7 @@ public class OrderDetailCreateUpdateDto {
 	public Guid? Id { get; set; }
 	public Guid? ProductId { get; set; }
 	public int? Count { get; set; }
+	public IEnumerable<Guid>? Categories { get; set; }
 }
 
 public class OrderFilterDto {

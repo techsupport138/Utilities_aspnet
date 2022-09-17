@@ -5,7 +5,7 @@ public interface IOrderRepository {
 	Task<GenericResponse<OrderReadDto>> ReadById(Guid id);
 	Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto);
 	Task<GenericResponse<OrderReadDto?>> Update(OrderCreateUpdateDto dto);
-	public Task<GenericResponse> Delete(Guid id);
+	Task<GenericResponse> Delete(Guid id);
 }
 
 public class OrderRepository : IOrderRepository {
@@ -20,14 +20,12 @@ public class OrderRepository : IOrderRepository {
 	}
 
 	public async Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto) {
-		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
 		double totalPrice = 0;
 
-		//create
 		OrderEntity entityOrder = new() {
 			Description = dto.Description,
 			ReceivedDate = dto.ReceivedDate,
-			UserId = userId,
+			UserId = _httpContextAccessor.HttpContext?.User.Identity?.Name!,
 			DiscountPercent = dto.DiscountPercent,
 			DiscountCode = dto.DiscountCode,
 			PayType = PayType.Online,
@@ -53,6 +51,16 @@ public class OrderRepository : IOrderRepository {
 				Price = productEntity?.Price ?? 0,
 				Count = item.Count,
 			};
+
+			if (item.Categories.IsNotNullOrEmpty()) {
+				List<CategoryEntity> listCategory = new();
+				foreach (Guid i in item.Categories ?? new List<Guid>()) {
+					CategoryEntity? e = await _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == i);
+					if (e != null) listCategory.Add(e);
+				}
+				orderDetailEntity.Categories = listCategory;
+			}
+			
 			await _dbContext.Set<OrderDetailEntity>().AddAsync(orderDetailEntity);
 			await _dbContext.SaveChangesAsync();
 
@@ -68,10 +76,8 @@ public class OrderRepository : IOrderRepository {
 	public async Task<GenericResponse<OrderReadDto?>> Update(OrderCreateUpdateDto dto) {
 		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
 		OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
-		if (oldOrder == null)
-			throw new ArgumentException("not found!");
+		if (oldOrder == null) throw new ArgumentException("not found!");
 
-		//edit order
 		oldOrder.Description = dto.Description;
 		oldOrder.ReceivedDate = dto.ReceivedDate;
 		oldOrder.Status = dto.Status;
@@ -88,13 +94,11 @@ public class OrderRepository : IOrderRepository {
 			if (oldOrderDetail != null) {
 				ProductEntity? product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
 				if (product != null) {
-					if (product.Stock < item.Count)
-						throw new ArgumentException("failed request! this request is more than stock!");
+					if (product.Stock < item.Count) throw new ArgumentException("failed request! this request is more than stock!");
 
 					if (dto.Status == OrderStatuses.Paid)
 						if (product.Stock > 0) product.Stock -= item.Count;
-						else
-							throw new ArgumentException("product's stock equals zero!");
+						else throw new ArgumentException("product's stock equals zero!");
 				}
 
 				oldOrderDetail.ProductId = item.ProductId;
@@ -109,7 +113,7 @@ public class OrderRepository : IOrderRepository {
 	}
 
 	public GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto) {
-		IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails).AsNoTracking();
+		IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails);
 
 		if (dto.Description.IsNotNullOrEmpty()) q = q.Where(x => (x.Description ?? "").Contains(dto.Description!));
 		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
@@ -124,13 +128,11 @@ public class OrderRepository : IOrderRepository {
 		if (dto.PayNumber.IsNotNullOrEmpty()) q = q.Where(x => (x.PayNumber ?? "").Contains(dto.PayNumber!));
 		if (dto.ReceivedDate.HasValue) q = q.Where(x => x.ReceivedDate == dto.ReceivedDate);
 
-		if (dto.UserId.IsNotNullOrEmpty()) {
-			q = q.Where(x => x.UserId == dto.UserId);
-		}
+		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 
 		int totalCount = q.Count();
 
-		q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize).AsNoTracking();
+		q = q.AsNoTracking().Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
 
 		return new GenericResponse<IQueryable<OrderEntity>>(q) {
 			TotalCount = totalCount,
@@ -140,7 +142,9 @@ public class OrderRepository : IOrderRepository {
 	}
 
 	public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id) {
-		OrderEntity? i = await _dbContext.Set<OrderEntity>().AsNoTracking().Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
+		OrderEntity? i = await _dbContext.Set<OrderEntity>()
+			.Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
+			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
 		return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(i));
 	}
@@ -152,9 +156,7 @@ public class OrderRepository : IOrderRepository {
 			_dbContext.Remove(i);
 			await _dbContext.SaveChangesAsync();
 		}
-		else {
-			return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
-		}
+		else return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
 
 		return new GenericResponse();
 	}

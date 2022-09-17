@@ -28,6 +28,7 @@ public class CategoryEntity : BaseEntity {
 
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
+	public double? Price { get; set; }
 	public DateTime? Date1 { get; set; }
 	public DateTime? Date2 { get; set; }
 
@@ -47,6 +48,9 @@ public class CategoryEntity : BaseEntity {
 
 	[System.Text.Json.Serialization.JsonIgnore]
 	public IEnumerable<FormEntity>? FormFields { get; set; }
+	
+	[System.Text.Json.Serialization.JsonIgnore]
+	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
 }
 
 public class CategoryReadDto {
