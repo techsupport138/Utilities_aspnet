@@ -5,20 +5,30 @@ public class FormEntity : BaseEntity {
 	[StringLength(2000)]
 	public string? Title { get; set; }
 
-	public UserEntity? User { get; set; }
-	public string? UserId { get; set; }
-
-	public ProductEntity? Product { get; set; }
-	public Guid? ProductId { get; set; }
-
-	public OrderDetailEntity? OrderDetail { get; set; }
-	public Guid? OrderDetailId { get; set; }
-
 	[ForeignKey(nameof(FormFieldId))]
 	[InverseProperty(nameof(FormFieldEntity.Forms))]
 	public FormFieldEntity? FormField { get; set; }
 
+	[System.Text.Json.Serialization.JsonIgnore]
 	public Guid? FormFieldId { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
+	public UserEntity? User { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
+	public string? UserId { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
+	public ProductEntity? Product { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
+	public Guid? ProductId { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
+	public OrderDetailEntity? OrderDetail { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
+	public Guid? OrderDetailId { get; set; }
 }
 
 [Table("FormFields")]
@@ -38,22 +48,6 @@ public class FormFieldEntity : BaseEntity {
 
 	[InverseProperty(nameof(FormEntity.FormField))]
 	public IEnumerable<FormEntity>? Forms { get; set; }
-}
-
-public class FormDto {
-	public Guid? Id { get; set; }
-	public string? Title { get; set; }
-	public FormFieldDto? FormField { get; set; }
-}
-
-public class FormFieldDto {
-	public Guid? Id { get; set; }
-	public string? Label { get; set; }
-	public string? Title { get; set; }
-	public bool? IsRequired { get; set; }
-	public string? OptionList { get; set; }
-	public FormFieldType? Type { get; set; }
-	public Guid? CategoryId { get; set; }
 }
 
 public class FormCreateDto {

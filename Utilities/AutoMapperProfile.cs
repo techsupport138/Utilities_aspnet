@@ -12,15 +12,11 @@ public class AutoMapperProfile : Profile {
 		CreateMap<VoteFieldEntity, VoteReadDto>()
 			.ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || !v.Votes.Any()) ? 0 : v.Votes.Sum(x => x.Score) / v.Votes.Count())).ReverseMap();
 		CreateMap<UserEntity, UserReadDto>().ReverseMap();
-		CreateMap<FormEntity, FormDto>().ReverseMap();
-		CreateMap<FormEntity, FormFieldDto>().ReverseMap();
-		CreateMap<FormFieldEntity, FormFieldDto>().ReverseMap();
 		CreateMap<CommentEntity, CommentCreateUpdateDto>().ReverseMap();
 		CreateMap<CommentEntity, CommentReadDto>()
 			.ForMember(x => x.IsLiked,
 			           c => c.MapFrom(v => v.LikeComments != null && v.LikeComments.Any() && v.LikeComments.Any(x => x.UserId == Server.UserId))).ReverseMap();
 		CreateMap<BookmarkEntity, BookmarkReadDto>().ReverseMap();
-		CreateMap<UserEntity, UserMinimalReadDto>().ReverseMap();
 		CreateMap<TopProductEntity, TopProductReadDto>().ReverseMap();
 		CreateMap<TeamEntity, TeamReadDto>().ReverseMap();
 		CreateMap<UserCreateUpdateDto, UserEntity>().ForMember(x => x.PasswordHash, y => y.MapFrom(z => z.Password)).ForMember(x => x.Media, y => y.Ignore());

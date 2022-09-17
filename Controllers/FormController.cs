@@ -9,20 +9,20 @@ public class FormController : BaseApiController {
 	public FormController(IFormRepository formRepository) => _formRepository = formRepository;
 
 	[HttpPost("CreateFormField")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> CreateFormField(FormFieldDto dto)
+	public async Task<ActionResult<GenericResponse<IQueryable<FormFieldEntity>>>> CreateFormField(FormFieldEntity dto)
 		=> Result(await _formRepository.CreateFormFields(dto));
 
 	[HttpPut("UpdateFormField")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> UpdateFormField(FormFieldDto dto)
+	public async Task<ActionResult<GenericResponse<IQueryable<FormFieldEntity>>>> UpdateFormField(FormFieldEntity dto)
 		=> Result(await _formRepository.UpdateFormFields(dto));
-
+	
 	[AllowAnonymous]
 	[HttpGet("{categoryId:guid}")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> ReadFormFieldById(Guid categoryId)
-		=> Result(await _formRepository.ReadFormFields(categoryId));
-
+	public ActionResult<GenericResponse<IQueryable<FormFieldEntity>>> ReadFormFieldById(Guid categoryId) =>
+		Result(_formRepository.ReadFormFields(categoryId));
+	
 	[HttpPost]
-	public async Task<ActionResult<GenericResponse<IEnumerable<FormFieldDto>>>> CreateForm(FormCreateDto model)
+	public async Task<ActionResult<GenericResponse<IQueryable<FormEntity>>>> CreateForm(FormCreateDto model)
 		=> Result(await _formRepository.UpdateForm(model));
 
 	[HttpDelete("DeleteFormField/{id:guid}")]

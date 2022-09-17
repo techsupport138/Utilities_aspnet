@@ -91,14 +91,15 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto) {
-		IIncludableQueryable<UserEntity, object?> dbSet = _context.Set<UserEntity>().Include(u => u.Media);
-
+		IQueryable<UserEntity> dbSet = _context.Set<UserEntity>().AsNoTracking();
+		
+		if (dto.ShowMedia.IsTrue()) dbSet = dbSet.Include(u => u.Media);
 		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(u => u.Categories);
 		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
 		if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
 		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products.Where(x => x.DeletedAt == null)).ThenInclude(u => u.Media);
 
-		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null);
+		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null).AsNoTracking();
 
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 

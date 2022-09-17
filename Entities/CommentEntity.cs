@@ -50,7 +50,7 @@ public class CommentReadDto {
 	public string? Comment { get; set; }
 	public Guid? ParentId { get; set; }
 	public string? UserId { get; set; }
-	public UserMinimalReadDto? User { get; set; }
+	public UserReadDto? User { get; set; }
 	public IEnumerable<CommentReadDto>? Children { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 }

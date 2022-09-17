@@ -207,7 +207,7 @@ public class ProductReadDto {
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryReadDto>? Categories { get; set; }
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }
-	public IEnumerable<FormDto>? Forms { get; set; }
+	public IEnumerable<FormEntity>? Forms { get; set; }
 	public IEnumerable<CommentReadDto>? Comments { get; set; }
 	public IEnumerable<TeamReadDto>? Teams { get; set; }
 }
