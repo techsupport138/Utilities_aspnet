@@ -35,8 +35,7 @@ public class NotificationRepository : INotificationRepository {
 			.Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
 			.Where(x => (x.UserId == null || x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name) && x.DeletedAt == null)
 			.Where(x => ids.Contains(x.Id))
-			.OrderByDescending(x => x.CreatedAt)
-			.AsNoTracking();
+			.OrderByDescending(x => x.CreatedAt);
 
 		foreach (NotificationEntity e in i) {
 			e.SeenStatus = seenStatus;
