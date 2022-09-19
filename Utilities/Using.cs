@@ -34,6 +34,7 @@ global using Swashbuckle.AspNetCore.SwaggerUI;
 global using Microsoft.AspNetCore.Authorization;
 global using Utilities_aspnet.Entities;
 global using Utilities_aspnet.Repositories;
-global using Microsoft.EntityFrameworkCore.Query;
 global using Zarinpal;
 global using Zarinpal.Models;
+global using System.IO.Compression;
+global using Microsoft.AspNetCore.ResponseCompression;

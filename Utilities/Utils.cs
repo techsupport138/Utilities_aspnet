@@ -1,7 +1,4 @@
-﻿using System.IO.Compression;
-using Microsoft.AspNetCore.ResponseCompression;
-
-namespace Utilities_aspnet.Utilities;
+﻿namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
 	public static void SetupUtilities<T>(
@@ -72,8 +69,8 @@ public static class StartupExtension {
 			options.UseCamelCasing(true);
 		});
 
-		builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 		builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+		builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 		builder.Services.AddTransient<AppSettings>();
 		builder.Services.AddTransient<ISmsSender, SmsSender>();
 		builder.Services.AddTransient<IReportRepository, ReportRepository>();
@@ -96,7 +93,6 @@ public static class StartupExtension {
 		builder.Services.AddTransient<IDiscountRepository, DiscountRepository>();
 		builder.Services.AddTransient<IGlobalSearchRepository, GlobalSearchRepository>();
 		builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
-		builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 	}
 
 	private static void AddUtilitiesSwagger(this WebApplicationBuilder builder, IServiceProvider? serviceProvider) {

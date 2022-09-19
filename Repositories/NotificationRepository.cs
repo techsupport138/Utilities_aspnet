@@ -38,7 +38,10 @@ public class NotificationRepository : INotificationRepository {
 			.OrderByDescending(x => x.CreatedAt)
 			.AsNoTracking();
 
-		foreach (NotificationEntity e in i) e.SeenStatus = seenStatus;
+		foreach (NotificationEntity e in i) {
+			e.SeenStatus = seenStatus;
+			_context.Update(e);
+		}
 		await _context.SaveChangesAsync();
 		return new GenericResponse();
 	}

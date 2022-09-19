@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-
-namespace Utilities_aspnet.Controllers;
+﻿namespace Utilities_aspnet.Controllers;
 
 [ApiController]
 public abstract class BaseApiController : ControllerBase {
