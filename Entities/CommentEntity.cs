@@ -40,6 +40,13 @@ public class CommentCreateUpdateDto {
 	public Guid? ProductId { get; set; }
 }
 
+public class CommentFilterDto {
+	public string? UserId { get; set; }
+	public Guid? ProductId { get; set; }
+	public Guid? CategoryId { get; set; }
+	public bool? ShowProducts { get; set; }
+}
+
 public class CommentReadDto {
 	public Guid Id { get; set; }
 	public DateTime? CreatedAt { get; set; }

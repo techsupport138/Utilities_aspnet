@@ -51,11 +51,15 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 		if (dto.StartPriceRange.HasValue) q = q.Where(x => x.Price >= dto.StartPriceRange);
 		if (dto.Currency.HasValue) q = q.Where(x => x.Currency == dto.Currency);
+		if (dto.HasComment.IsTrue()) q = q.Where(x => x.Comments.IsNotNullOrEmpty());
 		if (dto.HasDiscount.IsTrue()) q = q.Where(x => x.DiscountPercent != null || x.DiscountPrice != null);
 		if (dto.EndPriceRange.HasValue) q = q.Where(x => x.Price <= dto.EndPriceRange);
 		if (dto.Enabled.HasValue) q = q.Where(x => x.Enabled == dto.Enabled);
 		if (dto.IsForSale.HasValue) q = q.Where(x => x.IsForSale == dto.IsForSale);
 		if (dto.VisitsCount.HasValue) q = q.Where(x => x.VisitsCount == dto.VisitsCount);
+		if (dto.Length.HasValue) q = q.Where(x => x.Length.ToInt() == dto.Length.ToInt());
+		if (dto.ResponseTime.HasValue) q = q.Where(x => x.ResponseTime.ToInt() == dto.ResponseTime.ToInt());
+		if (dto.OnTimeDelivery.HasValue) q = q.Where(x => x.OnTimeDelivery.ToInt() == dto.OnTimeDelivery.ToInt());
 		if (dto.Length.HasValue) q = q.Where(x => x.Length.ToInt() == dto.Length.ToInt());
 		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
 		if (dto.Width.HasValue) q = q.Where(x => x.Width.ToInt() == dto.Width.ToInt());
@@ -174,6 +178,9 @@ public static class ProductEntityExtensionV2 {
 		entity.StateTr1 = dto.StateTr1 ?? entity.StateTr1;
 		entity.StateTr2 = dto.StateTr2 ?? entity.StateTr2;
 		entity.Latitude = dto.Latitude ?? entity.Latitude;
+		entity.RelatedIds = dto.RelatedIds ?? entity.RelatedIds;
+		entity.ResponseTime = dto.ResponseTime ?? entity.ResponseTime;
+		entity.OnTimeDelivery = dto.OnTimeDelivery ?? entity.OnTimeDelivery;
 		entity.DiscountPrice = dto.DiscountPrice ?? entity.DiscountPrice;
 		entity.DiscountPercent = dto.DiscountPercent ?? entity.DiscountPercent;
 		entity.Longitude = dto.Longitude ?? entity.Longitude;

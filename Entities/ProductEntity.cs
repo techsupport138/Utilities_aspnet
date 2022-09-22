@@ -103,8 +103,13 @@ public class ProductEntity : BaseEntity {
 
 	[StringLength(500)]
 	public string? Value12 { get; set; }
+	
+	[StringLength(500)]
+	public string? RelatedIds { get; set; }
 
 	public double? Latitude { get; set; }
+	public double? ResponseTime { get; set; }
+	public double? OnTimeDelivery { get; set; }
 	public double? Longitude { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
@@ -179,6 +184,7 @@ public class ProductReadDto {
 	public string? Value10 { get; set; }
 	public string? Value11 { get; set; }
 	public string? Value12 { get; set; }
+	public string? RelatedIds { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
 	public bool IsBookmarked { get; set; }
@@ -200,6 +206,8 @@ public class ProductReadDto {
 	public double? Width { get; set; }
 	public double? Height { get; set; }
 	public double? Weight { get; set; }
+	public double? ResponseTime { get; set; }
+	public double? OnTimeDelivery { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public DateTime? CreatedAt { get; set; }
@@ -252,6 +260,7 @@ public class ProductCreateUpdateDto {
 	public string? Value10 { get; set; }
 	public string? Value11 { get; set; }
 	public string? Value12 { get; set; }
+	public string? RelatedIds { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? Price { get; set; }
@@ -266,6 +275,8 @@ public class ProductCreateUpdateDto {
 	public double? ScorePlus { get; set; }
 	public double? ScoreMinus { get; set; }
 	public double? DiscountPrice { get; set; }
+	public double? ResponseTime { get; set; }
+	public double? OnTimeDelivery { get; set; }
 	public int? DiscountPercent { get; set; }
 	public int? Stock { get; set; }
 	public int? VisitsCount { get; set; }
@@ -307,6 +318,8 @@ public class ProductFilterDto {
 	public double? MinPrice { get; set; }
 	public double? StartPriceRange { get; set; }
 	public double? EndPriceRange { get; set; }
+	public double? ResponseTime { get; set; }
+	public double? OnTimeDelivery { get; set; }
 	public bool? Enabled { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? HasDiscount { get; set; }
@@ -327,6 +340,7 @@ public class ProductFilterDto {
 	public bool? OrderByPriceDecending { get; set; } = false;
 	public bool? OrderByCreatedDate { get; set; } = false;
 	public bool? OrderByCreaedDateDecending { get; set; } = false;
+	public bool? HasComment { get; set; } = false;
 	public int? VisitsCount { get; set; }
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
