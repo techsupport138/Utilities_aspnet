@@ -116,9 +116,11 @@ public class ProductEntity : BaseEntity {
 	public double? MinPrice { get; set; }
 	public double? Price { get; set; }
 	public double? VoteCount { get; set; }
+	public double? DiscountPrice { get; set; }
+	public int? DiscountPercent { get; set; }
+	public int? VisitsCount { get; set; }
 	public bool? IsForSale { get; set; }
 	public bool? Enabled { get; set; }
-	public int? VisitsCount { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public ProductStatus? Status { get; set; }
@@ -184,6 +186,8 @@ public class ProductReadDto {
 	public int? VisitsCount { get; set; }
 	public int? CommentsCount { get; set; }
 	public int? DownloadCount { get; set; }
+	public int? DiscountPercent { get; set; }
+	public double? DiscountPrice { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public double? MinOrder { get; set; }
@@ -261,11 +265,13 @@ public class ProductCreateUpdateDto {
 	public double? MinPrice { get; set; }
 	public double? ScorePlus { get; set; }
 	public double? ScoreMinus { get; set; }
-	public bool? IsForSale { get; set; }
-	public bool? Enabled { get; set; }
+	public double? DiscountPrice { get; set; }
+	public int? DiscountPercent { get; set; }
 	public int? Stock { get; set; }
 	public int? VisitsCount { get; set; }
 	public int? VisitsCountPlus { get; set; }
+	public bool? Enabled { get; set; }
+	public bool? IsForSale { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public DateTime? DeletedAt { get; set; }
@@ -303,6 +309,7 @@ public class ProductFilterDto {
 	public double? EndPriceRange { get; set; }
 	public bool? Enabled { get; set; }
 	public bool? IsForSale { get; set; }
+	public bool? HasDiscount { get; set; }
 	public bool? ShowMedia { get; set; } = false;
 	public bool? ShowForms { get; set; } = false;
 	public bool? ShowCategories { get; set; } = false;

@@ -50,8 +50,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.StateTr2.IsNotNullOrEmpty()) q = q.Where(x => x.StateTr2 == dto.StateTr2);
 		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 		if (dto.StartPriceRange.HasValue) q = q.Where(x => x.Price >= dto.StartPriceRange);
-		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
 		if (dto.Currency.HasValue) q = q.Where(x => x.Currency == dto.Currency);
+		if (dto.HasDiscount.IsTrue()) q = q.Where(x => x.DiscountPercent != null || x.DiscountPrice != null);
 		if (dto.EndPriceRange.HasValue) q = q.Where(x => x.Price <= dto.EndPriceRange);
 		if (dto.Enabled.HasValue) q = q.Where(x => x.Enabled == dto.Enabled);
 		if (dto.IsForSale.HasValue) q = q.Where(x => x.IsForSale == dto.IsForSale);
@@ -174,6 +174,8 @@ public static class ProductEntityExtensionV2 {
 		entity.StateTr1 = dto.StateTr1 ?? entity.StateTr1;
 		entity.StateTr2 = dto.StateTr2 ?? entity.StateTr2;
 		entity.Latitude = dto.Latitude ?? entity.Latitude;
+		entity.DiscountPrice = dto.DiscountPrice ?? entity.DiscountPrice;
+		entity.DiscountPercent = dto.DiscountPercent ?? entity.DiscountPercent;
 		entity.Longitude = dto.Longitude ?? entity.Longitude;
 		entity.Description = dto.Description ?? entity.Description;
 		entity.UseCase = dto.UseCase ?? entity.UseCase;
