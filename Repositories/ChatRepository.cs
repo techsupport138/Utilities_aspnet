@@ -55,7 +55,8 @@ public class ChatRepository : IChatRepository {
 			}
 		}
 
-		IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>().Where(x => x.FromUserId == userId && x.ToUserId == id).ToListAsync();
+		IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>()
+			.Where(x => x.FromUserId == userId && x.ToUserId == id).Include(x => x.Media).ToListAsync();
 
 		conversation.AddRange(conversationToUser);
 		List<ChatReadDto> conversations = conversation.Select(x => new ChatReadDto {
@@ -67,6 +68,7 @@ public class ChatRepository : IChatRepository {
 			AppUserName = user.AppUserName,
 			ProfileImage = "",
 			UserId = id,
+			Media = user.Media,
 			Send = x.ToUserId == id
 		}).OrderByDescending(x => x.DateTime).ToList();
 
