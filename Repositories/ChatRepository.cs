@@ -68,7 +68,7 @@ public class ChatRepository : IChatRepository {
 			AppUserName = user.AppUserName,
 			ProfileImage = "",
 			UserId = id,
-			Media = user.Media,
+			Media = x.Media,
 			Send = x.ToUserId == id
 		}).OrderByDescending(x => x.DateTime).ToList();
 
