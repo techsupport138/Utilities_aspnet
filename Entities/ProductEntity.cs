@@ -134,6 +134,9 @@ public class ProductEntity : BaseEntity {
 
 	public string? UserId { get; set; }
 	public UserEntity? User { get; set; }
+	
+	public Guid? ChatId { get; set; }
+	public ChatEntity? Chat { get; set; }
 
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<FormEntity>? Forms { get; set; }

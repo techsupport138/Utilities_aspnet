@@ -12,6 +12,9 @@ public class ChatEntity : BaseEntity {
 
 	public UserEntity ToUser { get; set; } = null!;
 
+	public Guid? ProductId { get; set; }
+	public ProductEntity? Product { get; set; }
+
 	[StringLength(2000)]
 	public string MessageText { get; set; } = null!;
 
@@ -30,10 +33,17 @@ public class ChatReadDto {
 	public string? ProfileImage { get; set; }
 	public bool Send { get; set; }
 	public int? UnReadMessages { get; set; } = 0;
+	public ProductEntity? Product { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 }
 
 public class ChatCreateUpdateDto {
-	public string UserId { get; set; } = null!;
+	public string? UserId { get; set; } = null!;
+	public Guid? ProductId { get; set; } = null!;
 	public string MessageText { get; set; } = null!;
+}
+
+public class ChatFilterDto {
+	public string? UserId { get; set; }
+	public Guid? ProductId { get; set; }
 }

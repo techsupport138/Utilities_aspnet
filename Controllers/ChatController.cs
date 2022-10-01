@@ -6,25 +6,15 @@ namespace Utilities_aspnet.Controllers;
 public class ChatController : BaseApiController {
 	private readonly IChatRepository _chatRepository;
 
-	public ChatController(IChatRepository chatRepository) {
-		_chatRepository = chatRepository;
-	}
+	public ChatController(IChatRepository chatRepository) => _chatRepository = chatRepository;
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> Read() {
-		GenericResponse<IEnumerable<ChatReadDto>?> i = await _chatRepository.Read();
-		return Result(i);
-	}
+	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> Read() => Result(await _chatRepository.Read());
 
-	[HttpGet("{userId}")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> ReadById(string userId) {
-		GenericResponse<IEnumerable<ChatReadDto>?> i = await _chatRepository.ReadByUserId(userId);
-		return Result(i);
-	}
+	[HttpGet("{userId}/{productId:guid}")]
+	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> ReadById(string userId, Guid? productId)
+		=> Result(await _chatRepository.ReadByUserId(userId, productId));
 
 	[HttpPost]
-	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Create(ChatCreateUpdateDto model) {
-		GenericResponse<ChatReadDto?> i = await _chatRepository.Create(model);
-		return Result(i);
-	}
+	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Create(ChatCreateUpdateDto model) => Result(await _chatRepository.Create(model));
 }
