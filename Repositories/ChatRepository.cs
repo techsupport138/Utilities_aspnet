@@ -45,7 +45,8 @@ public class ChatRepository : IChatRepository {
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		UserEntity? user = await _context.Set<UserEntity>().Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
 		if (user == null) return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.BadRequest);
-		List<ChatEntity> conversation = await _context.Set<ChatEntity>().Where(c => c.ToUserId == userId && c.FromUserId == id).ToListAsync();
+		List<ChatEntity> conversation = await _context.Set<ChatEntity>()
+			.Where(c => c.ToUserId == userId && c.FromUserId == id).Include(x => x.Media).ToListAsync();
 
 		foreach (ChatEntity? item in conversation) {
 			if (item.ReadMessage == false) {
@@ -76,8 +77,10 @@ public class ChatRepository : IChatRepository {
 
 	public async Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read() {
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-		List<string> toUserId = await _context.Set<ChatEntity>().Where(x => x.FromUserId == userId).Select(x => x.ToUserId).ToListAsync();
-		List<string> fromUserId = await _context.Set<ChatEntity>().Where(x => x.ToUserId == userId).Select(x => x.FromUserId).ToListAsync();
+		List<string> toUserId = await _context.Set<ChatEntity>()
+			.Where(x => x.FromUserId == userId).Include(x => x.Media).Select(x => x.ToUserId).ToListAsync();
+		List<string> fromUserId = await _context.Set<ChatEntity>()
+			.Where(x => x.ToUserId == userId).Include(x => x.Media).Select(x => x.FromUserId).ToListAsync();
 		toUserId.AddRange(fromUserId);
 		List<ChatReadDto> conversations = new();
 		IEnumerable<string> userIds = toUserId.Distinct();
