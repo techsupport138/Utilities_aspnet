@@ -1,29 +1,26 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IBlockRepository {
-	Task<GenericResponse<IEnumerable<UserReadDto>>> ReadMine();
+	GenericResponse<IQueryable<UserEntity>> ReadMine();
 	Task<GenericResponse> ToggleBlock(string userId);
 }
 
 public class BlockRepository : IBlockRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IMapper _mapper;
 
-	public BlockRepository(DbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public BlockRepository(DbContext context, IHttpContextAccessor httpContextAccessor) {
 		_context = context;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<IEnumerable<UserReadDto>>> ReadMine() {
-		IEnumerable<UserEntity?> blocks = await _context.Set<BlockEntity>()
+	public GenericResponse<IQueryable<UserEntity>> ReadMine() {
+		IQueryable<UserEntity?> blocks = _context.Set<BlockEntity>()
 			.Include(x => x.BlockedUser).ThenInclude(x => x!.Media)
-			.AsNoTracking()
 			.Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name)
-			.Select(x => x.BlockedUser).ToListAsync();
-
-		return new GenericResponse<IEnumerable<UserReadDto>>(new List<UserReadDto>(_mapper.Map<IEnumerable<UserReadDto>>(blocks)));
+			.AsNoTracking()
+			.Select(x => x.BlockedUser);
+		return new GenericResponse<IQueryable<UserEntity>>(blocks);
 	}
 
 	public async Task<GenericResponse> ToggleBlock(string userId) {
@@ -35,12 +32,9 @@ public class BlockRepository : IBlockRepository {
 				UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name,
 				BlockedUserId = userId
 			};
-
 			await _context.Set<BlockEntity>().AddAsync(block);
 		}
-
 		await _context.SaveChangesAsync();
-
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 }
