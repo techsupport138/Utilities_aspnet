@@ -16,14 +16,10 @@ public class CommentController : BaseApiController {
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse>> Create(CommentCreateUpdateDto parameter) => Result(await _repository.Create(parameter));
-	
+
 	[HttpPost("Filter")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public ActionResult<GenericResponse<CommentReadDto>> Filter(CommentFilterDto dto) => Result(_repository.Filter(dto));
-	
-	[HttpPost("FilterV2")]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public ActionResult<GenericResponse<CommentEntity>> FilterV2(CommentFilterDto dto) => Result(_repository.FilterV2(dto));
+	public ActionResult<GenericResponse<CommentEntity>> Filter(CommentFilterDto dto) => Result(_repository.Filter(dto));
 
 	[HttpPost("ToggleLikeComment/{commentId:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -5,8 +5,7 @@ public interface ICommentRepository {
 	Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId);
 	Task<GenericResponse<CommentReadDto?>> Read(Guid id);
 	Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id);
-	GenericResponse<IQueryable<CommentReadDto>?> Filter(CommentFilterDto dto);
-	GenericResponse<IQueryable<CommentEntity>?> FilterV2(CommentFilterDto dto);
+	GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto);
 	Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity);
 	Task<GenericResponse> Delete(Guid id);
 }
@@ -42,25 +41,7 @@ public class CommentRepository : ICommentRepository {
 		return new GenericResponse<IEnumerable<CommentReadDto>?>(_mapper.Map<IEnumerable<CommentReadDto>?>(comment));
 	}
 
-	public GenericResponse<IQueryable<CommentReadDto>?> Filter(CommentFilterDto dto) {
-		IQueryable<CommentEntity> e = _context.Set<CommentEntity>().Where(x => x.DeletedAt == null);
-
-		if (dto.ProductId.HasValue) e = e.Where(x => x.ProductId == dto.ProductId);
-		if (dto.UserId.IsNotNullOrEmpty()) e = e.Where(x => x.UserId == dto.UserId);
-
-		e = e.OrderByDescending(x => x.CreatedAt)
-			.Include(x => x.User).ThenInclude(x => x!.Media)
-			.Include(x => x.Media)
-			.Include(x => x.LikeComments)
-			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media).OrderByDescending(x => x.CreatedAt)
-			.AsNoTracking();
-
-		if (dto.ShowProducts.IsTrue()) e = e.Include(x => x.Product);
-
-		return new GenericResponse<IQueryable<CommentReadDto>?>(_mapper.Map<IQueryable<CommentReadDto>>(e));
-	}
-
-	public GenericResponse<IQueryable<CommentEntity>?> FilterV2(CommentFilterDto dto) {
+	public GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto) {
 		IQueryable<CommentEntity> e = _context.Set<CommentEntity>().Where(x => x.DeletedAt == null);
 
 		if (dto.ProductId.HasValue) e = e.Where(x => x.ProductId == dto.ProductId);
