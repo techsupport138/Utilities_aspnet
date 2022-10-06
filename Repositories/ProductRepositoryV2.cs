@@ -51,7 +51,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 		if (dto.StartPriceRange.HasValue) q = q.Where(x => x.Price >= dto.StartPriceRange);
 		if (dto.Currency.HasValue) q = q.Where(x => x.Currency == dto.Currency);
-		if (dto.HasComment.IsTrue()) q = q.Where(x => x.Comments.IsNotNullOrEmpty());
+		if (dto.HasComment.IsTrue()) q = q.Where(x => x.Comments.Any());
 		if (dto.HasDiscount.IsTrue()) q = q.Where(x => x.DiscountPercent != null || x.DiscountPrice != null);
 		if (dto.EndPriceRange.HasValue) q = q.Where(x => x.Price <= dto.EndPriceRange);
 		if (dto.Enabled.HasValue) q = q.Where(x => x.Enabled == dto.Enabled);
@@ -79,7 +79,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			                 (x.Description ?? "").Contains(dto.Query!));
 
 		if (dto.ShowCategories.IsTrue()) q = q.Include(i => i.Categories);
-		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments);
+		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments).ThenInclude(i => i.LikeComments);
 		if (dto.ShowForms.IsTrue()) q = q.Include(i => i.Forms);
 		if (dto.ShowMedia.IsTrue()) q = q.Include(i => i.Media);
 		if (dto.ShowReports.IsTrue()) q = q.Include(i => i.Reports);
