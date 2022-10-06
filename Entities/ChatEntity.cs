@@ -91,7 +91,6 @@ public class ChatReadDto {
 
 public class ChatCreateUpdateDto {
 	public string? UserId { get; set; } = null!;
-	public Guid? ProductId { get; set; } = null!;
 	public string MessageText { get; set; } = null!;
 }
 

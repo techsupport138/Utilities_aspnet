@@ -11,9 +11,9 @@ public class ChatController : BaseApiController {
 	[HttpGet]
 	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> Read() => Result(await _chatRepository.Read());
 
-	[HttpGet("{userId}/{productId:guid}")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> ReadById(string userId, Guid? productId)
-		=> Result(await _chatRepository.ReadByUserId(userId, productId));
+	[HttpGet("{userId}")]
+	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> ReadById(string userId)
+		=> Result(await _chatRepository.ReadByUserId(userId));
 
 	[HttpPost]
 	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Create(ChatCreateUpdateDto model) => Result(await _chatRepository.Create(model));

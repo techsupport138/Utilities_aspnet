@@ -2,7 +2,7 @@
 
 public interface IChatRepository {
 	Task<GenericResponse<ChatReadDto?>> Create(ChatCreateUpdateDto model);
-	Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id, Guid? productId);
+	Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id);
 	Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read();
 	Task<GenericResponse<GroupChatEntity?>> CreateGroupChat(GroupChatCreateUpdateDto dto);
 	Task<GenericResponse<GroupChatEntity?>> UpdateGroupChat(GroupChatCreateUpdateDto dto);
@@ -23,7 +23,6 @@ public class ChatRepository : IChatRepository {
 	public async Task<GenericResponse<ChatReadDto?>> Create(ChatCreateUpdateDto model) {
 		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == model.UserId);
 		ProductEntity? productEntity = new();
-		if (model.ProductId != null) productEntity = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == model.ProductId);
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		if (user == null) return new GenericResponse<ChatReadDto?>(null, UtilitiesStatusCodes.BadRequest);
 		ChatEntity conversation = new() {
@@ -32,7 +31,6 @@ public class ChatRepository : IChatRepository {
 			FromUserId = userId!,
 			ToUserId = model.UserId,
 			MessageText = model.MessageText,
-			ProductId = model.ProductId,
 			ReadMessage = false
 		};
 		await _context.Set<ChatEntity>().AddAsync(conversation);
@@ -138,11 +136,10 @@ public class ChatRepository : IChatRepository {
 		return new GenericResponse<IQueryable<GroupChatMessageEntity>?>(e);
 	}
 
-	public async Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id, Guid? productId) {
+	public async Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id) {
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		UserEntity? user = await _context.Set<UserEntity>().Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
 		ProductEntity product = new();
-		if (productId != null) await _context.Set<ProductEntity>().Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == productId);
 		if (user == null) return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.BadRequest);
 		List<ChatEntity> conversation = await _context.Set<ChatEntity>()
 			.Where(c => c.ToUserId == userId && c.FromUserId == id).Include(x => x.Media).ToListAsync();
@@ -153,7 +150,7 @@ public class ChatRepository : IChatRepository {
 		}
 
 		IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>()
-			.Where(x => (x.FromUserId == userId && x.ToUserId == id) && productId != null ? x.ProductId == productId : x.ProductId == null)
+			.Where(x => x.FromUserId == userId && x.ToUserId == id)
 			.Include(x => x.Media).ToListAsync();
 
 		conversation.AddRange(conversationToUser);
