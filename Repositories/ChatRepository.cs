@@ -103,7 +103,7 @@ public class ChatRepository : IChatRepository {
 	}
 
 	public GenericResponse<IQueryable<GroupChatMessageEntity>?> ReadGroupChatMessages(Guid id) {
-		IQueryable<GroupChatMessageEntity> e = _context.Set<GroupChatMessageEntity>().Where(x => x.Id == id)
+		IQueryable<GroupChatMessageEntity> e = _context.Set<GroupChatMessageEntity>().Where(x => x.GroupChatId == id)
 			.Include(x => x.Media)
 			.AsNoTracking();
 		return new GenericResponse<IQueryable<GroupChatMessageEntity>?>(e);
