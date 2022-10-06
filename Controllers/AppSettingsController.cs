@@ -24,6 +24,8 @@ public class AppSettingsController : BaseApiController {
 			Sender = EnumExtension.GetValues<Sender>(),
 			Currency = EnumExtension.GetValues<Currency>(),
 			SeenStatus = EnumExtension.GetValues<SeenStatus>(),
+			Priority = EnumExtension.GetValues<Priority>(),
+			ChatStatus = EnumExtension.GetValues<ChatStatus>(),
 			AppSettings = appSettings
 		}));
 	}

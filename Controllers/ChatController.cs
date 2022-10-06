@@ -17,4 +17,14 @@ public class ChatController : BaseApiController {
 
 	[HttpPost]
 	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Create(ChatCreateUpdateDto model) => Result(await _chatRepository.Create(model));
+
+	[HttpPost("CreateGroupChat")]
+	public async Task<ActionResult<GenericResponse<GroupChatEntity?>>> CreateGroupChat(GroupChatCreateUpdateDto dto)
+		=> Result(await _chatRepository.CreateGroupChat(dto));
+
+	[HttpPost("ReadMyGroupChats")]
+	public ActionResult<GenericResponse<GroupChatMessageEntity?>> ReadMyGroupChats() => Result(_chatRepository.ReadMyGroupChats());
+
+	[HttpPost("ReadGroupChatMessages")]
+	public ActionResult<GenericResponse<GroupChatMessageEntity?>> ReadGroupChatMessages(Guid id) => Result(_chatRepository.ReadGroupChatMessages(id));
 }

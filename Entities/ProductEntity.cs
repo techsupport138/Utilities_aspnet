@@ -148,6 +148,7 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<CommentEntity>? Comments { get; set; }
 	public IEnumerable<TeamEntity>? Teams { get; set; }
 	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
+	public IEnumerable<GroupChatEntity>? GroupChat { get; set; }
 }
 
 public class ProductReadDto {

@@ -61,6 +61,18 @@ public class MediaEntity : BaseEntity {
 
 	[System.Text.Json.Serialization.JsonIgnore]
 	public Guid? CategoryId { get; set; }
+	
+	[System.Text.Json.Serialization.JsonIgnore]
+	public GroupChatEntity? GroupChat { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
+	public Guid? GroupChatId { get; set; }	
+	
+	[System.Text.Json.Serialization.JsonIgnore]
+	public GroupChatMessageEntity? GroupChatMessage { get; set; }
+	
+	[System.Text.Json.Serialization.JsonIgnore]
+	public Guid? GroupChatMessageId { get; set; }
 }
 
 public class UploadDto {
@@ -74,6 +86,8 @@ public class UploadDto {
 	public Guid? NotificationId { get; set; }
 	public Guid? CommentId { get; set; }
 	public Guid? ChatId { get; set; }
+	public Guid? GroupChatId { get; set; }
+	public Guid? GroupChatMessageId { get; set; }
 	public IEnumerable<string>? Links { get; set; }
 	public IEnumerable<IFormFile>? Files { get; set; }
 }

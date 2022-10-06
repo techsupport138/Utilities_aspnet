@@ -99,3 +99,18 @@ public enum SeenStatus {
 	Ignored = 103,
 	Deleted = 104,
 }
+
+public enum ChatStatus {
+	Open = 100,
+	Closes = 101,
+	WaitingForHost = 102,
+	Answered = 103,
+	Deleted = 104
+}
+
+public enum Priority {
+	VeryHigh = 100,
+	High = 101,
+	Normal = 102,
+	Low = 103
+}

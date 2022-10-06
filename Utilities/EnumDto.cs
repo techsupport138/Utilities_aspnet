@@ -13,5 +13,7 @@ public class EnumDto {
 	public IEnumerable<CategoryReadDto>? Sender { get; set; }
 	public IEnumerable<CategoryReadDto>? Currency { get; set; }
 	public IEnumerable<CategoryReadDto>? SeenStatus { get; set; }
+	public IEnumerable<CategoryReadDto>? Priority { get; set; }
+	public IEnumerable<CategoryReadDto>? ChatStatus { get; set; }
 	public AppSettings? AppSettings { get; set; }
 }
