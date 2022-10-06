@@ -22,9 +22,15 @@ public class OrderRepository : IOrderRepository {
 	public async Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto) {
 		double totalPrice = 0;
 
-		IQueryable<ProductEntity> products = _dbContext.Set<ProductEntity>().Where(x => x.Id == dto.OrderDetails.First().ProductId).AsNoTracking();
+		List<ProductEntity> listProducts = new();
+		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails) {
+			ProductEntity? e = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
+			if (e != null) listProducts.Add(e);
+		}
 
-		IQueryable<string?> q = products.GroupBy(x => x.UserId).Where(y => y.Count() > 1).Select(z => z.Key);
+		IEnumerable<string?> q = listProducts.GroupBy(x => x.UserId).Select(z => z.Key);
+		if (q.Count() > 1)
+			return new GenericResponse<OrderReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Cannot Add from multiple seller.");
 
 		OrderEntity entityOrder = new() {
 			Description = dto.Description,
@@ -37,7 +43,7 @@ public class OrderRepository : IOrderRepository {
 			SendType = SendType.Pishtaz,
 			Status = OrderStatuses.Pending,
 			PayNumber = "",
-			ProductOwnerId = products.First().UserId,
+			ProductOwnerId = listProducts.First().UserId,
 		};
 
 		await _dbContext.Set<OrderEntity>().AddAsync(entityOrder);
@@ -134,6 +140,7 @@ public class OrderRepository : IOrderRepository {
 		if (dto.ReceivedDate.HasValue) q = q.Where(x => x.ReceivedDate == dto.ReceivedDate);
 
 		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
+		if (dto.ProductOwnerId.IsNotNullOrEmpty()) q = q.Where(x => x.ProductOwnerId == dto.ProductOwnerId);
 
 		int totalCount = q.Count();
 

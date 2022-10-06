@@ -122,6 +122,7 @@ public class OrderFilterDto {
 	public string? PayNumber { get; set; }
 	public DateTime? ReceivedDate { get; set; }
 	public string? UserId { get; set; }
+	public string? ProductOwnerId { get; set; }
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
 }
