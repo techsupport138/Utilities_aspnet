@@ -5,6 +5,7 @@ public interface IChatRepository {
 	Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id, Guid? productId);
 	Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read();
 	Task<GenericResponse<GroupChatEntity?>> CreateGroupChat(GroupChatCreateUpdateDto dto);
+	Task<GenericResponse<GroupChatEntity?>> UpdateGroupChat(GroupChatCreateUpdateDto dto);
 	Task<GenericResponse<GroupChatMessageEntity?>> CreateGroupChatMessage(GroupChatMessageCreateUpdateDto dto);
 	GenericResponse<IQueryable<GroupChatEntity>?> ReadMyGroupChats();
 	GenericResponse<IQueryable<GroupChatMessageEntity>?> ReadGroupChatMessages(Guid id);
@@ -73,6 +74,31 @@ public class ChatRepository : IChatRepository {
 		EntityEntry<GroupChatEntity> e = await _context.Set<GroupChatEntity>().AddAsync(entity);
 		await _context.SaveChangesAsync();
 		return new GenericResponse<GroupChatEntity?>(e.Entity);
+	}
+
+	public async Task<GenericResponse<GroupChatEntity?>> UpdateGroupChat(GroupChatCreateUpdateDto dto) {
+		GroupChatEntity? e = await _context.Set<GroupChatEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
+		
+		List<UserEntity> users = new();
+		foreach (string id in dto.UserIds) users.Add(await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == id));
+
+		List<ProductEntity> products = new();
+		foreach (Guid id in dto.ProductIds) products.Add(await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == id));
+
+		e.Department = dto.Department ?? e.Department;
+		e.Priority = dto.Priority ?? e.Priority;
+		e.Title = dto.Title ?? e.Title;
+		e.Type = dto.Type ?? e.Type;
+		e.Value = dto.Value ?? e.Value;
+		e.UpdatedAt = DateTime.Now;
+		e.UseCase = dto.UseCase ?? e.UseCase;
+		e.Description = dto.Description ?? e.Description;
+		e.Users = users;
+		e.Products = products;
+
+		EntityEntry<GroupChatEntity> entity = _context.Set<GroupChatEntity>().Update(e);
+		await _context.SaveChangesAsync();
+		return new GenericResponse<GroupChatEntity?>(entity.Entity);
 	}
 
 	public async Task<GenericResponse<GroupChatMessageEntity?>> CreateGroupChatMessage(GroupChatMessageCreateUpdateDto dto) {

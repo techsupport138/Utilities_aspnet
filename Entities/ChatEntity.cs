@@ -24,6 +24,7 @@ public class ChatEntity : BaseEntity {
 	public IEnumerable<MediaEntity>? Media { get; set; }
 }
 
+[Table("GroupChat")]
 public class GroupChatEntity : BaseEntity {
 	[StringLength(500)]
 	public string? Title { get; set; }
@@ -53,6 +54,7 @@ public class GroupChatEntity : BaseEntity {
 	public IEnumerable<GroupChatMessageEntity>? GroupChatMessage { get; set; }
 }
 
+[Table("GroupChatMessage")]
 public class GroupChatMessageEntity : BaseEntity {
 	[StringLength(2000)]
 	public string? Message { get; set; }
