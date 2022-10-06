@@ -77,7 +77,10 @@ public class ChatRepository : IChatRepository {
 	}
 
 	public async Task<GenericResponse<GroupChatEntity?>> UpdateGroupChat(GroupChatCreateUpdateDto dto) {
-		GroupChatEntity? e = await _context.Set<GroupChatEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
+		GroupChatEntity? e = await _context.Set<GroupChatEntity>()
+			.Include(x => x.Users)
+			.Include(x => x.Products)
+			.FirstOrDefaultAsync(x => x.Id == dto.Id);
 		
 		List<UserEntity> users = new();
 		foreach (string id in dto.UserIds) users.Add(await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == id));
