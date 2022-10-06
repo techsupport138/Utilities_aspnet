@@ -93,13 +93,19 @@ public class ChatRepository : IChatRepository {
 
 	public GenericResponse<IQueryable<GroupChatEntity>?> ReadMyGroupChats() {
 		IQueryable<GroupChatEntity> e = _context.Set<GroupChatEntity>()
-			.Where(x => x.Users.Any(y => y.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name));
+			.Where(x => x.Users.Any(y => y.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name))
+			.Include(x => x.Users)
+			.Include(x => x.Products)
+			.Include(x => x.Media)
+			.AsNoTracking();
 
 		return new GenericResponse<IQueryable<GroupChatEntity>?>(e);
 	}
 
 	public GenericResponse<IQueryable<GroupChatMessageEntity>?> ReadGroupChatMessages(Guid id) {
-		IQueryable<GroupChatMessageEntity> e = _context.Set<GroupChatMessageEntity>().Where(x => x.Id == id);
+		IQueryable<GroupChatMessageEntity> e = _context.Set<GroupChatMessageEntity>().Where(x => x.Id == id)
+			.Include(x => x.Media)
+			.AsNoTracking();
 		return new GenericResponse<IQueryable<GroupChatMessageEntity>?>(e);
 	}
 
