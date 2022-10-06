@@ -22,6 +22,10 @@ public class OrderRepository : IOrderRepository {
 	public async Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto) {
 		double totalPrice = 0;
 
+		IQueryable<ProductEntity> products = _dbContext.Set<ProductEntity>().Where(x => x.Id == dto.OrderDetails.First().ProductId).AsNoTracking();
+
+		IQueryable<string?> q = products.GroupBy(x => x.UserId).Where(y => y.Count() > 1).Select(z => z.Key);
+
 		OrderEntity entityOrder = new() {
 			Description = dto.Description,
 			ReceivedDate = dto.ReceivedDate,
@@ -32,7 +36,8 @@ public class OrderRepository : IOrderRepository {
 			SendPrice = 0,
 			SendType = SendType.Pishtaz,
 			Status = OrderStatuses.Pending,
-			PayNumber = ""
+			PayNumber = "",
+			ProductOwnerId = products.First().UserId,
 		};
 
 		await _dbContext.Set<OrderEntity>().AddAsync(entityOrder);
@@ -60,7 +65,7 @@ public class OrderRepository : IOrderRepository {
 				}
 				orderDetailEntity.Categories = listCategory;
 			}
-			
+
 			await _dbContext.Set<OrderDetailEntity>().AddAsync(orderDetailEntity);
 			await _dbContext.SaveChangesAsync();
 

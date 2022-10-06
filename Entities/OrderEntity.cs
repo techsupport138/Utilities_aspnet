@@ -22,8 +22,16 @@ public class OrderEntity : BaseEntity {
 	public string? PayNumber { get; set; }
 
 	public DateTime? ReceivedDate { get; set; }
+
+	[ForeignKey(nameof(UserId))]
 	public UserEntity? User { get; set; }
+
 	public string? UserId { get; set; }
+
+	[ForeignKey(nameof(ProductOwner))]
+	public UserEntity? ProductOwner { get; set; }
+
+	public string? ProductOwnerId { get; set; }
 	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
 }
 
