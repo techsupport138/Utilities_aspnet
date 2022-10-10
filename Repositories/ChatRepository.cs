@@ -42,7 +42,6 @@ public class ChatRepository : IChatRepository {
 			FullName = user.FullName,
 			ProfileImage = "",
 			UserId = conversation.ToUserId,
-			Product = productEntity,
 			Send = true
 		};
 		return new GenericResponse<ChatReadDto?>(conversations);
@@ -64,6 +63,7 @@ public class ChatRepository : IChatRepository {
 			CreatedAt = DateTime.Now,
 			UpdatedAt = DateTime.Now,
 			UseCase = dto.UseCase,
+			ChatStatus = dto.ChatStatus,
 			Description = dto.Description,
 			Users = users,
 			Products = products
@@ -139,10 +139,9 @@ public class ChatRepository : IChatRepository {
 	public async Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id) {
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		UserEntity? user = await _context.Set<UserEntity>().Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
-		ProductEntity product = new();
 		if (user == null) return new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.BadRequest);
 		List<ChatEntity> conversation = await _context.Set<ChatEntity>()
-			.Where(c => c.ToUserId == userId && c.FromUserId == id).Include(x => x.Media).ToListAsync();
+			.Where(c => c.ToUserId == userId && c.FromUserId == id).Include(x => x.Media).OrderByDescending(x => x.CreatedAt).ToListAsync();
 
 		foreach (ChatEntity? item in conversation.Where(item => item.ReadMessage == false)) {
 			item.ReadMessage = true;
@@ -161,10 +160,8 @@ public class ChatRepository : IChatRepository {
 			FullName = user.FullName,
 			PhoneNumber = user.PhoneNumber,
 			AppUserName = user.AppUserName,
-			Product = product,
-			ProfileImage = "",
 			UserId = id,
-			Media = x.Media,
+			Media = user.Media,
 			Send = x.ToUserId == id
 		}).OrderByDescending(x => x.DateTime).ToList();
 
@@ -184,8 +181,7 @@ public class ChatRepository : IChatRepository {
 		IEnumerable<string> userIds = toUserId.Distinct();
 
 		foreach (string? item in userIds) {
-			var user = await _context.Set<UserEntity>()
-				.Include(x => x.Media).Select(x => new {x.Id, x.FullName, x.PhoneNumber}).FirstOrDefaultAsync(x => x.Id == item);
+			UserEntity? user = await _context.Set<UserEntity>().Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == item);
 			ChatEntity? conversation = await _context.Set<ChatEntity>()
 				.Where(c => c.FromUserId == item && c.ToUserId == userId || c.FromUserId == userId && c.ToUserId == item).OrderByDescending(c => c.CreatedAt)
 				.Include(y => y.Media)
@@ -195,12 +191,11 @@ public class ChatRepository : IChatRepository {
 				Id = conversation!.Id,
 				DateTime = conversation.CreatedAt,
 				MessageText = conversation.MessageText,
-				FullName = user?.FullName,
-				PhoneNumber = user?.PhoneNumber,
-				ProfileImage = "",
 				UserId = conversation.ToUserId == item ? conversation.ToUserId : conversation.FromUserId,
 				Send = conversation.ToUserId == item,
-				UnReadMessages = countUnReadMessage
+				UnReadMessages = countUnReadMessage,
+				User = user,
+				Media = conversation.Media,
 			});
 		}
 

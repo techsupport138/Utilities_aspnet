@@ -12,11 +12,6 @@ public class ChatEntity : BaseEntity {
 
 	public UserEntity ToUser { get; set; } = null!;
 
-	[ForeignKey(nameof(Product))]
-	public Guid? ProductId { get; set; }
-
-	public ProductEntity? Product { get; set; }
-
 	[StringLength(2000)]
 	public string MessageText { get; set; } = null!;
 
@@ -85,8 +80,8 @@ public class ChatReadDto {
 	public string? ProfileImage { get; set; }
 	public bool Send { get; set; }
 	public int? UnReadMessages { get; set; } = 0;
-	public ProductEntity? Product { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
+	public UserEntity? User { get; set; }
 }
 
 public class ChatCreateUpdateDto {
