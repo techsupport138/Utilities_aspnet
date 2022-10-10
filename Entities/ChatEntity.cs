@@ -73,11 +73,7 @@ public class ChatReadDto {
 	public Guid Id { get; set; }
 	public string UserId { get; set; } = null!;
 	public string? MessageText { get; set; }
-	public string? FullName { get; set; }
-	public string? PhoneNumber { get; set; }
-	public string? AppUserName { get; set; }
 	public DateTime? DateTime { get; set; }
-	public string? ProfileImage { get; set; }
 	public bool Send { get; set; }
 	public int? UnReadMessages { get; set; } = 0;
 	public IEnumerable<MediaEntity>? Media { get; set; }

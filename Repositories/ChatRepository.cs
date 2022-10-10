@@ -22,7 +22,6 @@ public class ChatRepository : IChatRepository {
 
 	public async Task<GenericResponse<ChatReadDto?>> Create(ChatCreateUpdateDto model) {
 		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == model.UserId);
-		ProductEntity? productEntity = new();
 		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 		if (user == null) return new GenericResponse<ChatReadDto?>(null, UtilitiesStatusCodes.BadRequest);
 		ChatEntity conversation = new() {
@@ -39,8 +38,8 @@ public class ChatRepository : IChatRepository {
 			Id = conversation.Id,
 			DateTime = conversation.CreatedAt,
 			MessageText = conversation.MessageText,
-			FullName = user.FullName,
-			ProfileImage = "",
+			User = user,
+			Media = conversation.Media,
 			UserId = conversation.ToUserId,
 			Send = true
 		};
@@ -157,9 +156,7 @@ public class ChatRepository : IChatRepository {
 			Id = x.Id,
 			DateTime = x.CreatedAt,
 			MessageText = x.MessageText,
-			FullName = user.FullName,
-			PhoneNumber = user.PhoneNumber,
-			AppUserName = user.AppUserName,
+			User = user,
 			UserId = id,
 			Media = user.Media,
 			Send = x.ToUserId == id
@@ -196,6 +193,7 @@ public class ChatRepository : IChatRepository {
 				UnReadMessages = countUnReadMessage,
 				User = user,
 				Media = conversation.Media,
+				
 			});
 		}
 
