@@ -62,7 +62,7 @@ public class ContentRepository : IContentRepository {
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		ContentEntity? i = await _context.Set<ContentEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+		ContentEntity? i = await _context.Set<ContentEntity>().FirstOrDefaultAsync(i => i.Id == id);
 		if (i == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 		_context.Set<ContentEntity>().Remove(i);
 		await _context.SaveChangesAsync();
