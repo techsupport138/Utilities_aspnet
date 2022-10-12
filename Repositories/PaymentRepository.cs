@@ -49,8 +49,8 @@ public class PaymentRepository : IPaymentRepository {
 			await _context.SaveChangesAsync();
 
 			if (result.Status == 100 && result.Authority.Length == 36) {
-				string? url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
-				return new GenericResponse<string?>(url, UtilitiesStatusCodes.Success);
+				string url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
+				return new GenericResponse<string?>(url);
 			}
 			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
 		}
@@ -113,13 +113,13 @@ public class PaymentRepository : IPaymentRepository {
 			await _context.SaveChangesAsync();
 
 			if (result.Status == 100 && result.Authority.Length == 36) {
-				string? url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
-				return new GenericResponse<string?>(url, UtilitiesStatusCodes.Success);
+				string url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
+				return new GenericResponse<string?>(url);
 			}
 			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
 		}
 		catch (Exception ex) {
-			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
+			return new GenericResponse<string?>(ex.Message, UtilitiesStatusCodes.BadRequest);
 		}
 	}
 
@@ -129,12 +129,12 @@ public class PaymentRepository : IPaymentRepository {
 		string status,
 		string zarinPalMerchantId) {
 		ProductEntity? product = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId);
-		Payment? payment = new(zarinPalMerchantId, product.Price.ToInt());
+		Payment payment = new(zarinPalMerchantId, product.Price.ToInt());
 		if (!status.Equals("OK")) {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 		PaymentVerificationResponse? verify = payment.Verification(authority).Result;
-		TransactionEntity? pay = _context.Set<TransactionEntity>().FirstOrDefault(x => x.Authority == authority);
+		TransactionEntity? pay = await _context.Set<TransactionEntity>().FirstOrDefaultAsync(x => x.Authority == authority);
 		if (pay != null) {
 			pay.StatusId = (TransactionStatus?) Math.Abs(verify.Status);
 			pay.RefId = verify.RefId;

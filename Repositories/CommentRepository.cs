@@ -85,7 +85,7 @@ public class CommentRepository : ICommentRepository {
 			ParentId = dto.ParentId,
 			UserId = userId,
 		};
-		_context.Add(comment);
+		await _context.AddAsync(comment);
 		await _context.SaveChangesAsync();
 
 		try {

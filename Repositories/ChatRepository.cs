@@ -165,9 +165,7 @@ public class ChatRepository : IChatRepository {
 			Send = x.ToUserId == id
 		}).OrderByDescending(x => x.DateTime).ToList();
 
-		return !conversations.Any()
-			? new GenericResponse<IEnumerable<ChatReadDto>?>(null, UtilitiesStatusCodes.NotFound)
-			: new GenericResponse<IEnumerable<ChatReadDto>?>(conversations);
+		return new GenericResponse<IEnumerable<ChatReadDto>?>(conversations);
 	}
 
 	public async Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read() {

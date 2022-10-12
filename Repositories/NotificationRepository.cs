@@ -57,15 +57,15 @@ public class NotificationRepository : INotificationRepository {
 			UpdatedAt = DateTime.Now,
 			Visited = false
 		};
-		_context.Set<NotificationEntity>().Add(notification);
-		_context.SaveChanges();
+		await _context.Set<NotificationEntity>().AddAsync(notification);
+		await _context.SaveChangesAsync();
 		if (model.Media != null) {
-			_context.Set<MediaEntity>().Add(new MediaEntity {
+			await _context.Set<MediaEntity>().AddAsync(new MediaEntity {
 				NotificationId = notification.Id,
 				CreatedAt = DateTime.Now,
 				FileName = model.Media
 			});
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 
 		return new GenericResponse();
