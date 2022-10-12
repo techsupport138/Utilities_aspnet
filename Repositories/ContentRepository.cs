@@ -3,7 +3,6 @@
 public interface IContentRepository {
 	Task<GenericResponse<ContentEntity>> Create(ContentEntity dto);
 	GenericResponse<IQueryable<ContentEntity>> Read();
-	Task<GenericResponse<ContentEntity>> ReadById(Guid id);
 	Task<GenericResponse<ContentEntity>> Update(ContentEntity dto);
 	Task<GenericResponse> Delete(Guid id);
 }
@@ -45,11 +44,6 @@ public class ContentRepository : IContentRepository {
 		return new GenericResponse<IQueryable<ContentEntity>>(i);
 	}
 
-	public async Task<GenericResponse<ContentEntity>> ReadById(Guid id) {
-		ContentEntity? i = await _context.Set<ContentEntity>().AsNoTracking().Include(x => x.Media).FirstOrDefaultAsync(i => i.Id == id);
-		return new GenericResponse<ContentEntity>(i);
-	}
-
 	public async Task<GenericResponse<ContentEntity>> Update(ContentEntity dto) {
 		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		ContentEntity? entity = await _context.Set<ContentEntity>().AsNoTracking().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
@@ -68,8 +62,9 @@ public class ContentRepository : IContentRepository {
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		GenericResponse<ContentEntity> i = await ReadById(id);
-		_context.Set<ContentEntity>().Remove(i.Result);
+		ContentEntity? i = await _context.Set<ContentEntity>().AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+		if (i == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
+		_context.Set<ContentEntity>().Remove(i);
 		await _context.SaveChangesAsync();
 		return new GenericResponse();
 	}

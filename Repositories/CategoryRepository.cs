@@ -3,8 +3,6 @@
 public interface ICategoryRepository {
 	public Task<GenericResponse<CategoryEntity>> Create(CategoryEntity dto);
 	public GenericResponse<IQueryable<CategoryEntity>> Read();
-	public GenericResponse<CategoryEntity?> ReadById(Guid id);
-	public GenericResponse<IQueryable<CategoryEntity>> ReadByIds(IEnumerable<Guid> ids);
 	public Task<GenericResponse<CategoryEntity?>> Update(CategoryEntity dto);
 	public Task<GenericResponse> Delete(Guid id);
 }
@@ -25,23 +23,6 @@ public class CategoryRepository : ICategoryRepository {
 			.Include(i => i.Media)
 			.Include(i => i.Children)!.ThenInclude(i => i.Media)
 			.Where(x => x.ParentId == null).AsNoTracking();
-		return new GenericResponse<IQueryable<CategoryEntity>>(i);
-	}
-
-	public GenericResponse<CategoryEntity?> ReadById(Guid id) {
-		CategoryEntity? i = _dbContext.Set<CategoryEntity>()
-			.Include(i => i.Media)
-			.Include(i => i.Children)!.ThenInclude(i => i.Media)
-			.AsNoTracking().FirstOrDefault(x => x.Id == id);
-		return i == null ? new GenericResponse<CategoryEntity?>(null, UtilitiesStatusCodes.NotFound) : new GenericResponse<CategoryEntity?>(i);
-	}
-
-	public GenericResponse<IQueryable<CategoryEntity>> ReadByIds(IEnumerable<Guid> ids) {
-		IQueryable<CategoryEntity>? i = _dbContext.Set<CategoryEntity>()
-			.Include(i => i.Media)
-			.Include(i => i.Children)!.ThenInclude(i => i.Media)
-			.AsNoTracking()
-			.Where(t => ids.Contains(t.Id));
 		return new GenericResponse<IQueryable<CategoryEntity>>(i);
 	}
 

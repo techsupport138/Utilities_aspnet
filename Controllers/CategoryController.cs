@@ -14,9 +14,6 @@ public class CategoryController : BaseApiController {
 	[HttpGet]
 	public ActionResult<GenericResponse<IQueryable<CategoryReadDto>>> Read() => Result(_categoryRepository.Read());
 
-	[HttpGet("Parent")]
-	public ActionResult<GenericResponse<IQueryable<CategoryReadDto>>> ReadParent() => Result(_categoryRepository.Read());
-
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(CategoryEntity dto) => Result(await _categoryRepository.Update(dto));

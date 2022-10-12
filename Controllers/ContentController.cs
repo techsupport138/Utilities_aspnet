@@ -10,9 +10,6 @@ public class ContentController : BaseApiController {
 	[HttpGet]
 	public ActionResult<GenericResponse<IQueryable<ContentEntity>>> Read() => Result(_contentRepository.Read());
 
-	[HttpGet("{id:guid}")]
-	public async Task<ActionResult<GenericResponse<ContentEntity>>> ReadById(Guid id) => Result(await _contentRepository.ReadById(id));
-
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	public async Task<ActionResult<GenericResponse<ContentEntity>>> Create(ContentEntity dto) => Result(await _contentRepository.Create(dto));
