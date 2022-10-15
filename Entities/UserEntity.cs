@@ -214,7 +214,7 @@ public class UserReadDto {
 	
 	public GrowthRateReadDto? GrowthRate { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
-	public IEnumerable<CategoryReadDto>? Categories { get; set; }
+	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<ProductReadDto>? Products { get; set; }
 	public IEnumerable<UserReadDto>? Followers { get; set; }
 }

@@ -221,7 +221,7 @@ public class ProductReadDto {
 	public Currency? Currency { get; set; }
 	public UserReadDto? User { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
-	public IEnumerable<CategoryReadDto>? Categories { get; set; }
+	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }
 	public IEnumerable<FormEntity>? Forms { get; set; }
 	public IEnumerable<CommentReadDto>? Comments { get; set; }

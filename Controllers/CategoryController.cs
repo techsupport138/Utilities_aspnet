@@ -9,14 +9,14 @@ public class CategoryController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<CategoryReadDto>>> Create(CategoryEntity dto) => Result(await _categoryRepository.Create(dto));
+	public async Task<ActionResult<GenericResponse<CategoryEntity>>> Create(CategoryEntity dto) => Result(await _categoryRepository.Create(dto));
 
 	[HttpGet]
-	public ActionResult<GenericResponse<IQueryable<CategoryReadDto>>> Read() => Result(_categoryRepository.Read());
+	public ActionResult<GenericResponse<IQueryable<CategoryEntity>>> Read() => Result(_categoryRepository.Read());
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<ProductReadDto>>> Update(CategoryEntity dto) => Result(await _categoryRepository.Update(dto));
+	public async Task<ActionResult<GenericResponse<CategoryEntity>>> Update(CategoryEntity dto) => Result(await _categoryRepository.Update(dto));
 
 	[HttpDelete("{id:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

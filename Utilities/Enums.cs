@@ -1,9 +1,9 @@
 namespace Utilities_aspnet.Utilities;
 
 public static class EnumExtension {
-	public static IEnumerable<CategoryReadDto> GetValues<T>() {
-		return (from int itemType in Enum.GetValues(typeof(T)) select new CategoryReadDto {Title = Enum.GetName(typeof(T), itemType), SecondaryId = itemType})
-			.ToList();
+	public static IEnumerable<IdTitleDto> GetValues<T>() {
+		return (from int itemType in Enum.GetValues(typeof(T))
+			select new IdTitleDto {Title = Enum.GetName(typeof(T), itemType), Id = itemType}).ToList();
 	}
 }
 

@@ -94,7 +94,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 			userList = userList.Where(x => x.Id == userId);
 		}
 
-		model.Categories = _mapper.Map<IEnumerable<CategoryReadDto>>(categoryList);
+		model.Categories = _mapper.Map<IEnumerable<CategoryEntity>>(categoryList);
 		model.Users = _mapper.Map<IEnumerable<UserReadDto>>(userList);
 		model.Products = _mapper.Map<IEnumerable<ProductReadDto>>(productList);
 		if (filter.IsBookmark) model.Products = model.Products.Where(x => x.IsBookmarked).ToList();
