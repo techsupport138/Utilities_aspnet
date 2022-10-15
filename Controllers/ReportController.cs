@@ -8,7 +8,7 @@ public class ReportController : BaseApiController {
 	public ReportController(IReportRepository repository) => _repository = repository;
 
 	[HttpPost("Filter")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<ReportEntity>>>> Read(ReportFilterDto parameters) => Result(await _repository.Read(parameters));
+	public ActionResult<GenericResponse<IEnumerable<ReportEntity>>> Read(ReportFilterDto parameters) => Result(_repository.Read(parameters));
 
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<ReportEntity>>> ReadById(Guid id) => Result(await _repository.ReadById(id));
