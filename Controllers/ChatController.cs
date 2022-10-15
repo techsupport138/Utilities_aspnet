@@ -12,11 +12,16 @@ public class ChatController : BaseApiController {
 	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> Read() => Result(await _chatRepository.Read());
 
 	[HttpGet("{userId}")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> ReadById(string userId)
-		=> Result(await _chatRepository.ReadByUserId(userId));
+	public async Task<ActionResult<GenericResponse<IEnumerable<ChatReadDto>?>>> ReadById(string userId) => Result(await _chatRepository.ReadByUserId(userId));
 
 	[HttpPost]
 	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Create(ChatCreateUpdateDto model) => Result(await _chatRepository.Create(model));
+
+	[HttpPut]
+	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Update(ChatCreateUpdateDto model) => Result(await _chatRepository.Update(model));
+
+	[HttpDelete]
+	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Delete(Guid id) => Result(await _chatRepository.Delete(id));
 
 	[HttpPost("CreateGroupChat")]
 	public async Task<ActionResult<GenericResponse<GroupChatEntity?>>> CreateGroupChat(GroupChatCreateUpdateDto dto)

@@ -2,8 +2,11 @@
 
 public interface IChatRepository {
 	Task<GenericResponse<ChatReadDto?>> Create(ChatCreateUpdateDto model);
-	Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id);
 	Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read();
+	Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id);
+	Task<GenericResponse<ChatEntity?>> Update(ChatCreateUpdateDto dto);
+	Task<GenericResponse> Delete(Guid id);
+
 	Task<GenericResponse<GroupChatEntity?>> CreateGroupChat(GroupChatCreateUpdateDto dto);
 	Task<GenericResponse<GroupChatEntity?>> UpdateGroupChat(GroupChatCreateUpdateDto dto);
 	Task<GenericResponse<GroupChatMessageEntity?>> CreateGroupChatMessage(GroupChatMessageCreateUpdateDto dto);
@@ -46,6 +49,23 @@ public class ChatRepository : IChatRepository {
 		return new GenericResponse<ChatReadDto?>(conversations);
 	}
 
+	public async Task<GenericResponse<ChatEntity?>> Update(ChatCreateUpdateDto dto) {
+		ChatEntity? e = await _context.Set<ChatEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
+		if (e == null) return new GenericResponse<ChatEntity?>(null, UtilitiesStatusCodes.NotFound);
+		e.MessageText = dto.MessageText;
+		_context.Update(e);
+		await _context.SaveChangesAsync();
+		return new GenericResponse<ChatEntity?>(e);
+	}
+
+	public async Task<GenericResponse> Delete(Guid id) {
+		ChatEntity? e = await _context.Set<ChatEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		if (e == null) return new GenericResponse<ChatEntity?>(null, UtilitiesStatusCodes.NotFound);
+		_context.Remove(e);
+		await _context.SaveChangesAsync();
+		return new GenericResponse();
+	}
+
 	public async Task<GenericResponse<GroupChatEntity?>> CreateGroupChat(GroupChatCreateUpdateDto dto) {
 		List<UserEntity> users = new();
 		foreach (string id in dto.UserIds) users.Add(await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == id));
@@ -78,7 +98,7 @@ public class ChatRepository : IChatRepository {
 			.Include(x => x.Users)
 			.Include(x => x.Products)
 			.FirstOrDefaultAsync(x => x.Id == dto.Id);
-		
+
 		List<UserEntity> users = new();
 		foreach (string id in dto.UserIds) users.Add(await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == id));
 
@@ -194,7 +214,6 @@ public class ChatRepository : IChatRepository {
 				UnReadMessages = countUnReadMessage,
 				User = user,
 				Media = conversation.Media,
-				
 			});
 		}
 
