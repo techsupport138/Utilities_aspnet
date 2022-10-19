@@ -240,7 +240,7 @@ public class ProductReadDto {
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }
 	public IEnumerable<FormEntity>? Forms { get; set; }
 	public IEnumerable<CommentReadDto>? Comments { get; set; }
-	public IEnumerable<TeamReadDto>? Teams { get; set; }
+	public IEnumerable<TeamEntity>? Teams { get; set; }
 }
 
 public class ProductCreateUpdateDto {

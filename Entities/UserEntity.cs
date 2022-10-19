@@ -142,11 +142,6 @@ public class TeamEntity : BaseEntity {
 	public ProductEntity? Product { get; set; }
 }
 
-public class TeamReadDto {
-	public Guid Id { get; set; }
-	public UserEntity? User { get; set; }
-}
-
 public class GetMobileVerificationCodeForLoginDto {
 	public string Mobile { get; set; }
 	public bool SendSMS { get; set; }
