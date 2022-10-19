@@ -68,7 +68,7 @@ public class OrderReadDto {
 	public DateTime? PayDateTime { get; set; }
 	public string? PayNumber { get; set; }
 	public DateTime? ReceivedDate { get; set; }
-	public UserReadDto? User { get; set; }
+	public UserEntity? User { get; set; }
 	public IEnumerable<OrderDetailReadDto>? OrderDetails { get; set; }
 }
 

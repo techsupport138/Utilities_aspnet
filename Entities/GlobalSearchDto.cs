@@ -1,7 +1,7 @@
 ﻿namespace Utilities_aspnet.Entities;
 
 public class GlobalSearchDto {
-	public IEnumerable<UserReadDto>? Users { get; set; }
+	public IEnumerable<UserEntity>? Users { get; set; }
 	public IEnumerable<ProductReadDto>? Products { get; set; }
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 }

@@ -9,11 +9,11 @@ public class FollowBookmarkController : BaseApiController {
 
 	[HttpPost("ReadFollowers/{userId}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public ActionResult<GenericResponse<IEnumerable<UserReadDto>>> ReadFollowers(string userId) => Result(_repository.GetFollowers(userId));
+	public ActionResult<GenericResponse<IEnumerable<UserEntity>>> ReadFollowers(string userId) => Result(_repository.GetFollowers(userId));
 
 	[HttpPost("ReadFollowings/{userId}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public ActionResult<GenericResponse<IQueryable<UserReadDto>>> ReadFollowings(string userId) => Result(_repository.GetFollowing(userId));
+	public ActionResult<GenericResponse<IQueryable<UserEntity>>> ReadFollowings(string userId) => Result(_repository.GetFollowing(userId));
 
 	[HttpPost("ToggleFolllow")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

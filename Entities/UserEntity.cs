@@ -122,8 +122,8 @@ public class UserEntity : IdentityUser {
 	public GrowthRateReadDto? GrowthRate { get; set; }
 	
 	[NotMapped]
-	public IEnumerable<UserReadDto>? Followers { get; set; }
-	
+	public IEnumerable<UserEntity>? Followers { get; set; }
+
 }
 
 [Table("Otps")]
@@ -144,7 +144,7 @@ public class TeamEntity : BaseEntity {
 
 public class TeamReadDto {
 	public Guid Id { get; set; }
-	public UserReadDto? User { get; set; }
+	public UserEntity? User { get; set; }
 }
 
 public class GetMobileVerificationCodeForLoginDto {
@@ -170,57 +170,6 @@ public class RegisterDto {
 public class LoginWithPasswordDto {
 	public string? Email { get; set; }
 	public string? Password { get; set; }
-}
-
-public class UserReadDto {
-	public string? Token { get; set; }
-	public string? Id { get; set; }
-	public string? FullName { get; set; }
-	public string? PhoneNumber { get; set; }
-	public string? UserName { get; set; }
-	public string? Bio { get; set; }
-	public string? AppUserName { get; set; }
-	public string? AppPhoneNumber { get; set; }
-	public string? AppEmail { get; set; }
-	public string? Instagram { get; set; }
-	public string? Telegram { get; set; }
-	public string? WhatsApp { get; set; }
-	public string? LinkedIn { get; set; }
-	public string? Dribble { get; set; }
-	public string? SoundCloud { get; set; }
-	public string? Pinterest { get; set; }
-	public string? Color { get; set; }
-	public string? State { get; set; }
-	public string? StateTr1 { get; set; }
-	public string? StateTr2 { get; set; }
-	public string? Type { get; set; }
-	public string? FirstName { get; set; }
-	public string? LastName { get; set; }
-	public string? Headline { get; set; }
-	public string? Website { get; set; }
-	public string? Region { get; set; }
-	public string? Activity { get; set; }
-	public string? Gender { get; set; }
-	public string? GenderTr1 { get; set; }
-	public string? GenderTr2 { get; set; }
-	public double? Wallet { get; set; }
-	public double? Point { get; set; } = 0;
-	public bool? ShowContactInfo { get; set; }
-	public bool IsAdmin { get; set; }
-	public bool IsFollowing { get; set; }
-	public bool? Suspend { get; set; }
-	public int? CountFollowers { get; set; }
-	public int? CountFollowing { get; set; }
-	public int? CountProducts { get; set; }
-	public string? AccessLevel { get; set; }
-	public string? Badge { get; set; }
-	public DateTime? BirthDate { get; set; }
-	
-	public GrowthRateReadDto? GrowthRate { get; set; }
-	public IEnumerable<MediaEntity>? Media { get; set; }
-	public IEnumerable<CategoryEntity>? Categories { get; set; }
-	public IEnumerable<ProductReadDto>? Products { get; set; }
-	public IEnumerable<UserReadDto>? Followers { get; set; }
 }
 
 public class GrowthRateReadDto {

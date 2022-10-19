@@ -43,13 +43,13 @@ public class ProductEntity : BaseEntity {
 
 	[StringLength(500)]
 	public string? State { get; set; }
-	
+
 	[StringLength(500)]
 	public string? StateTr1 { get; set; }
-	
+
 	[StringLength(500)]
 	public string? StateTr2 { get; set; }
-	
+
 	[StringLength(500)]
 	public string? Packaging { get; set; }
 
@@ -103,7 +103,7 @@ public class ProductEntity : BaseEntity {
 
 	[StringLength(500)]
 	public string? Value12 { get; set; }
-	
+
 	[StringLength(500)]
 	public string? RelatedIds { get; set; }
 
@@ -134,7 +134,7 @@ public class ProductEntity : BaseEntity {
 
 	public string? UserId { get; set; }
 	public UserEntity? User { get; set; }
-	
+
 	public Guid? ChatId { get; set; }
 	public ChatEntity? Chat { get; set; }
 
@@ -149,6 +149,21 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<TeamEntity>? Teams { get; set; }
 	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
 	public IEnumerable<GroupChatEntity>? GroupChat { get; set; }
+
+	[NotMapped]
+	public bool IsBookmarked { get; set; }
+
+	[NotMapped]
+	public bool IsTopProduct { get; set; }
+
+	[NotMapped]
+	public int? CommentsCount { get; set; }
+
+	[NotMapped]
+	public int? DownloadCount { get; set; }
+
+	[NotMapped]
+	public double? Score { get; set; }
 }
 
 public class ProductReadDto {
@@ -219,7 +234,7 @@ public class ProductReadDto {
 	public DateTime? DeletedAt { get; set; }
 	public ProductStatus? Status { get; set; }
 	public Currency? Currency { get; set; }
-	public UserReadDto? User { get; set; }
+	public UserEntity? User { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 	public IEnumerable<VoteReadDto>? VoteFields { get; set; }
@@ -355,4 +370,3 @@ public class ProductFilterDto {
 	public IEnumerable<Guid>? Categories { get; set; }
 	public string? Query { get; set; }
 }
-

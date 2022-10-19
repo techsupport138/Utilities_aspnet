@@ -33,7 +33,6 @@ public class BookmarkCreateDto {
 public class BookmarkReadDto {
 	public string? FolderName { get; set; }
 	public ProductReadDto? Product { get; set; }
-	public ProductReadDto? Category { get; set; }
 }
 
 public class FollowCreateDto {

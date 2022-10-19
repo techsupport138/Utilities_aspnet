@@ -10,7 +10,6 @@ public class AutoMapperProfile : Profile {
 		CreateMap<ProductEntity, ProductCreateUpdateDto>().ReverseMap().ForMember(x => x.Categories, y => y.Ignore()).ForMember(x => x.Teams, y => y.Ignore());
 		CreateMap<VoteFieldEntity, VoteReadDto>()
 			.ForMember(x => x.Score, c => c.MapFrom(v => (v.Votes == null || !v.Votes.Any()) ? 0 : v.Votes.Sum(x => x.Score) / v.Votes.Count())).ReverseMap();
-		CreateMap<UserEntity, UserReadDto>().ReverseMap();
 		CreateMap<CommentEntity, CommentCreateUpdateDto>().ReverseMap();
 		CreateMap<CommentEntity, CommentReadDto>()
 			.ForMember(x => x.IsLiked,
