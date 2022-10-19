@@ -1,31 +1,26 @@
 namespace Utilities_aspnet.Repositories;
 
 public interface ITopProductRepository {
-	Task<GenericResponse<TopProductReadDto?>> ReadTopProduct();
-	Task<GenericResponse<TopProductReadDto?>> Create(TopProductCreateDto dto);
-	Task<GenericResponse<IEnumerable<TopProductReadDto>?>> Read();
+	Task<GenericResponse<TopProductEntity?>> ReadTopProduct();
+	Task<GenericResponse<TopProductEntity?>> Create(TopProductCreateDto dto);
+	GenericResponse<IQueryable<TopProductEntity>?> Read();
 }
 
 public class TopProductRepository : ITopProductRepository {
 	private readonly DbContext _dbContext;
-	private readonly IMapper _mapper;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly INotificationRepository _notificationRepository;
 
 	public TopProductRepository(
 		DbContext dbContext,
-		IMapper mapper,
 		IHttpContextAccessor httpContextAccessor,
 		INotificationRepository notificationRepository) {
 		_dbContext = dbContext;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 		_notificationRepository = notificationRepository;
 	}
 
-	public async Task<GenericResponse<TopProductReadDto?>> Create(TopProductCreateDto dto) {
-		TopProductEntity? entity = null;
-
+	public async Task<GenericResponse<TopProductEntity?>> Create(TopProductCreateDto dto) {
 		ProductEntity? product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == dto.ProductId);
 		TopProductEntity topProduct = new() {
 			ProductId = dto.ProductId,
@@ -35,7 +30,8 @@ public class TopProductRepository : ITopProductRepository {
 		await _dbContext.Set<TopProductEntity>().AddAsync(topProduct);
 		await _dbContext.SaveChangesAsync();
 
-		entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product).ThenInclude(x => x.Media).FirstOrDefaultAsync(x => x.Id == topProduct.Id);
+		TopProductEntity? entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product).ThenInclude(x => x.Media)
+			.FirstOrDefaultAsync(x => x.Id == topProduct.Id);
 
 		string? linkMedia = entity?.Product?.Media?.OrderBy(x => x.CreatedAt).Select(x => x.Link)?.FirstOrDefault();
 
@@ -47,21 +43,26 @@ public class TopProductRepository : ITopProductRepository {
 			Media = linkMedia
 		});
 
-		return new GenericResponse<TopProductReadDto?>(_mapper.Map<TopProductReadDto>(entity));
+		return new GenericResponse<TopProductEntity?>(entity);
 	}
 
-	public async Task<GenericResponse<TopProductReadDto?>> ReadTopProduct() {
-		TopProductEntity? entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product).ThenInclude(x => x.Media).Include(x => x.Product)
-			.ThenInclude(x => x.Categories).Include(x => x.Product).ThenInclude(x => x.User).OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync();
+	public async Task<GenericResponse<TopProductEntity?>> ReadTopProduct() {
+		TopProductEntity? entity = await _dbContext.Set<TopProductEntity>()
+			.Include(x => x.Product).ThenInclude(x => x.Media)
+			.Include(x => x.Product).ThenInclude(x => x.Categories)
+			.Include(x => x.Product).ThenInclude(x => x.User)
+			.OrderByDescending(x => x.CreatedAt).FirstOrDefaultAsync();
 
-		return new GenericResponse<TopProductReadDto?>(_mapper.Map<TopProductReadDto>(entity));
+		return new GenericResponse<TopProductEntity?>(entity);
 	}
 
-	public async Task<GenericResponse<IEnumerable<TopProductReadDto>?>> Read() {
-		IEnumerable<TopProductEntity> entity = await _dbContext.Set<TopProductEntity>().Include(x => x.Product).ThenInclude(x => x.Media)
-			.Include(x => x.Product).ThenInclude(x => x.Categories).Include(x => x.Product).ThenInclude(x => x.User).OrderByDescending(x => x.CreatedAt)
-			.ToListAsync();
+	public GenericResponse<IQueryable<TopProductEntity>?> Read() {
+		IQueryable<TopProductEntity> entity = _dbContext.Set<TopProductEntity>()
+			.Include(x => x.Product).ThenInclude(x => x.Media)
+			.Include(x => x.Product).ThenInclude(x => x.Categories)
+			.Include(x => x.Product).ThenInclude(x => x.User)
+			.OrderByDescending(x => x.CreatedAt);
 
-		return new GenericResponse<IEnumerable<TopProductReadDto>?>(_mapper.Map<IEnumerable<TopProductReadDto>?>(entity));
+		return new GenericResponse<IQueryable<TopProductEntity>?>(entity);
 	}
 }

@@ -9,11 +9,11 @@ public class TopProductController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<TopProductReadDto?>>> Create(TopProductCreateDto dto) => Result(await _topProductRepository.Create(dto));
+	public async Task<ActionResult<GenericResponse<TopProductEntity?>>> Create(TopProductCreateDto dto) => Result(await _topProductRepository.Create(dto));
 
 	[HttpGet]
-	public async Task<ActionResult<GenericResponse<IEnumerable<TopProductReadDto>?>>> Read() => Result(await _topProductRepository.Read());
+	public ActionResult<GenericResponse<IEnumerable<TopProductEntity>?>> Read() => Result(_topProductRepository.Read());
 
 	[HttpGet("TopProduct")]
-	public async Task<ActionResult<GenericResponse<TopProductReadDto?>>> ReadTopProduct() => Result(await _topProductRepository.ReadTopProduct());
+	public async Task<ActionResult<GenericResponse<TopProductEntity?>>> ReadTopProduct() => Result(await _topProductRepository.ReadTopProduct());
 }
