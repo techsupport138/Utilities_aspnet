@@ -30,5 +30,5 @@ public class FollowBookmarkController : BaseApiController {
 
 	[HttpPost("ReadBookmarks")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public ActionResult<GenericResponse<IEnumerable<BookmarkReadDto>?>> ReadBookmarks() => Result(_repository.ReadBookmarks());
+	public ActionResult<GenericResponse<IEnumerable<BookmarkEntity>?>> ReadBookmarks() => Result(_repository.ReadBookmarks());
 }

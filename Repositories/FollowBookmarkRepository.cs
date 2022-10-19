@@ -5,7 +5,7 @@ public interface IFollowBookmarkRepository {
 	GenericResponse<IQueryable<UserEntity>> GetFollowing(string id);
 	Task<GenericResponse> ToggleFollow(string sourceUserId, FollowCreateDto dto);
 	Task<GenericResponse> RemoveFollowings(string targetUserId, FollowCreateDto dto);
-	GenericResponse<IQueryable<BookmarkReadDto>?> ReadBookmarks();
+	GenericResponse<IQueryable<BookmarkEntity>?> ReadBookmarks();
 	Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto);
 }
 
@@ -28,7 +28,8 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
 	public async Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto) {
 		BookmarkEntity? oldBookmark = _context.Set<BookmarkEntity>()
-			.FirstOrDefault(x => (x.ProductId != null && x.ProductId == dto.ProductId || x.CategoryId != null && x.CategoryId == dto.CategoryId) &&
+			.FirstOrDefault(x => (x.ProductId != null && x.ProductId == dto.ProductId ||
+			                      x.CategoryId != null && x.CategoryId == dto.CategoryId) &&
 			                     x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!);
 		if (oldBookmark == null) {
 			BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
@@ -47,7 +48,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
-	public GenericResponse<IQueryable<BookmarkReadDto>?> ReadBookmarks() {
+	public GenericResponse<IQueryable<BookmarkEntity>?> ReadBookmarks() {
 		IQueryable<BookmarkEntity> bookmark = _context.Set<BookmarkEntity>()
 			.Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name!)
 			.Include(x => x.Product).ThenInclude(x => x.Media)
@@ -61,7 +62,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			.Include(x => x.Product).ThenInclude(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
 			.AsNoTracking();
 
-		return new GenericResponse<IQueryable<BookmarkReadDto>?>(_mapper.Map<IQueryable<BookmarkReadDto>>(bookmark));
+		return new GenericResponse<IQueryable<BookmarkEntity>?>(bookmark);
 	}
 
 	public GenericResponse<IQueryable<UserEntity>> GetFollowers(string id) {

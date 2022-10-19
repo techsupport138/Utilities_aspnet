@@ -11,16 +11,23 @@ public class FollowEntity : BaseEntity {
 
 [Table("Bookmarks")]
 public class BookmarkEntity : BaseEntity {
+	[System.Text.Json.Serialization.JsonIgnore]
 	public UserEntity? User { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
 	public string? UserId { get; set; }
 
 	[StringLength(500)]
 	public string? FolderName { get; set; }
 
 	public ProductEntity? Product { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
 	public Guid? ProductId { get; set; }
 
 	public CategoryEntity? Category { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
 	public Guid? CategoryId { get; set; }
 }
 
@@ -28,11 +35,6 @@ public class BookmarkCreateDto {
 	public string? FolderName { get; set; }
 	public Guid? ProductId { get; set; }
 	public Guid? CategoryId { get; set; }
-}
-
-public class BookmarkReadDto {
-	public string? FolderName { get; set; }
-	public ProductReadDto? Product { get; set; }
 }
 
 public class FollowCreateDto {
