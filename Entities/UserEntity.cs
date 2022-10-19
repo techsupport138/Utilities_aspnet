@@ -1,7 +1,7 @@
 ﻿namespace Utilities_aspnet.Entities;
 
 public class UserEntity : IdentityUser {
-	public bool Suspend { get; set; } = false;
+	public bool Suspend { get; set; }
 
 	[StringLength(500)]
 	public string? FirstName { get; set; }
@@ -73,7 +73,7 @@ public class UserEntity : IdentityUser {
 	public string? StateTr2 { get; set; }
 	
 	[StringLength(500)]
-	public string? Gender { get; set; } = null!;
+	public string? Gender { get; set; }
 
 	[StringLength(500)]
 	public string? GenderTr1 { get; set; }
@@ -91,8 +91,17 @@ public class UserEntity : IdentityUser {
 	public string? AccessLevel { get; set; }
 	public string? Badge { get; set; }
 
+	public IEnumerable<FormEntity>? FormBuilders { get; set; }
+	public IEnumerable<MediaEntity>? Media { get; set; }
+	public IEnumerable<ProductEntity>? Products { get; set; }
+	public IEnumerable<CategoryEntity>? Categories { get; set; }
+	public IEnumerable<TransactionEntity>? Transactions { get; set; }
+	public IEnumerable<TeamEntity>? Teams { get; set; }
+	public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
+	public IEnumerable<GroupChatEntity>? GroupChats { get; set; }
+	
 	[NotMapped]
-	public bool IsFollowing { get; set; } = false;
+	public bool IsFollowing { get; set; }
 
 	[NotMapped]
 	public int? CountProducts { get; set; }
@@ -111,15 +120,10 @@ public class UserEntity : IdentityUser {
 
 	[NotMapped]
 	public GrowthRateReadDto? GrowthRate { get; set; }
-
-	public IEnumerable<FormEntity>? FormBuilders { get; set; }
-	public IEnumerable<MediaEntity>? Media { get; set; }
-	public IEnumerable<ProductEntity>? Products { get; set; }
-	public IEnumerable<CategoryEntity>? Categories { get; set; }
-	public IEnumerable<TransactionEntity>? Transactions { get; set; }
-	public IEnumerable<TeamEntity>? Teams { get; set; }
-	public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
-	public IEnumerable<GroupChatEntity>? GroupChats { get; set; }
+	
+	[NotMapped]
+	public IEnumerable<UserReadDto>? Followers { get; set; }
+	
 }
 
 [Table("Otps")]
@@ -196,7 +200,7 @@ public class UserReadDto {
 	public string? Website { get; set; }
 	public string? Region { get; set; }
 	public string? Activity { get; set; }
-	public string? Gender { get; set; } = null!;
+	public string? Gender { get; set; }
 	public string? GenderTr1 { get; set; }
 	public string? GenderTr2 { get; set; }
 	public double? Wallet { get; set; }

@@ -55,7 +55,7 @@ public class PaymentRepository : IPaymentRepository {
 			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
 		}
 		catch (Exception ex) {
-			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
+			return new GenericResponse<string?>(ex.Message, UtilitiesStatusCodes.BadRequest);
 		}
 	}
 
@@ -69,8 +69,8 @@ public class PaymentRepository : IPaymentRepository {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
-		Payment? payment = new(zarinPalMerchantId, amount);
+		UserEntity user = (await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId))!;
+		Payment payment = new(zarinPalMerchantId, amount);
 		if (!status.Equals("OK")) {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
@@ -82,7 +82,7 @@ public class PaymentRepository : IPaymentRepository {
 			pay.UpdatedAt = DateTime.Now;
 			_context.Set<TransactionEntity>().Update(pay);
 		}
-
+		
 		user.Wallet += amount;
 		_context.Set<UserEntity>().Update(user);
 
@@ -94,11 +94,11 @@ public class PaymentRepository : IPaymentRepository {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
 		try {
-			ProductEntity? product = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId);
+			ProductEntity product = (await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
 			UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
-			Payment? payment = new(zarinPalMerchantId, product.Price.ToInt());
-			string? callbackUrl = $"{Server.ServerAddress}/Payment/CallBack/{productId}";
-			string? desc = $"خرید محصول {product.Title}";
+			Payment payment = new(zarinPalMerchantId, product.Price.ToInt());
+			string callbackUrl = $"{Server.ServerAddress}/Payment/CallBack/{productId}";
+			string desc = $"خرید محصول {product.Title}";
 			PaymentRequestResponse? result = payment.PaymentRequest(desc, callbackUrl, "", user?.PhoneNumber).Result;
 			await _context.Set<TransactionEntity>().AddAsync(new TransactionEntity {
 				Amount = product.Price.ToInt(),
@@ -128,7 +128,7 @@ public class PaymentRepository : IPaymentRepository {
 		string authority,
 		string status,
 		string zarinPalMerchantId) {
-		ProductEntity? product = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId);
+		ProductEntity product = (await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
 		Payment payment = new(zarinPalMerchantId, product.Price.ToInt());
 		if (!status.Equals("OK")) {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);

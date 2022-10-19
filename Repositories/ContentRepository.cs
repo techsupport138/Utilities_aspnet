@@ -13,7 +13,6 @@ public class ContentRepository : IContentRepository {
 	public ContentRepository(DbContext context) => _context = context;
 
 	public async Task<GenericResponse<ContentEntity>> Create(ContentEntity dto) {
-		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		EntityEntry<ContentEntity> i = await _context.Set<ContentEntity>().AddAsync(dto);
 		await _context.SaveChangesAsync();
 		return new GenericResponse<ContentEntity>(i.Entity);
@@ -22,19 +21,14 @@ public class ContentRepository : IContentRepository {
 	public GenericResponse<IQueryable<ContentEntity>> Read() => new(_context.Set<ContentEntity>().Include(x => x.Media).AsNoTracking());
 
 	public async Task<GenericResponse<ContentEntity>> Update(ContentEntity dto) {
-		if (dto == null) throw new ArgumentException("Dto must not be null", nameof(dto));
 		ContentEntity? entity = await _context.Set<ContentEntity>().AsNoTracking().Where(x => x.Id == dto.Id).FirstOrDefaultAsync();
-
-		if (entity == null)
-			return new GenericResponse<ContentEntity>(new ContentEntity());
-
+		if (entity == null) return new GenericResponse<ContentEntity>(new ContentEntity());
 		entity.UseCase = dto.UseCase;
 		entity.Title = dto.Title;
 		entity.SubTitle = dto.SubTitle;
 		entity.Description = dto.Description;
 		_context.Update(entity);
 		await _context.SaveChangesAsync();
-
 		return new GenericResponse<ContentEntity>(entity);
 	}
 
