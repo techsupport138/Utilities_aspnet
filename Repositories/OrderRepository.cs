@@ -140,6 +140,7 @@ public class OrderRepository : IOrderRepository {
 		if (dto.ShowVotes.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Votes);
 		if (dto.ShowVoteFields.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.VoteFields);
 
+		if (dto.Id.HasValue) q = q.Where(x => x.Id == dto.Id);
 		if (dto.Description.IsNotNullOrEmpty()) q = q.Where(x => (x.Description ?? "").Contains(dto.Description!));
 		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
 		if (dto.TotalPrice.HasValue) q = q.Where(x => x.TotalPrice.ToInt() == dto.TotalPrice.ToInt());

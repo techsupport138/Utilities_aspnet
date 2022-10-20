@@ -105,6 +105,7 @@ public class OrderDetailCreateUpdateDto {
 }
 
 public class OrderFilterDto {
+	public Guid? Id { get; set; }
 	public bool? ShowProducts { get; set; } = false;
 	public bool? ShowMedia { get; set; } = false;
 	public bool? ShowForms { get; set; } = false;
