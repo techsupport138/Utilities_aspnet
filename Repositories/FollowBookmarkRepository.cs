@@ -12,16 +12,10 @@ public interface IFollowBookmarkRepository {
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IMapper _mapper;
 	private readonly INotificationRepository _notificationRepository;
-
-	public FollowBookmarkRepository(
-		DbContext context,
-		IMapper mapper,
-		IHttpContextAccessor httpContextAccessor,
-		INotificationRepository notificationRepository) {
+	
+	public FollowBookmarkRepository(DbContext context, IHttpContextAccessor httpContextAccessor, INotificationRepository notificationRepository) {
 		_context = context;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 		_notificationRepository = notificationRepository;
 	}
@@ -59,9 +53,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			.Include(x => x.Product).ThenInclude(i => i.Categories)
 			.Include(x => x.Product).ThenInclude(i => i.Comments.Where(x => x.ParentId == null)).ThenInclude(x => x.Children)
 			.Include(x => x.Product).ThenInclude(i => i.Reports)
-			.Include(x => x.Product).ThenInclude(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media)
-			.AsNoTracking();
-
+			.Include(x => x.Product).ThenInclude(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media);
 		return new GenericResponse<IQueryable<BookmarkEntity>?>(bookmark);
 	}
 

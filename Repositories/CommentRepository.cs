@@ -6,7 +6,7 @@ public interface ICommentRepository {
 	Task<GenericResponse<CommentReadDto?>> Read(Guid id);
 	Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id);
 	GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto);
-	Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity);
+	Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
 }
 
@@ -42,21 +42,22 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto) {
-		IQueryable<CommentEntity> e = _context.Set<CommentEntity>().Where(x => x.DeletedAt == null);
+		IQueryable<CommentEntity> q = _context.Set<CommentEntity>().Where(x => x.DeletedAt == null);
 
-		if (dto.ProductId.HasValue) e = e.Where(x => x.ProductId == dto.ProductId);
-		if (dto.UserId.IsNotNullOrEmpty()) e = e.Where(x => x.UserId == dto.UserId);
+		if (dto.ProductId.HasValue) q = q.Where(x => x.ProductId == dto.ProductId);
+		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
+		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 
-		e = e.OrderByDescending(x => x.CreatedAt)
+		q = q.OrderByDescending(x => x.CreatedAt)
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
 			.Include(x => x.LikeComments)
 			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media).OrderByDescending(x => x.CreatedAt)
 			.AsNoTracking();
 
-		if (dto.ShowProducts.IsTrue()) e = e.Include(x => x.Product);
+		if (dto.ShowProducts.IsTrue()) q = q.Include(x => x.Product).ThenInclude(x => x.Media);
 
-		return new GenericResponse<IQueryable<CommentEntity>?>(e);
+		return new GenericResponse<IQueryable<CommentEntity>?>(q);
 	}
 
 	public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
@@ -84,6 +85,7 @@ public class CommentRepository : ICommentRepository {
 			Score = dto.Score,
 			ParentId = dto.ParentId,
 			UserId = userId,
+			Status = dto.Status
 		};
 		await _context.AddAsync(comment);
 		await _context.SaveChangesAsync();
@@ -138,13 +140,14 @@ public class CommentRepository : ICommentRepository {
 		return await Read(comment.Id);
 	}
 
-	public async Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto entity) {
+	public async Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto dto) {
 		CommentEntity? comment = await _context.Set<CommentEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
 		if (comment == null) return new GenericResponse<CommentReadDto?>(null);
-		if (!string.IsNullOrEmpty(entity.Comment)) comment.Comment = entity.Comment;
-		if (entity.Score.HasValue) comment.Score = entity.Score;
-		if (entity.ProductId.HasValue) comment.ProductId = entity.ProductId;
+		if (!string.IsNullOrEmpty(dto.Comment)) comment.Comment = dto.Comment;
+		if (dto.Score.HasValue) comment.Score = dto.Score;
+		if (dto.ProductId.HasValue) comment.ProductId = dto.ProductId;
+		if (dto.Status.HasValue) comment.Status = dto.Status;
 
 		comment.UpdatedAt = DateTime.Now;
 		_context.Set<CommentEntity>().Update(comment);
@@ -155,9 +158,10 @@ public class CommentRepository : ICommentRepository {
 
 	public async Task<GenericResponse> Delete(Guid id) {
 		CommentEntity? comment = await _context.Set<CommentEntity>().AsNoTracking().Include(p => p.Children).FirstOrDefaultAsync(x => x.Id == id);
-		if (comment == null) return new GenericResponse(UtilitiesStatusCodes.NotFound, "Comment notfound");
-		_context.Set<CommentEntity>().Remove(comment);
+		if (comment == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
+		comment.DeletedAt = DateTime.Now;
+		_context.Update(comment);
 		await _context.SaveChangesAsync();
-		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
+		return new GenericResponse();
 	}
 }

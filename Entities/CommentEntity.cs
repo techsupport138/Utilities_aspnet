@@ -7,6 +7,9 @@ public class CommentEntity : BaseEntity {
 	[StringLength(2000)]
 	public string? Comment { get; set; }
 
+	[StringLength(500)]
+	public ChatStatus? Status { get; set; }
+	
 	public Guid? ParentId { get; set; }
 	public CommentEntity? Parent { get; set; }
 
@@ -38,6 +41,7 @@ public class CommentCreateUpdateDto {
 	public double? Score { get; set; }
 	public string? Comment { get; set; }
 	public Guid? ProductId { get; set; }
+	public ChatStatus? Status { get; set; }
 }
 
 public class CommentFilterDto {
@@ -45,6 +49,7 @@ public class CommentFilterDto {
 	public Guid? ProductId { get; set; }
 	public Guid? CategoryId { get; set; }
 	public bool? ShowProducts { get; set; }
+	public ChatStatus? Status { get; set; }
 }
 
 public class CommentReadDto {
@@ -58,6 +63,7 @@ public class CommentReadDto {
 	public Guid? ParentId { get; set; }
 	public string? UserId { get; set; }
 	public UserEntity? User { get; set; }
+	public ChatStatus? Status { get; set; }
 	public IEnumerable<CommentReadDto>? Children { get; set; }
 	public IEnumerable<MediaEntity>? Media { get; set; }
 }
