@@ -99,6 +99,7 @@ public class OrderDetailCreateUpdateDto {
 	public Guid? Id { get; set; }
 	public Guid? OrderId { get; set; }
 	public Guid? ProductId { get; set; }
+	public double? Price { get; set; }
 	public int? Count { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 }
@@ -112,7 +113,6 @@ public class OrderFilterDto {
 	public bool? ShowVotes { get; set; } = false;
 	public bool? ShowReports { get; set; } = false;
 	public bool? ShowComments { get; set; } = false;
-	public bool? ShowOrders { get; set; } = false;
 	public bool? ShowTeams { get; set; } = false;
 	public string? Description { get; set; }
 	public OrderStatuses? Status { get; set; }
@@ -127,7 +127,6 @@ public class OrderFilterDto {
 	public string? PayNumber { get; set; }
 	public DateTime? ReceivedDate { get; set; }
 	public string? UserId { get; set; }
-	public string? OwnerId { get; set; }
 	public string? ProductOwnerId { get; set; }
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
