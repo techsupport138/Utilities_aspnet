@@ -6,6 +6,8 @@ public interface IOrderRepository {
 	Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto);
 	Task<GenericResponse<OrderReadDto?>> Update(OrderCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
+	Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto);
+	Task<GenericResponse> DeleteOrderDetail(Guid id);
 }
 
 public class OrderRepository : IOrderRepository {
@@ -124,7 +126,19 @@ public class OrderRepository : IOrderRepository {
 	}
 
 	public GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto) {
-		IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails);
+		IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails.Where(x => x.DeletedAt == null));
+
+		if (dto.ShowProducts.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product);
+		if (dto.ShowCategories.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Categories);
+		if (dto.ShowComments.IsTrue())
+			q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Comments).ThenInclude(i => i.LikeComments);
+		if (dto.ShowForms.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Forms);
+		if (dto.ShowMedia.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Media);
+		if (dto.ShowReports.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Reports);
+		if (dto.ShowTeams.IsTrue())
+			q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media);
+		if (dto.ShowVotes.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Votes);
+		if (dto.ShowVoteFields.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.VoteFields);
 
 		if (dto.Description.IsNotNullOrEmpty()) q = q.Where(x => (x.Description ?? "").Contains(dto.Description!));
 		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
@@ -170,6 +184,37 @@ public class OrderRepository : IOrderRepository {
 		}
 		else return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
 
+		return new GenericResponse();
+	}
+
+	public async Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto) {
+		OrderEntity? e = await _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.Id == dto.OrderId);
+		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
+		if (e.OrderDetails.Any()) {
+			e.OrderDetails.Append(new OrderDetailEntity {
+				ProductId = dto.ProductId, 
+				Count = dto.Count,
+				OrderId = dto.OrderId
+			});
+		}
+		else {
+			e.OrderDetails = new List<OrderDetailEntity>();
+			e.OrderDetails.Append(new OrderDetailEntity {
+				ProductId = dto.ProductId, 
+				Count = dto.Count,
+				OrderId = dto.OrderId
+			});
+		}
+		await _dbContext.SaveChangesAsync();
+		
+		return new GenericResponse();
+	}
+
+	public async Task<GenericResponse> DeleteOrderDetail(Guid id) {
+		OrderDetailEntity? e = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
+		e.DeletedAt = DateTime.Now;
+		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
 }

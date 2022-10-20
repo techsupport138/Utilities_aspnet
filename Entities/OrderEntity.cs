@@ -97,12 +97,23 @@ public class OrderCreateUpdateDto {
 
 public class OrderDetailCreateUpdateDto {
 	public Guid? Id { get; set; }
+	public Guid? OrderId { get; set; }
 	public Guid? ProductId { get; set; }
 	public int? Count { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 }
 
 public class OrderFilterDto {
+	public bool? ShowProducts { get; set; } = false;
+	public bool? ShowMedia { get; set; } = false;
+	public bool? ShowForms { get; set; } = false;
+	public bool? ShowCategories { get; set; } = false;
+	public bool? ShowVoteFields { get; set; } = false;
+	public bool? ShowVotes { get; set; } = false;
+	public bool? ShowReports { get; set; } = false;
+	public bool? ShowComments { get; set; } = false;
+	public bool? ShowOrders { get; set; } = false;
+	public bool? ShowTeams { get; set; } = false;
 	public string? Description { get; set; }
 	public OrderStatuses? Status { get; set; }
 	public double? TotalPrice { get; set; }

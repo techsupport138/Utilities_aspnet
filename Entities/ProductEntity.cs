@@ -349,6 +349,7 @@ public class ProductFilterDto {
 	public bool? ShowVotes { get; set; } = false;
 	public bool? ShowReports { get; set; } = false;
 	public bool? ShowComments { get; set; } = false;
+	public bool? ShowOrders { get; set; } = false;
 	public bool? ShowTeams { get; set; } = false;
 	public bool? ShowCreator { get; set; } = false;
 	public bool? OrderByVotes { get; set; } = false;
@@ -360,6 +361,7 @@ public class ProductFilterDto {
 	public bool? OrderByCreatedDate { get; set; } = false;
 	public bool? OrderByCreaedDateDecending { get; set; } = false;
 	public bool? HasComment { get; set; } = false;
+	public bool? HasOrder { get; set; } = false;
 	public int? VisitsCount { get; set; }
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
