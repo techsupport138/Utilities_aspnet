@@ -28,4 +28,16 @@ public class OrderController : BaseApiController {
 	[AllowAnonymous]
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<OrderReadDto>>> Delete(Guid id) => Result(await _orderRepository.Delete(id));
+
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
+	[HttpPost("CreateOrderDetailToOrder")]
+	public async Task<ActionResult<GenericResponse<OrderReadDto>>> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto)
+		=> Result(await _orderRepository.CreateOrderDetailToOrder(dto));
+
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[AllowAnonymous]
+	[HttpDelete("DeleteOrderDetail")]
+	public async Task<ActionResult<GenericResponse<OrderReadDto>>> DeleteOrderDetail(Guid id) =>
+		Result(await _orderRepository.DeleteOrderDetail(id));
 }

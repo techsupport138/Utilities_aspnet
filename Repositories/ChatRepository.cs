@@ -11,6 +11,7 @@ public interface IChatRepository {
 	Task<GenericResponse<GroupChatEntity?>> UpdateGroupChat(GroupChatCreateUpdateDto dto);
 	Task<GenericResponse<GroupChatMessageEntity?>> CreateGroupChatMessage(GroupChatMessageCreateUpdateDto dto);
 	GenericResponse<IQueryable<GroupChatEntity>?> ReadMyGroupChats();
+	Task<GenericResponse<GroupChatEntity>> ReadGroupChatById(Guid id);
 	GenericResponse<IQueryable<GroupChatMessageEntity>?> ReadGroupChatMessages(Guid id);
 }
 
@@ -146,6 +147,14 @@ public class ChatRepository : IChatRepository {
 			.AsNoTracking();
 
 		return new GenericResponse<IQueryable<GroupChatEntity>?>(e);
+	}
+
+	public async Task<GenericResponse<GroupChatEntity>> ReadGroupChatById(Guid id) {
+		GroupChatEntity? e = await _context.Set<GroupChatEntity>()
+			.Include(x => x.Users)
+			.Include(x => x.Products)
+			.Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
+		return new GenericResponse<GroupChatEntity>(e);
 	}
 
 	public GenericResponse<IQueryable<GroupChatMessageEntity>?> ReadGroupChatMessages(Guid id) {
