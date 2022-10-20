@@ -26,7 +26,7 @@ public class OrderController : BaseApiController {
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
-	[HttpGet("{id:guid}")]
+	[HttpDelete("{id:guid}")]
 	public async Task<ActionResult<GenericResponse<OrderReadDto>>> Delete(Guid id) => Result(await _orderRepository.Delete(id));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
