@@ -11,7 +11,6 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 	public GlobalSearchRepository(DbContext context, IMapper mapper) {
 		_context = context;
 		_mapper = mapper;
-		_mapper = mapper;
 	}
 
 	public async Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string? userId) {

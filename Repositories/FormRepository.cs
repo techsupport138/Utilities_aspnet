@@ -87,7 +87,6 @@ public class FormRepository : IFormRepository {
 	public async Task<GenericResponse> DeleteFormField(Guid id) {
 		FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>()
 			.Include(x => x.Forms)
-			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id);
 		if (entity == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 
@@ -100,7 +99,6 @@ public class FormRepository : IFormRepository {
 		FormEntity? entity = await _dbContext.Set<FormEntity>()
 			.Include(x => x.Product)
 			.Include(x => x.User)
-			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id);
 		if (entity == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 

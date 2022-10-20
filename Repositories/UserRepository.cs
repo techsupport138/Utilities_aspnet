@@ -353,7 +353,7 @@ public class UserRepository : IUserRepository {
 			List<CategoryEntity> list = new();
 			foreach (Guid item in dto.Categories!) {
 				CategoryEntity? e = _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item).Result;
-				if (e != null) list.Add(_mapper.Map<CategoryEntity>(e));
+				if (e != null) list.Add(e);
 			}
 
 			entity.Categories = list;
