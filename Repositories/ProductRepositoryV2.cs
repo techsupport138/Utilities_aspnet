@@ -87,11 +87,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.ShowVotes.IsTrue()) q = q.Include(i => i.Votes);
 		if (dto.ShowVoteFields.IsTrue()) q = q.Include(i => i.VoteFields);
 		if (dto.ShowCreator.IsTrue()) q = q.Include(i => i.User).ThenInclude(x => x!.Media);
-
-		int totalCount = q.Count();
-
 		if (dto.Categories != null && dto.Categories.Any()) q = q.Where(x => x.Categories.Any(y => dto.Categories.ToList().Contains(y.Id)));
-
 		if (dto.OrderByVotes.IsTrue()) q = q.OrderBy(x => x.VoteCount);
 		if (dto.OrderByVotesDecending.IsTrue()) q = q.OrderByDescending(x => x.VoteCount);
 		if (dto.OrderByAtoZ.IsTrue()) q = q.OrderBy(x => x.Title);
@@ -102,6 +98,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.OrderByCreaedDateDecending.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
 
 		q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
+
+		int totalCount = q.Count();
 
 		return new GenericResponse<IQueryable<ProductEntity>>(q.AsNoTracking()) {
 			TotalCount = totalCount,

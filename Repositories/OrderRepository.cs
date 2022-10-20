@@ -139,6 +139,7 @@ public class OrderRepository : IOrderRepository {
 		if (dto.PayNumber.IsNotNullOrEmpty()) q = q.Where(x => (x.PayNumber ?? "").Contains(dto.PayNumber!));
 		if (dto.ReceivedDate.HasValue) q = q.Where(x => x.ReceivedDate == dto.ReceivedDate);
 		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
+		if (dto.OwnerId.IsNotNullOrEmpty()) q = q.Where(x => x.ProductOwnerId == dto.OwnerId);
 		if (dto.ProductOwnerId.IsNotNullOrEmpty()) q = q.Where(x => x.ProductOwnerId == dto.ProductOwnerId);
 
 		int totalCount = q.Count();

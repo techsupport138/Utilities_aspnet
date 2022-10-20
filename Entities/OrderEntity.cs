@@ -5,24 +5,21 @@ public class OrderEntity : BaseEntity {
 	[StringLength(2000)]
 	public string? Description { get; set; }
 
-	public OrderStatuses? Status { get; set; }
-	public double? TotalPrice { get; set; }
-	public double? DiscountPrice { get; set; }
-	public int? DiscountPercent { get; set; }
-
 	[StringLength(500)]
 	public string? DiscountCode { get; set; }
-
-	public double? SendPrice { get; set; }
-	public SendType? SendType { get; set; }
-	public PayType? PayType { get; set; }
-	public DateTime? PayDateTime { get; set; }
 
 	[StringLength(500)]
 	public string? PayNumber { get; set; }
 
+	public OrderStatuses? Status { get; set; }
+	public double? TotalPrice { get; set; }
+	public double? DiscountPrice { get; set; }
+	public int? DiscountPercent { get; set; }
+	public double? SendPrice { get; set; }
+	public SendType? SendType { get; set; }
+	public PayType? PayType { get; set; }
+	public DateTime? PayDateTime { get; set; }
 	public DateTime? ReceivedDate { get; set; }
-
 	public UserEntity? User { get; set; }
 
 	[ForeignKey(nameof(User))]
@@ -108,20 +105,18 @@ public class OrderDetailCreateUpdateDto {
 public class OrderFilterDto {
 	public string? Description { get; set; }
 	public OrderStatuses? Status { get; set; }
-
 	public double? TotalPrice { get; set; }
 	public double? DiscountPrice { get; set; }
 	public int? DiscountPercent { get; set; }
 	public string? DiscountCode { get; set; }
-
 	public double? SendPrice { get; set; }
 	public SendType? SendType { get; set; }
-
 	public PayType? PayType { get; set; }
 	public DateTime? PayDateTime { get; set; }
 	public string? PayNumber { get; set; }
 	public DateTime? ReceivedDate { get; set; }
 	public string? UserId { get; set; }
+	public string? OwnerId { get; set; }
 	public string? ProductOwnerId { get; set; }
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
