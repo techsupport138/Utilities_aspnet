@@ -190,23 +190,14 @@ public class OrderRepository : IOrderRepository {
 	public async Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto) {
 		OrderEntity? e = await _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.Id == dto.OrderId);
 		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
-		if (e.OrderDetails.Any()) {
-			e.OrderDetails.Append(new OrderDetailEntity {
-				ProductId = dto.ProductId, 
-				Count = dto.Count,
-				OrderId = dto.OrderId
-			});
-		}
-		else {
-			e.OrderDetails = new List<OrderDetailEntity>();
-			e.OrderDetails.Append(new OrderDetailEntity {
-				ProductId = dto.ProductId, 
-				Count = dto.Count,
-				OrderId = dto.OrderId
-			});
-		}
+		EntityEntry<OrderDetailEntity> orderDetailEntity = await _dbContext.Set<OrderDetailEntity>().AddAsync(new OrderDetailEntity {
+			ProductId = dto.ProductId,
+			Count = dto.Count,
+			OrderId = dto.OrderId
+		});
+		if (!e.OrderDetails.Any()) return new GenericResponse(UtilitiesStatusCodes.Unhandled, "WHAT THE FUUUUUUUUCK");
+		e.OrderDetails.Append(orderDetailEntity.Entity);
 		await _dbContext.SaveChangesAsync();
-		
 		return new GenericResponse();
 	}
 
