@@ -406,8 +406,8 @@ public class UserRepository : IUserRepository {
 		                       dto.Feedback6;
 		double total = totalInteractive + totalFeedback;
 		if (total > 0) {
-			dto.TotalInterActive = (totalInteractive / total) * 100;
-			dto.TotalFeedback = (totalFeedback / total) * 100;
+			dto.TotalInterActive = totalInteractive / total * 100;
+			dto.TotalFeedback = totalFeedback / total * 100;
 		}
 
 		return dto;

@@ -152,7 +152,7 @@ public class ChatRepository : IChatRepository {
 	public async Task<GenericResponse<GroupChatEntity>> ReadGroupChatById(Guid id) {
 		GroupChatEntity? e = await _context.Set<GroupChatEntity>()
 			.Include(x => x.Users)
-			.Include(x => x.Products)
+			.Include(x => x.Products).ThenInclude(x => x.Categories)
 			.Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
 		return new GenericResponse<GroupChatEntity>(e);
 	}

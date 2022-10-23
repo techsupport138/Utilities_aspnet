@@ -20,20 +20,20 @@ public class CategoryRepository : ICategoryRepository {
 
 	public GenericResponse<IQueryable<CategoryEntity>> Read() {
 		IQueryable<CategoryEntity> i = _dbContext.Set<CategoryEntity>()
+			.Where(x => x.DeletedAt == null)
+			.Where(x => x.ParentId == null)
 			.Include(i => i.Media)
 			.Include(i => i.Children)!.ThenInclude(i => i.Media)
-			.Where(x => x.ParentId == null).AsNoTracking();
+			.AsNoTracking();
 		return new GenericResponse<IQueryable<CategoryEntity>>(i);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		CategoryEntity? i = await _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == id);
-		if (i != null) {
-			_dbContext.Remove(i);
-			await _dbContext.SaveChangesAsync();
-		}
-		else return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
-
+		CategoryEntity? e = await _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
+		e.DeletedAt = DateTime.Now;
+		_dbContext.Update(e);
+		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
 
