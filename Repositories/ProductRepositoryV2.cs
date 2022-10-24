@@ -99,13 +99,12 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.OrderByCreatedDate.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
 		if (dto.OrderByCreaedDateDecending.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
 
-		q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
-
 		int totalCount = q.Count();
+		q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
 
 		return new GenericResponse<IQueryable<ProductEntity>>(q.AsNoTracking()) {
 			TotalCount = totalCount,
-			PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto?.PageSize : totalCount / dto?.PageSize + 1,
+			PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto.PageSize : totalCount / dto.PageSize + 1,
 			PageSize = dto?.PageSize
 		};
 	}

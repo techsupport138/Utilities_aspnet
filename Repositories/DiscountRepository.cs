@@ -67,7 +67,7 @@ public class DiscountRepository : IDiscountRepository {
 			await _dbContext.SaveChangesAsync();
 		}
 		else
-			return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
+			return new GenericResponse(UtilitiesStatusCodes.NotFound);
 
 		return new GenericResponse();
 	}
