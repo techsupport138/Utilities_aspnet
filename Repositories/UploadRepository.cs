@@ -7,12 +7,10 @@ public interface IUploadRepository {
 
 public class UploadRepository : IUploadRepository {
 	private readonly DbContext _context;
-	private readonly IMapper _mapper;
 	private readonly IMediaRepository _mediaRepository;
 
-	public UploadRepository(DbContext context, IMediaRepository mediaRepository, IMapper mapper) {
+	public UploadRepository(DbContext context, IMediaRepository mediaRepository) {
 		_mediaRepository = mediaRepository;
-		_mapper = mapper;
 		_context = context;
 	}
 
@@ -76,16 +74,16 @@ public class UploadRepository : IUploadRepository {
 			}
 		}
 
-		return new GenericResponse<IEnumerable<MediaEntity>?>(_mapper.Map<IEnumerable<MediaEntity>>(medias), UtilitiesStatusCodes.Success, "File uploaded");
+		return new GenericResponse<IEnumerable<MediaEntity>?>(medias);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
 		MediaEntity? media = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == id);
-		if (media == null) return new GenericResponse(UtilitiesStatusCodes.NotFound, "File not Found");
+		if (media == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 
 		_context.Set<MediaEntity>().Remove(media);
 		await _context.SaveChangesAsync();
 
-		return new GenericResponse(UtilitiesStatusCodes.Success, "Success");
+		return new GenericResponse();
 	}
 }

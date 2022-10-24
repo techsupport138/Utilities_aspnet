@@ -26,10 +26,6 @@ public class UserController : BaseApiController {
 	[HttpPost("GetTokenForTest/{mobile}")]
 	public async Task<ActionResult<GenericResponse>> GetTokenForTest(string mobile) => Result(await _userRepository.GetTokenForTest(mobile));
 
-	[HttpPost]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse>> Create(UserCreateUpdateDto dto) => Result(await _userRepository.Create(dto));
-
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("Filter")]

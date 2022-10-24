@@ -1,7 +1,6 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
-	Task<GenericResponse<UserEntity?>> Create(UserCreateUpdateDto parameter);
 	Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto);
 	Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null, bool showVotes = false);
 	Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto);
@@ -17,7 +16,6 @@ public interface IUserRepository {
 
 public class UserRepository : IUserRepository {
 	private readonly DbContext _context;
-	private readonly IMapper _mapper;
 	private readonly UserManager<UserEntity> _userManager;
 	private readonly ISmsSender _sms;
 	private readonly IHttpContextAccessor _httpContextAccessor;
@@ -25,12 +23,10 @@ public class UserRepository : IUserRepository {
 	public UserRepository(
 		DbContext context,
 		UserManager<UserEntity> userManager,
-		IMapper mapper,
 		ISmsSender sms,
 		IHttpContextAccessor httpContextAccessor) {
 		_context = context;
 		_userManager = userManager;
-		_mapper = mapper;
 		_sms = sms;
 		_httpContextAccessor = httpContextAccessor;
 	}
@@ -164,17 +160,6 @@ public class UserRepository : IUserRepository {
 		JwtSecurityToken token = await CreateToken(user);
 		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
 		                                        "Success");
-	}
-
-	public async Task<GenericResponse<UserEntity?>> Create(UserCreateUpdateDto dto) {
-		UserEntity? entity = _mapper.Map<UserEntity>(dto);
-
-		FillUserData(dto, entity);
-
-		IdentityResult? result = await _userManager.CreateAsync(entity, dto.Password);
-		if (!result.Succeeded)
-			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.Unhandled, "The information was not entered correctly");
-		return await ReadById(entity.Id);
 	}
 
 	private async Task<JwtSecurityToken> CreateToken(UserEntity user) {
@@ -345,6 +330,9 @@ public class UserRepository : IUserRepository {
 		entity.Website = dto.Website ?? entity.Website;
 		entity.ShowContactInfo = dto.ShowContactInfo ?? entity.ShowContactInfo;
 		entity.State = dto.State ?? entity.State;
+		entity.Type = dto.Type ?? entity.Type;
+		entity.StateTr1 = dto.StateTr1 ?? entity.StateTr1;
+		entity.StateTr2 = dto.StateTr2 ?? entity.StateTr2;
 		entity.Point = dto.Point ?? entity.Point;
 		entity.AccessLevel = dto.AccessLevel ?? entity.AccessLevel;
 		entity.Badge = dto.Badge ?? entity.Badge;
