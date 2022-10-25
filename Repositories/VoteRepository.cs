@@ -2,23 +2,21 @@ namespace Utilities_aspnet.Repositories;
 
 public interface IVoteRepository {
 	Task<GenericResponse> CreateUpdateVote(VoteCreateUpdateDto dto);
-	Task<GenericResponse<IEnumerable<VoteReadDto>>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto);
-	Task<GenericResponse<IEnumerable<VoteReadDto>>> ReadVoteFields(Guid id);
+	Task<GenericResponse<IEnumerable<VoteFieldEntity>>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto);
+	Task<GenericResponse<IEnumerable<VoteFieldEntity>>> ReadVoteFields(Guid id);
 	GenericResponse<IQueryable<VoteEntity>> ReadProductVote(Guid productId, string userId);
 }
 
 public class VoteRepository : IVoteRepository {
 	private readonly DbContext _dbContext;
-	private readonly IMapper _mapper;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 	
-	public VoteRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public VoteRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = dbContext;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<IEnumerable<VoteReadDto>>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto) {
+	public async Task<GenericResponse<IEnumerable<VoteFieldEntity>>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto) {
 		foreach (VoteFieldDto item in dto.VoteFields)
 			try {
 				VoteFieldEntity? up = await _dbContext.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.Id == item.Id);
@@ -38,16 +36,14 @@ public class VoteRepository : IVoteRepository {
 			catch { }
 
 		IQueryable<VoteFieldEntity> entity = _dbContext.Set<VoteFieldEntity>().Where(x => x.ProductId == dto.ProductId);
-
-		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
+		return new GenericResponse<IEnumerable<VoteFieldEntity>>(entity);
 	}
 
-	public async Task<GenericResponse<IEnumerable<VoteReadDto>>> ReadVoteFields(Guid id) {
+	public async Task<GenericResponse<IEnumerable<VoteFieldEntity>>> ReadVoteFields(Guid id) {
 		IEnumerable<VoteFieldEntity> entity = await _dbContext.Set<VoteFieldEntity>()
 			.Where(x => x.ProductId == id)
 			.Include(x => x.Votes).ToListAsync();
-
-		return new GenericResponse<IEnumerable<VoteReadDto>>(_mapper.Map<IEnumerable<VoteReadDto>>(entity));
+		return new GenericResponse<IEnumerable<VoteFieldEntity>>(entity);
 	}
 
 	public GenericResponse<IQueryable<VoteEntity>> ReadProductVote(Guid productId, string userId) {

@@ -179,7 +179,7 @@ public class OrderRepository : IOrderRepository {
 			_dbContext.Remove(i);
 			await _dbContext.SaveChangesAsync();
 		}
-		else return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
+		else return new GenericResponse(UtilitiesStatusCodes.NotFound);
 		return new GenericResponse();
 	}
 
@@ -191,7 +191,7 @@ public class OrderRepository : IOrderRepository {
 			Count = dto.Count,
 			OrderId = dto.OrderId
 		});
-		if (!e.OrderDetails.Any()) return new GenericResponse(UtilitiesStatusCodes.Unhandled, "WHAT THE FUUUUUUUUCK");
+		if (!e.OrderDetails.Any()) return new GenericResponse(UtilitiesStatusCodes.Unhandled);
 		e.OrderDetails.Append(orderDetailEntity.Entity);
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();

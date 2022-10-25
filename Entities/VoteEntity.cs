@@ -46,9 +46,3 @@ public class VoteDto {
 	public double? Score { get; set; }
 	public Guid? VoteFieldId { get; set; }
 }
-
-public class VoteReadDto {
-	public Guid? Id { get; set; }
-	public string? Title { get; set; }
-	public double? Score { get; set; }
-}

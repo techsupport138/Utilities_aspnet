@@ -35,7 +35,6 @@ public static class StartupExtension {
 		});
 		builder.Services.AddResponseCaching();
 		builder.Services.AddScoped<DbContext, T>();
-		builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 		builder.Services.AddDbContext<T>(options => {
 			switch (databaseType) {

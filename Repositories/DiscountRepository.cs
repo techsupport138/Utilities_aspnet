@@ -24,7 +24,7 @@ public class DiscountRepository : IDiscountRepository {
 	}
 
 	public GenericResponse<IQueryable<DiscountEntity>> Filter(DiscountFilterDto dto) {
-		IQueryable<DiscountEntity> q = _dbContext.Set<DiscountEntity>().AsNoTracking();
+		IQueryable<DiscountEntity> q = _dbContext.Set<DiscountEntity>();
 
 		if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
 		if (dto.Code.IsNotNullOrEmpty()) q = q.Where(x => (x.Code ?? "").Contains(dto.Code!));
@@ -45,29 +45,26 @@ public class DiscountRepository : IDiscountRepository {
 	}
 
 	public async Task<GenericResponse<DiscountEntity?>> Update(DiscountEntity dto) {
-		DiscountEntity? entity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
+		DiscountEntity? e = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
 
-		if (entity == null) return new GenericResponse<DiscountEntity?>(null, UtilitiesStatusCodes.NotFound);
-		entity.Title = dto.Title ?? entity.Title;
-		entity.DiscountPercent = dto.DiscountPercent ?? entity.DiscountPercent;
-		entity.NumberUses = dto.NumberUses ?? entity.NumberUses;
-		entity.Code = dto.Code ?? entity.Code;
-		entity.StartDate = dto.StartDate ?? entity.StartDate;
-		entity.EndDate = dto.EndDate ?? entity.EndDate;
-		entity.UpdatedAt = DateTime.Now;
+		if (e == null) return new GenericResponse<DiscountEntity?>(null, UtilitiesStatusCodes.NotFound);
+		e.Title = dto.Title ?? e.Title;
+		e.DiscountPercent = dto.DiscountPercent ?? e.DiscountPercent;
+		e.NumberUses = dto.NumberUses ?? e.NumberUses;
+		e.Code = dto.Code ?? e.Code;
+		e.StartDate = dto.StartDate ?? e.StartDate;
+		e.EndDate = dto.EndDate ?? e.EndDate;
+		e.UpdatedAt = DateTime.Now;
 		await _dbContext.SaveChangesAsync();
-		return new GenericResponse<DiscountEntity?>(entity);
+		return new GenericResponse<DiscountEntity?>(e);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		DiscountEntity? i = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		DiscountEntity? e = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(x => x.Id == id);
 
-		if (i != null) {
-			_dbContext.Remove(i);
-			await _dbContext.SaveChangesAsync();
-		}
-		else
-			return new GenericResponse(UtilitiesStatusCodes.NotFound);
+		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
+		_dbContext.Remove(e);
+		await _dbContext.SaveChangesAsync();
 
 		return new GenericResponse();
 	}
@@ -77,8 +74,8 @@ public class DiscountRepository : IDiscountRepository {
 		DiscountEntity? discountEntity = await _dbContext.Set<DiscountEntity>().FirstOrDefaultAsync(p => p.Code!.ToLower().Trim() == code.ToLower().Trim());
 		if (discountEntity == null) throw new ArgumentException("Code not found!");
 
-		IQueryable<OrderEntity> orders =
-			_dbContext.Set<OrderEntity>().Where(p => p.UserId == userId && p.DiscountCode == code && p.Status != OrderStatuses.Canceled);
+		IQueryable<OrderEntity> orders = _dbContext.Set<OrderEntity>()
+			.Where(p => p.UserId == userId && p.DiscountCode == code && p.Status != OrderStatuses.Canceled);
 		return orders.Count() >= discountEntity.NumberUses
 			? new GenericResponse<DiscountEntity?>(null, UtilitiesStatusCodes.Forbidden, "Maximum use of this code!")
 			: new GenericResponse<DiscountEntity?>(discountEntity);

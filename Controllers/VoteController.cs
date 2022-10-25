@@ -13,13 +13,13 @@ public class VoteController : BaseApiController {
 
 	[HttpPost("VoteField")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<IEnumerable<VoteReadDto>?>>> CreateVoteFields(VoteFieldCreateUpdateDto dto)
+	public async Task<ActionResult<GenericResponse<IEnumerable<VoteFieldEntity>?>>> CreateVoteFields(VoteFieldCreateUpdateDto dto)
 		=> Result(await _voteRepository.CreateUpdateVoteFields(dto));
 
 	[HttpGet("VoteField/{id:guid}")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<VoteReadDto>?>>> ReadVoteFields(Guid id) => Result(await _voteRepository.ReadVoteFields(id));
+	public async Task<ActionResult<GenericResponse<IEnumerable<VoteFieldEntity>?>>> ReadVoteFields(Guid id) => Result(await _voteRepository.ReadVoteFields(id));
 
 	[HttpGet("ReadProductVote/{productId:guid}/{userId}")]
-	public ActionResult<GenericResponse<IEnumerable<VoteReadDto>?>> ReadProductVote(Guid productId, string userId)
+	public ActionResult<GenericResponse<IEnumerable<VoteFieldEntity>?>> ReadProductVote(Guid productId, string userId)
 		=> Result(_voteRepository.ReadProductVote(productId, userId));
 }
