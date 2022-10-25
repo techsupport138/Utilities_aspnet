@@ -24,6 +24,9 @@ public class CommentEntity : BaseEntity {
 
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
+	
+	[NotMapped]
+	public bool IsLiked { get; set; }
 }
 
 [Table("LikeComment")]

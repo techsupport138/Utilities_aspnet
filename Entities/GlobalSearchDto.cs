@@ -2,7 +2,7 @@
 
 public class GlobalSearchDto {
 	public IEnumerable<UserEntity>? Users { get; set; }
-	public IEnumerable<ProductReadDto>? Products { get; set; }
+	public IEnumerable<ProductEntity>? Products { get; set; }
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
 }
 

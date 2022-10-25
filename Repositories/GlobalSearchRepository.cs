@@ -6,12 +6,8 @@ public interface IGlobalSearchRepository {
 
 public class GlobalSearchRepository : IGlobalSearchRepository {
 	private readonly DbContext _context;
-	private readonly IMapper _mapper;
 
-	public GlobalSearchRepository(DbContext context, IMapper mapper) {
-		_context = context;
-		_mapper = mapper;
-	}
+	public GlobalSearchRepository(DbContext context) => _context = context;
 
 	public async Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string? userId) {
 		GlobalSearchDto model = new();
@@ -94,7 +90,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 
 		model.Categories = categoryList;
 		model.Users = userList;
-		model.Products = _mapper.Map<IEnumerable<ProductReadDto>>(productList);
+		model.Products = productList;
 		if (filter.IsBookmark) model.Products = model.Products.Where(x => x.IsBookmarked).ToList();
 		return new GenericResponse<GlobalSearchDto>(model);
 	}

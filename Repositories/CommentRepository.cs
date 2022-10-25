@@ -1,33 +1,30 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
 public interface ICommentRepository {
-	Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto dto);
-	Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId);
-	Task<GenericResponse<CommentReadDto?>> Read(Guid id);
-	Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id);
+	Task<GenericResponse<CommentEntity?>> Create(CommentCreateUpdateDto dto);
+	Task<GenericResponse<CommentEntity?>> ToggleLikeComment(Guid commentId);
+	Task<GenericResponse<CommentEntity?>> Read(Guid id);
+	Task<GenericResponse<IEnumerable<CommentEntity>?>> ReadByProductId(Guid id);
 	GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto);
-	Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto dto);
+	Task<GenericResponse<CommentEntity?>> Update(Guid id, CommentCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
 }
 
 public class CommentRepository : ICommentRepository {
 	private readonly DbContext _context;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IMapper _mapper;
 	private readonly INotificationRepository _notificationRepository;
-
+	
 	public CommentRepository(
 		DbContext context,
-		IMapper mapper,
 		IHttpContextAccessor httpContextAccessor,
 		INotificationRepository notificationRepository) {
 		_context = context;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 		_notificationRepository = notificationRepository;
 	}
 
-	public async Task<GenericResponse<IEnumerable<CommentReadDto>?>> ReadByProductId(Guid id) {
+	public async Task<GenericResponse<IEnumerable<CommentEntity>?>> ReadByProductId(Guid id) {
 		IEnumerable<CommentEntity> comment = await _context.Set<CommentEntity>()
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
@@ -38,7 +35,7 @@ public class CommentRepository : ICommentRepository {
 			.Where(x => x.ProductId == id && x.ParentId == null && x.DeletedAt == null)
 			.OrderByDescending(x => x.CreatedAt).AsNoTracking().ToListAsync();
 
-		return new GenericResponse<IEnumerable<CommentReadDto>?>(_mapper.Map<IEnumerable<CommentReadDto>?>(comment));
+		return new GenericResponse<IEnumerable<CommentEntity>?>(comment);
 	}
 
 	public GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto) {
@@ -60,7 +57,7 @@ public class CommentRepository : ICommentRepository {
 		return new GenericResponse<IQueryable<CommentEntity>?>(q);
 	}
 
-	public async Task<GenericResponse<CommentReadDto?>> Read(Guid id) {
+	public async Task<GenericResponse<CommentEntity?>> Read(Guid id) {
 		CommentEntity? comment = await _context.Set<CommentEntity>()
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
@@ -71,10 +68,10 @@ public class CommentRepository : ICommentRepository {
 			.AsNoTracking()
 			.FirstOrDefaultAsync();
 
-		return new GenericResponse<CommentReadDto?>(_mapper.Map<CommentReadDto>(comment));
+		return new GenericResponse<CommentEntity?>(comment);
 	}
 
-	public async Task<GenericResponse<CommentReadDto?>> Create(CommentCreateUpdateDto dto) {
+	public async Task<GenericResponse<CommentEntity?>> Create(CommentCreateUpdateDto dto) {
 		string userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
 
 		CommentEntity comment = new() {
@@ -115,7 +112,7 @@ public class CommentRepository : ICommentRepository {
 		return await Read(comment.Id);
 	}
 
-	public async Task<GenericResponse<CommentReadDto?>> ToggleLikeComment(Guid commentId) {
+	public async Task<GenericResponse<CommentEntity?>> ToggleLikeComment(Guid commentId) {
 		string userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
 		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == commentId);
 		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>()
@@ -140,10 +137,10 @@ public class CommentRepository : ICommentRepository {
 		return await Read(comment.Id);
 	}
 
-	public async Task<GenericResponse<CommentReadDto?>> Update(Guid id, CommentCreateUpdateDto dto) {
+	public async Task<GenericResponse<CommentEntity?>> Update(Guid id, CommentCreateUpdateDto dto) {
 		CommentEntity? comment = await _context.Set<CommentEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
-		if (comment == null) return new GenericResponse<CommentReadDto?>(null);
+		if (comment == null) return new GenericResponse<CommentEntity?>(null);
 		if (!string.IsNullOrEmpty(dto.Comment)) comment.Comment = dto.Comment;
 		if (dto.Score.HasValue) comment.Score = dto.Score;
 		if (dto.ProductId.HasValue) comment.ProductId = dto.ProductId;

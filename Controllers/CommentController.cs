@@ -8,10 +8,10 @@ public class CommentController : BaseApiController {
 	public CommentController(ICommentRepository commentRepository) => _repository = commentRepository;
 
 	[HttpGet("{id:guid}")]
-	public async Task<ActionResult<GenericResponse<CommentReadDto>>> Read(Guid id) => Result(await _repository.Read(id));
+	public async Task<ActionResult<GenericResponse<CommentEntity>>> Read(Guid id) => Result(await _repository.Read(id));
 
 	[HttpGet("ReadByProductId/{id:guid}")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<CommentReadDto>?>>> ReadByProductId(Guid id) => Result(await _repository.ReadByProductId(id));
+	public async Task<ActionResult<GenericResponse<IEnumerable<CommentEntity>?>>> ReadByProductId(Guid id) => Result(await _repository.ReadByProductId(id));
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -23,7 +23,7 @@ public class CommentController : BaseApiController {
 
 	[HttpPost("ToggleLikeComment/{commentId:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-	public async Task<ActionResult<GenericResponse<CommentReadDto?>>> ToggleLikeComment(Guid commentId)
+	public async Task<ActionResult<GenericResponse<CommentEntity?>>> ToggleLikeComment(Guid commentId)
 		=> Result(await _repository.ToggleLikeComment(commentId));
 
 	[HttpPut]
