@@ -105,7 +105,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		return new GenericResponse<IQueryable<ProductEntity>>(q.AsNoTracking()) {
 			TotalCount = totalCount,
 			PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto.PageSize : totalCount / dto.PageSize + 1,
-			PageSize = dto?.PageSize
+			PageSize = dto.PageSize
 		};
 	}
 

@@ -4,6 +4,7 @@ public interface IChatRepository {
 	Task<GenericResponse<ChatReadDto?>> Create(ChatCreateUpdateDto model);
 	Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read();
 	Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id);
+	Task<GenericResponse<IEnumerable<ChatReadDto>>> FilterByUserId(ChatFilterDto dto);
 	Task<GenericResponse<ChatEntity?>> Update(ChatCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
 
@@ -48,6 +49,46 @@ public class ChatRepository : IChatRepository {
 			Send = true
 		};
 		return new GenericResponse<ChatReadDto?>(conversations);
+	}
+	
+	public async Task<GenericResponse<IEnumerable<ChatReadDto>>> FilterByUserId(ChatFilterDto dto) {
+		string? userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		UserEntity? user = await _context.Set<UserEntity>()
+			.Include(x => x.Media)
+			.FirstOrDefaultAsync(x => x.Id == dto.UserId);
+		if (user == null) return new GenericResponse<IEnumerable<ChatReadDto>>(null, UtilitiesStatusCodes.BadRequest);
+		List<ChatEntity> conversation = await _context.Set<ChatEntity>()
+			.Where(c => c.ToUserId == userId && c.FromUserId == userId)
+			.Include(x => x.Media).OrderByDescending(x => x.CreatedAt).ToListAsync();
+
+		foreach (ChatEntity? item in conversation.Where(item => item.ReadMessage == false)) {
+			item.ReadMessage = true;
+			await _context.SaveChangesAsync();
+		}
+
+		IEnumerable<ChatEntity> conversationToUser = await _context.Set<ChatEntity>()
+			.Where(x => x.FromUserId == userId && x.ToUserId == dto.UserId)
+			.Include(x => x.Media).ToListAsync();
+
+		conversation.AddRange(conversationToUser);
+		List<ChatReadDto> conversations = conversation.Select(x => new ChatReadDto {
+			Id = x.Id,
+			DateTime = x.CreatedAt,
+			MessageText = x.MessageText,
+			User = user,
+			UserId = dto.UserId,
+			Media = x.Media,
+			Send = x.ToUserId == dto.UserId
+		}).OrderByDescending(x => x.DateTime).ToList();
+
+		int totalCount = conversation.Count;
+		conversations = conversations.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize).ToList();
+
+		return new GenericResponse<IEnumerable<ChatReadDto>>(conversations) {
+			TotalCount = totalCount,
+			PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto.PageSize : totalCount / dto.PageSize + 1,
+			PageSize = dto?.PageSize
+		};
 	}
 
 	public async Task<GenericResponse<ChatEntity?>> Update(ChatCreateUpdateDto dto) {

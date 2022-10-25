@@ -2,9 +2,9 @@ namespace Utilities_aspnet.Repositories;
 
 public interface IOrderRepository {
 	GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto);
-	Task<GenericResponse<OrderReadDto>> ReadById(Guid id);
-	Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto);
-	Task<GenericResponse<OrderReadDto?>> Update(OrderCreateUpdateDto dto);
+	Task<GenericResponse<OrderEntity>> ReadById(Guid id);
+	Task<GenericResponse<OrderEntity?>> Create(OrderCreateUpdateDto dto);
+	Task<GenericResponse<OrderEntity?>> Update(OrderCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
 	Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto);
 	Task<GenericResponse> DeleteOrderDetail(Guid id);
@@ -13,15 +13,13 @@ public interface IOrderRepository {
 public class OrderRepository : IOrderRepository {
 	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly IMapper _mapper;
 
-	public OrderRepository(DbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+	public OrderRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = dbContext;
-		_mapper = mapper;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<OrderReadDto?>> Create(OrderCreateUpdateDto dto) {
+	public async Task<GenericResponse<OrderEntity?>> Create(OrderCreateUpdateDto dto) {
 		double totalPrice = 0;
 
 		List<ProductEntity> listProducts = new();
@@ -32,7 +30,7 @@ public class OrderRepository : IOrderRepository {
 
 		IEnumerable<string?> q = listProducts.GroupBy(x => x.UserId).Select(z => z.Key);
 		if (q.Count() > 1)
-			return new GenericResponse<OrderReadDto?>(null, UtilitiesStatusCodes.BadRequest, "Cannot Add from multiple seller.");
+			return new GenericResponse<OrderEntity?>(null, UtilitiesStatusCodes.BadRequest, "Cannot Add from multiple seller.");
 
 		OrderEntity entityOrder = new() {
 			Description = dto.Description,
@@ -83,10 +81,10 @@ public class OrderRepository : IOrderRepository {
 		entityOrder.TotalPrice = totalPrice;
 		entityOrder.DiscountPrice = totalPrice * dto.DiscountPercent / 100;
 
-		return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(entityOrder));
+		return new GenericResponse<OrderEntity?>(entityOrder);
 	}
 
-	public async Task<GenericResponse<OrderReadDto?>> Update(OrderCreateUpdateDto dto) {
+	public async Task<GenericResponse<OrderEntity?>> Update(OrderCreateUpdateDto dto) {
 		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
 		OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
 		if (oldOrder == null) throw new ArgumentException("not found!");
@@ -122,7 +120,7 @@ public class OrderRepository : IOrderRepository {
 
 		await _dbContext.SaveChangesAsync();
 
-		return new GenericResponse<OrderReadDto?>(_mapper.Map<OrderReadDto>(oldOrder));
+		return new GenericResponse<OrderEntity?>(oldOrder);
 	}
 
 	public GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto) {
@@ -167,23 +165,21 @@ public class OrderRepository : IOrderRepository {
 		};
 	}
 
-	public async Task<GenericResponse<OrderReadDto>> ReadById(Guid id) {
+	public async Task<GenericResponse<OrderEntity>> ReadById(Guid id) {
 		OrderEntity? i = await _dbContext.Set<OrderEntity>()
 			.Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
-		return new GenericResponse<OrderReadDto>(_mapper.Map<OrderReadDto>(i));
+		return new GenericResponse<OrderEntity>(i);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
 		OrderEntity? i = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(i => i.Id == id);
-
 		if (i != null) {
 			_dbContext.Remove(i);
 			await _dbContext.SaveChangesAsync();
 		}
 		else return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
-
 		return new GenericResponse();
 	}
 

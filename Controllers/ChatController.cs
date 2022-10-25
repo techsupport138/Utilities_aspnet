@@ -17,6 +17,9 @@ public class ChatController : BaseApiController {
 	[HttpPost]
 	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Create(ChatCreateUpdateDto model) => Result(await _chatRepository.Create(model));
 
+	[HttpPost("Filter")]
+	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Filter(ChatFilterDto dto) => Result(await _chatRepository.FilterByUserId(dto));
+
 	[HttpPut]
 	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Update(ChatCreateUpdateDto model) => Result(await _chatRepository.Update(model));
 
@@ -24,7 +27,7 @@ public class ChatController : BaseApiController {
 	public async Task<ActionResult<GenericResponse<ChatReadDto?>>> Delete(Guid id) => Result(await _chatRepository.Delete(id));
 
 	[HttpPost("CreateGroupChat")]
-	public async Task<ActionResult<GenericResponse<GroupChatEntity?>>> CreateGroupChat(GroupChatCreateUpdateDto dto)
+	public async Task<ActionResult<GenericResponse<GroupChatEntity?>>> CreateGroupChat(GroupChatCreateUpdateDto dto) 
 		=> Result(await _chatRepository.CreateGroupChat(dto));
 
 	[HttpPut("UpdateGroupChat")]

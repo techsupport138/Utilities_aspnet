@@ -9,35 +9,35 @@ public class OrderController : BaseApiController {
 	public OrderController(IOrderRepository orderRepository) => _orderRepository = orderRepository;
 
 	[HttpPost]
-	public async Task<ActionResult<GenericResponse<OrderReadDto?>>> Create(OrderCreateUpdateDto dto) => Result(await _orderRepository.Create(dto));
+	public async Task<ActionResult<GenericResponse<OrderEntity?>>> Create(OrderCreateUpdateDto dto) => Result(await _orderRepository.Create(dto));
 
 	[HttpPut]
-	public async Task<ActionResult<GenericResponse<OrderReadDto?>>> Update(OrderCreateUpdateDto dto) => Result(await _orderRepository.Update(dto));
+	public async Task<ActionResult<GenericResponse<OrderEntity?>>> Update(OrderCreateUpdateDto dto) => Result(await _orderRepository.Update(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
-	public ActionResult<GenericResponse<IEnumerable<OrderReadDto>>> Filter(OrderFilterDto dto) => Result(_orderRepository.Filter(dto));
+	public ActionResult<GenericResponse<IEnumerable<OrderEntity>>> Filter(OrderFilterDto dto) => Result(_orderRepository.Filter(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpGet("{id:guid}")]
-	public async Task<ActionResult<GenericResponse<OrderReadDto>>> ReadById(Guid id) => Result(await _orderRepository.ReadById(id));
+	public async Task<ActionResult<GenericResponse<OrderEntity>>> ReadById(Guid id) => Result(await _orderRepository.ReadById(id));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpDelete("{id:guid}")]
-	public async Task<ActionResult<GenericResponse<OrderReadDto>>> Delete(Guid id) => Result(await _orderRepository.Delete(id));
+	public async Task<ActionResult<GenericResponse<OrderEntity>>> Delete(Guid id) => Result(await _orderRepository.Delete(id));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("CreateOrderDetailToOrder")]
-	public async Task<ActionResult<GenericResponse<OrderReadDto>>> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto)
+	public async Task<ActionResult<GenericResponse<OrderEntity>>> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto)
 		=> Result(await _orderRepository.CreateOrderDetailToOrder(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpDelete("DeleteOrderDetail")]
-	public async Task<ActionResult<GenericResponse<OrderReadDto>>> DeleteOrderDetail(Guid id) =>
+	public async Task<ActionResult<GenericResponse<OrderEntity>>> DeleteOrderDetail(Guid id) =>
 		Result(await _orderRepository.DeleteOrderDetail(id));
 }

@@ -80,6 +80,13 @@ public class ChatReadDto {
 	public UserEntity? User { get; set; }
 }
 
+public class ChatFilterDto {
+	public string UserId { get; set; } = null!;
+	public int PageSize { get; set; } = 100;
+	public int PageNumber { get; set; } = 1;
+	
+}
+
 public class ChatCreateUpdateDto {
 	public Guid? Id { get; set; } = null!;
 	public string? UserId { get; set; } = null!;

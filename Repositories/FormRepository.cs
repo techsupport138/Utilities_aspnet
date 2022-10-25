@@ -41,9 +41,10 @@ public class FormRepository : IFormRepository {
 			catch { }
 
 		IQueryable<FormEntity> entity = _dbContext.Set<FormEntity>()
-			.Where(x => x.ProductId == model.ProductId && model.ProductId != null || x.UserId == model.UserId && model.UserId != null ||
-			            x.OrderDetailId == model.OrderDetailId && model.OrderDetailId != null).AsNoTracking();
-
+			.Where(x => x.ProductId == model.ProductId && model.ProductId != null 
+			            || x.UserId == model.UserId && model.UserId != null
+			            || x.OrderDetailId == model.OrderDetailId && model.OrderDetailId != null)
+			.AsNoTracking();
 		return new GenericResponse<IQueryable<FormEntity>>(entity);
 	}
 
@@ -54,7 +55,6 @@ public class FormRepository : IFormRepository {
 			await _dbContext.SaveChangesAsync();
 		}
 		catch { }
-
 		return categoryId != null
 			? new GenericResponse<IQueryable<FormFieldEntity>?>(ReadFormFields((Guid) categoryId).Result)
 			: new GenericResponse<IQueryable<FormFieldEntity>?>(null);
@@ -64,7 +64,6 @@ public class FormRepository : IFormRepository {
 		Guid? categoryId = dto.CategoryId;
 		FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id);
 		if (entity == null) return new GenericResponse<IQueryable<FormFieldEntity>?>(null, UtilitiesStatusCodes.NotFound);
-
 		try {
 			entity.Label = dto.Label;
 			entity.OptionList = dto.OptionList;
@@ -75,7 +74,6 @@ public class FormRepository : IFormRepository {
 			await _dbContext.SaveChangesAsync();
 		}
 		catch { }
-
 		return categoryId != null
 			? new GenericResponse<IQueryable<FormFieldEntity>?>(ReadFormFields((Guid) categoryId).Result)
 			: new GenericResponse<IQueryable<FormFieldEntity>?>(null);

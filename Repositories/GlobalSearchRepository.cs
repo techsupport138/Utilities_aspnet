@@ -30,10 +30,9 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 		                                                                        (x.FullName.Contains(filter.Query) || x.AppUserName.Contains(filter.Query) ||
 		                                                                         x.FirstName.Contains(filter.Query) || x.LastName.Contains(filter.Query)));
 
-		if (filter.Minimal)
-			userList = userList.OrderByDescending(x => x.CreatedAt);
-		else
-			userList = userList.Include(u => u.Media).Include(u => u.Categories).Include(u => u.Products).OrderByDescending(x => x.CreatedAt);
+		userList = filter.Minimal
+			? userList.OrderByDescending(x => x.CreatedAt)
+			: userList.Include(u => u.Media).Include(u => u.Categories).Include(u => u.Products).OrderByDescending(x => x.CreatedAt);
 
 		IQueryable<ProductEntity> productList = _context.Set<ProductEntity>()
 			.Where(x => x.Title.Contains(filter.Title) && filter.Product && x.DeletedAt == null && (x.Title.Contains(filter.Query) ||
