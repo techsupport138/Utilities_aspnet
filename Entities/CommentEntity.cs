@@ -7,7 +7,6 @@ public class CommentEntity : BaseEntity {
 	[StringLength(2000)]
 	public string? Comment { get; set; }
 
-	[StringLength(500)]
 	public ChatStatus? Status { get; set; }
 	
 	public Guid? ParentId { get; set; }

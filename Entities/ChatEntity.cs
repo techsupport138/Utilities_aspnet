@@ -87,6 +87,29 @@ public class ChatFilterDto {
 	
 }
 
+public class GroupChatFilterDto {
+	public IEnumerable<string>? UsersIds { get; set; }
+	public IEnumerable<Guid>? ProductsIds { get; set; }
+	public string? Title { get; set; }
+	public string? Description { get; set; }
+	public string? Value { get; set; }
+	public string? Type { get; set; }
+	public string? UseCase { get; set; }
+	public string? Department { get; set; }
+	public ChatStatus? ChatStatus { get; set; }
+	public Priority? Priority { get; set; }
+	public bool? ShowUsers { get; set; }
+	public bool? ShowProducts { get; set; }
+	public bool? ShowCategories { get; set; }
+	public bool? OrderByAtoZ { get; set; } = false;
+	public bool? OrderByZtoA { get; set; } = false;
+	public bool? OrderByCreatedDate { get; set; } = false;
+	public bool? OrderByCreaedDateDecending { get; set; } = false;
+	public int PageSize { get; set; } = 100;
+	public int PageNumber { get; set; } = 1;
+	
+}
+
 public class ChatCreateUpdateDto {
 	public Guid? Id { get; set; } = null!;
 	public string? UserId { get; set; } = null!;

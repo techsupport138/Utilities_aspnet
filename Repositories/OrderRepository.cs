@@ -42,6 +42,8 @@ public class OrderRepository : IOrderRepository {
 			SendPrice = 0,
 			SendType = SendType.Pishtaz,
 			Status = OrderStatuses.Pending,
+			CreatedAt = DateTime.Now,
+			UpdatedAt = DateTime.Now,
 			PayNumber = "",
 			ProductOwnerId = listProducts.First().UserId,
 		};
@@ -59,8 +61,8 @@ public class OrderRepository : IOrderRepository {
 			OrderDetailEntity orderDetailEntity = new() {
 				OrderId = entityOrder.Id,
 				ProductId = item.ProductId,
-				Price = productEntity?.Price ?? 0,
-				Count = item.Count,
+				Price = item.Price ?? productEntity?.Price ?? 0,
+				Count = item.Count
 			};
 
 			if (item.Categories.IsNotNullOrEmpty()) {
@@ -99,6 +101,7 @@ public class OrderRepository : IOrderRepository {
 		oldOrder.SendType = dto.SendType;
 		oldOrder.DiscountCode = dto.DiscountCode;
 		oldOrder.DiscountPercent = dto.DiscountPercent;
+		oldOrder.UpdatedAt = DateTime.Now;
 
 		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails!) {
 			OrderDetailEntity? oldOrderDetail = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == item.Id);
@@ -113,7 +116,7 @@ public class OrderRepository : IOrderRepository {
 				}
 
 				oldOrderDetail.ProductId = item.ProductId;
-				oldOrderDetail.Price = product?.Price ?? 0;
+				oldOrderDetail.Price = item.Price ?? product?.Price ?? 0;
 				oldOrderDetail.Count = item.Count;
 			}
 		}

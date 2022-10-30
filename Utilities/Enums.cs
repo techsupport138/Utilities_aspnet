@@ -36,9 +36,9 @@ public enum DatabaseType {
 }
 
 public enum OrderStatuses {
-	Pending = 0,
-	Canceled = 1,
-	Paid = 2
+	Pending = 100,
+	Canceled = 101,
+	Paid = 102
 }
 
 public enum PayType {
@@ -73,10 +73,10 @@ public enum TransactionStatus {
 }
 
 public enum ProductStatus {
-	Released,
-	Expired,
-	InQueue,
-	Deleted
+	Released = 1,
+	Expired = 2,
+	InQueue = 3,
+	Deleted = 4
 }
 
 public enum Sender {

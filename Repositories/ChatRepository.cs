@@ -12,6 +12,7 @@ public interface IChatRepository {
 	Task<GenericResponse<GroupChatEntity?>> UpdateGroupChat(GroupChatCreateUpdateDto dto);
 	Task<GenericResponse<GroupChatMessageEntity?>> CreateGroupChatMessage(GroupChatMessageCreateUpdateDto dto);
 	GenericResponse<IQueryable<GroupChatEntity>?> ReadMyGroupChats();
+	GenericResponse<IQueryable<GroupChatEntity>> FilterGroupChats(GroupChatFilterDto dto);
 	Task<GenericResponse<GroupChatEntity>> ReadGroupChatById(Guid id);
 	GenericResponse<IQueryable<GroupChatMessageEntity>?> ReadGroupChatMessages(Guid id);
 }
@@ -176,6 +177,7 @@ public class ChatRepository : IChatRepository {
 		e.UseCase = dto.UseCase ?? e.UseCase;
 		e.Description = dto.Description ?? e.Description;
 		e.Users = users;
+		e.ChatStatus = dto.ChatStatus ?? e.ChatStatus;
 		e.Products = products;
 
 		EntityEntry<GroupChatEntity> entity = _context.Set<GroupChatEntity>().Update(e);
@@ -209,6 +211,40 @@ public class ChatRepository : IChatRepository {
 			.AsNoTracking();
 
 		return new GenericResponse<IQueryable<GroupChatEntity>?>(e);
+	}
+
+	public GenericResponse<IQueryable<GroupChatEntity>> FilterGroupChats(GroupChatFilterDto dto) {
+		IQueryable<GroupChatEntity> q = _context.Set<GroupChatEntity>()
+			.Where(x => x.Users.Any(y => y.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name));
+
+		if (dto.UsersIds.IsNotNullOrEmpty()) q = q.Where(x => x.Users.Any(x => x.Id == dto.UsersIds.FirstOrDefault()));
+		if (dto.ProductsIds.IsNotNullOrEmpty()) q = q.Where(x => x.Products.Any(x => x.Id == dto.ProductsIds.FirstOrDefault()));
+		if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => x.Title == dto.Title);
+		if (dto.Description.IsNotNullOrEmpty()) q = q.Where(x => x.Description == dto.Description);
+		if (dto.Type.IsNotNullOrEmpty()) q = q.Where(x => x.Type == dto.Type);
+		if (dto.Value.IsNotNullOrEmpty()) q = q.Where(x => x.Value == dto.Value);
+		if (dto.UseCase.IsNotNullOrEmpty()) q = q.Where(x => x.UseCase == dto.UseCase);
+		if (dto.Department.IsNotNullOrEmpty()) q = q.Where(x => x.Department == dto.Department);
+		if (dto.ChatStatus.HasValue) q = q.Where(x => x.ChatStatus == dto.ChatStatus);
+		if (dto.Priority.HasValue) q = q.Where(x => x.Priority == dto.Priority);
+
+		if (dto.ShowProducts.IsTrue()) q = q.Include(x => x.Products)!.ThenInclude(x => x.Media);
+		if (dto.ShowUsers.IsTrue()) q = q.Include(x => x.Users)!.ThenInclude(x => x.Media);
+		if (dto.ShowCategories.IsTrue()) q = q.Include(x => x.Products)!.ThenInclude(x => x.Categories);
+
+		if (dto.OrderByAtoZ.IsTrue()) q = q.OrderBy(x => x.Title);
+		if (dto.OrderByZtoA.IsTrue()) q = q.OrderByDescending(x => x.Title);
+		if (dto.OrderByCreatedDate.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
+		if (dto.OrderByCreaedDateDecending.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
+
+		int totalCount = q.Count();
+		q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
+
+		return new GenericResponse<IQueryable<GroupChatEntity>>(q.AsNoTracking()) {
+			TotalCount = totalCount,
+			PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto.PageSize : totalCount / dto.PageSize + 1,
+			PageSize = dto.PageSize
+		};
 	}
 
 	public async Task<GenericResponse<GroupChatEntity>> ReadGroupChatById(Guid id) {
