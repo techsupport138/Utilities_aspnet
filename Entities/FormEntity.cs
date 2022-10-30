@@ -43,7 +43,6 @@ public class FormFieldEntity : BaseEntity {
 
 	public FormFieldType? Type { get; set; }
 
-	[System.Text.Json.Serialization.JsonIgnore]
 	public Guid? CategoryId { get; set; }
 
 	[System.Text.Json.Serialization.JsonIgnore]

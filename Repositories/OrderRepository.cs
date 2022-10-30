@@ -132,6 +132,7 @@ public class OrderRepository : IOrderRepository {
 			q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Comments).ThenInclude(i => i.LikeComments);
 		if (dto.ShowForms.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Forms);
 		if (dto.ShowMedia.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Media);
+		if (dto.ShowUser.IsTrue()) q = q.Include(x => x.User).ThenInclude(x => x.Media);
 		if (dto.ShowReports.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Reports);
 		if (dto.ShowTeams.IsTrue())
 			q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product).ThenInclude(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media);
@@ -168,6 +169,7 @@ public class OrderRepository : IOrderRepository {
 	public async Task<GenericResponse<OrderEntity>> ReadById(Guid id) {
 		OrderEntity? i = await _dbContext.Set<OrderEntity>()
 			.Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
+			.Include(i => i.User).ThenInclude(i => i.Media)
 			.AsNoTracking()
 			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
 		return new GenericResponse<OrderEntity>(i);

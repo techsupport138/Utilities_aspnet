@@ -193,16 +193,18 @@ public class ChatRepository : IChatRepository {
 
 	public async Task<GenericResponse<GroupChatEntity>> ReadGroupChatById(Guid id) {
 		GroupChatEntity? e = await _context.Set<GroupChatEntity>()
-			.Include(x => x.Users)
-			.Include(x => x.Products).ThenInclude(x => x.Media)
-			.Include(x => x.Products).ThenInclude(x => x.Categories)
+			.Include(x => x.Users)!.ThenInclude(x => x.Media)
+			.Include(x => x.Products)!.ThenInclude(x => x.Media)
+			.Include(x => x.Products)!.ThenInclude(x => x.Categories)
 			.Include(x => x.Media).FirstOrDefaultAsync(x => x.Id == id);
 		return new GenericResponse<GroupChatEntity>(e);
 	}
 
 	public GenericResponse<IQueryable<GroupChatMessageEntity>?> ReadGroupChatMessages(Guid id) {
-		IQueryable<GroupChatMessageEntity> e = _context.Set<GroupChatMessageEntity>().Where(x => x.GroupChatId == id)
+		IQueryable<GroupChatMessageEntity> e = _context.Set<GroupChatMessageEntity>()
+			.Where(x => x.GroupChatId == id)
 			.Include(x => x.Media)
+			.Include(x => x.User).ThenInclude(x => x.Media)
 			.AsNoTracking();
 		return new GenericResponse<IQueryable<GroupChatMessageEntity>?>(e);
 	}
