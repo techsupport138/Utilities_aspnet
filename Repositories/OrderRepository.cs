@@ -194,7 +194,10 @@ public class OrderRepository : IOrderRepository {
 		EntityEntry<OrderDetailEntity> orderDetailEntity = await _dbContext.Set<OrderDetailEntity>().AddAsync(new OrderDetailEntity {
 			ProductId = dto.ProductId,
 			Count = dto.Count,
-			OrderId = dto.OrderId
+			OrderId = dto.OrderId,
+			Price = dto.Price,
+			CreatedAt = DateTime.Now,
+			UpdatedAt = DateTime.Now
 		});
 		if (!e.OrderDetails.Any()) return new GenericResponse(UtilitiesStatusCodes.Unhandled);
 		e.OrderDetails.Append(orderDetailEntity.Entity);
