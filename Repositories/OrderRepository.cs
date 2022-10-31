@@ -61,7 +61,7 @@ public class OrderRepository : IOrderRepository {
 			OrderDetailEntity orderDetailEntity = new() {
 				OrderId = entityOrder.Id,
 				ProductId = item.ProductId,
-				Price = item.Price ?? productEntity?.Price ?? 0,
+				Price = item.Price ?? productEntity?.Price,
 				Count = item.Count
 			};
 
@@ -116,7 +116,7 @@ public class OrderRepository : IOrderRepository {
 				}
 
 				oldOrderDetail.ProductId = item.ProductId;
-				oldOrderDetail.Price = item.Price ?? product?.Price ?? 0;
+				oldOrderDetail.Price = item.Price ?? product?.Price;
 				oldOrderDetail.Count = item.Count;
 			}
 		}
