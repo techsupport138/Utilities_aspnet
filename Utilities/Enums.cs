@@ -21,7 +21,8 @@ public enum UtilitiesStatusCodes {
 	Forbidden = 403,
 	NotFound = 404,
 	Unhandled = 900,
-	WrongVerificationCode = 602
+	WrongVerificationCode = 601,
+	MaximumLimitReached = 602
 }
 
 public enum OtpResult {

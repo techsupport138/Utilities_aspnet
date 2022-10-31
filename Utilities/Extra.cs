@@ -11,11 +11,7 @@ public class GenericResponse<T> : GenericResponse {
 }
 
 public class GenericResponse {
-	public GenericResponse(
-		UtilitiesStatusCodes status = UtilitiesStatusCodes.Success,
-		string message = "",
-		IEnumerable<Guid>? ids = null,
-		Guid? id = null) {
+	public GenericResponse(UtilitiesStatusCodes status = UtilitiesStatusCodes.Success, string message = "") {
 		Status = status;
 		Message = message;
 	}
