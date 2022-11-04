@@ -80,11 +80,6 @@ public enum ProductStatus {
 	Deleted = 4
 }
 
-public enum Sender {
-	SmsIr,
-	Faraz
-}
-
 public enum Currency {
 	Rial = 100,
 	Dolor = 101,

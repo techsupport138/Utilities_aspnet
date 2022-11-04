@@ -21,7 +21,6 @@ public class AppSettingsController : BaseApiController {
 			PayType = EnumExtension.GetValues<PayType>(),
 			SendType = EnumExtension.GetValues<SendType>(),
 			ProductStatus = EnumExtension.GetValues<ProductStatus>(),
-			Sender = EnumExtension.GetValues<Sender>(),
 			Currency = EnumExtension.GetValues<Currency>(),
 			SeenStatus = EnumExtension.GetValues<SeenStatus>(),
 			Priority = EnumExtension.GetValues<Priority>(),
