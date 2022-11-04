@@ -18,8 +18,8 @@ public class NotificationRepository : INotificationRepository {
 	public GenericResponse<IQueryable<NotificationEntity>> Read() {
 		IQueryable<NotificationEntity> i = _context.Set<NotificationEntity>()
 			.Include(x => x.Media)
-			.Include(x => x.CreatorUser).ThenInclude(x => x.Media)
-			.Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
+			.Include(x => x.CreatorUser).ThenInclude(x => x!.Media)
+			.Include(x => x.CreatorUser).ThenInclude(x => x!.Categories)
 			.Where(x => (x.UserId == null || x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name) && x.DeletedAt == null)
 			.OrderByDescending(x => x.CreatedAt)
 			.AsNoTracking()
@@ -31,8 +31,8 @@ public class NotificationRepository : INotificationRepository {
 	public async Task<GenericResponse> UpdateSeenStatus(IEnumerable<Guid> ids, SeenStatus seenStatus) {
 		IQueryable<NotificationEntity> i = _context.Set<NotificationEntity>()
 			.Include(x => x.Media)
-			.Include(x => x.CreatorUser).ThenInclude(x => x.Media)
-			.Include(x => x.CreatorUser).ThenInclude(x => x.Categories)
+			.Include(x => x.CreatorUser).ThenInclude(x => x!.Media)
+			.Include(x => x.CreatorUser).ThenInclude(x => x!.Categories)
 			.Where(x => (x.UserId == null || x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name) && x.DeletedAt == null)
 			.Where(x => ids.Contains(x.Id))
 			.OrderByDescending(x => x.CreatedAt);

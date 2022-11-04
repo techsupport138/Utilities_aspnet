@@ -4,7 +4,7 @@ public interface ICommentRepository {
 	Task<GenericResponse<CommentEntity?>> Create(CommentCreateUpdateDto dto);
 	Task<GenericResponse<CommentEntity?>> ToggleLikeComment(Guid commentId);
 	Task<GenericResponse<CommentEntity?>> Read(Guid id);
-	Task<GenericResponse<IEnumerable<CommentEntity>?>> ReadByProductId(Guid id);
+	GenericResponse<IQueryable<CommentEntity>?> ReadByProductId(Guid id);
 	GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto);
 	Task<GenericResponse<CommentEntity?>> Update(Guid id, CommentCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
@@ -24,8 +24,8 @@ public class CommentRepository : ICommentRepository {
 		_notificationRepository = notificationRepository;
 	}
 
-	public async Task<GenericResponse<IEnumerable<CommentEntity>?>> ReadByProductId(Guid id) {
-		IEnumerable<CommentEntity> comment = await _context.Set<CommentEntity>()
+	public GenericResponse<IQueryable<CommentEntity>?> ReadByProductId(Guid id) {
+		IQueryable<CommentEntity> comment = _context.Set<CommentEntity>()
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
 			.Include(x => x.LikeComments)
@@ -33,9 +33,8 @@ public class CommentRepository : ICommentRepository {
 			.Include(x => x.Children)!.ThenInclude(x => x.LikeComments)
 			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
 			.Where(x => x.ProductId == id && x.ParentId == null && x.DeletedAt == null)
-			.OrderByDescending(x => x.CreatedAt).AsNoTracking().ToListAsync();
-
-		return new GenericResponse<IEnumerable<CommentEntity>?>(comment);
+			.OrderByDescending(x => x.CreatedAt).AsNoTracking();
+		return new GenericResponse<IQueryable<CommentEntity>?>(comment);
 	}
 
 	public GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto) {
@@ -49,7 +48,8 @@ public class CommentRepository : ICommentRepository {
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
 			.Include(x => x.LikeComments)
-			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media).OrderByDescending(x => x.CreatedAt)
+			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
+			.OrderByDescending(x => x.CreatedAt)
 			.AsNoTracking();
 
 		if (dto.ShowProducts.IsTrue()) q = q.Include(x => x.Product).ThenInclude(x => x.Media);
@@ -62,7 +62,7 @@ public class CommentRepository : ICommentRepository {
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
 			.Include(x => x.LikeComments)
-			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media).OrderByDescending(x => x.CreatedAt)
+			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
 			.Where(x => x.Id == id && x.DeletedAt == null)
 			.OrderByDescending(x => x.CreatedAt)
 			.AsNoTracking()
