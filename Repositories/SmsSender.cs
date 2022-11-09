@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Repositories;
+﻿using Ghasedak.Core;
+
+namespace Utilities_aspnet.Repositories;
 
 public interface ISmsSender {
 	void SendSms(string mobileNumber, string message);
@@ -21,16 +23,26 @@ public class SmsSender : ISmsSender {
 		}
 		else mobileNumber = mobileNumber.TrimStart(new[] {'0'});
 
-		RestClient client = new("http://188.0.240.110/api/select");
-		RestRequest request = new RestRequest(Method.POST);
-		request.AddHeader("cache-control", "no-cache");
-		request.AddHeader("Content-Type", "application/json");
-		request.AddHeader("Authorization", "AccessKey " + smsSetting.SmsApiKey);
-		request.AddParameter("undefined",
-		                     "{\"op\" : \"pattern\"" + ",\"user\" : \"" + smsSetting.UserName + "\"" + ",\"pass\": \"" + smsSetting.SmsSecret + "\"" +
-		                     ",\"fromNum\" : " + "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " + mobileNumber + "" + ",\"patternCode\": \" " +
-		                     smsSetting.PatternCode + "\"" + ",\"inputData\" : [{\"verification-code\":" + message + "}]}", ParameterType.RequestBody);
+		switch (smsSetting.Provider) {
+			case "ghasedak": {
+				Api sms = new(smsSetting.SmsApiKey);
+				sms.SendSMSAsync(message, mobileNumber);
+				break;
+			}
+			case "faraz": {
+				RestClient client = new("http://188.0.240.110/api/select");
+				RestRequest request = new(Method.POST);
+				request.AddHeader("cache-control", "no-cache");
+				request.AddHeader("Content-Type", "application/json");
+				request.AddHeader("Authorization", "AccessKey " + smsSetting.SmsApiKey);
+				request.AddParameter("undefined",
+				                     "{\"op\" : \"pattern\"" + ",\"user\" : \"" + smsSetting.UserName + "\"" + ",\"pass\": \"" + smsSetting.SmsSecret + "\"" +
+				                     ",\"fromNum\" : " + "03000505".TrimStart(new[] {'0'}) + "" + ",\"toNum\": " + mobileNumber + "" + ",\"patternCode\": \" " +
+				                     smsSetting.PatternCode + "\"" + ",\"inputData\" : [{\"verification-code\":" + message + "}]}", ParameterType.RequestBody);
 
-		client.Execute(request);
+				client.Execute(request);
+				break;
+			}
+		}
 	}
 }

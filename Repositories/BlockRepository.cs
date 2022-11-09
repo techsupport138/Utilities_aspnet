@@ -24,12 +24,12 @@ public class BlockRepository : IBlockRepository {
 	}
 
 	public async Task<GenericResponse> ToggleBlock(string userId) {
-		BlockEntity? block = await _context.Set<BlockEntity>()
-			.FirstOrDefaultAsync(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name && x.BlockedUserId == userId);
+		string? user = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+		BlockEntity? block = await _context.Set<BlockEntity>().FirstOrDefaultAsync(x => x.UserId == user && x.BlockedUserId == userId);
 		if (block != null) _context.Set<BlockEntity>().Remove(block);
 		else {
 			block = new BlockEntity {
-				UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name,
+				UserId = user,
 				BlockedUserId = userId
 			};
 			await _context.Set<BlockEntity>().AddAsync(block);
