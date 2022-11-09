@@ -26,7 +26,7 @@ public class SmsSender : ISmsSender {
 		switch (smsSetting.Provider) {
 			case "ghasedak": {
 				Api sms = new(smsSetting.SmsApiKey);
-				sms.SendSMSAsync(message, mobileNumber);
+				sms.VerifyAsync(1, smsSetting.PatternCode, new[] { mobileNumber}, message);
 				break;
 			}
 			case "faraz": {
