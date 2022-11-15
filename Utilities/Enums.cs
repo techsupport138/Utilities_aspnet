@@ -8,10 +8,6 @@ public static class EnumExtension {
 }
 
 public static class UtilitiesStatusCodesExtension {
-	public static bool IsSuccessful(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Success;
-	public static bool IsBadRequest(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.BadRequest;
-	public static bool IsForbidden(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.Forbidden;
-	public static bool IsNotFound(this UtilitiesStatusCodes statusCode) => statusCode == UtilitiesStatusCodes.NotFound;
 	public static int Value(this UtilitiesStatusCodes statusCode) => (int) statusCode;
 }
 
@@ -64,7 +60,7 @@ public enum FormFieldType {
 	Image,
 	CarPlack,
 	PhoneNumber,
-	Password,
+	Password
 }
 
 public enum TransactionStatus {
@@ -93,7 +89,7 @@ public enum SeenStatus {
 	Seen = 101,
 	SeenDetail = 102,
 	Ignored = 103,
-	Deleted = 104,
+	Deleted = 104
 }
 
 public enum ChatStatus {

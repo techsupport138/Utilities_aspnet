@@ -88,12 +88,12 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto) {
 		IQueryable<UserEntity> dbSet = _context.Set<UserEntity>().AsNoTracking();
-		
+
 		if (dto.ShowMedia.IsTrue()) dbSet = dbSet.Include(u => u.Media);
 		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(u => u.Categories);
 		if (dto.ShowForms.IsTrue()) dbSet = dbSet.Include(u => u.FormBuilders);
 		if (dto.ShowTransactions.IsTrue()) dbSet = dbSet.Include(u => u.Transactions);
-		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products.Where(x => x.DeletedAt == null)).ThenInclude(u => u.Media);
+		if (dto.ShowProducts.IsTrue()) dbSet = dbSet.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(u => u.Media);
 
 		IQueryable<UserEntity> q = dbSet.Where(x => x.DeletedAt == null).AsNoTracking();
 
@@ -223,19 +223,12 @@ public class UserRepository : IUserRepository {
 
 		JwtSecurityToken token = await CreateToken(user);
 
-		string? otp = "1375";
 		if (aspNetUser.SendSMS) {
-			if (aspNetUser.Email != null && aspNetUser.Email.IsEmail()) {
-				//ToDo_AddEmailSender
-			}
-			else {
-				SendOtp(user.Id, 4);
-			}
+			if (aspNetUser.Email != null && aspNetUser.Email.IsEmail()) { }
+			else await SendOtp(user.Id, 4);
 		}
 
-		return new GenericResponse<UserEntity?>(
-			ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success, "Success"
-		);
+		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result);
 	}
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {

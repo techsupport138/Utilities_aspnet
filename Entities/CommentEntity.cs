@@ -53,19 +53,3 @@ public class CommentFilterDto {
 	public bool? ShowProducts { get; set; }
 	public ChatStatus? Status { get; set; }
 }
-
-public class CommentReadDto {
-	public Guid Id { get; set; }
-	public DateTime? CreatedAt { get; set; }
-	public DateTime? UpdatedAt { get; set; }
-	public DateTime? DeletedAt { get; set; }
-	public double? Score { get; set; } = 0;
-	public bool IsLiked { get; set; }
-	public string? Comment { get; set; }
-	public Guid? ParentId { get; set; }
-	public string? UserId { get; set; }
-	public UserEntity? User { get; set; }
-	public ChatStatus? Status { get; set; }
-	public IEnumerable<CommentReadDto>? Children { get; set; }
-	public IEnumerable<MediaEntity>? Media { get; set; }
-}

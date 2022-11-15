@@ -17,7 +17,7 @@ public class VoteRepository : IVoteRepository {
 	}
 
 	public async Task<GenericResponse<IEnumerable<VoteFieldEntity>>> CreateUpdateVoteFields(VoteFieldCreateUpdateDto dto) {
-		foreach (VoteFieldDto item in dto.VoteFields)
+		foreach (VoteFieldDto item in dto.VoteFields!)
 			try {
 				VoteFieldEntity? up = await _dbContext.Set<VoteFieldEntity>().FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.Id == item.Id);
 				if (up != null) {
@@ -57,7 +57,7 @@ public class VoteRepository : IVoteRepository {
 
 	public async Task<GenericResponse> CreateUpdateVote(VoteCreateUpdateDto dto) {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
-		foreach (VoteDto item in dto.Votes) {
+		foreach (VoteDto item in dto.Votes!) {
 			VoteEntity? update = await _dbContext.Set<VoteEntity>()
 				.FirstOrDefaultAsync(x => x.ProductId == dto.ProductId && x.VoteFieldId == item.VoteFieldId && x.UserId == userId);
 			if (update != null) {

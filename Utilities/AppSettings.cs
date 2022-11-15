@@ -43,7 +43,6 @@ public class EnumDto {
 	public IEnumerable<IdTitleDto>? PayType { get; set; }
 	public IEnumerable<IdTitleDto>? SendType { get; set; }
 	public IEnumerable<IdTitleDto>? ProductStatus { get; set; }
-	public IEnumerable<IdTitleDto>? Sender { get; set; }
 	public IEnumerable<IdTitleDto>? Currency { get; set; }
 	public IEnumerable<IdTitleDto>? SeenStatus { get; set; }
 	public IEnumerable<IdTitleDto>? Priority { get; set; }

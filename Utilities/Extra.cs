@@ -7,7 +7,7 @@ public class GenericResponse<T> : GenericResponse {
 		Message = message;
 	}
 
-	public T? Result { get; set; }
+	public T? Result { get; }
 }
 
 public class GenericResponse {
@@ -16,11 +16,11 @@ public class GenericResponse {
 		Message = message;
 	}
 
-	public UtilitiesStatusCodes Status { get; set; }
+	public UtilitiesStatusCodes Status { get; protected set; }
 	public int? PageSize { get; set; }
 	public int? PageCount { get; set; }
 	public int? TotalCount { get; set; }
-	public string Message { get; set; }
+	protected string Message { get; set; }
 }
 
 public static class BoolExtension {

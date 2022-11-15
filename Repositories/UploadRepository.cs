@@ -44,7 +44,7 @@ public class UploadRepository : IUploadRepository {
 					Size = model.Size,
 					NotificationId = model.NotificationId,
 					GroupChatId = model.GroupChatId,
-					GroupChatMessageId = model.GroupChatMessageId,
+					GroupChatMessageId = model.GroupChatMessageId
 				};
 				await _context.Set<MediaEntity>().AddAsync(media);
 				await _context.SaveChangesAsync();
