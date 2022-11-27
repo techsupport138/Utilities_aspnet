@@ -41,7 +41,7 @@ public class FormRepository : IFormRepository {
 			catch { }
 
 		IQueryable<FormEntity> entity = _dbContext.Set<FormEntity>()
-			.Where(x => x.ProductId == model.ProductId && model.ProductId != null 
+			.Where(x => x.ProductId == model.ProductId && model.ProductId != null
 			            || x.UserId == model.UserId && model.UserId != null
 			            || x.OrderDetailId == model.OrderDetailId && model.OrderDetailId != null)
 			.AsNoTracking();
@@ -80,8 +80,10 @@ public class FormRepository : IFormRepository {
 			: new GenericResponse<IQueryable<FormFieldEntity>?>(null);
 	}
 
-	public GenericResponse<IQueryable<FormFieldEntity>> ReadFormFields(Guid categoryId)
-		=> new(_dbContext.Set<FormFieldEntity>().Where(x => x.CategoryId == categoryId).AsNoTracking());
+	public GenericResponse<IQueryable<FormFieldEntity>> ReadFormFields(Guid categoryId) => new(_dbContext.Set<FormFieldEntity>()
+		                                                                                           .Where(x => x.DeletedAt == null)
+		                                                                                           .Where(x => x.CategoryId == categoryId)
+		                                                                                           .AsNoTracking());
 
 	public async Task<GenericResponse> DeleteFormField(Guid id) {
 		FormFieldEntity? entity = await _dbContext.Set<FormFieldEntity>()
