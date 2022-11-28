@@ -329,6 +329,7 @@ public class UserRepository : IUserRepository {
 		entity.Point = dto.Point ?? entity.Point;
 		entity.AccessLevel = dto.AccessLevel ?? entity.AccessLevel;
 		entity.Badge = dto.Badge ?? entity.Badge;
+		entity.UpdatedAt = DateTime.Now;
 
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> list = new();

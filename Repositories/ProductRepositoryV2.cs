@@ -80,7 +80,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			                 (x.Description ?? "").Contains(dto.Query!));
 
 		if (dto.ShowCategories.IsTrue()) q = q.Include(i => i.Categories);
-		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments).ThenInclude(i => i.LikeComments);
+		if (dto.ShowCategoryMedia.IsTrue()) q = q.Include(i => i.Categories)!.ThenInclude(i => i.Media);
+		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments)!.ThenInclude(i => i.LikeComments);
 		if (dto.ShowOrders.IsTrue()) q = q.Include(i => i.OrderDetails);
 		if (dto.ShowForms.IsTrue()) q = q.Include(i => i.Forms);
 		if (dto.ShowMedia.IsTrue()) q = q.Include(i => i.Media);

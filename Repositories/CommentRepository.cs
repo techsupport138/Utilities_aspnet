@@ -138,7 +138,7 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public async Task<GenericResponse<CommentEntity?>> Update(Guid id, CommentCreateUpdateDto dto) {
-		CommentEntity? comment = await _context.Set<CommentEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == id);
 
 		if (comment == null) return new GenericResponse<CommentEntity?>(null);
 		if (!string.IsNullOrEmpty(dto.Comment)) comment.Comment = dto.Comment;
@@ -154,7 +154,7 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		CommentEntity? comment = await _context.Set<CommentEntity>().AsNoTracking().Include(p => p.Children).FirstOrDefaultAsync(x => x.Id == id);
+		CommentEntity? comment = await _context.Set<CommentEntity>().Include(p => p.Children).FirstOrDefaultAsync(x => x.Id == id);
 		if (comment == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 		comment.DeletedAt = DateTime.Now;
 		_context.Update(comment);

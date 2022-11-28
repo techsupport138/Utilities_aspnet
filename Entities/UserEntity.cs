@@ -219,13 +219,13 @@ public class UserCreateUpdateDto {
 	public string? State { get; set; }
 	public string? StateTr1 { get; set; }
 	public string? StateTr2 { get; set; }
-	public bool? Suspend { get; set; }
-	public double? Wallet { get; set; }
-	public double? Point { get; set; } = 0;
-	public bool? ShowContactInfo { get; set; }
-	public DateTime? BirthDate { get; set; }
 	public string? AccessLevel { get; set; }
 	public string? Badge { get; set; }
+	public double? Wallet { get; set; }
+	public double? Point { get; set; } = 0;
+	public bool? Suspend { get; set; }
+	public bool? ShowContactInfo { get; set; }
+	public DateTime? BirthDate { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 }
 

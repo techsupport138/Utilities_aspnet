@@ -137,11 +137,17 @@ public class ChatRepository : IChatRepository {
 			.Include(x => x.Products)
 			.FirstOrDefaultAsync(x => x.Id == dto.Id);
 
-		List<UserEntity> users = new();
-		foreach (string id in dto.UserIds) users.Add(await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == id));
+		if (dto.UserIds != null) {
+			List<UserEntity> users = new();
+			foreach (string id in dto.UserIds) users.Add(await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == id));
+			e.Users = users;
+		}
 
-		List<ProductEntity> products = new();
-		foreach (Guid id in dto.ProductIds) products.Add(await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == id));
+		if (dto.ProductIds != null) {
+			List<ProductEntity> products = new();
+			foreach (Guid id in dto.ProductIds) products.Add(await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == id));
+			e.Products = products;
+		}
 
 		e.Department = dto.Department ?? e.Department;
 		e.Priority = dto.Priority ?? e.Priority;
@@ -151,9 +157,7 @@ public class ChatRepository : IChatRepository {
 		e.UpdatedAt = DateTime.Now;
 		e.UseCase = dto.UseCase ?? e.UseCase;
 		e.Description = dto.Description ?? e.Description;
-		e.Users = users;
 		e.ChatStatus = dto.ChatStatus ?? e.ChatStatus;
-		e.Products = products;
 
 		EntityEntry<GroupChatEntity> entity = _context.Set<GroupChatEntity>().Update(e);
 		await _context.SaveChangesAsync();
@@ -183,6 +187,8 @@ public class ChatRepository : IChatRepository {
 			.Include(x => x.Media)
 			.Include(x => x.Products).ThenInclude(x => x.Media)
 			.Include(x => x.Products).ThenInclude(x => x.Categories)
+			.Include(x => x.Products).ThenInclude(x => x.Comments)
+			.Include(x => x.Products).ThenInclude(x => x.User)
 			.AsNoTracking();
 
 		return new GenericResponse<IQueryable<GroupChatEntity>?>(e);

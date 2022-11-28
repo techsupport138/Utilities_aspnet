@@ -89,7 +89,7 @@ public class OrderRepository : IOrderRepository {
 	public async Task<GenericResponse<OrderEntity?>> Update(OrderCreateUpdateDto dto) {
 		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
 		OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
-		if (oldOrder == null) throw new ArgumentException("not found!");
+		if (oldOrder == null) return new GenericResponse<OrderEntity?>(null,UtilitiesStatusCodes.NotFound);
 
 		oldOrder.Description = dto.Description;
 		oldOrder.ReceivedDate = dto.ReceivedDate;

@@ -43,6 +43,9 @@ public class FormFieldEntity : BaseEntity {
 
 	[StringLength(500)]
 	public string? UseCase { get; set; }
+	
+	[StringLength(500)]
+	public string? UseCase2 { get; set; }
 
 	public bool? IsRequired { get; set; } = false;
 	public FormFieldType? Type { get; set; }

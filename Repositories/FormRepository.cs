@@ -69,6 +69,7 @@ public class FormRepository : IFormRepository {
 			entity.OptionList = dto.OptionList;
 			entity.CategoryId = categoryId;
 			entity.UseCase = dto.UseCase;
+			entity.UseCase2 = dto.UseCase2;
 			entity.IsRequired = dto.IsRequired;
 			entity.Type = dto.Type;
 			entity.UpdatedAt = DateTime.Now;
