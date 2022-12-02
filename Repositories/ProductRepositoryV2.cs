@@ -84,6 +84,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments)!.ThenInclude(i => i.LikeComments);
 		if (dto.ShowOrders.IsTrue()) q = q.Include(i => i.OrderDetails);
 		if (dto.ShowForms.IsTrue()) q = q.Include(i => i.Forms);
+		if (dto.ShowFormFields.IsTrue()) q = q.Include(i => i.Forms)!.ThenInclude(i => i.FormField); 
 		if (dto.ShowMedia.IsTrue()) q = q.Include(i => i.Media);
 		if (dto.ShowReports.IsTrue()) q = q.Include(i => i.Reports);
 		if (dto.ShowTeams.IsTrue()) q = q.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media);

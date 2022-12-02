@@ -267,6 +267,7 @@ public class ProductFilterDto {
 	public bool? HasDiscount { get; set; }
 	public bool? ShowMedia { get; set; } = false;
 	public bool? ShowForms { get; set; } = false;
+	public bool? ShowFormFields { get; set; } = false;
 	public bool? ShowCategories { get; set; } = false;
 	public bool? ShowVoteFields { get; set; } = false;
 	public bool? ShowVotes { get; set; } = false;
