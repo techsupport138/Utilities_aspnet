@@ -48,7 +48,15 @@ public class FormFieldEntity : BaseEntity {
 	public string? UseCase2 { get; set; }
 
 	public bool? IsRequired { get; set; } = false;
+	
 	public FormFieldType? Type { get; set; }
+	
+	public Guid? ParentId { get; set; }
+	
+	public FormFieldEntity? Parent { get; set; }
+
+	[InverseProperty("Parent")]
+	public IEnumerable<FormFieldEntity>? Children { get; set; }
 
 	public Guid? CategoryId { get; set; }
 

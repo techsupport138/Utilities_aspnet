@@ -60,7 +60,10 @@ public enum FormFieldType {
 	Image,
 	CarPlack,
 	PhoneNumber,
-	Password
+	Password,
+	Date,
+	Time,
+	DateTime
 }
 
 public enum TransactionStatus {
