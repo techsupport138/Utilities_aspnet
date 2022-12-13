@@ -82,6 +82,7 @@ public class FormRepository : IFormRepository {
 	}
 
 	public GenericResponse<IQueryable<FormFieldEntity>> ReadFormFields(Guid categoryId) => new(_dbContext.Set<FormFieldEntity>()
+		                                                                                           .Include(i => i.Children.Where(x => x.DeletedAt == null))
 		                                                                                           .Where(x => x.DeletedAt == null)
 		                                                                                           .Where(x => x.CategoryId == categoryId)
 		                                                                                           .AsNoTracking());
