@@ -64,9 +64,9 @@ public enum FormFieldType {
 }
 
 public enum TransactionStatus {
-	Fail = -1,
-	Pending = 0,
-	Success = 100
+	Pending = 100,
+	Fail = 101,
+	Success = 102
 }
 
 public enum ProductStatus {

@@ -23,7 +23,7 @@ public class CategoryRepository : ICategoryRepository {
 			.Where(x => x.DeletedAt == null)
 			.Where(x => x.ParentId == null)
 			.Include(i => i.Media)
-			.Include(i => i.Children)!.ThenInclude(i => i.Media)
+			.Include(i => i.Children.Where(x => x.DeletedAt == null)).ThenInclude(i => i.Media).Where(i => i.DeletedAt == null)
 			.AsNoTracking();
 		return new GenericResponse<IQueryable<CategoryEntity>>(i);
 	}
