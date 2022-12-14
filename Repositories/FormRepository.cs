@@ -93,8 +93,7 @@ public class FormRepository : IFormRepository {
 			.Include(x => x.Forms)
 			.FirstOrDefaultAsync(i => i.Id == id);
 		if (entity == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
-
-		_dbContext.Remove(entity);
+		entity.DeletedAt = DateTime.Now;
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
@@ -105,8 +104,7 @@ public class FormRepository : IFormRepository {
 			.Include(x => x.User)
 			.FirstOrDefaultAsync(i => i.Id == id);
 		if (entity == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
-
-		_dbContext.Remove(entity);
+		entity.DeletedAt = DateTime.Now;
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
