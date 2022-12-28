@@ -30,6 +30,12 @@ public class UploadRepository : IUploadRepository {
 				}
 
 				string name = _mediaRepository.GetFileName(Guid.NewGuid(), Path.GetExtension(file.FileName));
+				
+				List<string> allowedExtensions = new() {".png", ".gif", ".jpg", ".jpeg", ".mp4", ".mp3", ".pdf"};
+				if (!allowedExtensions.Contains(Path.GetExtension(file.FileName.ToLower()))) {
+					return new GenericResponse<IEnumerable<MediaEntity>?>(null, UtilitiesStatusCodes.BadRequest);
+				}
+				
 				MediaEntity media = new() {
 					FileName = _mediaRepository.GetFileUrl(name, folder),
 					UserId = model.UserId,
