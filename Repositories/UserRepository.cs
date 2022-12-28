@@ -233,37 +233,37 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
 		string mobile = dto.Mobile.Replace("+", "");
-		UserEntity? model = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
+		UserEntity? existingUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
 		                                                                              x.PhoneNumber == mobile ||
 		                                                                              x.AppUserName == mobile ||
 		                                                                              x.AppPhoneNumber == mobile ||
 		                                                                              x.UserName == mobile);
-		if (model != null) {
+		if (existingUser != null) {
 			string? otp = "1375";
-			if (dto.SendSMS) otp = await SendOtp(model.Id, 4);
+
+			if (dto.SendSMS) {
+				otp = await SendOtp(existingUser.Id, 4);
+			}
 			return new GenericResponse<string?>(otp);
 		}
-		else {
-			UserEntity user = new() {
-				Email = "",
-				PhoneNumber = mobile,
-				UserName = mobile,
-				EmailConfirmed = false,
-				PhoneNumberConfirmed = false,
-				FullName = "",
-				Wallet = 0,
-				Suspend = false
-			};
+		UserEntity user = new() {
+			Email = "",
+			PhoneNumber = mobile,
+			UserName = mobile,
+			EmailConfirmed = false,
+			PhoneNumberConfirmed = false,
+			FullName = "",
+			Wallet = 0,
+			Suspend = false
+		};
 
-			IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
-			if (!result.Succeeded)
-				return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, result.Errors.First().Code + result.Errors.First().Description);
+		IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
+		if (!result.Succeeded)
+			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, result.Errors.First().Code + result.Errors.First().Description);
 
-			string? otp = "1375";
-			if (dto.SendSMS) otp = await SendOtp(user.Id, 4);
+		if (dto.SendSMS) await SendOtp(user.Id, 4);
 
-			return new GenericResponse<string?>(otp ?? "1375");
-		}
+		return new GenericResponse<string?>(":)");
 	}
 
 	public async Task<GenericResponse<UserEntity?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) {

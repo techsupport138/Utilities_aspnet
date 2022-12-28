@@ -114,7 +114,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	public async Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct) {
 		ProductEntity? i = await _context.Set<ProductEntity>()
 			.Include(i => i.Media)
-			.Include(i => i.Categories)
+			.Include(i => i.Categories).ThenInclude(x => x.Media)
 			.Include(i => i.Reports)
 			.Include(i => i.Bookmarks)
 			.Include(i => i.Votes)
