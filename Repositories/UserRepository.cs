@@ -234,15 +234,16 @@ public class UserRepository : IUserRepository {
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
 		string mobile = dto.Mobile.Replace("+", "");
 		UserEntity? existingUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
-		                                                                              x.PhoneNumber == mobile ||
-		                                                                              x.AppUserName == mobile ||
-		                                                                              x.AppPhoneNumber == mobile ||
-		                                                                              x.UserName == mobile);
+		                                                                                     x.PhoneNumber == mobile ||
+		                                                                                     x.AppUserName == mobile ||
+		                                                                                     x.AppPhoneNumber == mobile ||
+		                                                                                     x.UserName == mobile);
 		if (existingUser != null) {
-			string? otp = "1375";
-
 			if (dto.SendSMS) {
-				otp = await SendOtp(existingUser.Id, 4);
+				bool ok = await SendOtp(existingUser.Id, 4);
+				if (!ok)
+					return new GenericResponse<string?>("برای دریافت کد تایید جدید کمی صبر کنید",
+					                                    UtilitiesStatusCodes.MaximumLimitReached);
 			}
 			return new GenericResponse<string?>(":)");
 		}
@@ -395,17 +396,17 @@ public class UserRepository : IUserRepository {
 		return dto;
 	}
 
-	private async Task<string?> SendOtp(string userId, int codeLength) {
-		DateTime dd = DateTime.Now.AddMinutes(-5);
+	private async Task<bool> SendOtp(string userId, int codeLength) {
+		DateTime dd = DateTime.Now.AddSeconds(-60);
 		bool oldOtp = _context.Set<OtpEntity>().Any(x => x.UserId == userId && x.CreatedAt > dd);
-		if (oldOtp) return null;
+		if (oldOtp) return false;
 
 		string newOtp = Utils.Random(codeLength).ToString();
 		_context.Set<OtpEntity>().Add(new OtpEntity {UserId = userId, OtpCode = newOtp, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now});
 		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 		_sms.SendSms(user?.PhoneNumber!, newOtp);
 		await _context.SaveChangesAsync();
-		return newOtp;
+		return true;
 	}
 
 	private async Task<OtpResult> Verify(string userId, string otp) {
