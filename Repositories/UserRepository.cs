@@ -244,7 +244,7 @@ public class UserRepository : IUserRepository {
 			if (dto.SendSMS) {
 				otp = await SendOtp(existingUser.Id, 4);
 			}
-			return new GenericResponse<string?>(otp);
+			return new GenericResponse<string?>(":)");
 		}
 		UserEntity user = new() {
 			Email = "",
