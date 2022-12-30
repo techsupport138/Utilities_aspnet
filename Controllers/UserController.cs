@@ -25,7 +25,11 @@ public class UserController : BaseApiController {
 
 	[HttpPost("GetTokenForTest/{mobile}")]
 	public async Task<ActionResult<GenericResponse>> GetTokenForTest(string mobile) => Result(await _userRepository.GetTokenForTest(mobile));
-
+	
+	[HttpDelete("Logout}")]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	public async Task<ActionResult<GenericResponse>> Logout() => Result(await _userRepository.Logout());
+	
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
