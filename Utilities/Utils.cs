@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
 	public static void SetupUtilities<T>(
@@ -166,5 +168,28 @@ public static class StartupExtension {
 			c.DocExpansion(DocExpansion.None);
 			c.DefaultModelsExpandDepth(-1);
 		});
+	}
+}
+
+public class ClaimRequirementAttribute : TypeFilterAttribute {
+	public ClaimRequirementAttribute() : base(typeof(ClaimRequirementFilter)) {
+		Arguments = new object[] {new Claim("IsLoggedIn", "true")};
+	}
+}
+
+public class ClaimRequirementFilter : IAuthorizationFilter {
+	readonly Claim _claim;
+	private readonly DbContext _dbContext;
+
+	public ClaimRequirementFilter(Claim claim, DbContext dbContext) {
+		_claim = claim;
+		_dbContext = dbContext;
+	}
+
+	public void OnAuthorization(AuthorizationFilterContext context) {
+		UserEntity? entity = _dbContext.Set<UserEntity>().FirstOrDefault(u => u.Id == context.HttpContext.User.Identity.Name);
+		if (!entity.IsLoggedIn) {
+			context.Result = new ForbidResult();
+		}
 	}
 }

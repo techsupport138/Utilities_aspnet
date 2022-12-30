@@ -178,7 +178,7 @@ public class UserRepository : IUserRepository {
 			new Claim(JwtRegisteredClaimNames.Sub, user.Id),
 			new Claim(ClaimTypes.NameIdentifier, user.Id),
 			new Claim(ClaimTypes.Name, user.Id),
-			new Claim(ClaimTypes.Expired, true.ToString()),
+			new Claim("IsLoggedIn", true.ToString()),
 			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 		};
 		if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));

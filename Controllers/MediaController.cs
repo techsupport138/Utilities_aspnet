@@ -9,9 +9,11 @@ public class MediaController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[ClaimRequirement]
 	public async Task<ActionResult<GenericResponse<MediaEntity>>> Upload([FromForm] UploadDto dto) => Result(await _uploadRepository.Upload(dto));
 
 	[HttpDelete("{id:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[ClaimRequirement]
 	public async Task<ActionResult<GenericResponse>> Delete(Guid id) => Result(await _uploadRepository.Delete(id));
 }

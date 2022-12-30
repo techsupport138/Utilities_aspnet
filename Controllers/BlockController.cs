@@ -2,6 +2,7 @@
 
 [ApiController]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[ClaimRequirement]
 [Route("api/[controller]")]
 public class BlockController : BaseApiController {
 	private readonly IBlockRepository _repository;

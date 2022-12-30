@@ -3,6 +3,7 @@ namespace Utilities_aspnet.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[ClaimRequirement]
 public class FormController : BaseApiController {
 	private readonly IFormRepository _formRepository;
 

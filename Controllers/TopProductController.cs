@@ -9,6 +9,7 @@ public class TopProductController : BaseApiController {
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[ClaimRequirement]
 	public async Task<ActionResult<GenericResponse<TopProductEntity?>>> Create(TopProductCreateDto dto) => Result(await _topProductRepository.Create(dto));
 
 	[HttpGet]
