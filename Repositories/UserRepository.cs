@@ -12,6 +12,7 @@ public interface IUserRepository {
 	Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser);
 	Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model);
 	Task<GenericResponse> RemovalFromTeam(Guid teamId);
+	Task<GenericResponse> Logout();
 }
 
 public class UserRepository : IUserRepository {
@@ -148,6 +149,13 @@ public class UserRepository : IUserRepository {
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
+	public async Task<GenericResponse> Logout() {
+		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name);
+		user!.IsLoggedIn = false;
+		await _context.SaveChangesAsync();
+		return new GenericResponse();
+	}
+
 	public async Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile) {
 		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile);
 
@@ -157,6 +165,8 @@ public class UserRepository : IUserRepository {
 		if (user.Suspend)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
 
+		user.IsLoggedIn = true;
+		await _context.SaveChangesAsync();
 		JwtSecurityToken token = await CreateToken(user);
 		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
 		                                        "Success");
@@ -168,6 +178,7 @@ public class UserRepository : IUserRepository {
 			new Claim(JwtRegisteredClaimNames.Sub, user.Id),
 			new Claim(ClaimTypes.NameIdentifier, user.Id),
 			new Claim(ClaimTypes.Name, user.Id),
+			new Claim(ClaimTypes.Expired, true.ToString()),
 			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 		};
 		if (roles != null) claims.AddRange(roles.Select(role => new Claim("role", role)));
@@ -282,6 +293,8 @@ public class UserRepository : IUserRepository {
 		if (user.Suspend)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
 
+		user.IsLoggedIn = true;
+		await _context.SaveChangesAsync();
 		JwtSecurityToken token = await CreateToken(user);
 
 		if (await Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)

@@ -80,10 +80,11 @@ public class UserEntity : IdentityUser {
 
 	[StringLength(500)]
 	public string? GenderTr2 { get; set; }
-
+	
 	public double? Wallet { get; set; } = 0;
 	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
+	public bool IsLoggedIn { get; set; } = false;
 	public DateTime? Birthdate { get; set; }
 	public DateTime? CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
