@@ -178,17 +178,15 @@ public class ClaimRequirementAttribute : TypeFilterAttribute {
 }
 
 public class ClaimRequirementFilter : IAuthorizationFilter {
-	readonly Claim _claim;
 	private readonly DbContext _dbContext;
 
 	public ClaimRequirementFilter(Claim claim, DbContext dbContext) {
-		_claim = claim;
 		_dbContext = dbContext;
 	}
 
 	public void OnAuthorization(AuthorizationFilterContext context) {
 		UserEntity? entity = _dbContext.Set<UserEntity>().FirstOrDefault(u => u.Id == context.HttpContext.User.Identity.Name);
-		if (!entity.IsLoggedIn) {
+		if (entity is {IsLoggedIn: false}) {
 			context.Result = new ForbidResult();
 		}
 	}
