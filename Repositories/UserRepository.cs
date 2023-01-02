@@ -108,6 +108,8 @@ public class UserRepository : IUserRepository {
 		if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
 		if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
 		if (dto.ShowSuspend.IsTrue()) q = q.Where(x => x.Suspend == true);
+		
+		if (dto.OrderByUserName.IsTrue()) q = q.OrderBy(x => x.UserName);
 
 		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
 
@@ -197,11 +199,13 @@ public class UserRepository : IUserRepository {
 		                   ?? await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
 
 		if (user == null) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "User not found");
-
+		
 		bool result = await _userManager.CheckPasswordAsync(user, model.Password);
 		if (!result)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
+		user.IsLoggedIn = true;
+		await _context.SaveChangesAsync();
 		JwtSecurityToken token = await CreateToken(user);
 
 		return new GenericResponse<UserEntity?>(
@@ -210,10 +214,10 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser) {
-		UserEntity? model = _context.Set<UserEntity>()
-			.FirstOrDefault(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email || x.PhoneNumber == aspNetUser.PhoneNumber);
+		UserEntity? model = await _context.Set<UserEntity>()
+			.FirstOrDefaultAsync(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email || x.PhoneNumber == aspNetUser.PhoneNumber);
 		if (model != null)
-			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "This email or username already exists");
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.UserAlreadyExist, "This email or username already exists");
 
 		UserEntity user = new() {
 			Email = aspNetUser.Email ?? "",

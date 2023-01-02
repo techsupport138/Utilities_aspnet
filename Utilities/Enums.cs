@@ -18,7 +18,8 @@ public enum UtilitiesStatusCodes {
 	NotFound = 404,
 	Unhandled = 900,
 	WrongVerificationCode = 601,
-	MaximumLimitReached = 602
+	MaximumLimitReached = 602,
+	UserAlreadyExist = 603,
 }
 
 public enum OtpResult {

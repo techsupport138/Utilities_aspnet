@@ -68,7 +68,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.Weight.HasValue) q = q.Where(x => x.Weight.ToInt() == dto.Weight.ToInt());
 		if (dto.MinOrder.HasValue) q = q.Where(x => x.MinOrder >= dto.MinOrder);
 		if (dto.MaxOrder.HasValue) q = q.Where(x => x.MaxOrder <= dto.MaxOrder);
-		if (dto.MinPrice.HasValue) q = q.Where(x => x.MinPrice <= dto.MinPrice);
+		if (dto.MinPrice.HasValue) q = q.Where(x => x.MinPrice >= dto.MinPrice);
 		if (dto.MaxPrice.HasValue) q = q.Where(x => x.MaxPrice <= dto.MaxPrice);
 		if (dto.StartDate.HasValue) q = q.Where(x => x.StartDate >= dto.StartDate);
 		if (dto.EndDate.HasValue) q = q.Where(x => x.EndDate <= dto.EndDate);
@@ -80,11 +80,12 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 			                 (x.Description ?? "").Contains(dto.Query!));
 
 		if (dto.ShowCategories.IsTrue()) q = q.Include(i => i.Categories);
+		if (dto.ShowCategoriesFormFields.IsTrue()) q = q.Include(i => i.Categories).ThenInclude(i => i.FormFields);
 		if (dto.ShowCategoryMedia.IsTrue()) q = q.Include(i => i.Categories)!.ThenInclude(i => i.Media);
 		if (dto.ShowComments.IsTrue()) q = q.Include(i => i.Comments)!.ThenInclude(i => i.LikeComments);
 		if (dto.ShowOrders.IsTrue()) q = q.Include(i => i.OrderDetails);
 		if (dto.ShowForms.IsTrue()) q = q.Include(i => i.Forms);
-		if (dto.ShowFormFields.IsTrue()) q = q.Include(i => i.Forms)!.ThenInclude(i => i.FormField); 
+		if (dto.ShowFormFields.IsTrue()) q = q.Include(i => i.Forms)!.ThenInclude(i => i.FormField);
 		if (dto.ShowMedia.IsTrue()) q = q.Include(i => i.Media);
 		if (dto.ShowReports.IsTrue()) q = q.Include(i => i.Reports);
 		if (dto.ShowTeams.IsTrue()) q = q.Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media);
@@ -100,6 +101,36 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.OrderByPriceDecending.IsTrue()) q = q.OrderByDescending(x => x.Price);
 		if (dto.OrderByCreatedDate.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
 		if (dto.OrderByCreaedDateDecending.IsTrue()) q = q.OrderByDescending(x => x.CreatedAt);
+
+		if (dto.MinValue.HasValue)
+			q = q.Where(x => x.Value.ToInt() >= dto.MinValue ||
+			                 x.Value1.ToInt() >= dto.MinValue ||
+			                 x.Value2.ToInt() >= dto.MinValue ||
+			                 x.Value3.ToInt() >= dto.MinValue ||
+			                 x.Value4.ToInt() >= dto.MinValue ||
+			                 x.Value5.ToInt() >= dto.MinValue ||
+			                 x.Value6.ToInt() >= dto.MinValue ||
+			                 x.Value7.ToInt() >= dto.MinValue ||
+			                 x.Value8.ToInt() >= dto.MinValue ||
+			                 x.Value9.ToInt() >= dto.MinValue ||
+			                 x.Value10.ToInt() >= dto.MinValue ||
+			                 x.Value11.ToInt() >= dto.MinValue ||
+			                 x.Value12.ToInt() >= dto.MinValue);
+
+		if (dto.MaxValue.HasValue)
+			q = q.Where(x => x.Value.ToInt() <= dto.MaxValue ||
+			                 x.Value1.ToInt() <= dto.MaxValue ||
+			                 x.Value2.ToInt() <= dto.MaxValue ||
+			                 x.Value3.ToInt() <= dto.MaxValue ||
+			                 x.Value4.ToInt() <= dto.MaxValue ||
+			                 x.Value5.ToInt() <= dto.MaxValue ||
+			                 x.Value6.ToInt() <= dto.MaxValue ||
+			                 x.Value7.ToInt() <= dto.MaxValue ||
+			                 x.Value8.ToInt() <= dto.MaxValue ||
+			                 x.Value9.ToInt() <= dto.MaxValue ||
+			                 x.Value10.ToInt() <= dto.MaxValue ||
+			                 x.Value11.ToInt() <= dto.MaxValue ||
+			                 x.Value12.ToInt() <= dto.MaxValue);
 
 		int totalCount = q.Count();
 		q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);

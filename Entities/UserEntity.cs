@@ -240,4 +240,5 @@ public class UserFilterDto {
 	public bool? ShowTransactions { get; set; }
 	public bool? ShowFollowings { get; set; }
 	public bool? ShowSuspend { get; set; }
+	public bool? OrderByUserName { get; set; }
 }

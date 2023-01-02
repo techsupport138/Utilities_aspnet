@@ -25,20 +25,20 @@ public class UserController : BaseApiController {
 
 	[HttpPost("GetTokenForTest/{mobile}")]
 	public async Task<ActionResult<GenericResponse>> GetTokenForTest(string mobile) => Result(await _userRepository.GetTokenForTest(mobile));
-	
+
 	[HttpDelete("Logout")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-[ClaimRequirement]
+	[ClaimRequirement]
 	public async Task<ActionResult<GenericResponse>> Logout() => Result(await _userRepository.Logout());
-	
+
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-[ClaimRequirement]
+	[ClaimRequirement]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
 	public async Task<ActionResult<GenericResponse<IEnumerable<UserEntity>>>> Filter(UserFilterDto dto) => Result(await _userRepository.Filter(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-[ClaimRequirement]
+	[ClaimRequirement]
 	[AllowAnonymous]
 	[HttpGet("{id}")]
 	public async Task<ActionResult<GenericResponse<UserEntity?>>> ReadById(string id, bool showVotes = false)
@@ -46,16 +46,16 @@ public class UserController : BaseApiController {
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-[ClaimRequirement]
+	[ClaimRequirement]
 	public async Task<ActionResult<GenericResponse<UserEntity>>> Update(UserCreateUpdateDto dto) => Result(await _userRepository.Update(dto));
 
 	[HttpDelete("{id}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-[ClaimRequirement]
+	[ClaimRequirement]
 	public async Task<ActionResult<GenericResponse>> Delete(string id) => Result(await _userRepository.Delete(id));
 
 	[HttpDelete("DeleteFromTeam/{teamId:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-[ClaimRequirement]
+	[ClaimRequirement]
 	public async Task<ActionResult<GenericResponse>> DeleteFromTeam(Guid teamId) => Result(await _userRepository.RemovalFromTeam(teamId));
 }

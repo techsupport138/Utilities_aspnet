@@ -269,6 +269,7 @@ public class ProductFilterDto {
 	public bool? ShowForms { get; set; } = false;
 	public bool? ShowFormFields { get; set; } = false;
 	public bool? ShowCategories { get; set; } = false;
+	public bool? ShowCategoriesFormFields { get; set; } = false;
 	public bool? ShowVoteFields { get; set; } = false;
 	public bool? ShowVotes { get; set; } = false;
 	public bool? ShowReports { get; set; } = false;
@@ -285,6 +286,8 @@ public class ProductFilterDto {
 	public bool? OrderByPriceDecending { get; set; } = false;
 	public bool? OrderByCreatedDate { get; set; } = false;
 	public bool? OrderByCreaedDateDecending { get; set; } = false;
+	public int? MinValue { get; set; }
+	public int? MaxValue { get; set; }
 	public bool? HasComment { get; set; } = false;
 	public bool? HasOrder { get; set; } = false;
 	public int? VisitsCount { get; set; }
