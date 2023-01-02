@@ -229,7 +229,8 @@ public class UserRepository : IUserRepository {
 			Wallet = 0,
 			Suspend = false,
 			FirstName = aspNetUser.FirstName,
-			LastName = aspNetUser.LastName
+			LastName = aspNetUser.LastName,
+			IsLoggedIn = true,
 		};
 
 		IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
