@@ -248,8 +248,9 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
-		if (dto.Mobile.Length >= 14) return new GenericResponse<string?>("شماره موبایل وارد شده صحیح نیست", UtilitiesStatusCodes.BadRequest);
 		string mobile = dto.Mobile.Replace("+", "");
+		if (mobile.Length >= 12 && mobile.Length <= 10)
+			return new GenericResponse<string?>("شماره موبایل وارد شده صحیح نیست", UtilitiesStatusCodes.BadRequest);
 		UserEntity? existingUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
 		                                                                                     x.PhoneNumber == mobile ||
 		                                                                                     x.AppUserName == mobile ||
