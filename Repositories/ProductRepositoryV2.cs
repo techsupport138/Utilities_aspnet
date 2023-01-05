@@ -93,6 +93,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (dto.ShowVoteFields.IsTrue()) q = q.Include(i => i.VoteFields);
 		if (dto.ShowCreator.IsTrue()) q = q.Include(i => i.User).ThenInclude(x => x!.Media);
 		if (dto.Categories != null && dto.Categories.Any()) q = q.Where(x => x.Categories.Any(y => dto.Categories.ToList().Contains(y.Id)));
+		if (dto.CategoriesAnd != null && dto.CategoriesAnd.Any()) q = q.Where(x => x.Categories.All(y => dto.CategoriesAnd.ToList().Contains(y.Id)));
 		if (dto.OrderByVotes.IsTrue()) q = q.OrderBy(x => x.VoteCount);
 		if (dto.OrderByVotesDecending.IsTrue()) q = q.OrderByDescending(x => x.VoteCount);
 		if (dto.OrderByAtoZ.IsTrue()) q = q.OrderBy(x => x.Title);

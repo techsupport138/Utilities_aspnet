@@ -84,7 +84,7 @@ public class UserEntity : IdentityUser {
 	public double? Wallet { get; set; } = 0;
 	public double? Point { get; set; } = 0;
 	public bool? ShowContactInfo { get; set; }
-	public bool IsLoggedIn { get; set; } = false;
+	public bool IsLoggedIn { get; set; }
 	public DateTime? Birthdate { get; set; }
 	public DateTime? CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
