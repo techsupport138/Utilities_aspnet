@@ -146,6 +146,7 @@ public class TeamEntity : BaseEntity {
 public class GetMobileVerificationCodeForLoginDto {
 	public string Mobile { get; set; }
 	public bool SendSMS { get; set; }
+	public string? token { get; set; }
 }
 
 public class VerifyMobileForLoginDto {

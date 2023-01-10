@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Repositories;
+﻿using System.Globalization;
+
+namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
 	Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto);
@@ -8,6 +10,7 @@ public interface IUserRepository {
 	Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile);
 	Task<GenericResponse> CheckUserName(string userName);
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
+	Task<GenericResponse<string?>> GetVerificationCodeForLoginSafe(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserEntity?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser);
 	Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model);
@@ -108,7 +111,7 @@ public class UserRepository : IUserRepository {
 		if (dto.UserId != null) q = q.Where(x => x.Id == dto.UserId);
 		if (dto.UserName != null) q = q.Where(x => (x.AppUserName ?? "").ToLower().Contains(dto.UserName.ToLower()));
 		if (dto.ShowSuspend.IsTrue()) q = q.Where(x => x.Suspend == true);
-		
+
 		if (dto.OrderByUserName.IsTrue()) q = q.OrderBy(x => x.UserName);
 
 		List<UserEntity> entity = await q.AsNoTracking().ToListAsync();
@@ -199,7 +202,7 @@ public class UserRepository : IUserRepository {
 		                   ?? await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
 
 		if (user == null) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "User not found");
-		
+
 		bool result = await _userManager.CheckPasswordAsync(user, model.Password);
 		if (!result)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
@@ -256,6 +259,49 @@ public class UserRepository : IUserRepository {
 		                                                                                     x.AppUserName == mobile ||
 		                                                                                     x.AppPhoneNumber == mobile ||
 		                                                                                     x.UserName == mobile);
+		if (existingUser != null) {
+			if (dto.SendSMS) {
+				bool ok = await SendOtp(existingUser.Id, 4);
+				if (!ok)
+					return new GenericResponse<string?>("برای دریافت کد تایید جدید کمی صبر کنید",
+					                                    UtilitiesStatusCodes.MaximumLimitReached);
+			}
+			return new GenericResponse<string?>(":)");
+		}
+		UserEntity user = new() {
+			Email = "",
+			PhoneNumber = mobile,
+			UserName = mobile,
+			EmailConfirmed = false,
+			PhoneNumberConfirmed = false,
+			FullName = "",
+			Wallet = 0,
+			Suspend = false
+		};
+
+		IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
+		if (!result.Succeeded)
+			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, result.Errors.First().Code + result.Errors.First().Description);
+
+		if (dto.SendSMS) await SendOtp(user.Id, 4);
+
+		return new GenericResponse<string?>(":)");
+	}
+
+	public async Task<GenericResponse<string?>> GetVerificationCodeForLoginSafe(GetMobileVerificationCodeForLoginDto dto) {
+		string salt = DateTime.Now.ToString(CultureInfo.InvariantCulture)[..10] + "SinaMN75";
+		bool isOk = Encryption.ValidateMd5HashData(Encryption.GetMd5HashData(salt), dto.token);
+		if (!isOk) return new GenericResponse<string?>("UnAuthorized", UtilitiesStatusCodes.Forbidden);
+		
+		string mobile = dto.Mobile.Replace("+", "");
+		if (mobile.First() != 0) mobile = mobile.Insert(0, "0");
+		if (mobile.Length is > 12 or < 9) return new GenericResponse<string?>("شماره موبایل وارد شده صحیح نیست", UtilitiesStatusCodes.BadRequest);
+		UserEntity? existingUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
+		                                                                                     x.PhoneNumber == mobile ||
+		                                                                                     x.AppUserName == mobile ||
+		                                                                                     x.AppPhoneNumber == mobile ||
+		                                                                                     x.UserName == mobile);
+
 		if (existingUser != null) {
 			if (dto.SendSMS) {
 				bool ok = await SendOtp(existingUser.Id, 4);
