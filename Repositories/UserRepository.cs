@@ -289,7 +289,7 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLoginSafe(GetMobileVerificationCodeForLoginDto dto) {
-		string salt = DateTime.Now.ToString(CultureInfo.InvariantCulture)[..10] + "SinaMN75";
+		string salt = DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + "SinaMN75";
 		bool isOk = Encryption.ValidateMd5HashData(Encryption.GetMd5HashData(salt), dto.token);
 		if (!isOk) return new GenericResponse<string?>("UnAuthorized", UtilitiesStatusCodes.Forbidden);
 		
