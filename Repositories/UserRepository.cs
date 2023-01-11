@@ -290,8 +290,8 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLoginSafe(GetMobileVerificationCodeForLoginDto dto) {
 		string salt = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}SinaMN75";
-		bool isOk = Encryption.ValidateMd5HashData(Encryption.GetMd5HashData(salt), dto.token);
-		if (!isOk) return new GenericResponse<string?>("UnAuthorized", UtilitiesStatusCodes.Forbidden);
+		bool isOk = Encryption.ValidateMd5HashData(Encryption.GetMd5HashData(salt).ToLower(), dto.token.ToLower());
+		if (!isOk) return new GenericResponse<string?>("Unauthorized", UtilitiesStatusCodes.Unhandled);
 		
 		string mobile = dto.Mobile.Replace("+", "");
 		if (mobile.First() != 0) mobile = mobile.Insert(0, "0");
