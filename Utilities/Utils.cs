@@ -31,7 +31,7 @@ public static class StartupExtension {
 		builder.Services.AddOptions();
 		builder.Services.AddMemoryCache();
 		builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-		builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRa teLimiting"));
+		builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 		builder.Services.Configure<IpRateLimitPolicies>(builder.Configuration.GetSection("IpRateLimitPolicies"));
 		builder.Services.AddInMemoryRateLimiting();
 
