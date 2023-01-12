@@ -12,6 +12,7 @@ public class AppSettingsController : BaseApiController {
 		AppSettings appSettings = new();
 		_config.GetSection("AppSettings").Bind(appSettings);
 		return Result(new GenericResponse<EnumDto?>(new EnumDto {
+			DateTime = DateTime.Now,
 			FormFieldType = EnumExtension.GetValues<FormFieldType>(),
 			TransactionStatuses = EnumExtension.GetValues<TransactionStatus>(),
 			UtilitiesStatusCodes = EnumExtension.GetValues<UtilitiesStatusCodes>(),

@@ -34,6 +34,7 @@ public class IdTitleDto {
 }
 
 public class EnumDto {
+	public DateTime? DateTime { get; set; }
 	public IEnumerable<IdTitleDto>? FormFieldType { get; set; }
 	public IEnumerable<IdTitleDto>? TransactionStatuses { get; set; }
 	public IEnumerable<IdTitleDto>? UtilitiesStatusCodes { get; set; }
