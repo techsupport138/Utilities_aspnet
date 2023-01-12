@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using AspNetCoreRateLimit;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Utilities_aspnet.Utilities;
 
@@ -26,8 +27,15 @@ public static class StartupExtension {
 	}
 
 	private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) where T : DbContext {
-		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+		
+		builder.Services.AddOptions();
 		builder.Services.AddMemoryCache();
+		builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+		builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRa teLimiting"));
+		builder.Services.Configure<IpRateLimitPolicies>(builder.Configuration.GetSection("IpRateLimitPolicies"));
+		builder.Services.AddInMemoryRateLimiting();
+
+		builder.Services.AddCors(c => c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 		builder.Services.Configure<BrotliCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
 		builder.Services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
 		builder.Services.AddResponseCompression(options => {
@@ -70,7 +78,7 @@ public static class StartupExtension {
 			options.UseCamelCasing(true);
 		});
 
-		builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+		builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 		builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 		builder.Services.AddTransient<AppSettings>();
 		builder.Services.AddTransient<ISmsSender, SmsSender>();
@@ -152,6 +160,7 @@ public static class StartupExtension {
 	}
 
 	public static void UseUtilitiesServices(this WebApplication app) {
+		app.UseIpRateLimiting();
 		app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 		app.UseDeveloperExceptionPage();
 		app.UseResponseCaching();

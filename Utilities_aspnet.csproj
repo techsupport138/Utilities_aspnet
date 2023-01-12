@@ -17,5 +17,6 @@
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.1" />
         <PackageReference Include="RestSharp" Version="106.15.0" />
         <PackageReference Include="Zarinpal" Version="2.0.4" />
+        <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
     </ItemGroup>
 </Project>
