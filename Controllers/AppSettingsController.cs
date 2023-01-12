@@ -11,8 +11,11 @@ public class AppSettingsController : BaseApiController {
 	public ActionResult<GenericResponse<EnumDto>> Read() {
 		AppSettings appSettings = new();
 		_config.GetSection("AppSettings").Bind(appSettings);
+		string hashedDateTime = Encryption
+			.GetMd5HashData($"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}SinaMN75").ToLower();
 		return Result(new GenericResponse<EnumDto?>(new EnumDto {
 			DateTime = DateTime.Now,
+			HashedDateTime = hashedDateTime,
 			FormFieldType = EnumExtension.GetValues<FormFieldType>(),
 			TransactionStatuses = EnumExtension.GetValues<TransactionStatus>(),
 			UtilitiesStatusCodes = EnumExtension.GetValues<UtilitiesStatusCodes>(),
