@@ -10,7 +10,6 @@ public interface IUserRepository {
 	Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile);
 	Task<GenericResponse> CheckUserName(string userName);
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
-	Task<GenericResponse<string?>> GetVerificationCodeForLoginSafe(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserEntity?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
 	Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser);
 	Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model);
@@ -251,44 +250,6 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
-		string mobile = dto.Mobile.Replace("+", "");
-		if (mobile.First() != 0) mobile = mobile.Insert(0, "0");
-		if (mobile.Length is > 12 or < 9) return new GenericResponse<string?>("شماره موبایل وارد شده صحیح نیست", UtilitiesStatusCodes.BadRequest);
-		UserEntity? existingUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
-		                                                                                     x.PhoneNumber == mobile ||
-		                                                                                     x.AppUserName == mobile ||
-		                                                                                     x.AppPhoneNumber == mobile ||
-		                                                                                     x.UserName == mobile);
-		if (existingUser != null) {
-			if (dto.SendSMS) {
-				bool ok = await SendOtp(existingUser.Id, 4);
-				if (!ok)
-					return new GenericResponse<string?>("برای دریافت کد تایید جدید کمی صبر کنید",
-					                                    UtilitiesStatusCodes.MaximumLimitReached);
-			}
-			return new GenericResponse<string?>(":)");
-		}
-		UserEntity user = new() {
-			Email = "",
-			PhoneNumber = mobile,
-			UserName = mobile,
-			EmailConfirmed = false,
-			PhoneNumberConfirmed = false,
-			FullName = "",
-			Wallet = 0,
-			Suspend = false
-		};
-
-		IdentityResult? result = await _userManager.CreateAsync(user, "SinaMN75");
-		if (!result.Succeeded)
-			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest, result.Errors.First().Code + result.Errors.First().Description);
-
-		if (dto.SendSMS) await SendOtp(user.Id, 4);
-
-		return new GenericResponse<string?>(":)");
-	}
-
-	public async Task<GenericResponse<string?>> GetVerificationCodeForLoginSafe(GetMobileVerificationCodeForLoginDto dto) {
 		string salt = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}SinaMN75";
 		bool isOk = dto.token == Encryption.GetMd5HashData(salt).ToLower();
 		if (!isOk) return new GenericResponse<string?>("Unauthorized", UtilitiesStatusCodes.Unhandled);
