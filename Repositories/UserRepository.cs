@@ -253,7 +253,7 @@ public class UserRepository : IUserRepository {
 		string salt = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}SinaMN75";
 		bool isOk = dto.token == Encryption.GetMd5HashData(salt).ToLower();
 		if (!isOk) return new GenericResponse<string?>("Unauthorized", UtilitiesStatusCodes.Unhandled);
-		
+
 		string mobile = dto.Mobile.Replace("+", "");
 		if (mobile.First() != 0) mobile = mobile.Insert(0, "0");
 		if (mobile.Length is > 12 or < 9) return new GenericResponse<string?>("شماره موبایل وارد شده صحیح نیست", UtilitiesStatusCodes.BadRequest);
@@ -265,12 +265,10 @@ public class UserRepository : IUserRepository {
 
 		if (existingUser != null) {
 			if (dto.SendSMS) {
-				bool ok = await SendOtp(existingUser.Id, 4);
-				if (!ok)
-					return new GenericResponse<string?>("برای دریافت کد تایید جدید کمی صبر کنید",
-					                                    UtilitiesStatusCodes.MaximumLimitReached);
+				if (!await SendOtp(existingUser.Id, 4))
+					return new GenericResponse<string?>("برای دریافت کد تایید جدید کمی صبر کنید", UtilitiesStatusCodes.MaximumLimitReached);
+				return new GenericResponse<string?>(":)");
 			}
-			return new GenericResponse<string?>($"{salt}        {Encryption.GetMd5HashData(salt)}       {dto.token}");
 		}
 		UserEntity user = new() {
 			Email = "",
