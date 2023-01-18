@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface IUserRepository {
 	Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto);
@@ -255,7 +253,7 @@ public class UserRepository : IUserRepository {
 		if (!isOk) return new GenericResponse<string?>("Unauthorized", UtilitiesStatusCodes.Unhandled);
 
 		string mobile = dto.Mobile.Replace("+", "");
-		if (mobile.First() != 0) mobile = mobile.Insert(0, "0");
+		if (mobile[0].ToString() != "0") mobile = mobile.Insert(0, "0");
 		if (mobile.Length is > 12 or < 9) return new GenericResponse<string?>("شماره موبایل وارد شده صحیح نیست", UtilitiesStatusCodes.BadRequest);
 		UserEntity? existingUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
 		                                                                                     x.PhoneNumber == mobile ||
@@ -292,24 +290,19 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<UserEntity?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) {
 		string mobile = dto.Mobile.Replace("+", "");
-		if (dto.VerificationCode.Length >= 6 && !dto.VerificationCode.IsNumerical())
-			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.WrongVerificationCode, "کد تایید وارد شده صحیح نیست");
 
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile) ??
-		                   await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile);
+		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile || x.Email == mobile);
 
-		if (user == null)
-			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "کاربر یافت نشد");
+		if (user == null) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.UserNotFound, "کاربر یافت نشد");
 
-		if (user.Suspend)
-			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
+		if (user.Suspend) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.UserSuspended, "کاربر به حالت تعلیق در آمده است");
 
 		user.IsLoggedIn = true;
 		await _context.SaveChangesAsync();
 		JwtSecurityToken token = await CreateToken(user);
 
-		if (await Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
-			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کد تایید وارد شده صحیح نیست");
+		if (Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
+			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.WrongVerificationCode, "کد تایید وارد شده صحیح نیست");
 
 		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 		                                        UtilitiesStatusCodes.Success, "Success");
@@ -424,7 +417,7 @@ public class UserRepository : IUserRepository {
 	private async Task<bool> SendOtp(string userId, int codeLength) {
 		DateTime dd = DateTime.Now.AddHours(-24);
 		IQueryable<OtpEntity> oldOtp = _context.Set<OtpEntity>().Where(x => x.UserId == userId && x.CreatedAt > dd);
-		if (oldOtp.Count() >= 2) return false;
+		if (oldOtp.Count() >= 3) return false;
 
 		string newOtp = Utils.Random(codeLength).ToString();
 		_context.Set<OtpEntity>().Add(new OtpEntity {UserId = userId, OtpCode = newOtp, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now});
@@ -434,12 +427,11 @@ public class UserRepository : IUserRepository {
 		return true;
 	}
 
-	private async Task<OtpResult> Verify(string userId, string otp) {
+	private OtpResult Verify(string userId, string otp) {
 		if (otp == "1375") return OtpResult.Ok;
-		bool model = _context.Set<OtpEntity>().Any(x => x.UserId == userId && x.CreatedAt > DateTime.Now.AddMinutes(-5) && x.OtpCode == otp);
-		if (model) return OtpResult.Ok;
-		OtpEntity? model2 = await _context.Set<OtpEntity>().FirstOrDefaultAsync(x => x.UserId == userId);
-		if (model2 != null && model2.CreatedAt < DateTime.Now.AddMinutes(-6)) return OtpResult.TimeOut;
-		return model2?.OtpCode != otp ? OtpResult.Incorrect : OtpResult.TimeOut;
+		IQueryable<OtpEntity> model = _context.Set<OtpEntity>().Where(x => x.UserId == userId &&
+		                                                                   x.CreatedAt > DateTime.Now.AddMinutes(-5) &&
+		                                                                   x.OtpCode == otp);
+		return model.IsNotNullOrEmpty() ? OtpResult.Ok : OtpResult.Incorrect;
 	}
 }

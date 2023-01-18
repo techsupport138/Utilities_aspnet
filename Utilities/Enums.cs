@@ -20,6 +20,8 @@ public enum UtilitiesStatusCodes {
 	WrongVerificationCode = 601,
 	MaximumLimitReached = 602,
 	UserAlreadyExist = 603,
+	UserSuspended = 604,
+	UserNotFound = 605,
 }
 
 public enum OtpResult {
