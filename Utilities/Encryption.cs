@@ -1,24 +1,14 @@
-using System.Security.Cryptography;
-
 namespace Utilities_aspnet.Utilities;
 
 public class Encryption {
-
 	public static string GetMd5HashData(string data) {
-		MD5 md5 = MD5.Create();
-		byte[] inputBytes = Encoding.ASCII.GetBytes(data);
-		byte[] hashBytes = md5.ComputeHash(inputBytes);
-
 		StringBuilder sb = new();
-		foreach (byte t in hashBytes) {
-			sb.Append(t.ToString("X2"));
-		}
+		foreach (byte t in MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(data))) sb.Append(t.ToString("X2"));
 		return sb.ToString();
 	}
 
 	public static bool ValidateMd5HashData(string inputData, string storedHashData) {
-		byte[] tmpSource = ASCIIEncoding.ASCII.GetBytes(inputData);
-		byte[] tmpNewHash = new MD5CryptoServiceProvider().ComputeHash(tmpSource);
+		byte[] tmpNewHash = new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(inputData));
 
 		bool bEqual = false;
 		if (tmpNewHash.Length == storedHashData.Length) {

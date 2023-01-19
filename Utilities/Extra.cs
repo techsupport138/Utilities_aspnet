@@ -50,7 +50,7 @@ public class Utils {
 		int otp = codeLength switch {
 			4 => rnd.Next(1001, 9999),
 			5 => rnd.Next(1001, 99999),
-			_ => rnd.Next(1001, 9999)
+			_ => rnd.Next(1001, 999999)
 		};
 
 		return otp;

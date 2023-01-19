@@ -1,7 +1,4 @@
-﻿using AspNetCoreRateLimit;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace Utilities_aspnet.Utilities;
+﻿namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
 	public static void SetupUtilities<T>(
@@ -27,7 +24,6 @@ public static class StartupExtension {
 	}
 
 	private static void AddUtilitiesServices<T>(this WebApplicationBuilder builder, string connectionStrings, DatabaseType databaseType) where T : DbContext {
-		
 		builder.Services.AddOptions();
 		builder.Services.AddMemoryCache();
 		builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
@@ -64,12 +60,11 @@ public static class StartupExtension {
 		builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 		builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 		builder.Services.AddControllersWithViews(option => {
-			option.EnableEndpointRouting = false; 
+			option.EnableEndpointRouting = false;
 			option.CacheProfiles.Add("default", new CacheProfile {
 				Duration = 10,
 				Location = ResponseCacheLocation.Any
 			});
-			
 		}).AddNewtonsoftJson(options => {
 			options.SerializerSettings.ContractResolver = new DefaultContractResolver();
 			options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -96,7 +91,6 @@ public static class StartupExtension {
 		builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 		builder.Services.AddTransient<IContentRepository, ContentRepository>();
 		builder.Services.AddTransient<IVoteRepository, VoteRepository>();
-		builder.Services.AddTransient<IBlockRepository, BlockRepository>();
 		builder.Services.AddTransient<ITopProductRepository, TopProductRepository>();
 		builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 		builder.Services.AddTransient<IDiscountRepository, DiscountRepository>();
@@ -189,14 +183,10 @@ public class ClaimRequirementAttribute : TypeFilterAttribute {
 public class ClaimRequirementFilter : IAuthorizationFilter {
 	private readonly DbContext _dbContext;
 
-	public ClaimRequirementFilter(Claim claim, DbContext dbContext) {
-		_dbContext = dbContext;
-	}
+	public ClaimRequirementFilter(Claim claim, DbContext dbContext) => _dbContext = dbContext;
 
 	public void OnAuthorization(AuthorizationFilterContext context) {
-		UserEntity? entity = _dbContext.Set<UserEntity>().FirstOrDefault(u => u.Id == context.HttpContext.User.Identity.Name);
-		if (entity is {IsLoggedIn: false}) {
-			context.Result = new ForbidResult();
-		}
+		UserEntity? entity = _dbContext.Set<UserEntity>().FirstOrDefault(u => context.HttpContext.User.Identity != null && u.Id == context.HttpContext.User.Identity.Name);
+		if (entity is {IsLoggedIn: false}) context.Result = new ForbidResult();
 	}
 }

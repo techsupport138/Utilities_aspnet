@@ -3,25 +3,25 @@ namespace Utilities_aspnet.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class CategoryController : BaseApiController {
-	private readonly ICategoryRepository _categoryRepository;
+	private readonly ICategoryRepository _repository;
 
-	public CategoryController(ICategoryRepository categoryRepository) => _categoryRepository = categoryRepository;
+	public CategoryController(ICategoryRepository repository) => _repository = repository;
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
-	public async Task<ActionResult<GenericResponse<CategoryEntity>>> Create(CategoryEntity dto) => Result(await _categoryRepository.Create(dto));
+	public async Task<ActionResult<GenericResponse<CategoryEntity>>> Create(CategoryEntity dto) => Result(await _repository.Create(dto));
 
 	[HttpGet]
-	public ActionResult<GenericResponse<IQueryable<CategoryEntity>>> Read() => Result(_categoryRepository.Read());
+	public ActionResult<GenericResponse<IQueryable<CategoryEntity>>> Read() => Result(_repository.Read());
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
-	public async Task<ActionResult<GenericResponse<CategoryEntity>>> Update(CategoryEntity dto) => Result(await _categoryRepository.Update(dto));
+	public async Task<ActionResult<GenericResponse<CategoryEntity>>> Update(CategoryEntity dto) => Result(await _repository.Update(dto));
 
 	[HttpDelete("{id:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
-	public async Task<IActionResult> Delete(Guid id) => Result(await _categoryRepository.Delete(id));
+	public async Task<IActionResult> Delete(Guid id) => Result(await _repository.Delete(id));
 }

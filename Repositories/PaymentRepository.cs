@@ -19,11 +19,11 @@ public interface IPaymentRepository {
 }
 
 public class PaymentRepository : IPaymentRepository {
-	private readonly DbContext _context;
+	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public PaymentRepository(DbContext context, IHttpContextAccessor httpContextAccessor) {
-		_context = context;
+	public PaymentRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
+		_dbContext = dbContext;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
@@ -31,13 +31,13 @@ public class PaymentRepository : IPaymentRepository {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
 		try {
-			UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
+			UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 			Payment payment = new(zarinPalMerchantId, amount.ToInt());
 			string callbackUrl = $"{Server.ServerAddress}/Payment/WalletCallBack/{user?.Id}/{amount}";
 			string desc = $"شارژ کیف پول به مبلغ {amount}";
 			PaymentRequestResponse? result = payment.PaymentRequest(desc, callbackUrl, "", user?.PhoneNumber).Result;
 
-			await _context.Set<TransactionEntity>().AddAsync(new TransactionEntity {
+			await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity {
 				Amount = amount,
 				Authority = result.Authority,
 				CreatedAt = DateTime.Now,
@@ -46,7 +46,7 @@ public class PaymentRepository : IPaymentRepository {
 				UserId = userId,
 				StatusId = TransactionStatus.Pending
 			});
-			await _context.SaveChangesAsync();
+			await _dbContext.SaveChangesAsync();
 
 			if (result.Status == 100 && result.Authority.Length == 36) {
 				string url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
@@ -69,24 +69,24 @@ public class PaymentRepository : IPaymentRepository {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 
-		UserEntity user = (await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId))!;
+		UserEntity user = (await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId))!;
 		Payment payment = new(zarinPalMerchantId, amount);
 		if (!status.Equals("OK")) {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 		PaymentVerificationResponse? verify = payment.Verification(authority).Result;
-		TransactionEntity? pay = _context.Set<TransactionEntity>().FirstOrDefault(x => x.Authority == authority);
+		TransactionEntity? pay = _dbContext.Set<TransactionEntity>().FirstOrDefault(x => x.Authority == authority);
 		if (pay != null) {
 			pay.StatusId = (TransactionStatus?) Math.Abs(verify.Status);
 			pay.RefId = verify.RefId;
 			pay.UpdatedAt = DateTime.Now;
-			_context.Set<TransactionEntity>().Update(pay);
+			_dbContext.Set<TransactionEntity>().Update(pay);
 		}
 		
 		user.Wallet += amount;
-		_context.Set<UserEntity>().Update(user);
+		_dbContext.Set<UserEntity>().Update(user);
 
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
 
@@ -94,13 +94,13 @@ public class PaymentRepository : IPaymentRepository {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
 		try {
-			ProductEntity product = (await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
-			UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
+			ProductEntity product = (await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
+			UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 			Payment payment = new(zarinPalMerchantId, product.Price.ToInt());
 			string callbackUrl = $"{Server.ServerAddress}/Payment/CallBack/{productId}";
 			string desc = $"خرید محصول {product.Title}";
 			PaymentRequestResponse? result = payment.PaymentRequest(desc, callbackUrl, "", user?.PhoneNumber).Result;
-			await _context.Set<TransactionEntity>().AddAsync(new TransactionEntity {
+			await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity {
 				Amount = product.Price.ToInt(),
 				Authority = result.Authority,
 				CreatedAt = DateTime.Now,
@@ -110,7 +110,7 @@ public class PaymentRepository : IPaymentRepository {
 				ProductId = productId,
 				StatusId = TransactionStatus.Pending
 			});
-			await _context.SaveChangesAsync();
+			await _dbContext.SaveChangesAsync();
 
 			if (result.Status == 100 && result.Authority.Length == 36) {
 				string url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
@@ -128,21 +128,21 @@ public class PaymentRepository : IPaymentRepository {
 		string authority,
 		string status,
 		string zarinPalMerchantId) {
-		ProductEntity product = (await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
+		ProductEntity product = (await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
 		Payment payment = new(zarinPalMerchantId, product.Price.ToInt());
 		if (!status.Equals("OK")) {
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 		PaymentVerificationResponse? verify = payment.Verification(authority).Result;
-		TransactionEntity? pay = await _context.Set<TransactionEntity>().FirstOrDefaultAsync(x => x.Authority == authority);
+		TransactionEntity? pay = await _dbContext.Set<TransactionEntity>().FirstOrDefaultAsync(x => x.Authority == authority);
 		if (pay != null) {
 			pay.StatusId = (TransactionStatus?) Math.Abs(verify.Status);
 			pay.RefId = verify.RefId;
 			pay.UpdatedAt = DateTime.Now;
-			_context.Set<TransactionEntity>().Update(pay);
+			_dbContext.Set<TransactionEntity>().Update(pay);
 		}
 
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
 }

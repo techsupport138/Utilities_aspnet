@@ -3,59 +3,65 @@ namespace Utilities_aspnet.Controllers;
 [ApiController]
 [Route("api/user")]
 public class UserController : BaseApiController {
-	private readonly IUserRepository _userRepository;
+	private readonly IUserRepository _repository;
 
-	public UserController(IUserRepository userRepository) => _userRepository = userRepository;
+	public UserController(IUserRepository repository) => _repository = repository;
 
 	[HttpPost("Register")]
-	public async Task<ActionResult<GenericResponse>> Register(RegisterDto dto) => Result(await _userRepository.Register(dto));
+	public async Task<ActionResult<GenericResponse>> Register(RegisterDto dto) => Result(await _repository.Register(dto));
 
 	[HttpPost("LoginWithPassword")]
-	public async Task<ActionResult<GenericResponse>> LoginWithPassword(LoginWithPasswordDto dto) => Result(await _userRepository.LoginWithPassword(dto));
+	public async Task<ActionResult<GenericResponse>> LoginWithPassword(LoginWithPasswordDto dto) => Result(await _repository.LoginWithPassword(dto));
 
 	[HttpPost("CheckUserName/{userName}")]
-	public async Task<ActionResult<GenericResponse>> CheckUserName(string userName) => Result(await _userRepository.CheckUserName(userName));
+	public async Task<ActionResult<GenericResponse>> CheckUserName(string userName) => Result(await _repository.CheckUserName(userName));
 
 	[HttpPost("GetVerificationCodeForLogin")]
 	public async Task<ActionResult<GenericResponse>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto)
-		=> Result(await _userRepository.GetVerificationCodeForLogin(dto));
+		=> Result(await _repository.GetVerificationCodeForLogin(dto));
 
 	[HttpPost("VerifyCodeForLogin")]
-	public async Task<ActionResult<GenericResponse>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) => Result(await _userRepository.VerifyCodeForLogin(dto));
+	public async Task<ActionResult<GenericResponse>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) => Result(await _repository.VerifyCodeForLogin(dto));
 
 	[HttpPost("GetTokenForTest/{mobile}")]
-	public async Task<ActionResult<GenericResponse>> GetTokenForTest(string mobile) => Result(await _userRepository.GetTokenForTest(mobile));
+	public async Task<ActionResult<GenericResponse>> GetTokenForTest(string mobile) => Result(await _repository.GetTokenForTest(mobile));
 
 	[HttpDelete("Logout")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
-	public async Task<ActionResult<GenericResponse>> Logout() => Result(await _userRepository.Logout());
+	public async Task<ActionResult<GenericResponse>> Logout() => Result(await _repository.Logout());
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
 	[AllowAnonymous]
 	[HttpPost("Filter")]
-	public async Task<ActionResult<GenericResponse<IEnumerable<UserEntity>>>> Filter(UserFilterDto dto) => Result(await _userRepository.Filter(dto));
+	public async Task<ActionResult<GenericResponse<IEnumerable<UserEntity>>>> Filter(UserFilterDto dto) => Result(await _repository.Filter(dto));
 
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
 	[AllowAnonymous]
 	[HttpGet("{id}")]
 	public async Task<ActionResult<GenericResponse<UserEntity?>>> ReadById(string id, bool showVotes = false)
-		=> Result(await _userRepository.ReadById(id, showVotes: showVotes));
+		=> Result(await _repository.ReadById(id, showVotes: showVotes));
 
 	[HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
-	public async Task<ActionResult<GenericResponse<UserEntity>>> Update(UserCreateUpdateDto dto) => Result(await _userRepository.Update(dto));
+	public async Task<ActionResult<GenericResponse<UserEntity>>> Update(UserCreateUpdateDto dto) => Result(await _repository.Update(dto));
 
 	[HttpDelete("{id}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
-	public async Task<ActionResult<GenericResponse>> Delete(string id) => Result(await _userRepository.Delete(id));
+	public async Task<ActionResult<GenericResponse>> Delete(string id) => Result(await _repository.Delete(id));
 
 	[HttpDelete("DeleteFromTeam/{teamId:guid}")]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
-	public async Task<ActionResult<GenericResponse>> DeleteFromTeam(Guid teamId) => Result(await _userRepository.RemovalFromTeam(teamId));
+	public async Task<ActionResult<GenericResponse>> DeleteFromTeam(Guid teamId) => Result(await _repository.RemovalFromTeam(teamId));
+	
+	[HttpGet("ReadMyBlockList")]
+	public ActionResult<GenericResponse<IQueryable<UserEntity>>> ReadMine() => Result(_repository.ReadMyBlockList());
+
+	[HttpPost("ToggleBlock")]
+	public async Task<ActionResult<GenericResponse>> Create(string userId) => Result(await _repository.ToggleBlock(userId));
 }

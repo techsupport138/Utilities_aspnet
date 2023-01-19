@@ -37,3 +37,7 @@ global using Swashbuckle.AspNetCore.SwaggerUI;
 global using Zarinpal;
 global using Zarinpal.Models;
 global using System.IO.Compression;
+global using Ghasedak.Core;
+global using System.Security.Cryptography;
+global using AspNetCoreRateLimit;
+global using Microsoft.AspNetCore.Mvc.Filters;

@@ -2,7 +2,7 @@ namespace Utilities_aspnet.Utilities;
 
 public static class EnumExtension {
 	public static IEnumerable<IdTitleDto> GetValues<T>() {
-		return (from int itemType in Enum.GetValues(typeof(T))
+		return (from int itemType in Enum.GetValues(typeof(T)) 
 			select new IdTitleDto {Title = Enum.GetName(typeof(T), itemType), Id = itemType}).ToList();
 	}
 }

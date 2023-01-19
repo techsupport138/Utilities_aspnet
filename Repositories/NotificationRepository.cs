@@ -7,16 +7,16 @@ public interface INotificationRepository {
 }
 
 public class NotificationRepository : INotificationRepository {
-	private readonly DbContext _context;
+	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public NotificationRepository(DbContext context, IHttpContextAccessor httpContextAccessor) {
-		_context = context;
+	public NotificationRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
+		_dbContext = dbContext;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
 	public GenericResponse<IQueryable<NotificationEntity>> Read() {
-		IQueryable<NotificationEntity> i = _context.Set<NotificationEntity>()
+		IQueryable<NotificationEntity> i = _dbContext.Set<NotificationEntity>()
 			.Include(x => x.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x!.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x!.Categories)
@@ -29,7 +29,7 @@ public class NotificationRepository : INotificationRepository {
 	}
 
 	public async Task<GenericResponse> UpdateSeenStatus(IEnumerable<Guid> ids, SeenStatus seenStatus) {
-		IQueryable<NotificationEntity> i = _context.Set<NotificationEntity>()
+		IQueryable<NotificationEntity> i = _dbContext.Set<NotificationEntity>()
 			.Include(x => x.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x!.Media)
 			.Include(x => x.CreatorUser).ThenInclude(x => x!.Categories)
@@ -39,9 +39,9 @@ public class NotificationRepository : INotificationRepository {
 
 		foreach (NotificationEntity e in i) {
 			e.SeenStatus = seenStatus;
-			_context.Update(e);
+			_dbContext.Update(e);
 		}
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
 
@@ -57,15 +57,15 @@ public class NotificationRepository : INotificationRepository {
 			UpdatedAt = DateTime.Now,
 			Visited = false
 		};
-		await _context.Set<NotificationEntity>().AddAsync(notification);
-		await _context.SaveChangesAsync();
+		await _dbContext.Set<NotificationEntity>().AddAsync(notification);
+		await _dbContext.SaveChangesAsync();
 		if (model.Media != null) {
-			await _context.Set<MediaEntity>().AddAsync(new MediaEntity {
+			await _dbContext.Set<MediaEntity>().AddAsync(new MediaEntity {
 				NotificationId = notification.Id,
 				CreatedAt = DateTime.Now,
 				FileName = model.Media
 			});
-			await _context.SaveChangesAsync();
+			await _dbContext.SaveChangesAsync();
 		}
 
 		return new GenericResponse();

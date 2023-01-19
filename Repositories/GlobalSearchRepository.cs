@@ -5,14 +5,14 @@ public interface IGlobalSearchRepository {
 }
 
 public class GlobalSearchRepository : IGlobalSearchRepository {
-	private readonly DbContext _context;
+	private readonly DbContext _dbContext;
 
-	public GlobalSearchRepository(DbContext context) => _context = context;
+	public GlobalSearchRepository(DbContext dbContext) => _dbContext = dbContext;
 
 	public async Task<GenericResponse<GlobalSearchDto>> Filter(GlobalSearchParams filter, string? userId) {
 		GlobalSearchDto model = new();
 
-		IEnumerable<CategoryEntity> categoryList = await _context.Set<CategoryEntity>()
+		IEnumerable<CategoryEntity> categoryList = await _dbContext.Set<CategoryEntity>()
 			.Include(x => x.Media)
 			.Where(x => x.Title.Contains(filter.Title) && filter.Category && x.DeletedAt == null && (x.Title.Contains(filter.Query) ||
 			                                                                                         x.Subtitle.Contains(filter.Query) ||
@@ -20,7 +20,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 			                                                                                         x.TitleTr2.Contains(filter.Query)))
 			.OrderByDescending(x => x.CreatedAt).ToListAsync();
 
-		IQueryable<UserEntity> userList = _context.Set<UserEntity>().Where(x => x.UserName.Contains(filter.Title) && filter.User ||
+		IQueryable<UserEntity> userList = _dbContext.Set<UserEntity>().Where(x => x.UserName.Contains(filter.Title) && filter.User ||
 		                                                                        x.FullName.Contains(filter.Title) && filter.User ||
 		                                                                        x.AppUserName.Contains(filter.Title) && filter.User &&
 		                                                                        (x.FullName.Contains(filter.Query) || x.AppUserName.Contains(filter.Query) ||
@@ -30,7 +30,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 			? userList.OrderByDescending(x => x.CreatedAt)
 			: userList.Include(u => u.Media).Include(u => u.Categories).Include(u => u.Products).OrderByDescending(x => x.CreatedAt);
 
-		IQueryable<ProductEntity> productList = _context.Set<ProductEntity>()
+		IQueryable<ProductEntity> productList = _dbContext.Set<ProductEntity>()
 			.Where(x => x.Title.Contains(filter.Title) && filter.Product && x.DeletedAt == null && (x.Title.Contains(filter.Query) ||
 			                                                                                        x.Subtitle.Contains(filter.Query) ||
 			                                                                                        x.Description.Contains(filter.Query) ||
@@ -47,7 +47,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 				.Where(x => x.DeletedAt == null);
 		else
 			productList =
-				_context.Set<ProductEntity>().Where(x => x.Title.Contains(filter.Title) && filter.Product && x.DeletedAt == null)
+				_dbContext.Set<ProductEntity>().Where(x => x.Title.Contains(filter.Title) && filter.Product && x.DeletedAt == null)
 					.Include(i => i.Media)
 					.Include(i => i.Categories)
 					.Include(i => i.Comments.Where(x => x.ParentId == null)).ThenInclude(x => x.Children)
@@ -70,7 +70,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 		}
 
 		if (filter.IsFollowing) {
-			List<string?> userFollowing = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId).Select(x => x.FollowsUserId).ToListAsync();
+			List<string?> userFollowing = await _dbContext.Set<FollowEntity>().Where(x => x.FollowerUserId == userId).Select(x => x.FollowsUserId).ToListAsync();
 
 			productList = productList.Where(x => userFollowing.Contains(x.UserId));
 		}

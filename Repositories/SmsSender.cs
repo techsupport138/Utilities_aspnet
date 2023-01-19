@@ -1,6 +1,4 @@
-﻿using Ghasedak.Core;
-
-namespace Utilities_aspnet.Repositories;
+﻿namespace Utilities_aspnet.Repositories;
 
 public interface ISmsSender {
 	void SendSms(string mobileNumber, string message);

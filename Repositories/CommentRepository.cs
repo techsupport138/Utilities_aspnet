@@ -11,21 +11,21 @@ public interface ICommentRepository {
 }
 
 public class CommentRepository : ICommentRepository {
-	private readonly DbContext _context;
+	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 	private readonly INotificationRepository _notificationRepository;
 	
 	public CommentRepository(
-		DbContext context,
+		DbContext dbContext,
 		IHttpContextAccessor httpContextAccessor,
 		INotificationRepository notificationRepository) {
-		_context = context;
+		_dbContext = dbContext;
 		_httpContextAccessor = httpContextAccessor;
 		_notificationRepository = notificationRepository;
 	}
 
 	public GenericResponse<IQueryable<CommentEntity>?> ReadByProductId(Guid id) {
-		IQueryable<CommentEntity> comment = _context.Set<CommentEntity>()
+		IQueryable<CommentEntity> comment = _dbContext.Set<CommentEntity>()
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
 			.Include(x => x.LikeComments)
@@ -38,7 +38,7 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto) {
-		IQueryable<CommentEntity> q = _context.Set<CommentEntity>().Where(x => x.DeletedAt == null);
+		IQueryable<CommentEntity> q = _dbContext.Set<CommentEntity>().Where(x => x.DeletedAt == null);
 
 		if (dto.ProductId.HasValue) q = q.Where(x => x.ProductId == dto.ProductId);
 		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
@@ -58,7 +58,7 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public async Task<GenericResponse<CommentEntity?>> Read(Guid id) {
-		CommentEntity? comment = await _context.Set<CommentEntity>()
+		CommentEntity? comment = await _dbContext.Set<CommentEntity>()
 			.Include(x => x.User).ThenInclude(x => x!.Media)
 			.Include(x => x.Media)
 			.Include(x => x.LikeComments)
@@ -84,11 +84,11 @@ public class CommentRepository : ICommentRepository {
 			UserId = userId,
 			Status = dto.Status
 		};
-		await _context.AddAsync(comment);
-		await _context.SaveChangesAsync();
+		await _dbContext.AddAsync(comment);
+		await _dbContext.SaveChangesAsync();
 
 		try {
-			ProductEntity? product = _context.Set<ProductEntity>()
+			ProductEntity? product = _dbContext.Set<ProductEntity>()
 				.Include(x => x.Media)
 				.Include(x => x.User)
 				.FirstOrDefault(x => x.Id == comment.ProductId);
@@ -114,23 +114,23 @@ public class CommentRepository : ICommentRepository {
 
 	public async Task<GenericResponse<CommentEntity?>> ToggleLikeComment(Guid commentId) {
 		string userId = _httpContextAccessor.HttpContext!.User.Identity!.Name!;
-		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == commentId);
-		LikeCommentEntity? oldLikeComment = await _context.Set<LikeCommentEntity>()
+		CommentEntity? comment = await _dbContext.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == commentId);
+		LikeCommentEntity? oldLikeComment = await _dbContext.Set<LikeCommentEntity>()
 			.FirstOrDefaultAsync(x => x.CommentId == commentId && x.UserId == userId);
 		comment.Score ??= 0;
 		if (oldLikeComment != null) {
 			comment.Score -= 1;
-			_context.Set<LikeCommentEntity>().Remove(oldLikeComment);
-			await _context.SaveChangesAsync();
+			_dbContext.Set<LikeCommentEntity>().Remove(oldLikeComment);
+			await _dbContext.SaveChangesAsync();
 		}
 		else {
 			comment.Score += 1;
-			await _context.AddAsync(new LikeCommentEntity {UserId = userId, CommentId = commentId});
-			await _context.SaveChangesAsync();
-			UserEntity? commectUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == comment.UserId);
+			await _dbContext.AddAsync(new LikeCommentEntity {UserId = userId, CommentId = commentId});
+			await _dbContext.SaveChangesAsync();
+			UserEntity? commectUser = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == comment.UserId);
 			if (commectUser != null) {
 				commectUser.Point += 1;
-				await _context.SaveChangesAsync();
+				await _dbContext.SaveChangesAsync();
 			}
 		}
 
@@ -138,7 +138,7 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public async Task<GenericResponse<CommentEntity?>> Update(Guid id, CommentCreateUpdateDto dto) {
-		CommentEntity? comment = await _context.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		CommentEntity? comment = await _dbContext.Set<CommentEntity>().FirstOrDefaultAsync(x => x.Id == id);
 
 		if (comment == null) return new GenericResponse<CommentEntity?>(null);
 		if (!string.IsNullOrEmpty(dto.Comment)) comment.Comment = dto.Comment;
@@ -147,18 +147,18 @@ public class CommentRepository : ICommentRepository {
 		if (dto.Status.HasValue) comment.Status = dto.Status;
 
 		comment.UpdatedAt = DateTime.Now;
-		_context.Set<CommentEntity>().Update(comment);
-		await _context.SaveChangesAsync();
+		_dbContext.Set<CommentEntity>().Update(comment);
+		await _dbContext.SaveChangesAsync();
 
 		return await Read(comment.Id);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		CommentEntity? comment = await _context.Set<CommentEntity>().Include(p => p.Children).FirstOrDefaultAsync(x => x.Id == id);
+		CommentEntity? comment = await _dbContext.Set<CommentEntity>().Include(p => p.Children).FirstOrDefaultAsync(x => x.Id == id);
 		if (comment == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 		comment.DeletedAt = DateTime.Now;
-		_context.Update(comment);
-		await _context.SaveChangesAsync();
+		_dbContext.Update(comment);
+		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
 }

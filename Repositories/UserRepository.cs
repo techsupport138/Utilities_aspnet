@@ -13,33 +13,35 @@ public interface IUserRepository {
 	Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model);
 	Task<GenericResponse> RemovalFromTeam(Guid teamId);
 	Task<GenericResponse> Logout();
+	GenericResponse<IQueryable<UserEntity>> ReadMyBlockList();
+	Task<GenericResponse> ToggleBlock(string userId);
 }
 
 public class UserRepository : IUserRepository {
-	private readonly DbContext _context;
+	private readonly DbContext _dbContext;
 	private readonly UserManager<UserEntity> _userManager;
 	private readonly ISmsSender _sms;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
 	public UserRepository(
-		DbContext context,
+		DbContext dbContext,
 		UserManager<UserEntity> userManager,
 		ISmsSender sms,
 		IHttpContextAccessor httpContextAccessor) {
-		_context = context;
+		_dbContext = dbContext;
 		_userManager = userManager;
 		_sms = sms;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
 	public async Task<GenericResponse> CheckUserName(string userName) {
-		bool existUserName = await _context.Set<UserEntity>().AnyAsync(x => x.AppUserName == userName);
+		bool existUserName = await _dbContext.Set<UserEntity>().AnyAsync(x => x.AppUserName == userName);
 		return existUserName ? new GenericResponse(UtilitiesStatusCodes.BadRequest, "Username is available") : new GenericResponse();
 	}
 
 	public async Task<GenericResponse<UserEntity?>> ReadById(string idOrUserName, string? token = null, bool showVotes = false) {
 		bool isUserId = Guid.TryParse(idOrUserName, out _);
-		UserEntity? entity = await _context.Set<UserEntity>()
+		UserEntity? entity = await _dbContext.Set<UserEntity>()
 			.Include(u => u.Media)
 			.Include(u => u.Categories)!.ThenInclude(u => u.Media)
 			.Include(u => u.Products!.Where(x => x.DeletedAt == null)).ThenInclude(x => x.Media)
@@ -51,9 +53,9 @@ public class UserRepository : IUserRepository {
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, $"User: {idOrUserName} Not Found");
 
 		entity.CountProducts = entity.Products?.Count();
-		List<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
+		List<FollowEntity> follower = await _dbContext.Set<FollowEntity>().Where(x => x.FollowsUserId == entity.Id).ToListAsync();
 		entity.CountFollowers = follower.Count;
-		List<FollowEntity> following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == entity.Id).ToListAsync();
+		List<FollowEntity> following = await _dbContext.Set<FollowEntity>().Where(x => x.FollowerUserId == entity.Id).ToListAsync();
 		entity.CountFollowing = following.Count;
 
 		entity.IsAdmin = await _userManager.IsInRoleAsync(entity, "Admin");
@@ -62,7 +64,7 @@ public class UserRepository : IUserRepository {
 
 		try {
 			if (_httpContextAccessor.HttpContext?.User.Identity?.Name != null) {
-				entity.IsFollowing = await _context.Set<FollowEntity>()
+				entity.IsFollowing = await _dbContext.Set<FollowEntity>()
 					.AnyAsync(x => x.FollowsUserId == entity.Id && x.FollowerUserId == _httpContextAccessor.HttpContext.User.Identity.Name);
 			}
 		}
@@ -72,7 +74,7 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Update(UserCreateUpdateDto dto) {
-		UserEntity? entity = _context.Set<UserEntity>()
+		UserEntity? entity = _dbContext.Set<UserEntity>()
 			.Include(x => x.Categories)
 			.Include(x => x.Media)
 			.FirstOrDefault(x => x.Id == dto.Id);
@@ -82,13 +84,13 @@ public class UserRepository : IUserRepository {
 
 		FillUserData(dto, entity);
 
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 
 		return new GenericResponse<UserEntity?>(entity);
 	}
 
 	public async Task<GenericResponse<IEnumerable<UserEntity>>> Filter(UserFilterDto dto) {
-		IQueryable<UserEntity> dbSet = _context.Set<UserEntity>().AsNoTracking();
+		IQueryable<UserEntity> dbSet = _dbContext.Set<UserEntity>().AsNoTracking();
 
 		if (dto.ShowMedia.IsTrue()) dbSet = dbSet.Include(u => u.Media);
 		if (dto.ShowCategories.IsTrue()) dbSet = dbSet.Include(u => u.Categories);
@@ -101,7 +103,7 @@ public class UserRepository : IUserRepository {
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
 		if (dto.ShowFollowings.IsTrue()) {
-			List<string?> follows = _context.Set<FollowEntity>().Where(x => x.FollowerUserId == userId).Select(x => x.FollowsUserId).ToList();
+			List<string?> follows = _dbContext.Set<FollowEntity>().Where(x => x.FollowerUserId == userId).Select(x => x.FollowsUserId).ToList();
 			q = q.Where(u => follows.Contains(u.Id));
 		}
 
@@ -115,7 +117,7 @@ public class UserRepository : IUserRepository {
 
 		if (userId != null) {
 			foreach (UserEntity item in entity) {
-				item.IsFollowing = await _context.Set<FollowEntity>().AnyAsync(x => x.FollowsUserId == item.Id && x.FollowerUserId == userId);
+				item.IsFollowing = await _dbContext.Set<FollowEntity>().AnyAsync(x => x.FollowsUserId == item.Id && x.FollowerUserId == userId);
 			}
 		}
 
@@ -123,43 +125,43 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse> Delete(string id) {
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == id);
 
 		if (user == null)
 			return new GenericResponse(UtilitiesStatusCodes.NotFound, "User notfound");
 
 		user.DeletedAt = DateTime.Now;
 
-		_context.Set<UserEntity>().Update(user);
-		await _context.SaveChangesAsync();
+		_dbContext.Set<UserEntity>().Update(user);
+		await _dbContext.SaveChangesAsync();
 
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
 	public async Task<GenericResponse> RemovalFromTeam(Guid teamId) {
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name);
+		UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name);
 
 		if (user == null)
 			return new GenericResponse(UtilitiesStatusCodes.NotFound, "User notfound");
-		TeamEntity? team = await _context.Set<TeamEntity>().FirstOrDefaultAsync(x => x.UserId == user.Id && x.Id == teamId);
+		TeamEntity? team = await _dbContext.Set<TeamEntity>().FirstOrDefaultAsync(x => x.UserId == user.Id && x.Id == teamId);
 		if (team == null)
 			return new GenericResponse(UtilitiesStatusCodes.NotFound, "Team notfound");
 
-		_context.Set<TeamEntity>().Remove(team);
-		await _context.SaveChangesAsync();
+		_dbContext.Set<TeamEntity>().Remove(team);
+		await _dbContext.SaveChangesAsync();
 
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
 	public async Task<GenericResponse> Logout() {
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name);
+		UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == _httpContextAccessor.HttpContext!.User.Identity!.Name);
 		user!.IsLoggedIn = false;
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
 
 	public async Task<GenericResponse<UserEntity?>> GetTokenForTest(string mobile) {
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile);
+		UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile);
 
 		if (user == null)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "شماره موبایل وارد شده یافت نشد");
@@ -168,7 +170,7 @@ public class UserRepository : IUserRepository {
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "کاربر به حالت تعلیق در آمده است");
 
 		user.IsLoggedIn = true;
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 		JwtSecurityToken token = await CreateToken(user);
 		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result, UtilitiesStatusCodes.Success,
 		                                        "Success");
@@ -196,7 +198,7 @@ public class UserRepository : IUserRepository {
 
 	public async Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model) {
 		UserEntity? user = (await _userManager.FindByEmailAsync(model.Email) ?? await _userManager.FindByNameAsync(model.Email))
-		                   ?? await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
+		                   ?? await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == model.Email);
 
 		if (user == null) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.NotFound, "User not found");
 
@@ -205,7 +207,7 @@ public class UserRepository : IUserRepository {
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.BadRequest, "The password is incorrect!");
 
 		user.IsLoggedIn = true;
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 		JwtSecurityToken token = await CreateToken(user);
 
 		return new GenericResponse<UserEntity?>(
@@ -214,7 +216,7 @@ public class UserRepository : IUserRepository {
 	}
 
 	public async Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser) {
-		UserEntity? model = await _context.Set<UserEntity>()
+		UserEntity? model = await _dbContext.Set<UserEntity>()
 			.FirstOrDefaultAsync(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email || x.PhoneNumber == aspNetUser.PhoneNumber);
 		if (model != null)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.UserAlreadyExist, "This email or username already exists");
@@ -255,7 +257,7 @@ public class UserRepository : IUserRepository {
 		string mobile = dto.Mobile.Replace("+", "");
 		if (mobile[0].ToString() != "0") mobile = mobile.Insert(0, "0");
 		if (mobile.Length is > 12 or < 9) return new GenericResponse<string?>("شماره موبایل وارد شده صحیح نیست", UtilitiesStatusCodes.BadRequest);
-		UserEntity? existingUser = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
+		UserEntity? existingUser = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
 		                                                                                     x.PhoneNumber == mobile ||
 		                                                                                     x.AppUserName == mobile ||
 		                                                                                     x.AppPhoneNumber == mobile ||
@@ -291,14 +293,14 @@ public class UserRepository : IUserRepository {
 	public async Task<GenericResponse<UserEntity?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto) {
 		string mobile = dto.Mobile.Replace("+", "");
 
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile || x.Email == mobile);
+		UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.PhoneNumber == mobile || x.Email == mobile);
 
 		if (user == null) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.UserNotFound, "کاربر یافت نشد");
 
 		if (user.Suspend) return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.UserSuspended, "کاربر به حالت تعلیق در آمده است");
 
 		user.IsLoggedIn = true;
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 		JwtSecurityToken token = await CreateToken(user);
 
 		if (Verify(user.Id, dto.VerificationCode) != OtpResult.Ok)
@@ -306,6 +308,30 @@ public class UserRepository : IUserRepository {
 
 		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result,
 		                                        UtilitiesStatusCodes.Success, "Success");
+	}
+	
+	public GenericResponse<IQueryable<UserEntity>> ReadMyBlockList() {
+		IQueryable<UserEntity?> blocks = _dbContext.Set<BlockEntity>()
+			.Include(x => x.BlockedUser).ThenInclude(x => x!.Media)
+			.Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name)
+			.AsNoTracking()
+			.Select(x => x.BlockedUser);
+		return new GenericResponse<IQueryable<UserEntity>>(blocks);
+	}
+
+	public async Task<GenericResponse> ToggleBlock(string userId) {
+		string? user = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+		BlockEntity? block = await _dbContext.Set<BlockEntity>().FirstOrDefaultAsync(x => x.UserId == user && x.BlockedUserId == userId);
+		if (block != null) _dbContext.Set<BlockEntity>().Remove(block);
+		else {
+			block = new BlockEntity {
+				UserId = user,
+				BlockedUserId = userId
+			};
+			await _dbContext.Set<BlockEntity>().AddAsync(block);
+		}
+		await _dbContext.SaveChangesAsync();
+		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
 
 	#endregion
@@ -353,7 +379,7 @@ public class UserRepository : IUserRepository {
 		if (dto.Categories.IsNotNullOrEmpty()) {
 			List<CategoryEntity> list = new();
 			foreach (Guid item in dto.Categories!) {
-				CategoryEntity? e = _context.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item).Result;
+				CategoryEntity? e = _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == item).Result;
 				if (e != null) list.Add(e);
 			}
 
@@ -362,12 +388,12 @@ public class UserRepository : IUserRepository {
 	}
 
 	private async Task<GrowthRateReadDto?> GetGrowthRate(string? id) {
-		IEnumerable<CommentEntity> myComments = await _context.Set<CommentEntity>().Where(x => x.UserId == id).ToListAsync();
-		IEnumerable<Guid> productIds = await _context.Set<ProductEntity>().Where(x => x.UserId == id).Select(x => x.Id).ToListAsync();
-		IEnumerable<CommentEntity> comments = await _context.Set<CommentEntity>().Where(x => productIds.Contains(x.ProductId ?? Guid.Empty)).ToListAsync();
+		IEnumerable<CommentEntity> myComments = await _dbContext.Set<CommentEntity>().Where(x => x.UserId == id).ToListAsync();
+		IEnumerable<Guid> productIds = await _dbContext.Set<ProductEntity>().Where(x => x.UserId == id).Select(x => x.Id).ToListAsync();
+		IEnumerable<CommentEntity> comments = await _dbContext.Set<CommentEntity>().Where(x => productIds.Contains(x.ProductId ?? Guid.Empty)).ToListAsync();
 
-		IEnumerable<FollowEntity> follower = await _context.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
-		IEnumerable<FollowEntity> following = await _context.Set<FollowEntity>().Where(x => x.FollowerUserId == id).ToListAsync();
+		IEnumerable<FollowEntity> follower = await _dbContext.Set<FollowEntity>().Where(x => x.FollowsUserId == id).ToListAsync();
+		IEnumerable<FollowEntity> following = await _dbContext.Set<FollowEntity>().Where(x => x.FollowerUserId == id).ToListAsync();
 
 		DateTime saturday = DateTime.Today.AddDays(-(int) DateTime.Today.DayOfWeek + (int) DayOfWeek.Saturday);
 		DateTime sunday = DateTime.Today.AddDays(-(int) DateTime.Today.DayOfWeek);
@@ -416,20 +442,20 @@ public class UserRepository : IUserRepository {
 
 	private async Task<bool> SendOtp(string userId, int codeLength) {
 		DateTime dd = DateTime.Now.AddHours(-24);
-		IQueryable<OtpEntity> oldOtp = _context.Set<OtpEntity>().Where(x => x.UserId == userId && x.CreatedAt > dd);
+		IQueryable<OtpEntity> oldOtp = _dbContext.Set<OtpEntity>().Where(x => x.UserId == userId && x.CreatedAt > dd);
 		if (oldOtp.Count() >= 3) return false;
 
 		string newOtp = Utils.Random(codeLength).ToString();
-		_context.Set<OtpEntity>().Add(new OtpEntity {UserId = userId, OtpCode = newOtp, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now});
-		UserEntity? user = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
+		_dbContext.Set<OtpEntity>().Add(new OtpEntity {UserId = userId, OtpCode = newOtp, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now});
+		UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 		_sms.SendSms(user?.PhoneNumber!, newOtp);
-		await _context.SaveChangesAsync();
+		await _dbContext.SaveChangesAsync();
 		return true;
 	}
 
 	private OtpResult Verify(string userId, string otp) {
 		if (otp == "1375") return OtpResult.Ok;
-		IQueryable<OtpEntity> model = _context.Set<OtpEntity>().Where(x => x.UserId == userId &&
+		IQueryable<OtpEntity> model = _dbContext.Set<OtpEntity>().Where(x => x.UserId == userId &&
 		                                                                   x.CreatedAt > DateTime.Now.AddMinutes(-5) &&
 		                                                                   x.OtpCode == otp);
 		return model.IsNotNullOrEmpty() ? OtpResult.Ok : OtpResult.Incorrect;

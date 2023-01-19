@@ -9,29 +9,29 @@ public interface IProductRepositoryV2 {
 }
 
 public class ProductRepositoryV2 : IProductRepositoryV2 {
-	private readonly DbContext _context;
+	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public ProductRepositoryV2(DbContext context, IHttpContextAccessor httpContextAccessor) {
-		_context = context;
+	public ProductRepositoryV2(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
+		_dbContext = dbContext;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
 		ProductEntity entity = new();
 
-		ProductEntity e = await entity.FillDataV2(dto, _context);
+		ProductEntity e = await entity.FillDataV2(dto, _dbContext);
 		e.VisitsCount = 1;
 		e.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
 		e.CreatedAt = DateTime.Now;
-		EntityEntry<ProductEntity> i = await _context.Set<ProductEntity>().AddAsync(e, ct);
-		await _context.SaveChangesAsync(ct);
+		EntityEntry<ProductEntity> i = await _dbContext.Set<ProductEntity>().AddAsync(e, ct);
+		await _dbContext.SaveChangesAsync(ct);
 
 		return new GenericResponse<ProductEntity>(i.Entity);
 	}
 
 	public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto) {
-		IQueryable<ProductEntity> q = _context.Set<ProductEntity>();
+		IQueryable<ProductEntity> q = _dbContext.Set<ProductEntity>();
 		q = q.Where(x => x.DeletedAt == null);
 
 		if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
@@ -144,7 +144,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	}
 
 	public async Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct) {
-		ProductEntity? i = await _context.Set<ProductEntity>()
+		ProductEntity? i = await _dbContext.Set<ProductEntity>()
 			.Include(i => i.Media)
 			.Include(i => i.Categories).ThenInclude(x => x.Media)
 			.Include(i => i.Reports)
@@ -161,14 +161,14 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 
 		if (i.VisitsCount == null) i.VisitsCount = 1;
 		else i.VisitsCount += 1;
-		_context.Update(i);
-		await _context.SaveChangesAsync(ct);
+		_dbContext.Update(i);
+		await _dbContext.SaveChangesAsync(ct);
 
 		return new GenericResponse<ProductEntity?>(i);
 	}
 
 	public async Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct) {
-		ProductEntity? entity = await _context.Set<ProductEntity>()
+		ProductEntity? entity = await _dbContext.Set<ProductEntity>()
 			.Include(x => x.Categories)
 			.Include(x => x.Teams)
 			.Where(x => x.Id == dto.Id)
@@ -177,19 +177,19 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (entity == null)
 			return new GenericResponse<ProductEntity>(new ProductEntity());
 
-		ProductEntity e = await entity.FillDataV2(dto, _context);
-		_context.Update(e);
-		await _context.SaveChangesAsync(ct);
+		ProductEntity e = await entity.FillDataV2(dto, _dbContext);
+		_dbContext.Update(e);
+		await _dbContext.SaveChangesAsync(ct);
 
 		return new GenericResponse<ProductEntity>(e);
 	}
 
 	public async Task<GenericResponse> Delete(Guid id, CancellationToken ct) {
-		ProductEntity? i = await _context.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == id, ct);
+		ProductEntity? i = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == id, ct);
 		if (i != null) {
 			i.DeletedAt = DateTime.Now;
-			_context.Update(i);
-			await _context.SaveChangesAsync(ct);
+			_dbContext.Update(i);
+			await _dbContext.SaveChangesAsync(ct);
 			return new GenericResponse(message: "Deleted");
 		}
 		return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");

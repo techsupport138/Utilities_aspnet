@@ -6,12 +6,12 @@ public interface IUploadRepository {
 }
 
 public class UploadRepository : IUploadRepository {
-	private readonly DbContext _context;
+	private readonly DbContext _dbContext;
 	private readonly IMediaRepository _mediaRepository;
 
-	public UploadRepository(DbContext context, IMediaRepository mediaRepository) {
+	public UploadRepository(DbContext dbContext, IMediaRepository mediaRepository) {
 		_mediaRepository = mediaRepository;
-		_context = context;
+		_dbContext = dbContext;
 	}
 
 	public async Task<GenericResponse<IEnumerable<MediaEntity>?>> Upload(UploadDto model) {
@@ -22,10 +22,10 @@ public class UploadRepository : IUploadRepository {
 				string folder = "";
 				if (model.UserId != null) {
 					folder = "Users";
-					List<MediaEntity> userMedia = _context.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
+					List<MediaEntity> userMedia = _dbContext.Set<MediaEntity>().Where(x => x.UserId == model.UserId).ToList();
 					if (userMedia.Any()) {
-						_context.Set<MediaEntity>().RemoveRange(userMedia);
-						await _context.SaveChangesAsync();
+						_dbContext.Set<MediaEntity>().RemoveRange(userMedia);
+						await _dbContext.SaveChangesAsync();
 					}
 				}
 
@@ -52,8 +52,8 @@ public class UploadRepository : IUploadRepository {
 					GroupChatId = model.GroupChatId,
 					GroupChatMessageId = model.GroupChatMessageId
 				};
-				await _context.Set<MediaEntity>().AddAsync(media);
-				await _context.SaveChangesAsync();
+				await _dbContext.Set<MediaEntity>().AddAsync(media);
+				await _dbContext.SaveChangesAsync();
 				medias.Add(media);
 
 				_mediaRepository.SaveMedia(file, name, folder);
@@ -74,8 +74,8 @@ public class UploadRepository : IUploadRepository {
 				         Size = model.Size,
 				         NotificationId = model.NotificationId
 			         })) {
-				await _context.Set<MediaEntity>().AddAsync(media);
-				await _context.SaveChangesAsync();
+				await _dbContext.Set<MediaEntity>().AddAsync(media);
+				await _dbContext.SaveChangesAsync();
 				medias.Add(media);
 			}
 		}
@@ -84,11 +84,11 @@ public class UploadRepository : IUploadRepository {
 	}
 
 	public async Task<GenericResponse> Delete(Guid id) {
-		MediaEntity? media = await _context.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		MediaEntity? media = await _dbContext.Set<MediaEntity>().FirstOrDefaultAsync(x => x.Id == id);
 		if (media == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 
-		_context.Set<MediaEntity>().Remove(media);
-		await _context.SaveChangesAsync();
+		_dbContext.Set<MediaEntity>().Remove(media);
+		await _dbContext.SaveChangesAsync();
 
 		return new GenericResponse();
 	}
