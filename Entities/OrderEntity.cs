@@ -96,11 +96,31 @@ public class OrderFilterDto {
 	public double? SendPrice { get; set; }
 	public SendType? SendType { get; set; }
 	public PayType? PayType { get; set; }
-	public DateTime? PayDateTime { get; set; }
 	public string? PayNumber { get; set; }
+	public DateTime? PayDateTime { get; set; }
 	public DateTime? ReceivedDate { get; set; }
+	public DateTime? StartDate { get; set; }
+	public DateTime? EndDate { get; set; }
 	public string? UserId { get; set; }
 	public string? ProductOwnerId { get; set; }
 	public int PageSize { get; set; } = 100;
 	public int PageNumber { get; set; } = 1;
+}
+
+public class OrderSummaryResponseDto {
+	public int? Month { get; set; }
+	public int? Year { get; set; }
+	public int? Count { get; set; }
+	public double? Total { get; set; }
+	public string? UseCase { get; set; }
+}
+
+public class OrderSummaryRequestDto {
+	public string? UserId { get; set; }
+	public string? Title { get; set; }
+	public double? Price { get; set; }
+	public OrderType OrderType { get; set; } = OrderType.Sale;
+	public int? SectionCount { get; set; }
+	public DateTime? StartDate { get; set; }
+	public DateTime? EndDate { get; set; }
 }

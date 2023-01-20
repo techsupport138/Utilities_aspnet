@@ -8,6 +8,7 @@ public interface IOrderRepository {
 	Task<GenericResponse> Delete(Guid id);
 	Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto);
 	Task<GenericResponse> DeleteOrderDetail(Guid id);
+	GenericResponse<IQueryable<OrderSummaryResponseDto>> ReadOrderSummary(OrderSummaryRequestDto dto);
 }
 
 public class OrderRepository : IOrderRepository {
@@ -89,7 +90,7 @@ public class OrderRepository : IOrderRepository {
 	public async Task<GenericResponse<OrderEntity?>> Update(OrderCreateUpdateDto dto) {
 		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
 		OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
-		if (oldOrder == null) return new GenericResponse<OrderEntity?>(null,UtilitiesStatusCodes.NotFound);
+		if (oldOrder == null) return new GenericResponse<OrderEntity?>(null, UtilitiesStatusCodes.NotFound);
 
 		oldOrder.Description = dto.Description;
 		oldOrder.ReceivedDate = dto.ReceivedDate;
@@ -157,6 +158,8 @@ public class OrderRepository : IOrderRepository {
 		if (dto.ReceivedDate.HasValue) q = q.Where(x => x.ReceivedDate == dto.ReceivedDate);
 		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 		if (dto.ProductOwnerId.IsNotNullOrEmpty()) q = q.Where(x => x.ProductOwnerId == dto.ProductOwnerId);
+		if (dto.StartDate.HasValue) q = q.Where(x => x.CreatedAt >= dto.StartDate);
+		if (dto.EndDate.HasValue) q = q.Where(x => x.CreatedAt <= dto.EndDate);
 
 		int totalCount = q.Count();
 
@@ -211,5 +214,32 @@ public class OrderRepository : IOrderRepository {
 		e.DeletedAt = DateTime.Now;
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
+	}
+
+	public GenericResponse<IQueryable<OrderSummaryResponseDto>> ReadOrderSummary(OrderSummaryRequestDto dto) {
+		IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>()
+			.Include(x => x.User)
+			.Include(x => x.OrderDetails).ThenInclude(x => x.Product)
+			.Where(x => x.DeletedAt == null)
+			.Where(x => x.CreatedAt >= dto.StartDate)
+			.Where(x => x.CreatedAt <= dto.EndDate);
+
+		if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.UserId == dto.UserId);
+		if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.ProductOwnerId == dto.UserId);
+
+		IOrderedQueryable<OrderSummaryResponseDto> c = q.GroupBy(o => new {
+				(o.CreatedAt ?? DateTime.Now).Month, (o.CreatedAt ?? DateTime.Now).Year
+			}).Select(g => new OrderSummaryResponseDto {
+				Month = g.Key.Month,
+				Year = g.Key.Year,
+				Count = g.Count(),
+				Total = g.Sum(x => x.TotalPrice),
+				UseCase = g.Max(y => y.OrderDetails.First().Product.UseCase),
+				
+			})
+			.OrderByDescending(a => a.Year)
+			.ThenByDescending(a => a.Month);
+
+		return new GenericResponse<IQueryable<OrderSummaryResponseDto>>(c);
 	}
 }

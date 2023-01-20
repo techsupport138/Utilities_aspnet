@@ -9,7 +9,7 @@ public interface IUserRepository {
 	Task<GenericResponse> CheckUserName(string userName);
 	Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto);
 	Task<GenericResponse<UserEntity?>> VerifyCodeForLogin(VerifyMobileForLoginDto dto);
-	Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser);
+	Task<GenericResponse<UserEntity?>> Register(RegisterDto dto);
 	Task<GenericResponse<UserEntity?>> LoginWithPassword(LoginWithPasswordDto model);
 	Task<GenericResponse> RemovalFromTeam(Guid teamId);
 	Task<GenericResponse> Logout();
@@ -215,34 +215,35 @@ public class UserRepository : IUserRepository {
 		);
 	}
 
-	public async Task<GenericResponse<UserEntity?>> Register(RegisterDto aspNetUser) {
+	public async Task<GenericResponse<UserEntity?>> Register(RegisterDto dto) {
 		UserEntity? model = await _dbContext.Set<UserEntity>()
-			.FirstOrDefaultAsync(x => x.UserName == aspNetUser.UserName || x.Email == aspNetUser.Email || x.PhoneNumber == aspNetUser.PhoneNumber);
+			.FirstOrDefaultAsync(x => x.UserName == dto.UserName || x.Email == dto.Email || x.PhoneNumber == dto.PhoneNumber);
 		if (model != null)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.UserAlreadyExist, "This email or username already exists");
 
 		UserEntity user = new() {
-			Email = aspNetUser.Email ?? "",
-			UserName = aspNetUser.UserName ?? aspNetUser.Email ?? aspNetUser.PhoneNumber,
-			PhoneNumber = aspNetUser.PhoneNumber,
+			Email = dto.Email ?? "",
+			UserName = dto.UserName ?? dto.Email ?? dto.PhoneNumber,
+			PhoneNumber = dto.PhoneNumber,
 			EmailConfirmed = false,
 			PhoneNumberConfirmed = false,
 			FullName = "",
 			Wallet = 0,
+			AccessLevel = dto.AccessLevel,
 			Suspend = false,
-			FirstName = aspNetUser.FirstName,
-			LastName = aspNetUser.LastName,
+			FirstName = dto.FirstName,
+			LastName = dto.LastName,
 			IsLoggedIn = true,
 		};
 
-		IdentityResult? result = await _userManager.CreateAsync(user, aspNetUser.Password);
+		IdentityResult? result = await _userManager.CreateAsync(user, dto.Password);
 		if (!result.Succeeded)
 			return new GenericResponse<UserEntity?>(null, UtilitiesStatusCodes.Unhandled, "The information was not entered correctly");
 
 		JwtSecurityToken token = await CreateToken(user);
 
-		if (aspNetUser.SendSMS) {
-			if (aspNetUser.Email != null && aspNetUser.Email.IsEmail()) { }
+		if (dto.SendSMS) {
+			if (dto.Email != null && dto.Email.IsEmail()) { }
 			else await SendOtp(user.Id, 4);
 		}
 

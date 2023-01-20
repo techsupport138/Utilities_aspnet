@@ -112,3 +112,8 @@ public enum Priority {
 	Normal = 102,
 	Low = 103
 }
+
+public enum OrderType {
+	Sale = 100,
+	Purchase = 101
+}
