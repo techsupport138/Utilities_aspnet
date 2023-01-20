@@ -1,6 +1,6 @@
 namespace Utilities_aspnet.Repositories;
 
-public interface IProductRepositoryV2 {
+public interface IProductRepository {
 	Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct);
 	GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto);
 	Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct);
@@ -8,11 +8,11 @@ public interface IProductRepositoryV2 {
 	Task<GenericResponse> Delete(Guid id, CancellationToken ct);
 }
 
-public class ProductRepositoryV2 : IProductRepositoryV2 {
+public class ProductRepository : IProductRepository {
 	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public ProductRepositoryV2(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
+	public ProductRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = dbContext;
 		_httpContextAccessor = httpContextAccessor;
 	}
@@ -20,7 +20,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct) {
 		ProductEntity entity = new();
 
-		ProductEntity e = await entity.FillDataV2(dto, _dbContext);
+		ProductEntity e = await entity.FillData(dto, _dbContext);
 		e.VisitsCount = 1;
 		e.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
 		e.CreatedAt = DateTime.Now;
@@ -177,7 +177,7 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 		if (entity == null)
 			return new GenericResponse<ProductEntity>(new ProductEntity());
 
-		ProductEntity e = await entity.FillDataV2(dto, _dbContext);
+		ProductEntity e = await entity.FillData(dto, _dbContext);
 		_dbContext.Update(e);
 		await _dbContext.SaveChangesAsync(ct);
 
@@ -196,8 +196,8 @@ public class ProductRepositoryV2 : IProductRepositoryV2 {
 	}
 }
 
-public static class ProductEntityExtensionV2 {
-	public static async Task<ProductEntity> FillDataV2(this ProductEntity entity, ProductCreateUpdateDto dto, DbContext context) {
+public static class ProductEntityExtension {
+	public static async Task<ProductEntity> FillData(this ProductEntity entity, ProductCreateUpdateDto dto, DbContext context) {
 		entity.Title = dto.Title ?? entity.Title;
 		entity.Subtitle = dto.Subtitle ?? entity.Subtitle;
 		entity.Details = dto.Details ?? entity.Details;

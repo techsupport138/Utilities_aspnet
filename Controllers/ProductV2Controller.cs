@@ -3,9 +3,9 @@ namespace Utilities_aspnet.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class ProductV2Controller : BaseApiController {
-	private readonly IProductRepositoryV2 _repository;
+	private readonly IProductRepository _repository;
 
-	public ProductV2Controller(IProductRepositoryV2 repository) => _repository = repository;
+	public ProductV2Controller(IProductRepository repository) => _repository = repository;
 
 	[HttpPost]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

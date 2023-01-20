@@ -83,7 +83,7 @@ public static class StartupExtension {
 		builder.Services.AddTransient<IUploadRepository, UploadRepository>();
 		builder.Services.AddTransient<IFollowBookmarkRepository, FollowBookmarkRepository>();
 		builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
-		builder.Services.AddTransient<IProductRepositoryV2, ProductRepositoryV2>();
+		builder.Services.AddTransient<IProductRepository, ProductRepository>();
 		builder.Services.AddTransient<IChatRepository, ChatRepository>();
 		builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
 		builder.Services.AddTransient<IFormRepository, FormRepository>();
@@ -186,7 +186,8 @@ public class ClaimRequirementFilter : IAuthorizationFilter {
 	public ClaimRequirementFilter(Claim claim, DbContext dbContext) => _dbContext = dbContext;
 
 	public void OnAuthorization(AuthorizationFilterContext context) {
-		UserEntity? entity = _dbContext.Set<UserEntity>().FirstOrDefault(u => context.HttpContext.User.Identity != null && u.Id == context.HttpContext.User.Identity.Name);
+		UserEntity? entity = _dbContext.Set<UserEntity>()
+			.FirstOrDefault(u => context.HttpContext.User.Identity != null && u.Id == context.HttpContext.User.Identity.Name);
 		if (entity is {IsLoggedIn: false}) context.Result = new ForbidResult();
 	}
 }

@@ -37,7 +37,15 @@ public static class NumberExtension {
 	public static bool IsNumerical(this string value) => Regex.IsMatch(value, @"^\d+$");
 	public static int ToInt(this double value) => (int) value;
 	public static int ToInt(this double? value) => (int) (value ?? 0.0);
-	public static int ToInt(this string? value) => int.Parse(value ?? "0");
+
+	public static int ToInt(this string? value) {
+		try {
+			return int.Parse(value ?? "0");
+		}
+		catch (Exception e) {
+			return 0;
+		}
+	}
 }
 
 public static class StringExtension {
