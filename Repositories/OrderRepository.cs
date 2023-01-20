@@ -234,7 +234,7 @@ public class OrderRepository : IOrderRepository {
 				Year = g.Key.Year,
 				Count = g.Count(),
 				Total = g.Sum(x => x.TotalPrice),
-				UseCase = g.Max(y => y.OrderDetails.First().Product.UseCase),
+				//UseCase = g.Max(y => y.OrderDetails.First().Product.UseCase),
 				
 			})
 			.OrderByDescending(a => a.Year)
