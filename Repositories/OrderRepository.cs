@@ -46,6 +46,7 @@ public class OrderRepository : IOrderRepository {
 			CreatedAt = DateTime.Now,
 			UpdatedAt = DateTime.Now,
 			PayNumber = "",
+			ProductUseCase = dto.ProductUseCase,
 			ProductOwnerId = listProducts.First().UserId,
 		};
 
@@ -103,6 +104,7 @@ public class OrderRepository : IOrderRepository {
 		oldOrder.DiscountCode = dto.DiscountCode;
 		oldOrder.DiscountPercent = dto.DiscountPercent;
 		oldOrder.UpdatedAt = DateTime.Now;
+		oldOrder.ProductUseCase = dto.ProductUseCase;
 
 		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails!) {
 			OrderDetailEntity? oldOrderDetail = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == item.Id);
@@ -145,6 +147,7 @@ public class OrderRepository : IOrderRepository {
 
 		if (dto.Id.HasValue) q = q.Where(x => x.Id == dto.Id);
 		if (dto.Description.IsNotNullOrEmpty()) q = q.Where(x => (x.Description ?? "").Contains(dto.Description!));
+		if (dto.ProductUseCase.IsNotNullOrEmpty()) q = q.Where(x => (x.ProductUseCase ?? "").Contains(dto.ProductUseCase!));
 		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
 		if (dto.TotalPrice.HasValue) q = q.Where(x => x.TotalPrice.ToInt() == dto.TotalPrice.ToInt());
 		if (dto.DiscountPrice.HasValue) q = q.Where(x => x.DiscountPrice.ToInt() == dto.DiscountPrice.ToInt());

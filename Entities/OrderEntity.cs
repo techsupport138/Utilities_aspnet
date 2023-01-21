@@ -7,6 +7,9 @@ public class OrderEntity : BaseEntity {
 
 	[StringLength(500)]
 	public string? DiscountCode { get; set; }
+	
+	[StringLength(500)]
+	public string? ProductUseCase { get; set; }
 
 	[StringLength(500)]
 	public string? PayNumber { get; set; }
@@ -57,6 +60,7 @@ public class OrderCreateUpdateDto {
 	public double? TotalPrice { get; set; }
 	public int? DiscountPercent { get; set; }
 	public string? DiscountCode { get; set; }
+	public string? ProductUseCase { get; set; }
 	public double? DiscountPrice { get; set; }
 	public double? SendPrice { get; set; }
 
@@ -92,6 +96,7 @@ public class OrderFilterDto {
 	public double? TotalPrice { get; set; }
 	public double? DiscountPrice { get; set; }
 	public int? DiscountPercent { get; set; }
+	public string? ProductUseCase { get; set; }
 	public string? DiscountCode { get; set; }
 	public double? SendPrice { get; set; }
 	public SendType? SendType { get; set; }
