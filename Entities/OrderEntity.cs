@@ -124,7 +124,7 @@ public class OrderSummaryRequestDto {
 	public string? UserId { get; set; }
 	public string? Title { get; set; }
 	public double? Price { get; set; }
-	public OrderType OrderType { get; set; } = OrderType.Sale;
+	public OrderType OrderType { get; set; } = OrderType.None;
 	public int? SectionCount { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }

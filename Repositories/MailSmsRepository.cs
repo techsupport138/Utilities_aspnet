@@ -23,7 +23,7 @@ public class MailSmsRepository : IMailSmsRepository {
 			return new GenericResponse();
 		}
 		catch (Exception ex) {
-			return new GenericResponse(UtilitiesStatusCodes.Unhandled);
+			return new GenericResponse(UtilitiesStatusCodes.Unhandled,ex.ToString());
 		}
 	}
 }

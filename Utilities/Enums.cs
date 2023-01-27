@@ -115,5 +115,6 @@ public enum Priority {
 
 public enum OrderType {
 	Sale = 100,
-	Purchase = 101
+	Purchase = 101,
+	None=102
 }

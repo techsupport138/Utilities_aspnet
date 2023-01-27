@@ -227,8 +227,11 @@ public class OrderRepository : IOrderRepository {
 			.Where(x => x.CreatedAt >= dto.StartDate)
 			.Where(x => x.CreatedAt <= dto.EndDate);
 
-		if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.UserId == dto.UserId);
-		if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.ProductOwnerId == dto.UserId);
+		if (dto.OrderType == OrderType.None)
+		{
+			if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.UserId == dto.UserId);
+			if (dto.OrderType == OrderType.Purchase) q = q.Where(x => x.ProductOwnerId == dto.UserId);
+		}
 
 		IOrderedQueryable<OrderSummaryResponseDto> c = q.GroupBy(o => new {
 				(o.CreatedAt ?? DateTime.Now).Month, (o.CreatedAt ?? DateTime.Now).Year
