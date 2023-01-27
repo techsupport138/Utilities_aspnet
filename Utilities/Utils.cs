@@ -96,6 +96,7 @@ public static class StartupExtension {
 		builder.Services.AddTransient<IDiscountRepository, DiscountRepository>();
 		builder.Services.AddTransient<IGlobalSearchRepository, GlobalSearchRepository>();
 		builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
+		builder.Services.AddTransient<IMailSmsRepository, MailSmsRepository>();
 	}
 
 	private static void AddUtilitiesSwagger(this WebApplicationBuilder builder, IServiceProvider? serviceProvider) {
