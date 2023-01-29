@@ -250,6 +250,8 @@ public class ProductFilterDto {
 	public string? StateTr1 { get; set; }
 	public string? StateTr2 { get; set; }
 	public string? UserId { get; set; }
+	public string? KeyValues1 { get; set; }
+	public string? KeyValues2 { get; set; }
 	public double? Length { get; set; }
 	public double? Width { get; set; }
 	public double? Height { get; set; }

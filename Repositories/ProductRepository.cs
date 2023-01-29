@@ -43,6 +43,8 @@ public class ProductRepository : IProductRepository {
 		if (dto.Email.IsNotNullOrEmpty()) q = q.Where(x => (x.Email ?? "").Contains(dto.Email!));
 		if (dto.PhoneNumber.IsNotNullOrEmpty()) q = q.Where(x => (x.PhoneNumber ?? "").Contains(dto.PhoneNumber!));
 		if (dto.Address.IsNotNullOrEmpty()) q = q.Where(x => (x.Address ?? "").Contains(dto.Address!));
+		if (dto.KeyValues1.IsNotNullOrEmpty()) q = q.Where(x => (x.KeyValues1 ?? "").Contains(dto.KeyValues1!));
+		if (dto.KeyValues2.IsNotNullOrEmpty()) q = q.Where(x => (x.KeyValues2 ?? "").Contains(dto.KeyValues2!));
 		if (dto.Unit.IsNotNullOrEmpty()) q = q.Where(x => x.Unit == dto.Unit);
 		if (dto.UseCase.IsNotNullOrEmpty()) q = q.Where(x => x.UseCase.Contains(dto.UseCase));
 		if (dto.State.IsNotNullOrEmpty()) q = q.Where(x => x.State == dto.State);
