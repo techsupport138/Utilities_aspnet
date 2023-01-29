@@ -442,9 +442,9 @@ public class UserRepository : IUserRepository {
 	}
 
 	private async Task<bool> SendOtp(string userId, int codeLength) {
-		DateTime dd = DateTime.Now.AddHours(-24);
+		DateTime dd = DateTime.Now.AddMinutes(-10);
 		IQueryable<OtpEntity> oldOtp = _dbContext.Set<OtpEntity>().Where(x => x.UserId == userId && x.CreatedAt > dd);
-		if (oldOtp.Count() >= 3) return false;
+		if (oldOtp.Count() >= 2) return false;
 
 		string newOtp = Utils.Random(codeLength).ToString();
 		_dbContext.Set<OtpEntity>().Add(new OtpEntity {UserId = userId, OtpCode = newOtp, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now});
