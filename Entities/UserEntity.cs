@@ -124,6 +124,7 @@ public class UserEntity : IdentityUser {
 	
 	[NotMapped]
 	public IEnumerable<UserEntity>? Followers { get; set; }
+    public bool IsOnline { get; set; }
 
 }
 
