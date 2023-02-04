@@ -138,6 +138,8 @@ public class ProductEntity : BaseEntity {
 	public Guid? ChatId { get; set; }
 	public ChatEntity? Chat { get; set; }
 
+	public DateTime? ExpireDate { get; set; }
+
 	public IEnumerable<MediaEntity>? Media { get; set; }
 	public IEnumerable<FormEntity>? Forms { get; set; }
 	public IEnumerable<CategoryEntity>? Categories { get; set; }
@@ -149,8 +151,9 @@ public class ProductEntity : BaseEntity {
 	public IEnumerable<TeamEntity>? Teams { get; set; }
 	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
 	public IEnumerable<GroupChatEntity>? GroupChat { get; set; }
+    public IEnumerable<ProductInsight>? ProductInsights { get; set; }
 
-	[NotMapped]
+    [NotMapped]
 	public bool IsBookmarked { get; set; }
 
 	[NotMapped]
@@ -164,6 +167,23 @@ public class ProductEntity : BaseEntity {
 
 	[NotMapped]
 	public double? Score { get; set; }
+}
+
+[Table("ProductsInsight")]
+public class ProductInsight : BaseEntity
+{
+	public Reaction Reaction { get; set; }
+    public UserEntity User { get; set; }
+    public string UserId { get; set; }
+}
+
+public enum Reaction
+{
+	None = 0,
+	Like = 1,
+	DissLike = 2,
+	Funny = 3,
+	Awful = 4
 }
 
 public class ProductCreateUpdateDto {
@@ -228,8 +248,10 @@ public class ProductCreateUpdateDto {
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 	public DateTime? DeletedAt { get; set; }
+	public DateTime? ExpireDate { get; set; }
 	public ProductStatus? Status { get; set; }
 	public Currency? Currency { get; set; }
+	public ProductInsightDto ProductInsight { get; set; }
 	public IEnumerable<Guid>? Categories { get; set; }
 	public IEnumerable<string>? Teams { get; set; }
 }
@@ -302,4 +324,10 @@ public class ProductFilterDto {
 	public IEnumerable<Guid>? Categories { get; set; }
 	public IEnumerable<Guid>? CategoriesAnd { get; set; }
 	public string? Query { get; set; }
+}
+
+public class ProductInsightDto
+{
+	public Reaction Reaction { get; set; }
+	public string UserId { get; set; }
 }
