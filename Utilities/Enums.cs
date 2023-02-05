@@ -113,8 +113,16 @@ public enum Priority {
 	Low = 103
 }
 
-public enum OrderType {
+public enum OrderType
+{
 	Sale = 100,
 	Purchase = 101,
-	None=102
+	All = 102
+}
+public enum OrderReportType
+{
+	OrderSummary = 100,
+	ProductUseCase = 101,
+	PercentUsecase = 102,
+	All = 105
 }

@@ -1,13 +1,14 @@
 ﻿namespace Utilities_aspnet.Entities;
 
 [Table("Order")]
-public class OrderEntity : BaseEntity {
+public class OrderEntity : BaseEntity
+{
 	[StringLength(2000)]
 	public string? Description { get; set; }
 
 	[StringLength(500)]
 	public string? DiscountCode { get; set; }
-	
+
 	[StringLength(500)]
 	public string? ProductUseCase { get; set; }
 
@@ -37,10 +38,11 @@ public class OrderEntity : BaseEntity {
 }
 
 [Table("OrderDetail")]
-public class OrderDetailEntity : BaseEntity {
+public class OrderDetailEntity : BaseEntity
+{
 	public double? Price { get; set; }
 	public int? Count { get; set; }
-	
+
 	public OrderEntity? Order { get; set; }
 	public Guid? OrderId { get; set; }
 
@@ -51,7 +53,8 @@ public class OrderDetailEntity : BaseEntity {
 	public IEnumerable<FormEntity>? Forms { get; set; }
 }
 
-public class OrderCreateUpdateDto {
+public class OrderCreateUpdateDto
+{
 	public Guid? Id { get; set; }
 	public string? Description { get; set; }
 	public OrderStatuses? Status { get; set; }
@@ -70,7 +73,8 @@ public class OrderCreateUpdateDto {
 	public IEnumerable<OrderDetailCreateUpdateDto>? OrderDetails { get; set; }
 }
 
-public class OrderDetailCreateUpdateDto {
+public class OrderDetailCreateUpdateDto
+{
 	public Guid? Id { get; set; }
 	public Guid? OrderId { get; set; }
 	public Guid? ProductId { get; set; }
@@ -79,7 +83,8 @@ public class OrderDetailCreateUpdateDto {
 	public IEnumerable<Guid>? Categories { get; set; }
 }
 
-public class OrderFilterDto {
+public class OrderFilterDto
+{
 	public Guid? Id { get; set; }
 	public bool? ShowProducts { get; set; } = false;
 	public bool? ShowMedia { get; set; } = false;
@@ -112,19 +117,24 @@ public class OrderFilterDto {
 	public int PageNumber { get; set; } = 1;
 }
 
-public class OrderSummaryResponseDto {
+public class OrderSummaryResponseDto
+{
+	public string? Title { get; set; }
 	public int? Month { get; set; }
 	public int? Year { get; set; }
+	public int? Day { get; set; }
 	public int? Count { get; set; }
 	public double? Total { get; set; }
 	public string? UseCase { get; set; }
 }
 
-public class OrderSummaryRequestDto {
+public class OrderSummaryRequestDto
+{
 	public string? UserId { get; set; }
 	public string? Title { get; set; }
 	public double? Price { get; set; }
-	public OrderType OrderType { get; set; } = OrderType.None;
+	public OrderType OrderType { get; set; } = OrderType.All;
+	public OrderReportType OrderReportType { get; set; } = OrderReportType.OrderSummary;
 	public int? SectionCount { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }

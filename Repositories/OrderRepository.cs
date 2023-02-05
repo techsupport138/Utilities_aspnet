@@ -1,6 +1,9 @@
+using System.Globalization;
+
 namespace Utilities_aspnet.Repositories;
 
-public interface IOrderRepository {
+public interface IOrderRepository
+{
 	GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto);
 	Task<GenericResponse<OrderEntity>> ReadById(Guid id);
 	Task<GenericResponse<OrderEntity?>> Create(OrderCreateUpdateDto dto);
@@ -11,20 +14,24 @@ public interface IOrderRepository {
 	GenericResponse<IQueryable<OrderSummaryResponseDto>> ReadOrderSummary(OrderSummaryRequestDto dto);
 }
 
-public class OrderRepository : IOrderRepository {
+public class OrderRepository : IOrderRepository
+{
 	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public OrderRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
+	public OrderRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor)
+	{
 		_dbContext = dbContext;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<OrderEntity?>> Create(OrderCreateUpdateDto dto) {
+	public async Task<GenericResponse<OrderEntity?>> Create(OrderCreateUpdateDto dto)
+	{
 		double totalPrice = 0;
 
 		List<ProductEntity> listProducts = new();
-		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails!) {
+		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails!)
+		{
 			ProductEntity? e = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
 			if (e != null) listProducts.Add(e);
 		}
@@ -33,7 +40,8 @@ public class OrderRepository : IOrderRepository {
 		if (q.Count() > 1)
 			return new GenericResponse<OrderEntity?>(null, UtilitiesStatusCodes.BadRequest, "Cannot Add from multiple seller.");
 
-		OrderEntity entityOrder = new() {
+		OrderEntity entityOrder = new()
+		{
 			Description = dto.Description,
 			ReceivedDate = dto.ReceivedDate,
 			UserId = _httpContextAccessor.HttpContext?.User.Identity?.Name!,
@@ -53,23 +61,28 @@ public class OrderRepository : IOrderRepository {
 		await _dbContext.Set<OrderEntity>().AddAsync(entityOrder);
 		await _dbContext.SaveChangesAsync();
 
-		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails) {
+		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails)
+		{
 			ProductEntity? productEntity = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
-			if (productEntity != null && productEntity.Stock < item.Count) {
+			if (productEntity != null && productEntity.Stock < item.Count)
+			{
 				await Delete(entityOrder.Id);
 				throw new ArgumentException("failed request! this request is more than stock!");
 			}
 
-			OrderDetailEntity orderDetailEntity = new() {
+			OrderDetailEntity orderDetailEntity = new()
+			{
 				OrderId = entityOrder.Id,
 				ProductId = item.ProductId,
 				Price = item.Price ?? productEntity?.Price,
 				Count = item.Count
 			};
 
-			if (item.Categories.IsNotNullOrEmpty()) {
+			if (item.Categories.IsNotNullOrEmpty())
+			{
 				List<CategoryEntity> listCategory = new();
-				foreach (Guid i in item.Categories ?? new List<Guid>()) {
+				foreach (Guid i in item.Categories ?? new List<Guid>())
+				{
 					CategoryEntity? e = await _dbContext.Set<CategoryEntity>().FirstOrDefaultAsync(x => x.Id == i);
 					if (e != null) listCategory.Add(e);
 				}
@@ -88,7 +101,8 @@ public class OrderRepository : IOrderRepository {
 		return new GenericResponse<OrderEntity?>(entityOrder);
 	}
 
-	public async Task<GenericResponse<OrderEntity?>> Update(OrderCreateUpdateDto dto) {
+	public async Task<GenericResponse<OrderEntity?>> Update(OrderCreateUpdateDto dto)
+	{
 		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
 		OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
 		if (oldOrder == null) return new GenericResponse<OrderEntity?>(null, UtilitiesStatusCodes.NotFound);
@@ -106,11 +120,14 @@ public class OrderRepository : IOrderRepository {
 		oldOrder.UpdatedAt = DateTime.Now;
 		oldOrder.ProductUseCase = dto.ProductUseCase;
 
-		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails!) {
+		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails!)
+		{
 			OrderDetailEntity? oldOrderDetail = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == item.Id);
-			if (oldOrderDetail != null) {
+			if (oldOrderDetail != null)
+			{
 				ProductEntity? product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
-				if (product != null) {
+				if (product != null)
+				{
 					if (product.Stock < item.Count) throw new ArgumentException("failed request! this request is more than stock!");
 
 					if (dto.Status == OrderStatuses.Paid)
@@ -129,7 +146,8 @@ public class OrderRepository : IOrderRepository {
 		return new GenericResponse<OrderEntity?>(oldOrder);
 	}
 
-	public GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto) {
+	public GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto)
+	{
 		IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails.Where(x => x.DeletedAt == null));
 
 		if (dto.ShowProducts.IsTrue()) q = q.Include(x => x.OrderDetails).ThenInclude(x => x.Product);
@@ -168,14 +186,16 @@ public class OrderRepository : IOrderRepository {
 
 		q = q.AsNoTracking().Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
 
-		return new GenericResponse<IQueryable<OrderEntity>>(q) {
+		return new GenericResponse<IQueryable<OrderEntity>>(q)
+		{
 			TotalCount = totalCount,
 			PageCount = totalCount % dto.PageSize == 0 ? totalCount / dto.PageSize : totalCount / dto.PageSize + 1,
 			PageSize = dto.PageSize
 		};
 	}
 
-	public async Task<GenericResponse<OrderEntity>> ReadById(Guid id) {
+	public async Task<GenericResponse<OrderEntity>> ReadById(Guid id)
+	{
 		OrderEntity? i = await _dbContext.Set<OrderEntity>()
 			.Include(i => i.OrderDetails)!.ThenInclude(p => p.Product)
 			.Include(i => i.User).ThenInclude(i => i.Media)
@@ -184,9 +204,11 @@ public class OrderRepository : IOrderRepository {
 		return new GenericResponse<OrderEntity>(i);
 	}
 
-	public async Task<GenericResponse> Delete(Guid id) {
+	public async Task<GenericResponse> Delete(Guid id)
+	{
 		OrderEntity? i = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(i => i.Id == id);
-		if (i != null) {
+		if (i != null)
+		{
 			_dbContext.Remove(i);
 			await _dbContext.SaveChangesAsync();
 		}
@@ -194,10 +216,12 @@ public class OrderRepository : IOrderRepository {
 		return new GenericResponse();
 	}
 
-	public async Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto) {
+	public async Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto)
+	{
 		OrderEntity? e = await _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.Id == dto.OrderId);
 		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
-		EntityEntry<OrderDetailEntity> orderDetailEntity = await _dbContext.Set<OrderDetailEntity>().AddAsync(new OrderDetailEntity {
+		EntityEntry<OrderDetailEntity> orderDetailEntity = await _dbContext.Set<OrderDetailEntity>().AddAsync(new OrderDetailEntity
+		{
 			ProductId = dto.ProductId,
 			Count = dto.Count,
 			OrderId = dto.OrderId,
@@ -211,7 +235,8 @@ public class OrderRepository : IOrderRepository {
 		return new GenericResponse();
 	}
 
-	public async Task<GenericResponse> DeleteOrderDetail(Guid id) {
+	public async Task<GenericResponse> DeleteOrderDetail(Guid id)
+	{
 		OrderDetailEntity? e = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == id);
 		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 		e.DeletedAt = DateTime.Now;
@@ -219,7 +244,8 @@ public class OrderRepository : IOrderRepository {
 		return new GenericResponse();
 	}
 
-	public GenericResponse<IQueryable<OrderSummaryResponseDto>> ReadOrderSummary(OrderSummaryRequestDto dto) {
+	public GenericResponse<IQueryable<OrderSummaryResponseDto>> ReadOrderSummary(OrderSummaryRequestDto dto)
+	{
 		IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>()
 			.Include(x => x.User)
 			.Include(x => x.OrderDetails).ThenInclude(x => x.Product)
@@ -227,25 +253,136 @@ public class OrderRepository : IOrderRepository {
 			.Where(x => x.CreatedAt >= dto.StartDate)
 			.Where(x => x.CreatedAt <= dto.EndDate);
 
-		if (dto.OrderType == OrderType.None)
+		if (dto.OrderType != OrderType.All)
 		{
 			if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.UserId == dto.UserId);
 			if (dto.OrderType == OrderType.Purchase) q = q.Where(x => x.ProductOwnerId == dto.UserId);
 		}
 
-		IOrderedQueryable<OrderSummaryResponseDto> c = q.GroupBy(o => new {
-				(o.CreatedAt ?? DateTime.Now).Month, (o.CreatedAt ?? DateTime.Now).Year
-			}).Select(g => new OrderSummaryResponseDto {
-				Month = g.Key.Month,
-				Year = g.Key.Year,
-				Count = g.Count(),
-				Total = g.Sum(x => x.TotalPrice),
-				//UseCase = g.Max(y => y.OrderDetails.First().Product.UseCase),
-				
-			})
-			.OrderByDescending(a => a.Year)
-			.ThenByDescending(a => a.Month);
+		bool isGratherThanMonth = true;
+
+		if (dto.EndDate != null && dto.StartDate != null)
+		{
+			var x = (dto.EndDate.Value - dto.StartDate.Value).TotalDays;
+			if (x.ToInt() <= 31) isGratherThanMonth = false;
+		}
+		IOrderedQueryable<OrderSummaryResponseDto> c;
+		switch (dto.OrderReportType)
+		{
+			case OrderReportType.OrderSummary:
+				#region OrderSummary      
+				if (isGratherThanMonth)
+				{
+					c = q.GroupBy(o => new
+					{
+						(o.CreatedAt ?? DateTime.Now).Month,
+						(o.CreatedAt ?? DateTime.Now).Year
+					}).Select(g => new OrderSummaryResponseDto
+					{
+						Title = g.Key.Year + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month),
+						Month = g.Key.Month,
+						Year = g.Key.Year,
+						Count = g.Count(),
+						Total = g.Sum(x => x.TotalPrice),
+						//UseCase = g.Max(y => y.OrderDetails.First().Product.UseCase),
+
+					})
+					   .OrderBy(a => a.Year)
+					   .ThenBy(a => a.Month);
+				}
+				else
+				{
+					c = q.GroupBy(o => new
+					{
+						(o.CreatedAt ?? DateTime.Now).Day,
+						(o.CreatedAt ?? DateTime.Now).Month
+					}).Select(g => new OrderSummaryResponseDto
+					{
+						Title = g.Key.Day + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month),
+						Month = g.Key.Month,
+						Day = g.Key.Day,
+						Count = g.Count(),
+						Total = g.Sum(x => x.TotalPrice),
+						//UseCase = g.Max(y => y.OrderDetails.First().Product.UseCase),
+
+					})
+				  .OrderBy(a => a.Month)
+				  .ThenBy(a => a.Day);
+				}
+				#endregion
+				break;
+			case OrderReportType.ProductUseCase:
+				#region OrderSummary      
+
+
+
+				if (isGratherThanMonth)
+				{
+					c = q.GroupBy(o => new
+					{
+						(o.CreatedAt ?? DateTime.Now).Month,
+						(o.CreatedAt ?? DateTime.Now).Year,
+						o.ProductUseCase
+					}).Select(g => new OrderSummaryResponseDto
+					{
+						Title = g.Key.Year + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month),
+						Month = g.Key.Month,
+						Year = g.Key.Year,
+						Count = g.Count(),
+						Total = g.Sum(x => x.TotalPrice),
+						UseCase = g.Max(y => y.ProductUseCase)
+
+					})
+						.OrderBy(a => a.Year)
+						.ThenBy(a => a.Month);
+				}
+				else
+				{
+					c = q.GroupBy(o => new
+					{
+						(o.CreatedAt ?? DateTime.Now).Day,
+						(o.CreatedAt ?? DateTime.Now).Month,
+						o.ProductUseCase
+					}).Select(g => new OrderSummaryResponseDto
+					{
+						Title = g.Key.Day + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month),
+						Month = g.Key.Month,
+						Day = g.Key.Day,
+						Count = g.Count(),
+						Total = g.Sum(x => x.TotalPrice),
+						UseCase = g.Max(y => y.ProductUseCase)
+
+					})
+				   .OrderBy(a => a.Month)
+				   .ThenBy(a => a.Day);
+				}
+				#endregion
+				break;
+			default:
+				#region OrderSummary      
+				c = q.GroupBy(o => new
+				{
+					(o.CreatedAt ?? DateTime.Now).Month,
+					(o.CreatedAt ?? DateTime.Now).Year
+				}).Select(g => new OrderSummaryResponseDto
+				{
+					Title = g.Key.Year + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month),
+					Month = g.Key.Month,
+					Year = g.Key.Year,
+					Count = g.Count(),
+					Total = g.Sum(x => x.TotalPrice),
+					//UseCase = g.Max(y => y.OrderDetails.First().Product.UseCase),
+
+				})
+				   .OrderBy(a => a.Year)
+				   .ThenBy(a => a.Month);
+				#endregion
+				break;
+		}
+
 
 		return new GenericResponse<IQueryable<OrderSummaryResponseDto>>(c);
+
+
 	}
 }
