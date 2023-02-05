@@ -175,6 +175,8 @@ public class ProductInsight : BaseEntity
 	public Reaction Reaction { get; set; }
     public UserEntity User { get; set; }
     public string UserId { get; set; }
+	public ProductEntity ProductEntity { get; set; }
+	public string ProductId { get; set; }
 }
 
 public enum Reaction

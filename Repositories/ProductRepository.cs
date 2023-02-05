@@ -333,16 +333,31 @@ public static class ProductEntityExtension
             UserEntity? e = await context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == pInsight.UserId);
             if (e != null)
             {
-                ProductInsight pI = new()
+                ProductInsight pI;
+                var oldProductInsight = await context.Set<ProductInsight>().FirstOrDefaultAsync(f => f.UserId == e.Id && f.ProductId == entity.Id.ToString());
+                if (oldProductInsight is not null && oldProductInsight.Reaction != pInsight.Reaction)
                 {
-                    UserId = e.Id,
-                    Reaction = pInsight.Reaction
-                };
+                    pI = new ProductInsight
+                    {
+                        UserId = e.Id,
+                        Reaction = pInsight.Reaction,
+                        UpdatedAt = DateTime.Now
+                    };
+                }
+                else
+                {
+                    pI = new ProductInsight
+                    {
+                        UserId = e.Id,
+                        Reaction = pInsight.Reaction,
+                        CreatedAt = DateTime.Now
+                    };
+                }
                 await context.Set<ProductInsight>().AddAsync(pI);
                 productInsights.Add(pI);
             }
             entity.ProductInsights = productInsights;
-        }    
+        }
         return entity;
     }
 }
