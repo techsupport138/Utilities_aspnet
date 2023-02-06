@@ -5,6 +5,7 @@ public interface IProductRepository
     Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct);
     GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto);
     Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct);
+    Task<GenericResponse<ProductEntity?>> ReadById(Guid id,string userId, CancellationToken ct);
     Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct);
     Task<GenericResponse> Delete(Guid id, CancellationToken ct);
 }
@@ -41,6 +42,17 @@ public class ProductRepository : IProductRepository
         q = q.Where(x => x.DeletedAt == null);
         q = q.Where(w => w.ExpireDate >= DateTime.Now);
 
+        if (dto.UserId.IsNotNullOrEmpty())
+        {
+            var user = _dbContext.Set<UserEntity>().FirstOrDefault(f => f.Id == dto.UserId);
+            if (user != null && user.Birthdate.HasValue)
+            {
+                var ageCatg = Utils.CalculateAgeCategories(user.Birthdate.Value);
+                q = q.Where(w => w.AgeCategory == ageCatg);
+            }
+            q = q.Where(x => x.UserId == dto.UserId);
+        }
+
         if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
         if (dto.Subtitle.IsNotNullOrEmpty()) q = q.Where(x => (x.Subtitle ?? "").Contains(dto.Subtitle!));
         if (dto.Type.IsNotNullOrEmpty()) q = q.Where(x => (x.Type ?? "").Contains(dto.Type!));
@@ -57,7 +69,6 @@ public class ProductRepository : IProductRepository
         if (dto.State.IsNotNullOrEmpty()) q = q.Where(x => x.State == dto.State);
         if (dto.StateTr1.IsNotNullOrEmpty()) q = q.Where(x => x.StateTr1 == dto.StateTr2);
         if (dto.StateTr2.IsNotNullOrEmpty()) q = q.Where(x => x.StateTr2 == dto.StateTr2);
-        if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
         if (dto.StartPriceRange.HasValue) q = q.Where(x => x.Price >= dto.StartPriceRange);
         if (dto.Currency.HasValue) q = q.Where(x => x.Currency == dto.Currency);
         if (dto.HasComment.IsTrue()) q = q.Where(x => x.Comments.Any());
@@ -153,7 +164,7 @@ public class ProductRepository : IProductRepository
         };
     }
 
-    //Todo: inja am check konim age expire shode bod neshon nadim??
+    //Todo: inja am check konim age expire shode bod neshon nadim?? || dar khosose AgeCategories ham lazem daram ke bedonam lazeme?
     //momkene khode kasi ke maleke story hastesh bade ye modat mikhad bebine chi gozashte?
     //pas ghaedatan nabayad inja check konim 
     //ya maslan check konim age khode sab story bod betone bebine
@@ -175,8 +186,45 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
         if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
+
         if (i.VisitsCount == null) i.VisitsCount = 1;
         else i.VisitsCount += 1;
+        _dbContext.Update(i);
+        await _dbContext.SaveChangesAsync(ct);
+
+        return new GenericResponse<ProductEntity?>(i);
+    }
+
+    public async Task<GenericResponse<ProductEntity?>> ReadById(Guid id, string userId, CancellationToken ct)
+    {
+        ProductEntity? i = await _dbContext.Set<ProductEntity>()
+            .Include(i => i.Media)
+            .Include(i => i.Categories).ThenInclude(x => x.Media)
+            .Include(i => i.Reports)
+            .Include(i => i.Bookmarks)
+            .Include(i => i.Votes)
+            .Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
+            .Include(i => i.User).ThenInclude(x => x.Media)
+            .Include(i => i.User).ThenInclude(x => x.Categories)
+            .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
+            .Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
+            .Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
+            .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
+        if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
+
+        var user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId);
+        if (user != null)
+        {
+            var visitProduct = new VisitProducts
+            {
+                CreatedAt = DateTime.Now,
+                ProductId = i.Id,
+                UserId = user.Id,
+            };
+            await _dbContext.Set<VisitProducts>().AddAsync(visitProduct);            
+        }
+        if (i.VisitProducts.Count() == 0) i.VisitsCount = 1;
+        else i.VisitsCount = i.VisitProducts.Count();
         _dbContext.Update(i);
         await _dbContext.SaveChangesAsync(ct);
 
@@ -280,6 +328,7 @@ public static class ProductEntityExtension
         entity.DeletedAt = dto.DeletedAt ?? entity.DeletedAt;
         entity.UpdatedAt = DateTime.Now;
         entity.ExpireDate = dto.ExpireDate ?? entity.ExpireDate;
+        entity.AgeCategory = dto.AgeCategory ?? AgeCategory.None;
 
         if (dto.VisitsCountPlus.HasValue)
         {
