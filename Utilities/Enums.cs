@@ -126,3 +126,10 @@ public enum OrderReportType
 	PercentUsecase = 102,
 	All = 105
 }
+public enum ReportType
+{
+	Insight = 100,
+	TopKeyword = 101,
+	PercentUsecase = 102,
+	All = 105
+}

@@ -15,6 +15,9 @@ public class ReportEntity : BaseEntity {
 
 	public Guid? ProductId { get; set; }
 	public ProductEntity? Product { get; set; }
+	public ReportType ReportType { get; set; } = ReportType.All;
+	[StringLength(500)]
+	public string? ProductUseCase { get; set; }
 }
 
 public class ReportFilterDto {
