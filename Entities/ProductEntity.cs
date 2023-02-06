@@ -190,24 +190,6 @@ public class VisitProducts : BaseEntity
     public Guid ProductId { get; set; }
 }
 
-public enum Reaction
-{
-    None = 0,
-    Like = 1,
-    DissLike = 2,
-    Funny = 3,
-    Awful = 4
-}
-
-public enum AgeCategory
-{
-    None = 0,
-    Kids = 1,
-    Tennager = 2,
-    Young = 3,
-    Adult = 4
-}
-
 public class ProductCreateUpdateDto
 {
     public Guid? Id { get; set; }

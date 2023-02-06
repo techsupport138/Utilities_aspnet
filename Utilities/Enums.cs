@@ -118,3 +118,21 @@ public enum OrderType {
 	Purchase = 101,
 	None=102
 }
+
+public enum Reaction
+{
+    None = 0,
+    Like = 1,
+    DissLike = 2,
+    Funny = 3,
+    Awful = 4
+}
+
+public enum AgeCategory
+{
+    None = 0,
+    Kids = 1,
+    Tennager = 2,
+    Young = 3,
+    Adult = 4
+}
