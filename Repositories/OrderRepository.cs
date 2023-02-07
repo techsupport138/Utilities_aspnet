@@ -125,26 +125,27 @@ public class OrderRepository : IOrderRepository
 		oldOrder.UpdatedAt = DateTime.Now;
 		oldOrder.ProductUseCase = dto.ProductUseCase;
 
-		foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails!)
-		{
-			OrderDetailEntity? oldOrderDetail = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == item.Id);
-			if (oldOrderDetail != null)
+		if (dto.OrderDetails != null)
+			foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails)
 			{
-				ProductEntity? product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
-				if (product != null)
+				OrderDetailEntity? oldOrderDetail = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == item.Id);
+				if (oldOrderDetail != null)
 				{
-					if (product.Stock < item.Count) throw new ArgumentException("failed request! this request is more than stock!");
+					ProductEntity? product = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == item.ProductId);
+					if (product != null)
+					{
+						if (product.Stock < item.Count) throw new ArgumentException("failed request! this request is more than stock!");
 
-					if (dto.Status == OrderStatuses.Paid)
-						if (product.Stock > 0) product.Stock -= item.Count;
-						else throw new ArgumentException("product's stock equals zero!");
+						if (dto.Status == OrderStatuses.Paid)
+							if (product.Stock > 0) product.Stock -= item.Count;
+							else throw new ArgumentException("product's stock equals zero!");
+					}
+
+					oldOrderDetail.ProductId = item.ProductId;
+					oldOrderDetail.Price = item.Price ?? product?.Price;
+					oldOrderDetail.Count = item.Count;
 				}
-
-				oldOrderDetail.ProductId = item.ProductId;
-				oldOrderDetail.Price = item.Price ?? product?.Price;
-				oldOrderDetail.Count = item.Count;
 			}
-		}
 
 		await _dbContext.SaveChangesAsync();
 
