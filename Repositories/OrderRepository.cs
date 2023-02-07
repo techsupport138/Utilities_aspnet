@@ -57,6 +57,8 @@ public class OrderRepository : IOrderRepository
 			ProductUseCase = dto.ProductUseCase,
 			ProductOwnerId = listProducts.First().UserId,
 		};
+		if (dto.UserId.IsNotNullOrEmpty())
+			entityOrder.UserId = dto.UserId;
 
 		await _dbContext.Set<OrderEntity>().AddAsync(entityOrder);
 		await _dbContext.SaveChangesAsync();
@@ -97,6 +99,9 @@ public class OrderRepository : IOrderRepository
 
 		entityOrder.TotalPrice = totalPrice;
 		entityOrder.DiscountPrice = totalPrice * dto.DiscountPercent / 100;
+
+		_dbContext.Set<OrderEntity>().Update(entityOrder);
+		await _dbContext.SaveChangesAsync();
 
 		return new GenericResponse<OrderEntity?>(entityOrder);
 	}
@@ -231,6 +236,9 @@ public class OrderRepository : IOrderRepository
 		});
 		if (!e.OrderDetails.Any()) return new GenericResponse(UtilitiesStatusCodes.Unhandled);
 		e.OrderDetails.Append(orderDetailEntity.Entity);
+		
+
+		e.TotalPrice= e.OrderDetails.Sum(x => x.Price ?? 0);
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}

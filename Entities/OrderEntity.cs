@@ -71,6 +71,7 @@ public class OrderCreateUpdateDto
 	public SendType? SendType { get; set; }
 
 	public IEnumerable<OrderDetailCreateUpdateDto>? OrderDetails { get; set; }
+	public string? UserId { get; set; }
 }
 
 public class OrderDetailCreateUpdateDto
