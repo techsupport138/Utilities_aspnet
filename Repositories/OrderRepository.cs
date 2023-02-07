@@ -95,9 +95,9 @@ public class OrderRepository : IOrderRepository
 			await _dbContext.SaveChangesAsync();
 
 			totalPrice += Convert.ToDouble(productEntity?.Price ?? 0);
-		}
 
-		entityOrder.TotalPrice = totalPrice;
+		}
+		entityOrder.TotalPrice = totalPrice = entityOrder.OrderDetails.Sum(x => x.Price ?? 0);
 		entityOrder.DiscountPrice = totalPrice * dto.DiscountPercent / 100;
 
 		_dbContext.Set<OrderEntity>().Update(entityOrder);
@@ -236,9 +236,9 @@ public class OrderRepository : IOrderRepository
 		});
 		if (!e.OrderDetails.Any()) return new GenericResponse(UtilitiesStatusCodes.Unhandled);
 		e.OrderDetails.Append(orderDetailEntity.Entity);
-		
 
-		e.TotalPrice= e.OrderDetails.Sum(x => x.Price ?? 0);
+
+		e.TotalPrice = e.OrderDetails.Sum(x => x.Price ?? 0);
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
