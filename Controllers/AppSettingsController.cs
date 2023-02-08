@@ -30,6 +30,7 @@ public class AppSettingsController : BaseApiController {
 			Priority = EnumExtension.GetValues<Priority>(),
 			ChatStatus = EnumExtension.GetValues<ChatStatus>(),
 			AppSettings = appSettings
+			
 		}));
 	}
 }
