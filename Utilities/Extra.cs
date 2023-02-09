@@ -63,4 +63,14 @@ public class Utils {
 
 		return otp;
 	}
+    public static AgeCategory CalculateAgeCategories(DateTime birthDate)
+    {
+        var age = DateTime.Today.Year - birthDate.Year;
+        AgeCategory ageCategory = AgeCategory.None;
+        if (age < 13) ageCategory = AgeCategory.Kids;
+        if (age > 13 && age < 18) ageCategory = AgeCategory.Tennager;
+        if (age > 18 && age < 26) ageCategory = AgeCategory.Young;
+        if (age > 26) ageCategory = ageCategory = AgeCategory.Adult;
+        return ageCategory;
+    }
 }

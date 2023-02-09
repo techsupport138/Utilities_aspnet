@@ -117,7 +117,7 @@ public enum OrderType
 {
 	Sale = 100,
 	Purchase = 101,
-	All = 102
+		All = 102
 }
 public enum OrderReportType
 {
@@ -132,4 +132,23 @@ public enum ReportType
 	TopKeyword = 101,
 	PercentUsecase = 102,
 	All = 105
+	None=102
 }
+
+public enum Reaction
+{
+    None = 0,
+    Like = 1,
+    DissLike = 2,
+    Funny = 3,
+    Awful = 4
+}
+
+public enum AgeCategory
+{
+    None = 0,
+    Kids = 1,
+    Tennager = 2,
+    Young = 3,
+    Adult = 4
+\}

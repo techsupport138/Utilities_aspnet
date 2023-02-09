@@ -275,14 +275,15 @@ public class UserRepository : IUserRepository
 		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result);
 	}
 
-	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto)
-	{
-		// string salt = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}SinaMN75";
-		// bool isOk = dto.token == Encryption.GetMd5HashData(salt).ToLower();
-		// if (!isOk) return new GenericResponse<string?>("Unauthorized", UtilitiesStatusCodes.Unhandled);
+	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
+		//Todo: Why Commented This ??? <Mohamadhosein , Phopex>
+		string salt = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}SinaMN75";
+		bool isOk = dto.token == Encryption.GetMd5HashData(salt).ToLower();
+		if (!isOk) return new GenericResponse<string?>("Unauthorized", UtilitiesStatusCodes.Unhandled);
 
-		string mobile = dto.Mobile.Replace("+", "");
-		if (mobile[0].ToString() != "0") mobile = mobile.Insert(0, "0");
+		string mobile = dto.Mobile.DeleteAdditionsInsteadNumber();
+        mobile = mobile.GetLast(10);
+        mobile = mobile.Insert(0, "0");         
 		if (mobile.Length is > 12 or < 9) return new GenericResponse<string?>("شماره موبایل وارد شده صحیح نیست", UtilitiesStatusCodes.BadRequest);
 		UserEntity? existingUser = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Email == mobile ||
 																							 x.PhoneNumber == mobile ||
