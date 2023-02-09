@@ -250,11 +250,10 @@ public class UserRepository : IUserRepository {
 		return new GenericResponse<UserEntity?>(ReadById(user.Id, new JwtSecurityTokenHandler().WriteToken(token)).Result.Result);
 	}
 
-	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {
-		//Todo: Why Commented This ??? <Mohamadhosein , Phopex>
-		string salt = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}SinaMN75";
-		bool isOk = dto.token == Encryption.GetMd5HashData(salt).ToLower();
-		if (!isOk) return new GenericResponse<string?>("Unauthorized", UtilitiesStatusCodes.Unhandled);
+	public async Task<GenericResponse<string?>> GetVerificationCodeForLogin(GetMobileVerificationCodeForLoginDto dto) {		
+		//string salt = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}SinaMN75";
+		//bool isOk = dto.token == Encryption.GetMd5HashData(salt).ToLower();
+		//if (!isOk) return new GenericResponse<string?>("Unauthorized", UtilitiesStatusCodes.Unhandled);
 
 		string mobile = dto.Mobile.DeleteAdditionsInsteadNumber();
         mobile = mobile.GetLast(10);
