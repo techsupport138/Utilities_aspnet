@@ -121,18 +121,18 @@ public enum OrderType {
 
 public enum Reaction
 {
-    None = 0,
-    Like = 1,
-    DissLike = 2,
-    Funny = 3,
-    Awful = 4
+    None = 100,
+    Like = 101,
+    DissLike = 102,
+    Funny = 103,
+    Awful = 104
 }
 
 public enum AgeCategory
 {
-    None = 0,
-    Kids = 1,
-    Tennager = 2,
-    Young = 3,
-    Adult = 4
+    None = 100,
+    Kids = 101,
+    Tennager = 102,
+    Young = 103,
+    Adult = 104
 }

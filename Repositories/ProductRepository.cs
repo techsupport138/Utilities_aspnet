@@ -1,3 +1,5 @@
+using Utilities_aspnet.Entities;
+
 namespace Utilities_aspnet.Repositories;
 
 public interface IProductRepository
@@ -42,9 +44,10 @@ public class ProductRepository : IProductRepository
         q = q.Where(x => x.DeletedAt == null);
         q = q.Where(w => w.ExpireDate >= DateTime.Now);
 
-        if (dto.UserId.IsNotNullOrEmpty())
+        var guestUser = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+        if (dto.FilterByAge && !string.IsNullOrEmpty(guestUser))
         {
-            var user = _dbContext.Set<UserEntity>().FirstOrDefault(f => f.Id == dto.UserId);
+            var user = _dbContext.Set<UserEntity>().FirstOrDefault(f => f.Id == guestUser);
             if (user != null && user.Birthdate.HasValue)
             {
                 var ageCatg = Utils.CalculateAgeCategories(user.Birthdate.Value);
@@ -52,6 +55,9 @@ public class ProductRepository : IProductRepository
             }
             q = q.Where(x => x.UserId == dto.UserId);
         }
+
+        if (dto.AgeCategory is not null)
+            q.Where(w => w.AgeCategory == dto.AgeCategory);
 
         if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
         if (dto.Subtitle.IsNotNullOrEmpty()) q = q.Where(x => (x.Subtitle ?? "").Contains(dto.Subtitle!));
@@ -163,12 +169,7 @@ public class ProductRepository : IProductRepository
             PageSize = dto.PageSize
         };
     }
-
-    //Todo: inja am check konim age expire shode bod neshon nadim?? || dar khosose AgeCategories ham lazem daram ke bedonam lazeme?
-    //momkene khode kasi ke maleke story hastesh bade ye modat mikhad bebine chi gozashte?
-    //pas ghaedatan nabayad inja check konim 
-    //ya maslan check konim age khode sab story bod betone bebine
-    // <MohamadHosein , Phopex>
+    
     public async Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct)
     {
         ProductEntity? i = await _dbContext.Set<ProductEntity>()
@@ -186,34 +187,9 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
         if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
-
-        if (i.VisitsCount == null) i.VisitsCount = 1;
-        else i.VisitsCount += 1;
-        _dbContext.Update(i);
-        await _dbContext.SaveChangesAsync(ct);
-
-        return new GenericResponse<ProductEntity?>(i);
-    }
-
-    public async Task<GenericResponse<ProductEntity?>> ReadById(Guid id, string userId, CancellationToken ct)
-    {
-        ProductEntity? i = await _dbContext.Set<ProductEntity>()
-            .Include(i => i.Media)
-            .Include(i => i.Categories).ThenInclude(x => x.Media)
-            .Include(i => i.Reports)
-            .Include(i => i.Bookmarks)
-            .Include(i => i.Votes)
-            .Include(i => i.Comments)!.ThenInclude(x => x.LikeComments)
-            .Include(i => i.User).ThenInclude(x => x.Media)
-            .Include(i => i.User).ThenInclude(x => x.Categories)
-            .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
-            .Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
-            .Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
-            .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
-        if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
-
+        var userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
         var user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId);
-        if (user != null)
+        if (user is not null && !_dbContext.Set<VisitProducts>().Any(a=>a.UserId == user.Id && a.ProductId == i.Id))
         {
             var visitProduct = new VisitProducts
             {
@@ -221,10 +197,10 @@ public class ProductRepository : IProductRepository
                 ProductId = i.Id,
                 UserId = user.Id,
             };
-            await _dbContext.Set<VisitProducts>().AddAsync(visitProduct);            
+            await _dbContext.Set<VisitProducts>().AddAsync(visitProduct);
         }
         if (i.VisitProducts.Count() == 0) i.VisitsCount = 1;
-        else i.VisitsCount = i.VisitProducts.Count();
+        else i.VisitsCount = i.VisitProducts.Count() + 1;
         _dbContext.Update(i);
         await _dbContext.SaveChangesAsync(ct);
 
@@ -241,6 +217,9 @@ public class ProductRepository : IProductRepository
 
         if (entity == null)
             return new GenericResponse<ProductEntity>(new ProductEntity());
+
+        if(dto.ProductInsight is not null)
+            dto.ProductInsight.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
 
         ProductEntity e = await entity.FillData(dto, _dbContext);
         _dbContext.Update(e);
@@ -328,7 +307,7 @@ public static class ProductEntityExtension
         entity.DeletedAt = dto.DeletedAt ?? entity.DeletedAt;
         entity.UpdatedAt = DateTime.Now;
         entity.ExpireDate = dto.ExpireDate ?? entity.ExpireDate;
-        entity.AgeCategory = dto.AgeCategory ?? AgeCategory.None;
+        entity.AgeCategory = dto.AgeCategory ?? entity.AgeCategory;
 
         if (dto.VisitsCountPlus.HasValue)
         {

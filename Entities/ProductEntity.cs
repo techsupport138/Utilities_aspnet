@@ -153,7 +153,7 @@ public class ProductEntity : BaseEntity
     public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
     public IEnumerable<GroupChatEntity>? GroupChat { get; set; }
     public IEnumerable<ProductInsight>? ProductInsights { get; set; }
-    public IEnumerable<VisitProducts> VisitProducts { get; set; }
+    public IEnumerable<VisitProducts>? VisitProducts { get; set; }
 
     [NotMapped]
     public bool IsBookmarked { get; set; }
@@ -331,10 +331,12 @@ public class ProductFilterDto
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<Guid>? CategoriesAnd { get; set; }
     public string? Query { get; set; }
+    public AgeCategory? AgeCategory { get; set; }
+    public bool FilterByAge { get; set; }
 }
 
 public class ProductInsightDto
 {
     public Reaction Reaction { get; set; }
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
 }
