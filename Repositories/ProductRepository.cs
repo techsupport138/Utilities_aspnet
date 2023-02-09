@@ -7,7 +7,6 @@ public interface IProductRepository
     Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct);
     GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto);
     Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct);
-    Task<GenericResponse<ProductEntity?>> ReadById(Guid id,string userId, CancellationToken ct);
     Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct);
     Task<GenericResponse> Delete(Guid id, CancellationToken ct);
 }
