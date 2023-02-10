@@ -116,7 +116,7 @@ public enum Priority {
 public enum OrderType {
 	Sale = 100,
 	Purchase = 101,
-	None=102
+	All=102
 }
 
 public enum Reaction
@@ -135,4 +135,19 @@ public enum AgeCategory
     Tennager = 102,
     Young = 103,
     Adult = 104
+}
+
+public enum OrderReportType
+{
+	OrderSummary = 100,
+	ProductUseCase = 101,
+	PercentUsecase = 102,
+	All = 105
+}
+public enum ReportType
+{
+	Insight = 100,
+	TopKeyword = 101,
+	PercentUsecase = 102,
+	All = 105
 }
