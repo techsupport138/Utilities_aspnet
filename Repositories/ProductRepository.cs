@@ -41,7 +41,7 @@ public class ProductRepository : IProductRepository
     {
         IQueryable<ProductEntity> q = _dbContext.Set<ProductEntity>();
         q = q.Where(x => x.DeletedAt == null);
-        q = q.Where(w => w.ExpireDate >= DateTime.Now);
+        q = q.Where(w => w.ExpireDate ==null || w.ExpireDate >= DateTime.Now);
 
         var guestUser = _httpContextAccessor.HttpContext!.User.Identity!.Name;
         if (dto.FilterByAge && !string.IsNullOrEmpty(guestUser))
