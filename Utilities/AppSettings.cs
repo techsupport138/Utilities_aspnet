@@ -49,5 +49,7 @@ public class EnumDto {
 	public IEnumerable<IdTitleDto>? SeenStatus { get; set; }
 	public IEnumerable<IdTitleDto>? Priority { get; set; }
 	public IEnumerable<IdTitleDto>? ChatStatus { get; set; }
+	public IEnumerable<IdTitleDto>? Reaction { get; set; }
+	public IEnumerable<IdTitleDto>? AgeCategory { get; set; }
 	public AppSettings? AppSettings { get; set; }
 }

@@ -26,7 +26,7 @@ public class ProductV2Controller : BaseApiController {
 	public async Task<ActionResult<GenericResponse<ProductEntity>>> ReadById(Guid id, CancellationToken ct)
 		=> Result(await _repository.ReadById(id, ct));
 
-	[HttpPut]
+    [HttpPut]
 	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ClaimRequirement]
 	public async Task<ActionResult<GenericResponse<ProductEntity>>> Update(ProductCreateUpdateDto dto, CancellationToken ct)
