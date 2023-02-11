@@ -137,10 +137,10 @@ public class OrderSummaryRequestDto
 	public string? Title { get; set; }
 	public double? Price { get; set; }
 	public OrderType OrderType { get; set; } = OrderType.All;
-	public OrderReportType OrderReportType { get; set; } = OrderReportType.OrderSummary;
+	public OrderReportType OrderReportType { get; set; } = OrderReportType.OrderDate;
 	public int? SectionCount { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
 
-	
+
 }

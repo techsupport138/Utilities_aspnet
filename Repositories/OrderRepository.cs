@@ -255,15 +255,21 @@ public class OrderRepository : IOrderRepository
 
 	public GenericResponse<IQueryable<OrderSummaryResponseDto>> ReadOrderSummary(OrderSummaryRequestDto dto)
 	{
+		string[] useCase = new string[] { "product", "capacity" };
 		IQueryable<OrderEntity> q = _dbContext.Set<OrderEntity>()
 			.Include(x => x.User)
 			.Include(x => x.OrderDetails).ThenInclude(x => x.Product)
 			.Where(x => x.DeletedAt == null)
-			.Where(x => x.CreatedAt >= dto.StartDate)
-			.Where(x => x.CreatedAt <= dto.EndDate);
+			.Where(o => useCase.Contains(o.ProductUseCase)).AsNoTracking();
+
+
+		if (dto.StartDate.HasValue) q = q.Where(x => x.CreatedAt >= dto.StartDate);
+		if (dto.EndDate.HasValue) q = q.Where(x => x.CreatedAt <= dto.EndDate);
 
 		if (dto.OrderType != OrderType.All)
 		{
+			if (dto.UserId == null)
+				return new GenericResponse<IQueryable<OrderSummaryResponseDto>>(null);
 			if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.UserId == dto.UserId);
 			if (dto.OrderType == OrderType.Purchase) q = q.Where(x => x.ProductOwnerId == dto.UserId);
 		}
@@ -278,8 +284,8 @@ public class OrderRepository : IOrderRepository
 		IOrderedQueryable<OrderSummaryResponseDto> c;
 		switch (dto.OrderReportType)
 		{
-			case OrderReportType.OrderSummary:
-				#region OrderSummary      
+			case OrderReportType.OrderDate:
+				#region OrderDate      
 				if (isGratherThanMonth)
 				{
 					c = q.GroupBy(o => new
@@ -320,13 +326,12 @@ public class OrderRepository : IOrderRepository
 				}
 				#endregion
 				break;
-			case OrderReportType.ProductUseCase:
-				#region OrderSummary      
-
-
+			case OrderReportType.OrderDateProductUseCase:
+				#region OrderDateProductUseCase 
 
 				if (isGratherThanMonth)
 				{
+
 					c = q.GroupBy(o => new
 					{
 						(o.CreatedAt ?? DateTime.Now).Month,
@@ -367,25 +372,56 @@ public class OrderRepository : IOrderRepository
 				}
 				#endregion
 				break;
-			default:
-				#region OrderSummary      
+			case OrderReportType.OrderProductUseCase:
+				#region OrderProductUseCase 
 				c = q.GroupBy(o => new
 				{
-					(o.CreatedAt ?? DateTime.Now).Month,
-					(o.CreatedAt ?? DateTime.Now).Year
+					o.ProductUseCase
 				}).Select(g => new OrderSummaryResponseDto
 				{
-					Title = g.Key.Year + " " + CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(g.Key.Month),
-					Month = g.Key.Month,
-					Year = g.Key.Year,
+					Title = g.Max(y => y.ProductUseCase),
 					Count = g.Count(),
 					Total = g.Sum(x => x.TotalPrice),
-					//UseCase = g.Max(y => y.OrderDetails.First().Product.UseCase),
+					UseCase = g.Max(y => y.ProductUseCase)
 
 				})
-				   .OrderBy(a => a.Year)
-				   .ThenBy(a => a.Month);
+					.OrderBy(a => a.Title);
+
 				#endregion
+				break;
+			case OrderReportType.OrderState:
+				#region OrderState 
+				c = q.GroupBy(o => new
+				{
+					o.State
+				}).Select(g => new OrderSummaryResponseDto
+				{
+					Title = g.Max(y => y.State),
+					Count = g.Count(),
+					Total = g.Sum(x => x.TotalPrice)
+
+				})
+					.OrderByDescending(a => a.Total);
+
+				#endregion
+				break;
+			case OrderReportType.OrderStuse:
+				#region OrderStuse 
+				c = q.GroupBy(o => (int)o.Status
+				).Select(g => new OrderSummaryResponseDto
+				{
+					Title = g.Max(y => ((int)y.Status).ToString()),
+					Count = g.Count(),
+					Total = g.Sum(x => x.TotalPrice),
+					UseCase = g.Max(y => ((int)y.Status).ToString())
+
+				})
+					.OrderBy(a => a.Title);
+
+				#endregion
+				break;
+			default:
+				return new GenericResponse<IQueryable<OrderSummaryResponseDto>>(null);
 				break;
 		}
 
