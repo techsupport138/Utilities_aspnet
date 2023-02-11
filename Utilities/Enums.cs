@@ -35,15 +35,31 @@ public enum DatabaseType {
 	MySql = 1
 }
 
-public enum OrderStatuses {
+public enum OrderStatuses
+{
 	Pending = 100,
 	Canceled = 101,
-	Paid = 102
+	Paid = 102,
+	Accept = 103,
+	Reject = 104,
+	InProgress = 105,
+	InProcess = 106,
+	Shipping = 107,//not used yet
+	Refund = 108,//not used yet
+	RefundComplete = 109,//not used yet
+	Complete = 110
+
 }
 
-public enum PayType {
+public enum PayType
+{
 	Online,
-	PayAtHome
+	PayAtHome,
+	Cash = 101,
+	Stripe = 102,
+	Coin = 103,//not used yet
+	Paypal = 104,//not used yet
+	Visa = 105//not used yet
 }
 
 public enum SendType {

@@ -35,6 +35,7 @@ public class OrderEntity : BaseEntity
 	public string? ProductOwnerId { get; set; }
 
 	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
+	public string? State { get; set; }
 }
 
 [Table("OrderDetail")]
@@ -127,6 +128,7 @@ public class OrderSummaryResponseDto
 	public int? Count { get; set; }
 	public double? Total { get; set; }
 	public string? UseCase { get; set; }
+	public OrderType? orderType { get; set; }
 }
 
 public class OrderSummaryRequestDto
@@ -139,4 +141,6 @@ public class OrderSummaryRequestDto
 	public int? SectionCount { get; set; }
 	public DateTime? StartDate { get; set; }
 	public DateTime? EndDate { get; set; }
+
+	
 }
