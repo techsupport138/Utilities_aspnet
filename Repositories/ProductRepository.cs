@@ -26,6 +26,9 @@ public class ProductRepository : IProductRepository
     {
         ProductEntity entity = new();
 
+        if (dto.ProductInsight is not null)
+            dto.ProductInsight.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+
         ProductEntity e = await entity.FillData(dto, _dbContext);
         e.VisitsCount = 1;
         e.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
