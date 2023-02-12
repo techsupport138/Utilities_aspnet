@@ -278,7 +278,7 @@ public class OrderRepository : IOrderRepository
 
 		if (dto.EndDate != null && dto.StartDate != null)
 		{
-			var x = (dto.EndDate.Value - dto.StartDate.Value).TotalDays;
+			double x = (dto.EndDate.Value - dto.StartDate.Value).TotalDays;
 			if (x.ToInt() <= 31) isGratherThanMonth = false;
 		}
 		IOrderedQueryable<OrderSummaryResponseDto> c;

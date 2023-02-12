@@ -43,13 +43,13 @@ public class ProductRepository : IProductRepository
         q = q.Where(x => x.DeletedAt == null);
         q = q.Where(w => w.ExpireDate ==null || w.ExpireDate >= DateTime.Now);
 
-        var guestUser = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+        string? guestUser = _httpContextAccessor.HttpContext!.User.Identity!.Name;
         if (dto.FilterByAge && !string.IsNullOrEmpty(guestUser))
         {
-            var user = _dbContext.Set<UserEntity>().FirstOrDefault(f => f.Id == guestUser);
+            UserEntity? user = _dbContext.Set<UserEntity>().FirstOrDefault(f => f.Id == guestUser);
             if (user != null && user.Birthdate.HasValue)
             {
-                var ageCatg = Utils.CalculateAgeCategories(user.Birthdate.Value);
+                AgeCategory ageCatg = Utils.CalculateAgeCategories(user.Birthdate.Value);
                 q = q.Where(w => w.AgeCategory == ageCatg);
             }
             q = q.Where(x => x.UserId == dto.UserId);
@@ -186,20 +186,20 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
         if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
-        var userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
-        var user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId);
+        string? userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+        UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
         if (user is not null && !_dbContext.Set<VisitProducts>().Any(a=>a.UserId == user.Id && a.ProductId == i.Id))
         {
-            var visitProduct = new VisitProducts
+            VisitProducts visitProduct = new VisitProducts
             {
                 CreatedAt = DateTime.Now,
                 ProductId = i.Id,
                 UserId = user.Id,
             };
-            await _dbContext.Set<VisitProducts>().AddAsync(visitProduct);
+            await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
         }
-        if (i.VisitProducts.Count() == 0) i.VisitsCount = 1;
-        else i.VisitsCount = i.VisitProducts.Count() + 1;
+        if (i.VisitProducts != null && !i.VisitProducts.Any()) i.VisitsCount = 1;
+        else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
         _dbContext.Update(i);
         await _dbContext.SaveChangesAsync(ct);
 
@@ -356,12 +356,12 @@ public static class ProductEntityExtension
         if (dto.ProductInsight is not null)
         {
             List<ProductInsight> productInsights = new();
-            var pInsight = dto.ProductInsight;
+            ProductInsightDto? pInsight = dto.ProductInsight;
             UserEntity? e = await context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == pInsight.UserId);
             if (e != null)
             {
                 ProductInsight pI;
-                var oldProductInsight = await context.Set<ProductInsight>().FirstOrDefaultAsync(f => f.UserId == e.Id && f.ProductId == entity.Id.ToString());
+                ProductInsight? oldProductInsight = await context.Set<ProductInsight>().FirstOrDefaultAsync(f => f.UserId == e.Id && f.ProductId == entity.Id.ToString());
                 if (oldProductInsight is not null && oldProductInsight.Reaction != pInsight.Reaction)
                 {
                     pI = new ProductInsight

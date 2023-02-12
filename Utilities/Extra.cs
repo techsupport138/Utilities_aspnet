@@ -63,14 +63,17 @@ public class Utils {
 
 		return otp;
 	}
-    public static AgeCategory CalculateAgeCategories(DateTime birthDate)
-    {
-        var age = DateTime.Today.Year - birthDate.Year;
-        AgeCategory ageCategory = AgeCategory.None;
-        if (age < 13) ageCategory = AgeCategory.Kids;
-        if (age > 13 && age < 18) ageCategory = AgeCategory.Tennager;
-        if (age > 18 && age < 26) ageCategory = AgeCategory.Young;
-        if (age > 26) ageCategory = ageCategory = AgeCategory.Adult;
-        return ageCategory;
-    }
+
+	public static AgeCategory CalculateAgeCategories(DateTime birthDate) {
+		int age = DateTime.Today.Year - birthDate.Year;
+		AgeCategory ageCategory = AgeCategory.None;
+		ageCategory = age switch {
+			< 13 => AgeCategory.Kids,
+			> 13 and < 18 => AgeCategory.Tennager,
+			> 18 and < 26 => AgeCategory.Young,
+			> 26 => ageCategory = AgeCategory.Adult,
+			_ => ageCategory
+		};
+		return ageCategory;
+	}
 }
