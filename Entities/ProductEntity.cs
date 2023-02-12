@@ -140,7 +140,7 @@ public class ProductEntity : BaseEntity
     public ChatEntity? Chat { get; set; }
 
     public DateTime? ExpireDate { get; set; }
-    public AgeCategory AgeCategory { get; set; }
+    public AgeCategory? AgeCategory { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<FormEntity>? Forms { get; set; }
     public IEnumerable<CategoryEntity>? Categories { get; set; }
@@ -184,10 +184,10 @@ public class ProductInsight : BaseEntity
 [Table("VisitProducts")]
 public class VisitProducts : BaseEntity
 {
-    public UserEntity User { get; set; }
-    public string UserId { get; set; }
-    public ProductEntity ProductEntity { get; set; }
-    public Guid ProductId { get; set; }
+    public UserEntity? User { get; set; }
+    public string? UserId { get; set; }
+    public ProductEntity? ProductEntity { get; set; }
+    public Guid? ProductId { get; set; }
 }
 
 public class ProductCreateUpdateDto
