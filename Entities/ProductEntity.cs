@@ -140,7 +140,7 @@ public class ProductEntity : BaseEntity
     public ChatEntity? Chat { get; set; }
 
     public DateTime? ExpireDate { get; set; }
-    public AgeCategory AgeCategory { get; set; }
+    public AgeCategory? AgeCategory { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<FormEntity>? Forms { get; set; }
     public IEnumerable<CategoryEntity>? Categories { get; set; }
@@ -174,20 +174,20 @@ public class ProductEntity : BaseEntity
 [Table("ProductsInsight")]
 public class ProductInsight : BaseEntity
 {
-    public Reaction Reaction { get; set; }
-    public UserEntity User { get; set; }
-    public string UserId { get; set; }
-    public ProductEntity ProductEntity { get; set; }
-    public string ProductId { get; set; }
+    public Reaction? Reaction { get; set; }
+    public UserEntity? User { get; set; }
+    public string? UserId { get; set; }
+    public ProductEntity? ProductEntity { get; set; }
+    public string? ProductId { get; set; }
 }
 
 [Table("VisitProducts")]
 public class VisitProducts : BaseEntity
 {
-    public UserEntity User { get; set; }
-    public string UserId { get; set; }
-    public ProductEntity ProductEntity { get; set; }
-    public Guid ProductId { get; set; }
+    public UserEntity? User { get; set; }
+    public string? UserId { get; set; }
+    public ProductEntity? ProductEntity { get; set; }
+    public Guid? ProductId { get; set; }
 }
 
 public class ProductCreateUpdateDto
@@ -256,7 +256,7 @@ public class ProductCreateUpdateDto
     public DateTime? ExpireDate { get; set; }
     public ProductStatus? Status { get; set; }
     public Currency? Currency { get; set; }
-    public ProductInsightDto ProductInsight { get; set; }
+    public ProductInsightDto? ProductInsight { get; set; }
     public AgeCategory? AgeCategory { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<string>? Teams { get; set; }
@@ -337,6 +337,6 @@ public class ProductFilterDto
 
 public class ProductInsightDto
 {
-    public Reaction Reaction { get; set; }
+    public Reaction? Reaction { get; set; }
     public string? UserId { get; set; }
 }

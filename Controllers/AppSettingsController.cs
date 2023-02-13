@@ -32,6 +32,7 @@ public class AppSettingsController : BaseApiController {
 			Reaction = EnumExtension.GetValues<Reaction>(),
 			AgeCategory = EnumExtension.GetValues<AgeCategory>(),
 			AppSettings = appSettings
+			
 		}));
 	}
 }

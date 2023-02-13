@@ -1,17 +1,21 @@
 namespace Utilities_aspnet.Utilities;
 
-public static class EnumExtension {
-	public static IEnumerable<IdTitleDto> GetValues<T>() {
-		return (from int itemType in Enum.GetValues(typeof(T)) 
-			select new IdTitleDto {Title = Enum.GetName(typeof(T), itemType), Id = itemType}).ToList();
+public static class EnumExtension
+{
+	public static IEnumerable<IdTitleDto> GetValues<T>()
+	{
+		return (from int itemType in Enum.GetValues(typeof(T))
+				select new IdTitleDto { Title = Enum.GetName(typeof(T), itemType), Id = itemType }).ToList();
 	}
 }
 
-public static class UtilitiesStatusCodesExtension {
-	public static int Value(this UtilitiesStatusCodes statusCode) => (int) statusCode;
+public static class UtilitiesStatusCodesExtension
+{
+	public static int Value(this UtilitiesStatusCodes statusCode) => (int)statusCode;
 }
 
-public enum UtilitiesStatusCodes {
+public enum UtilitiesStatusCodes
+{
 	Success = 200,
 	BadRequest = 400,
 	Forbidden = 403,
@@ -24,35 +28,55 @@ public enum UtilitiesStatusCodes {
 	UserNotFound = 605,
 }
 
-public enum OtpResult {
+public enum OtpResult
+{
 	Ok = 1,
 	Incorrect = 2,
 	TimeOut = 3
 }
 
-public enum DatabaseType {
+public enum DatabaseType
+{
 	SqlServer = 0,
 	MySql = 1
 }
 
-public enum OrderStatuses {
+public enum OrderStatuses
+{
 	Pending = 100,
 	Canceled = 101,
-	Paid = 102
+	Paid = 102,
+	Accept = 103,
+	Reject = 104,
+	InProgress = 105,
+	InProcess = 106,
+	Shipping = 107,//not used yet
+	Refund = 108,//not used yet
+	RefundComplete = 109,//not used yet
+	Complete = 110
+
 }
 
-public enum PayType {
+public enum PayType
+{
 	Online,
-	PayAtHome
+	PayAtHome,
+	Cash = 101,
+	Stripe = 102,
+	Coin = 103,//not used yet
+	Paypal = 104,//not used yet
+	Visa = 105//not used yet
 }
 
-public enum SendType {
+public enum SendType
+{
 	Pishtaz,
 	Custome,
 	Tipax
 }
 
-public enum FormFieldType {
+public enum FormFieldType
+{
 	SingleLineText,
 	MultiLineText,
 	MultiSelect,
@@ -69,20 +93,23 @@ public enum FormFieldType {
 	DateTime
 }
 
-public enum TransactionStatus {
+public enum TransactionStatus
+{
 	Pending = 100,
 	Fail = 101,
 	Success = 102
 }
 
-public enum ProductStatus {
+public enum ProductStatus
+{
 	Released = 1,
 	Expired = 2,
 	InQueue = 3,
 	Deleted = 4
 }
 
-public enum Currency {
+public enum Currency
+{
 	Rial = 100,
 	Dolor = 101,
 	Lira = 102,
@@ -90,7 +117,8 @@ public enum Currency {
 	Btc = 200
 }
 
-public enum SeenStatus {
+public enum SeenStatus
+{
 	UnSeen = 100,
 	Seen = 101,
 	SeenDetail = 102,
@@ -98,7 +126,8 @@ public enum SeenStatus {
 	Deleted = 104
 }
 
-public enum ChatStatus {
+public enum ChatStatus
+{
 	Open = 100,
 	Closes = 101,
 	WaitingForHost = 102,
@@ -106,33 +135,52 @@ public enum ChatStatus {
 	Deleted = 104
 }
 
-public enum Priority {
+public enum Priority
+{
 	VeryHigh = 100,
 	High = 101,
 	Normal = 102,
 	Low = 103
 }
 
-public enum OrderType {
+public enum OrderType
+{
 	Sale = 100,
 	Purchase = 101,
-	None=102
+	All = 102
 }
 
 public enum Reaction
 {
-    None = 100,
-    Like = 101,
-    DissLike = 102,
-    Funny = 103,
-    Awful = 104
+	None = 100,
+	Like = 101,
+	DissLike = 102,
+	Funny = 103,
+	Awful = 104
 }
 
 public enum AgeCategory
 {
-    None = 100,
-    Kids = 101,
-    Tennager = 102,
-    Young = 103,
-    Adult = 104
+	None = 100,
+	Kids = 101,
+	Tennager = 102,
+	Young = 103,
+	Adult = 104
+}
+
+public enum OrderReportType
+{
+	OrderDate = 100,
+	OrderDateProductUseCase = 101,
+	OrderProductUseCase = 102,
+	OrderState = 103,
+	OrderStuse = 104,
+	All = 105
+}
+public enum ReportType
+{
+	Insight = 100,
+	TopKeyword = 101,
+	PercentUsecase = 102,
+	All = 105
 }
