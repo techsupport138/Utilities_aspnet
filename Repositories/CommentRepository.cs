@@ -38,23 +38,46 @@ public class CommentRepository : ICommentRepository {
 	}
 
 	public GenericResponse<IQueryable<CommentEntity>?> Filter(CommentFilterDto dto) {
-		IQueryable<CommentEntity> q = _dbContext.Set<CommentEntity>().Where(x => x.DeletedAt == null);
+		if (!dto.ShowDeleted)
+		{
+			IQueryable<CommentEntity> q = _dbContext.Set<CommentEntity>().Where(x => x.DeletedAt == null);
 
-		if (dto.ProductId.HasValue) q = q.Where(x => x.ProductId == dto.ProductId);
-		if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
-		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
+			if (dto.ProductId.HasValue) q = q.Where(x => x.ProductId == dto.ProductId);
+			if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
+			if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 
-		q = q.OrderByDescending(x => x.CreatedAt)
-			.Include(x => x.User).ThenInclude(x => x!.Media)
-			.Include(x => x.Media)
-			.Include(x => x.LikeComments)
-			.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
-			.OrderByDescending(x => x.CreatedAt)
-			.AsNoTracking();
+			q = q.OrderByDescending(x => x.CreatedAt)
+				.Include(x => x.User).ThenInclude(x => x!.Media)
+				.Include(x => x.Media)
+				.Include(x => x.LikeComments)
+				.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
+				.OrderByDescending(x => x.CreatedAt)
+				.AsNoTracking();
 
-		if (dto.ShowProducts.IsTrue()) q = q.Include(x => x.Product).ThenInclude(x => x.Media);
+			if (dto.ShowProducts.IsTrue()) q = q.Include(x => x.Product).ThenInclude(x => x.Media);
 
-		return new GenericResponse<IQueryable<CommentEntity>?>(q);
+			return new GenericResponse<IQueryable<CommentEntity>?>(q);
+		}
+		else
+		{
+			IQueryable<CommentEntity> q = _dbContext.Set<CommentEntity>();
+
+			if (dto.ProductId.HasValue) q = q.Where(x => x.ProductId == dto.ProductId);
+			if (dto.Status.HasValue) q = q.Where(x => x.Status == dto.Status);
+			if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
+
+			q = q.OrderByDescending(x => x.CreatedAt)
+				.Include(x => x.User).ThenInclude(x => x!.Media)
+				.Include(x => x.Media)
+				.Include(x => x.LikeComments)
+				.Include(x => x.Children)!.ThenInclude(x => x.User).ThenInclude(x => x!.Media)
+				.OrderByDescending(x => x.CreatedAt)
+				.AsNoTracking();
+
+			if (dto.ShowProducts.IsTrue()) q = q.Include(x => x.Product).ThenInclude(x => x.Media);
+
+			return new GenericResponse<IQueryable<CommentEntity>?>(q);
+		}
 	}
 
 	public async Task<GenericResponse<CommentEntity?>> Read(Guid id) {

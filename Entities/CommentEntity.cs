@@ -52,4 +52,5 @@ public class CommentFilterDto {
 	public Guid? CategoryId { get; set; }
 	public bool? ShowProducts { get; set; }
 	public ChatStatus? Status { get; set; }
+    public bool ShowDeleted { get; set; }
 }
