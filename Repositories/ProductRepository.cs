@@ -217,7 +217,7 @@ public class ProductRepository : IProductRepository
         if (i.ProductInsights.Any())
         {
             i.ProductInsights.GroupBy(g => g.Reaction).ToList().ForEach(item =>
-                item.Select(s => s.Count == item.Count());
+                item.Select(s => s.Count == item.Count()));
         }
 
         return new GenericResponse<ProductEntity?>(i);
