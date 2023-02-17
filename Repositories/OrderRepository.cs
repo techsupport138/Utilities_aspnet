@@ -97,7 +97,7 @@ public class OrderRepository : IOrderRepository
 			totalPrice += Convert.ToDouble(productEntity?.Price ?? 0);
 
 		}
-		entityOrder.TotalPrice = totalPrice = entityOrder.OrderDetails.Sum(x => x.Price ?? 0);
+		entityOrder.TotalPrice = totalPrice = entityOrder.OrderDetails.Where(o => o.DeletedAt != null).Sum(x => x.Price ?? 0);
 		entityOrder.DiscountPrice = totalPrice * dto.DiscountPercent / 100;
 
 		_dbContext.Set<OrderEntity>().Update(entityOrder);
@@ -109,7 +109,7 @@ public class OrderRepository : IOrderRepository
 	public async Task<GenericResponse<OrderEntity?>> Update(OrderCreateUpdateDto dto)
 	{
 		string userId = _httpContextAccessor.HttpContext?.User.Identity?.Name!;
-		OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.UserId == userId && x.Id == dto.Id);
+		OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id && (x.UserId == userId || x.ProductOwnerId == userId));
 		if (oldOrder == null) return new GenericResponse<OrderEntity?>(null, UtilitiesStatusCodes.NotFound);
 
 		oldOrder.Description = dto.Description;
@@ -184,12 +184,12 @@ public class OrderRepository : IOrderRepository
 		if (dto.PayNumber.IsNotNullOrEmpty()) q = q.Where(x => (x.PayNumber ?? "").Contains(dto.PayNumber!));
 		if (dto.ReceivedDate.HasValue) q = q.Where(x => x.ReceivedDate == dto.ReceivedDate);
 
-		if(dto.UserId.IsNotNullOrEmpty() && dto.ProductOwnerId.IsNotNullOrEmpty())
-			q = q.Where(x => x.ProductOwnerId == dto.ProductOwnerId ||  x.UserId == dto.UserId);
+		if (dto.UserId.IsNotNullOrEmpty() && dto.ProductOwnerId.IsNotNullOrEmpty())
+			q = q.Where(x => x.ProductOwnerId == dto.ProductOwnerId || x.UserId == dto.UserId);
 		else
-        { 
-		if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
-		if (dto.ProductOwnerId.IsNotNullOrEmpty()) q = q.Where(x => x.ProductOwnerId == dto.ProductOwnerId);
+		{
+			if (dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
+			if (dto.ProductOwnerId.IsNotNullOrEmpty()) q = q.Where(x => x.ProductOwnerId == dto.ProductOwnerId);
 		}
 		if (dto.StartDate.HasValue) q = q.Where(x => x.CreatedAt >= dto.StartDate);
 		if (dto.EndDate.HasValue) q = q.Where(x => x.CreatedAt <= dto.EndDate);
@@ -232,6 +232,13 @@ public class OrderRepository : IOrderRepository
 	{
 		OrderEntity? e = await _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.Id == dto.OrderId);
 		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
+
+
+		IEnumerable<string?> q = e.OrderDetails?.GroupBy(x => x.Product?.UserId).Select(z => z.Key);
+		if (q.Count() > 1)
+			return new GenericResponse(UtilitiesStatusCodes.BadRequest, "Cannot Add from multiple seller.");
+
+
 		EntityEntry<OrderDetailEntity> orderDetailEntity = await _dbContext.Set<OrderDetailEntity>().AddAsync(new OrderDetailEntity
 		{
 			ProductId = dto.ProductId,
@@ -245,7 +252,9 @@ public class OrderRepository : IOrderRepository
 		e.OrderDetails.Append(orderDetailEntity.Entity);
 
 
-		e.TotalPrice = e.OrderDetails.Sum(x => x.Price ?? 0);
+		e.TotalPrice = e.OrderDetails.Where(o => o.DeletedAt != null).Sum(x => x.Price ?? 0);
+		e.UpdatedAt = DateTime.Now;
+		e.ProductOwnerId = q.First();
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
@@ -255,6 +264,13 @@ public class OrderRepository : IOrderRepository
 		OrderDetailEntity? e = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == id);
 		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 		e.DeletedAt = DateTime.Now;
+
+
+
+		await _dbContext.SaveChangesAsync();
+		e.Order.TotalPrice = e.Order.OrderDetails?.Where(o => o.DeletedAt != null).Sum(x => x.Price ?? 0);
+		e.Order.UpdatedAt = DateTime.Now;
+		e.Order.ProductOwnerId = e.Order.OrderDetails?.Where(o => o.DeletedAt != null).FirstOrDefault()?.Product?.UserId ?? null;
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
