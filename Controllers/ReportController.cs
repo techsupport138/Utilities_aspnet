@@ -12,7 +12,7 @@ public class ReportController : BaseApiController
 	public ActionResult<GenericResponse<IEnumerable<ReportEntity>>> Read(ReportFilterDto parameters) => Result(_repository.Read(parameters));
 
 
-	[HttpPost("TopReport")]
+	[HttpPost("TopReports")]
 	public ActionResult<GenericResponse<List<string>>> TopReport(ReportFilterDto parameters) => Result(_repository.TopReport(parameters));
 
 
