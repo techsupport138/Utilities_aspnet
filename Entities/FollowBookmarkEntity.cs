@@ -2,9 +2,14 @@
 
 [Table("Follows")]
 public class FollowEntity : BaseEntity {
+	/// <summary>
+	/// دنبال شده
+	/// </summary>
 	public string? FollowerUserId { get; set; }
 	public UserEntity? FollowerUser { get; set; }
-
+	/// <summary>
+	/// دنبال کننده
+	/// </summary>
 	public string? FollowsUserId { get; set; }
 	public UserEntity? FollowsUser { get; set; }
 }
