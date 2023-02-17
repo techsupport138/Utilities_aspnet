@@ -172,13 +172,14 @@ public class ProductEntity : BaseEntity
 }
 
 [Table("ProductsInsight")]
-public class ProductInsight : BaseEntity
+public class ProductInsight : BaseEntity  
 {
     public Reaction? Reaction { get; set; }
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }
     public ProductEntity? ProductEntity { get; set; }
     public string? ProductId { get; set; }
+    public int? Count { get; set; } = 0;
 }
 
 [Table("VisitProducts")]
@@ -332,7 +333,8 @@ public class ProductFilterDto
     public IEnumerable<Guid>? CategoriesAnd { get; set; }
     public string? Query { get; set; }
     public AgeCategory? AgeCategory { get; set; }
-    public bool FilterByAge { get; set; }
+    public bool FilterByAge { get; set; } = false;
+    public bool ShowExpired { get; set; } = false;
 }
 
 public class ProductInsightDto
