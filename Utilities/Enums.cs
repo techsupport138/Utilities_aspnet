@@ -26,6 +26,7 @@ public enum UtilitiesStatusCodes
 	UserAlreadyExist = 603,
 	UserSuspended = 604,
 	UserNotFound = 605,
+	MultipleSeller = 607
 }
 
 public enum OtpResult
