@@ -1,6 +1,6 @@
 ﻿namespace Utilities_aspnet.Repositories;
 
-public interface IChatRepository {
+public interface IOldChatRepository {
 	Task<GenericResponse<ChatReadDto?>> Create(ChatCreateUpdateDto model);
 	Task<GenericResponse<IEnumerable<ChatReadDto>?>> Read();
 	Task<GenericResponse<IEnumerable<ChatReadDto>?>> ReadByUserId(string id);
@@ -17,11 +17,11 @@ public interface IChatRepository {
 	GenericResponse<IQueryable<GroupChatMessageEntity>?> ReadGroupChatMessages(Guid id);
 }
 
-public class ChatRepository : IChatRepository {
+public class OldChatRepository : IOldChatRepository {
 	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public ChatRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
+	public OldChatRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
 		_dbContext = dbContext;
 		_httpContextAccessor = httpContextAccessor;
 	}
