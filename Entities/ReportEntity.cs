@@ -23,4 +23,19 @@ public class ReportEntity : BaseEntity {
 public class ReportFilterDto {
 	public bool? User { get; set; }
 	public bool? Product { get; set; }
+	public ReportType ReportType { get; set; }
+	public string? UserId { get; set; }
+	public string? CreatorUserId { get; set; }
+	public int? Count { get; set; }
+}
+
+public class ReportResponseDto
+{
+	public string? Title { get; set; }
+	public int? Month { get; set; }
+	public int? Year { get; set; }
+	public int? Day { get; set; }
+	public int? Count { get; set; }
+	public double? Total { get; set; }
+	public Guid? ProductId { get; set; }
 }

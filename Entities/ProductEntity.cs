@@ -332,7 +332,7 @@ public class ProductFilterDto
     public IEnumerable<Guid>? CategoriesAnd { get; set; }
     public string? Query { get; set; }
     public AgeCategory? AgeCategory { get; set; }
-    public bool FilterByAge { get; set; }
+    public bool? FilterByAge { get; set; }
 }
 
 public class ProductInsightDto

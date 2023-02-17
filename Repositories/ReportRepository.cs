@@ -36,6 +36,41 @@ public class ReportRepository : IReportRepository {
 		return new GenericResponse<IQueryable<ReportEntity>>(entities);
 	}
 
+		public List<ReportResponseDto> Report(ReportFilterDto dto) {
+		List<ReportResponseDto> entities=new List<ReportResponseDto>();
+		if(dto.ReportType==ReportType.TopKeyword)
+        {
+			string[] useCase = new string[] { "product", "capacity" };
+			IQueryable<ProductEntity> plist1 = _dbContext.Set<ProductEntity>().AsNoTracking();
+			if (dto.UserId.IsNotNullOrEmpty()) plist1 = plist1.Where(x => x.UserId == dto.UserId );
+			plist1.Where(o => useCase.Contains(o.UseCase) && o.KeyValues2!=null).Take(10).OrderByDescending(p=>p.CreatedAt);
+
+			IQueryable<ProductEntity> plist2 = _dbContext.Set<ProductEntity>().AsNoTracking();
+			if (dto.UserId.IsNotNullOrEmpty())
+			{
+				plist2 = plist2.Where(x => x.UserId == dto.UserId);
+				plist2 = plist2.Where(x => x.Bookmarks!=null && x.Bookmarks.Any(b => b.UserId==dto.UserId)).OrderByDescending(b => b.CreatedAt);
+			}
+			plist2.Where(o => useCase.Contains(o.UseCase) && o.KeyValues2 != null).Take(10);
+
+
+			var plists = plist1.Concat(plist2).Select(p=>p.KeyValues2!.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+	.Select((str, idx) => new { str, idx })
+	.ToDictionary(x => x.str, x => x.idx));
+
+
+		
+			foreach (var item in plists.ToList())
+            {
+				entities.Add(new ReportResponseDto { Title = item.ToString() });
+
+			} 
+		}
+
+		
+		return entities;
+	}
+
 	public async Task<GenericResponse> Delete(Guid id) {
 		ReportEntity? report = await _dbContext.Set<ReportEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 		if (report == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
@@ -52,4 +87,6 @@ public class ReportRepository : IReportRepository {
 			.FirstOrDefaultAsync(x => x.Id == id);
 		return new GenericResponse<ReportEntity?>(entity);
 	}
+
+
 }

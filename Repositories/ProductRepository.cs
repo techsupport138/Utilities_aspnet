@@ -47,7 +47,7 @@ public class ProductRepository : IProductRepository
         q = q.Where(w => w.ExpireDate ==null || w.ExpireDate >= DateTime.Now);
 
         string? guestUser = _httpContextAccessor.HttpContext!.User.Identity!.Name;
-        if (dto.FilterByAge && !string.IsNullOrEmpty(guestUser))
+        if (dto.FilterByAge!=null && dto.FilterByAge == true && !string.IsNullOrEmpty(guestUser))
         {
             UserEntity? user = _dbContext.Set<UserEntity>().FirstOrDefault(f => f.Id == guestUser);
             if (user != null && user.Birthdate.HasValue)
@@ -57,9 +57,11 @@ public class ProductRepository : IProductRepository
             }
             q = q.Where(x => x.UserId == dto.UserId);
         }
-
+     
         if (dto.AgeCategory is not null)
             q.Where(w => w.AgeCategory == dto.AgeCategory);
+
+        if (dto.FilterByAge == null && dto.UserId.IsNotNullOrEmpty()) q = q.Where(x => x.UserId == dto.UserId);
 
         if (dto.Title.IsNotNullOrEmpty()) q = q.Where(x => (x.Title ?? "").Contains(dto.Title!));
         if (dto.Subtitle.IsNotNullOrEmpty()) q = q.Where(x => (x.Subtitle ?? "").Contains(dto.Subtitle!));
