@@ -192,18 +192,18 @@ public class PaymentRepository : IPaymentRepository {
 
 
 
-			await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity
-			{
-				Amount = order.TotalPrice.ToInt(),
-				Authority = paymentIntent.StripeResponse.ToString(),
-				CreatedAt = DateTime.Now,
-				Descriptions = "ClientSecret"+paymentIntent.ClientSecret,
-				GatewayName = "Stripe",
-				UserId = userId,
-				ProductId = productId,
-				StatusId = TransactionStatus.Pending
-			});
-			await _dbContext.SaveChangesAsync();
+			//await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity
+			//{
+			//	Amount = order.TotalPrice.ToInt(),
+			//	Authority = paymentIntent.StripeResponse.ToString(),
+			//	CreatedAt = DateTime.Now,
+			//	Descriptions = "ClientSecret"+paymentIntent.ClientSecret,
+			//	GatewayName = "Stripe",
+			//	UserId = userId,
+			//	ProductId = productId,
+			//	StatusId = TransactionStatus.Pending
+			//});
+			//await _dbContext.SaveChangesAsync();
 
 			
 			return new GenericResponse<string?>(paymentIntent.ClientSecret, UtilitiesStatusCodes.Success);
