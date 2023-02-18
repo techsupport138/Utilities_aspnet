@@ -13,7 +13,13 @@ public class ReportController : BaseApiController
 
 
 	[HttpPost("TopReports")]
+	
 	public ActionResult<GenericResponse<List<string>>> TopReport(ReportFilterDto parameters) => Result(_repository.TopReport(parameters));
+
+	[HttpPost("CompletationInformation")]
+	public ActionResult<GenericResponse<List<ReportResponseDto>>> CompletationInformation(ReportFilterDto parameters) => Result(_repository.CompletationInformation(parameters));
+
+
 
 
 	[HttpGet("{id:guid}")]

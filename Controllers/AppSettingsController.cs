@@ -31,6 +31,7 @@ public class AppSettingsController : BaseApiController {
 			ChatStatus = EnumExtension.GetValues<ChatStatus>(),
 			Reaction = EnumExtension.GetValues<Reaction>(),
 			AgeCategory = EnumExtension.GetValues<AgeCategory>(),
+			ReferenceIdType = EnumExtension.GetValues<ReferenceIdType>(),
 			AppSettings = appSettings
 			
 		}));

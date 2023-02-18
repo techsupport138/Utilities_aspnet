@@ -38,7 +38,7 @@ public class OrderRepository : IOrderRepository
 
 		IEnumerable<string?> q = listProducts.GroupBy(x => x.UserId).Select(z => z.Key);
 		if (q.Count() > 1)
-			return new GenericResponse<OrderEntity?>(null, UtilitiesStatusCodes.BadRequest, "Cannot Add from multiple seller.");
+			return new GenericResponse<OrderEntity?>(null, UtilitiesStatusCodes.MultipleSeller, "Cannot Add from multiple seller.");
 
 		OrderEntity entityOrder = new()
 		{
@@ -97,7 +97,7 @@ public class OrderRepository : IOrderRepository
 			totalPrice += Convert.ToDouble(productEntity?.Price ?? 0);
 
 		}
-		entityOrder.TotalPrice = totalPrice = entityOrder.OrderDetails.Where(o => o.DeletedAt != null).Sum(x => x.Price ?? 0);
+		entityOrder.TotalPrice = totalPrice = entityOrder.OrderDetails.Where(o => o.DeletedAt == null).Sum(x => x.Price ?? 0);
 		entityOrder.DiscountPrice = totalPrice * dto.DiscountPercent / 100;
 
 		_dbContext.Set<OrderEntity>().Update(entityOrder);
@@ -112,18 +112,18 @@ public class OrderRepository : IOrderRepository
 		OrderEntity? oldOrder = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.Id == dto.Id && (x.UserId == userId || x.ProductOwnerId == userId));
 		if (oldOrder == null) return new GenericResponse<OrderEntity?>(null, UtilitiesStatusCodes.NotFound);
 
-		oldOrder.Description = dto.Description;
-		oldOrder.ReceivedDate = dto.ReceivedDate;
-		oldOrder.Status = dto.Status;
-		oldOrder.TotalPrice = dto.TotalPrice;
-		oldOrder.DiscountPrice = dto.DiscountPrice;
-		oldOrder.PayType = dto.PayType;
-		oldOrder.SendPrice = dto.SendPrice;
-		oldOrder.SendType = dto.SendType;
-		oldOrder.DiscountCode = dto.DiscountCode;
-		oldOrder.DiscountPercent = dto.DiscountPercent;
+		oldOrder.Description = dto.Description ?? oldOrder.Description;
+		oldOrder.ReceivedDate = dto.ReceivedDate ?? oldOrder.ReceivedDate;
+		oldOrder.Status = dto.Status ?? oldOrder.Status;
+		oldOrder.TotalPrice = dto.TotalPrice ?? oldOrder.TotalPrice;
+		oldOrder.DiscountPrice = dto.DiscountPrice ?? oldOrder.DiscountPrice;
+		oldOrder.PayType = dto.PayType ?? oldOrder.PayType;
+		oldOrder.SendPrice = dto.SendPrice ?? oldOrder.SendPrice;
+		oldOrder.SendType = dto.SendType ?? oldOrder.SendType;
+		oldOrder.DiscountCode = dto.DiscountCode ?? oldOrder.DiscountCode;
+		oldOrder.DiscountPercent = dto.DiscountPercent ?? oldOrder.DiscountPercent;
 		oldOrder.UpdatedAt = DateTime.Now;
-		oldOrder.ProductUseCase = dto.ProductUseCase;
+		oldOrder.ProductUseCase = dto.ProductUseCase ?? oldOrder.ProductUseCase;
 
 		if (dto.OrderDetails != null)
 			foreach (OrderDetailCreateUpdateDto item in dto.OrderDetails)
@@ -230,13 +230,13 @@ public class OrderRepository : IOrderRepository
 
 	public async Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto)
 	{
-		OrderEntity? e = await _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails).FirstOrDefaultAsync(x => x.Id == dto.OrderId);
+		OrderEntity? e = await _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails.Where(x => x.DeletedAt == null)).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == dto.OrderId);
 		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 
 
 		IEnumerable<string?> q = e.OrderDetails?.GroupBy(x => x.Product?.UserId).Select(z => z.Key);
 		if (q.Count() > 1)
-			return new GenericResponse(UtilitiesStatusCodes.BadRequest, "Cannot Add from multiple seller.");
+			return new GenericResponse(UtilitiesStatusCodes.MultipleSeller, "Cannot Add from multiple seller.");
 
 
 		EntityEntry<OrderDetailEntity> orderDetailEntity = await _dbContext.Set<OrderDetailEntity>().AddAsync(new OrderDetailEntity
@@ -251,26 +251,28 @@ public class OrderRepository : IOrderRepository
 		if (!e.OrderDetails.Any()) return new GenericResponse(UtilitiesStatusCodes.Unhandled);
 		e.OrderDetails.Append(orderDetailEntity.Entity);
 
+		ProductEntity p = await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(p => p.Id == orderDetailEntity.Entity.ProductId);
 
-		e.TotalPrice = e.OrderDetails.Where(o => o.DeletedAt != null).Sum(x => x.Price ?? 0);
+		e.TotalPrice = e.OrderDetails.Where(o => o.DeletedAt == null).Sum(x => x.Price ?? 0);
 		e.UpdatedAt = DateTime.Now;
-		e.ProductOwnerId = q.First();
+		e.ProductOwnerId = q.First() ?? p?.UserId;//order detail agar null get pownerid
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
 
 	public async Task<GenericResponse> DeleteOrderDetail(Guid id)
 	{
-		OrderDetailEntity? e = await _dbContext.Set<OrderDetailEntity>().FirstOrDefaultAsync(x => x.Id == id);
+		OrderDetailEntity? e = await _dbContext.Set<OrderDetailEntity>().Include(e => e.Order).ThenInclude(d => d.OrderDetails).ThenInclude(d1 => d1.Product).FirstOrDefaultAsync(x => x.Id == id);
+
 		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
 		e.DeletedAt = DateTime.Now;
 
 
 
 		await _dbContext.SaveChangesAsync();
-		e.Order.TotalPrice = e.Order.OrderDetails?.Where(o => o.DeletedAt != null).Sum(x => x.Price ?? 0);
+		e.Order.TotalPrice = e.Order.OrderDetails?.Where(o => o.DeletedAt == null).Sum(x => x.Price ?? 0);
 		e.Order.UpdatedAt = DateTime.Now;
-		e.Order.ProductOwnerId = e.Order.OrderDetails?.Where(o => o.DeletedAt != null).FirstOrDefault()?.Product?.UserId ?? null;
+		e.Order.ProductOwnerId = e.Order.OrderDetails?.Where(o => o.DeletedAt == null && o.Product != null && o.Product.UserId != null).FirstOrDefault()?.Product?.UserId;
 		await _dbContext.SaveChangesAsync();
 		return new GenericResponse();
 	}
@@ -292,8 +294,8 @@ public class OrderRepository : IOrderRepository
 		{
 			if (dto.UserId == null)
 				return new GenericResponse<IQueryable<OrderSummaryResponseDto>>(null);
-			if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.UserId == dto.UserId);
-			if (dto.OrderType == OrderType.Purchase) q = q.Where(x => x.ProductOwnerId == dto.UserId);
+			if (dto.OrderType == OrderType.Purchase) q = q.Where(x => x.UserId == dto.UserId);
+			if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.ProductOwnerId == dto.UserId);
 		}
 
 		bool isGratherThanMonth = true;
