@@ -47,7 +47,7 @@ public class ProductRepository : IProductRepository
         if (!dto.ShowExpired) q = q.Where(w => w.ExpireDate == null || w.ExpireDate >= DateTime.Now);
 
         string? guestUser = _httpContextAccessor.HttpContext!.User.Identity!.Name;
-        if (dto.FilterByAge!=null && dto.FilterByAge == true && !string.IsNullOrEmpty(guestUser))
+        if (dto.FilterByAge != null && dto.FilterByAge == true && !string.IsNullOrEmpty(guestUser))
         {
             UserEntity? user = _dbContext.Set<UserEntity>().FirstOrDefault(f => f.Id == guestUser);
             if (user != null && user.Birthdate.HasValue)
@@ -57,7 +57,7 @@ public class ProductRepository : IProductRepository
             }
             q = q.Where(x => x.UserId == dto.UserId);
         }
-     
+
         if (dto.AgeCategory is not null)
             q.Where(w => w.AgeCategory == dto.AgeCategory);
 
@@ -214,11 +214,14 @@ public class ProductRepository : IProductRepository
             await _dbContext.SaveChangesAsync(ct);
         }
 
-        if (i.ProductInsights.Any())
+        if (i.ProductInsights?.Any() != null)
         {
             i.ProductInsights.GroupBy(g => g.Reaction).ToList().ForEach(item =>
                 item.Select(s => s.Count == item.Count()));
         }
+
+        i.Comments = _dbContext.Set<CommentEntity>().Where(w => w.ProductId == i.Id && w.DeletedAt == null);
+        i.CommentsCount = i.Comments.Count();
 
         return new GenericResponse<ProductEntity?>(i);
     }
