@@ -84,13 +84,13 @@ public class ReportRepository : IReportRepository
 	public GenericResponse<List<ReportResponseDto>> CompletationInformation(ReportFilterDto dto)
 	{
 		List<ReportResponseDto> outputReport = new List<ReportResponseDto>();
-		if (dto.ReportType == ReportType.TopKeyword)
+		if (true)
 		{
 			string[] useCase = new string[] { "product", "capacity", "supplier" };
 			IQueryable<ProductEntity> p = _dbContext.Set<ProductEntity>().Include(i=>i.Categories).AsNoTracking();
 			if (dto.UserId.IsNotNullOrEmpty()) p = p.Where(x => x.UserId == dto.UserId);
 			List<ProductEntity> plist = p.Where(o => useCase.Contains(o.UseCase) && o.DeletedAt == null).ToList();
-			if (plist is null) return new GenericResponse<List<ReportResponseDto>>(null, UtilitiesStatusCodes.NotFound);
+			if (plist is null || plist.Count()==0) return new GenericResponse<List<ReportResponseDto>>(null, UtilitiesStatusCodes.NotFound);
 
 			#region profile
 				List<int> pcount = new List<int>();
@@ -109,13 +109,14 @@ public class ReportRepository : IReportRepository
 				}
 				ReportResponseDto profileCompletation = new ReportResponseDto();
 				profileCompletation.Title = "profileCompletation";
-				profileCompletation.Count = pcount.Count();
-				profileCompletation.Total = pcount.Average();
+				profileCompletation.Count = profile?.VisitsCount;
+				profileCompletation.Total = Math.Round(pcount.Average(),2);
 
 			#endregion
 
 			#region product
 			List<double> productscount = new List<double>();
+			int totalProductVisitCount=0;
 			foreach (ProductEntity product in plist.Where(p => p.UseCase == "product"))
 			{
 				List<int> prcount = new List<int>();
@@ -151,18 +152,23 @@ public class ReportRepository : IReportRepository
 					pcount.Add(product.Longitude == null ? 0 : 1);
 					pcount.Add(product.Email.IsNullOrEmpty() ? 0 : 1);
 
+					totalProductVisitCount += product.VisitsCount ?? 0;
+
 					productscount.Add(pcount.Average());
+
+					
 				}
 			}
 				ReportResponseDto productsCompletation = new ReportResponseDto();
 				productsCompletation.Title = "productsCompletation";
-				productsCompletation.Count = productscount.Count();
-				productsCompletation.Total = productscount.Average();
+				productsCompletation.Count = totalProductVisitCount;
+				productsCompletation.Total = Math.Round(productscount.Average(),2);
 
 			#endregion
 
 			#region capacity
 			List<double> capacityscount = new List<double>();
+			int totalCapacityVisitCount = 0;
 			foreach (ProductEntity capacity in plist.Where(p => p.UseCase == "capacity"))
 			{
 				List<int> prcount = new List<int>();
@@ -212,14 +218,15 @@ public class ReportRepository : IReportRepository
 					pcount.Add(capacity.Value11.IsNullOrEmpty() ? 0 : 1);
 					pcount.Add(capacity.Value12.IsNullOrEmpty() ? 0 : 1);
 
+					totalCapacityVisitCount += capacity.VisitsCount ?? 0;
 
 					capacityscount.Add(pcount.Average());
 				}
 			}
 			ReportResponseDto capacitysCompletation = new ReportResponseDto();
 			capacitysCompletation.Title = "capacitysCompletation";
-			capacitysCompletation.Count = capacityscount.Count();
-			capacitysCompletation.Total = capacityscount.Average();
+			capacitysCompletation.Count = totalCapacityVisitCount;
+			capacitysCompletation.Total = Math.Round(capacityscount.Average(),2);
 
 			#endregion
 
