@@ -214,7 +214,7 @@ public class ProductRepository : IProductRepository
             await _dbContext.SaveChangesAsync(ct);
         }
 
-        if (i.ProductInsights.Any())
+        if (i.ProductInsights?.Any() != null)
         {
             i.ProductInsights.GroupBy(g => g.Reaction).ToList().ForEach(item =>
                 item.Select(s => s.Count == item.Count()));
