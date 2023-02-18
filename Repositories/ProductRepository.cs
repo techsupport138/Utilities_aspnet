@@ -44,7 +44,7 @@ public class ProductRepository : IProductRepository
     {
         IQueryable<ProductEntity> q = _dbContext.Set<ProductEntity>();
         q = q.Where(x => x.DeletedAt == null);
-        q = q.Where(w => w.ExpireDate ==null || w.ExpireDate >= DateTime.Now);
+        if (!dto.ShowExpired) q = q.Where(w => w.ExpireDate == null || w.ExpireDate >= DateTime.Now);
 
         string? guestUser = _httpContextAccessor.HttpContext!.User.Identity!.Name;
         if (dto.FilterByAge!=null && dto.FilterByAge == true && !string.IsNullOrEmpty(guestUser))
@@ -163,6 +163,9 @@ public class ProductRepository : IProductRepository
                              x.Value11.ToInt() <= dto.MaxValue ||
                              x.Value12.ToInt() <= dto.MaxValue);
 
+        //ToCheck With Sina
+        // q.Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")));
+
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
 
@@ -173,7 +176,7 @@ public class ProductRepository : IProductRepository
             PageSize = dto.PageSize
         };
     }
-    
+
     public async Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct)
     {
         ProductEntity? i = await _dbContext.Set<ProductEntity>()
@@ -191,12 +194,14 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
         if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
-        try {
-            string? userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
-            UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
-            if (user is not null && !_dbContext.Set<VisitProducts>().Any(a=>a.UserId == user.Id && a.ProductId == i.Id))
+        string? userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+        UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
+        if (user is not null)
+        {
+            if (!_dbContext.Set<VisitProducts>().Any(a => a.UserId == user.Id && a.ProductId == i.Id))
             {
-                VisitProducts visitProduct = new() {
+                VisitProducts visitProduct = new()
+                {
                     CreatedAt = DateTime.Now,
                     ProductId = i.Id,
                     UserId = user.Id,
@@ -208,8 +213,11 @@ public class ProductRepository : IProductRepository
             _dbContext.Update(i);
             await _dbContext.SaveChangesAsync(ct);
         }
-        catch (Exception e) {
-            Console.WriteLine(e);
+
+        if (i.ProductInsights.Any())
+        {
+            i.ProductInsights.GroupBy(g => g.Reaction).ToList().ForEach(item =>
+                item.Select(s => s.Count == item.Count()));
         }
 
         return new GenericResponse<ProductEntity?>(i);
@@ -226,7 +234,7 @@ public class ProductRepository : IProductRepository
         if (entity == null)
             return new GenericResponse<ProductEntity>(new ProductEntity());
 
-        if(dto.ProductInsight is not null)
+        if (dto.ProductInsight is not null)
             dto.ProductInsight.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
 
         ProductEntity e = await entity.FillData(dto, _dbContext);
