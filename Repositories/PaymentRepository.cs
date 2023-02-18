@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Repositories;
+﻿using Stripe;
+
+namespace Utilities_aspnet.Repositories;
 
 public interface IPaymentRepository {
 	Task<GenericResponse<string?>> IncreaseWalletBalance(double amount, string zarinPalMerchantId);
@@ -137,6 +139,97 @@ public class PaymentRepository : IPaymentRepository {
 		TransactionEntity? pay = await _dbContext.Set<TransactionEntity>().FirstOrDefaultAsync(x => x.Authority == authority);
 		if (pay != null) {
 			pay.StatusId = (TransactionStatus?) Math.Abs(verify.Status);
+			pay.RefId = verify.RefId;
+			pay.UpdatedAt = DateTime.Now;
+			_dbContext.Set<TransactionEntity>().Update(pay);
+		}
+
+		await _dbContext.SaveChangesAsync();
+		return new GenericResponse();
+	}
+
+
+	public async Task<GenericResponse<string?>> StripeBuyProduct(Guid productId,string? extraparams)
+	{
+		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
+
+		try
+		{
+			OrderEntity order = (await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
+			UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
+
+			if(order == null || order.TotalPrice==0)
+				return new GenericResponse<string?>("zero price", UtilitiesStatusCodes.BadRequest);
+
+			if (!long.TryParse(order.TotalPrice.ToString(), out long tprice))
+			return new GenericResponse<string?>("zero l price", UtilitiesStatusCodes.BadRequest);
+
+			#region Stripe
+			// Set your secret key. Remember to switch to your live secret key in production.
+			// See your keys here: https://dashboard.stripe.com/apikeys
+			StripeConfiguration.ApiKey = "pk_test_51MYdbtDl26fbDZBl7dtokleFo9hlPPFXZVdADRxRc3CPBL31fgW4PSvfYqoY4jprUmu2pVMZ9XqUJevilwzA7wSe003J6G3YE1";
+
+				var options = new PaymentIntentCreateOptions
+				{
+					Amount = tprice,
+					Currency = "usd",
+					PaymentMethodTypes = new List<string>
+    {
+        //"bancontact",
+        "card",
+        //"eps",
+        //"giropay",
+        //"ideal",
+        //"p24",
+        //"sepa_debit",
+        //"sofort",
+    },
+				};
+			PaymentIntentService service = new PaymentIntentService();
+			PaymentIntent paymentIntent= await service.CreateAsync(options);
+			#endregion
+
+
+
+			await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity
+			{
+				Amount = order.TotalPrice.ToInt(),
+				Authority = paymentIntent.StripeResponse.ToString(),
+				CreatedAt = DateTime.Now,
+				Descriptions = "ClientSecret"+paymentIntent.ClientSecret,
+				GatewayName = "Stripe",
+				UserId = userId,
+				ProductId = productId,
+				StatusId = TransactionStatus.Pending
+			});
+			await _dbContext.SaveChangesAsync();
+
+			
+			return new GenericResponse<string?>(paymentIntent.ClientSecret, UtilitiesStatusCodes.Success);
+		}
+		catch (Exception ex)
+		{
+			return new GenericResponse<string?>(ex.Message, UtilitiesStatusCodes.BadRequest);
+		}
+	}
+
+	public async Task<GenericResponse> StripeCallBack(
+		Guid productId,
+		string authority,
+		string status,
+		string zarinPalMerchantId)
+	{
+		ProductEntity product = (await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
+		Payment payment = new(zarinPalMerchantId, product.Price.ToInt());
+		if (!status.Equals("OK"))
+		{
+			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
+		}
+		PaymentVerificationResponse? verify = payment.Verification(authority).Result;
+		TransactionEntity? pay = await _dbContext.Set<TransactionEntity>().FirstOrDefaultAsync(x => x.Authority == authority);
+		if (pay != null)
+		{
+			pay.StatusId = (TransactionStatus?)Math.Abs(verify.Status);
 			pay.RefId = verify.RefId;
 			pay.UpdatedAt = DateTime.Now;
 			_dbContext.Set<TransactionEntity>().Update(pay);
