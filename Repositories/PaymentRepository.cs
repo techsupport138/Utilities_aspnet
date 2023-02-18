@@ -168,7 +168,7 @@ public class PaymentRepository : IPaymentRepository {
 			#region Stripe
 			// Set your secret key. Remember to switch to your live secret key in production.
 			// See your keys here: https://dashboard.stripe.com/apikeys
-			StripeConfiguration.ApiKey = "pk_test_51MYdbtDl26fbDZBl7dtokleFo9hlPPFXZVdADRxRc3CPBL31fgW4PSvfYqoY4jprUmu2pVMZ9XqUJevilwzA7wSe003J6G3YE1";
+			StripeConfiguration.ApiKey = "sk_test_51MYdbtDl26fbDZBl5mwqqA1uyCJQCHG8uNave9q0tHWsOni6W79IEb753a0rRpgnwqyr97E8nY8FFKetPvl3CFVu00vXwSicjS";
 
 				var options = new PaymentIntentCreateOptions
 				{
