@@ -294,8 +294,8 @@ public class OrderRepository : IOrderRepository
 		{
 			if (dto.UserId == null)
 				return new GenericResponse<IQueryable<OrderSummaryResponseDto>>(null);
-			if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.UserId == dto.UserId);
-			if (dto.OrderType == OrderType.Purchase) q = q.Where(x => x.ProductOwnerId == dto.UserId);
+			if (dto.OrderType == OrderType.Purchase) q = q.Where(x => x.UserId == dto.UserId);
+			if (dto.OrderType == OrderType.Sale) q = q.Where(x => x.ProductOwnerId == dto.UserId);
 		}
 
 		bool isGratherThanMonth = true;
