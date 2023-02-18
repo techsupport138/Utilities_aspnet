@@ -5,6 +5,7 @@ namespace Utilities_aspnet.Repositories;
 public interface IPaymentRepository {
 	Task<GenericResponse<string?>> IncreaseWalletBalance(double amount, string zarinPalMerchantId);
 	Task<GenericResponse<string?>> BuyProduct(Guid productId, string zarinPalMerchantId);
+	Task<GenericResponse<string?>> StripeBuyProduct(Guid productId, string? extraparams);
 
 	Task<GenericResponse> WalletCallBack(
 		int amount,
