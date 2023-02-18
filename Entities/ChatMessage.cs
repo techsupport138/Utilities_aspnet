@@ -19,7 +19,7 @@ namespace Utilities_aspnet.Entities
         public bool? ReadPrivateMessage { get; set; } = false;
         public List<SeenMessage>? SeenStatus { get; set; } = new List<SeenMessage>();
         public List<ChatReaction>? Emojies { get; set; } = new List<ChatReaction>();
-        public Guid? RepliedTo { get; set; }
+        public string? RepliedTo { get; set; }
         public List<string>? UsersMentioned { get; set; }
         public string? ReferenceId { get; set; }
         public ReferenceIdType? ReferenceIdType { get; set; }
@@ -49,7 +49,7 @@ namespace Utilities_aspnet.Entities
 
         [StringLength(2000)]
         public string? MessageText { get; set; } = null;
-        public Guid? RepliedTo { get; set; }
+        public string? RepliedTo { get; set; }
         public string? ReferenceId { get; set; }
         public ReferenceIdType? ReferenceIdType { get; set; }
         public IFormFile? File { get; set; }
@@ -70,6 +70,6 @@ namespace Utilities_aspnet.Entities
 
         [StringLength(2000)]
         public string MessageText { get; set; } = null!;
-        public Guid? RepliedTo { get; set; }
+        public string? RepliedTo { get; set; }
     }
 }

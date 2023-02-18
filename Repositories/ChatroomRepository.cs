@@ -8,11 +8,11 @@ namespace Utilities_aspnet.Repositories
 {
     public interface IChatroomRepository
     {
-        Task CreateChatroom(string chatrooomName, Guid userId);
-        Task EditChatroom(string chatrooomName, Guid userId);
-        Task DeleteChatroom(Guid chatroomId, Guid userId);
+        Task CreateChatroom(string chatrooomName, string userId);
+        Task EditChatroom(string chatrooomName, string userId);
+        Task DeleteChatroom(Guid chatroomId, string userId);
         Task<List<ChatRoom>> GetChatroomsByName(string chatroomName);
-        Task AddUserToChatroom(Guid chatroomId, Guid userId);
+        Task AddUserToChatroom(Guid chatroomId, string userId);
         Task AddMessageToChatroom(Guid roomId, ChatMessageInputDto message);
         Task<List<ChatMessage>> GetChatroomMessages(Guid chatroomId);
         Task EditGroupMessage(Guid roomId, ChatMessageEditDto message);
@@ -76,7 +76,7 @@ namespace Utilities_aspnet.Repositories
 
         }
 
-        public async Task AddUserToChatroom(Guid chatroomId, Guid userId)
+        public async Task AddUserToChatroom(Guid chatroomId, string userId)
         {
             var room = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id == chatroomId);
             if (room != null)
@@ -87,7 +87,7 @@ namespace Utilities_aspnet.Repositories
 
         }
 
-        public async Task CreateChatroom(string chatrooomName, Guid userId)
+        public async Task CreateChatroom(string chatrooomName, string userId)
         {
             var chatroomToAdd = new ChatRoom
             {
@@ -96,14 +96,14 @@ namespace Utilities_aspnet.Repositories
                 UpdatedAt = DateTime.Now,
                 Name = chatrooomName,
                 Creator = userId,
-                Users = new List<Guid> { userId }
+                Users = new List<string> { userId }
             };
             _context.Set<ChatRoom>().Add(chatroomToAdd);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteChatroom(Guid chatroomId, Guid userId)
+        public async Task DeleteChatroom(Guid chatroomId, string userId)
         {
             var chatroom = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id == chatroomId);
             if (chatroom != null)
@@ -126,7 +126,7 @@ namespace Utilities_aspnet.Repositories
                 if (messageToDelete == null)
                     return;
 
-                if (messageToDelete.Id == message.UserId || messageToDelete.Id == room.Creator)
+                if (messageToDelete.Id == message.UserId || messageToDelete.FromUserId == room.Creator)
                 {
                     room.Messages.Remove(messageToDelete);
                     await _context.SaveChangesAsync();
@@ -134,7 +134,7 @@ namespace Utilities_aspnet.Repositories
             }
         }
 
-        public async Task EditChatroom(string chatrooomName, Guid userId)
+        public async Task EditChatroom(string chatrooomName, string userId)
         {
             var chatroom = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Name == chatrooomName);
 
