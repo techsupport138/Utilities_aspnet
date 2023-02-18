@@ -48,7 +48,7 @@ namespace Utilities_aspnet.Entities
         public Guid? ToGroupId { get; set; }
 
         [StringLength(2000)]
-        public string MessageText { get; set; } = null!;
+        public string? MessageText { get; set; } = null;
         public Guid? RepliedTo { get; set; }
         public string? ReferenceId { get; set; }
         public ReferenceIdType? ReferenceIdType { get; set; }
