@@ -42,7 +42,7 @@ public class ProductRepository : IProductRepository
         return new GenericResponse<ProductEntity>(i.Entity);
     }
 
-    public async GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto)
+    public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto)
     {
         IQueryable<ProductEntity> q = _dbContext.Set<ProductEntity>();
         q = q.Where(x => x.DeletedAt == null);
@@ -170,8 +170,8 @@ public class ProductRepository : IProductRepository
             //Hamed Todo
         }
 
-        //ToCheck With Sina
-        // q.Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")));
+        q = q.Where(w => w.VisitProducts != null)
+            .Where(w=>w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")));
 
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
