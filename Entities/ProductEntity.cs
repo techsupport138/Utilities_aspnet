@@ -138,6 +138,8 @@ public class ProductEntity : BaseEntity
 
     public Guid? ChatId { get; set; }
     public ChatEntity? Chat { get; set; }
+    public Guid? FileId { get; set; }
+    public FileManagerEntity? FileManager { get; set; }
 
     public DateTime? ExpireDate { get; set; }
     public AgeCategory? AgeCategory { get; set; }
@@ -261,6 +263,7 @@ public class ProductCreateUpdateDto
     public AgeCategory? AgeCategory { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<string>? Teams { get; set; }
+    public RequestSaveFileDto? Files { get; set; }    
 }
 
 public class ProductFilterDto
