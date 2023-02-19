@@ -42,7 +42,7 @@ public class ProductRepository : IProductRepository
         return new GenericResponse<ProductEntity>(i.Entity);
     }
 
-    public async GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto)
+    public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto)
     {
         IQueryable<ProductEntity> q = _dbContext.Set<ProductEntity>();
         q = q.Where(x => x.DeletedAt == null);

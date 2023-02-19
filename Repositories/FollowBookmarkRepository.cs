@@ -7,6 +7,7 @@ public interface IFollowBookmarkRepository {
 	Task<GenericResponse> RemoveFollowings(string targetUserId, FollowCreateDto dto);
 	GenericResponse<IQueryable<BookmarkEntity>?> ReadBookmarks();
 	Task<GenericResponse> ToggleBookmark(BookmarkCreateDto dto);
+	GenericResponse<IQueryable<BookmarkEntity>?> ReadBookmarksByFolderName(string folderName);
 }
 
 public class FollowBookmarkRepository : IFollowBookmarkRepository {
@@ -29,6 +30,7 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
 			if (dto.ProductId.HasValue) bookmark.ProductId = dto.ProductId;
+			if (dto.MediaId.HasValue) bookmark.MediaId = dto.MediaId;
 			bookmark.FolderName = dto.FolderName;
 
 			await _dbContext.Set<BookmarkEntity>().AddAsync(bookmark);
@@ -129,4 +131,21 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 
 		return new GenericResponse(UtilitiesStatusCodes.Success, "Mission Accomplished");
 	}
+
+	public GenericResponse<IQueryable<BookmarkEntity>?> ReadBookmarksByFolderName(string folderName)
+	{
+		IQueryable<BookmarkEntity> bookmark = _dbContext.Set<BookmarkEntity>()
+			.Where(x => x.UserId == _httpContextAccessor.HttpContext!.User.Identity!.Name! && x.FolderName == folderName)
+			.Include(x => x.Product).ThenInclude(x => x.Media)
+			.Include(x => x.Product).ThenInclude(i => i.Votes)
+			.Include(x => x.Product).ThenInclude(i => i.User).ThenInclude(x => x.Media)
+			.Include(x => x.Product).ThenInclude(i => i.Bookmarks)
+			.Include(x => x.Product).ThenInclude(i => i.Forms)!.ThenInclude(x => x.FormField)
+			.Include(x => x.Product).ThenInclude(i => i.Categories)
+			.Include(x => x.Product).ThenInclude(i => i.Comments.Where(x => x.ParentId == null)).ThenInclude(x => x.Children)
+			.Include(x => x.Product).ThenInclude(i => i.Reports)
+			.Include(x => x.Product).ThenInclude(i => i.Teams)!.ThenInclude(x => x.User)!.ThenInclude(x => x.Media);
+		return new GenericResponse<IQueryable<BookmarkEntity>?>(bookmark);
+	}
+
 }
