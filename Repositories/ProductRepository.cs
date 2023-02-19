@@ -167,7 +167,7 @@ public class ProductRepository : IProductRepository
         if (dto.IsFollowing)
         {
             var following = _followBookmarkRepository.GetFollowing(dto.UserId ?? "");
-            //Hamed Todo
+            q = q.Where(x => following.Result.ToList().Any(y => y.Id == x.UserId));
         }
 
         //ToCheck With Sina
