@@ -15,11 +15,13 @@ public class ProductRepository : IProductRepository
 {
     private readonly DbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IFollowBookmarkRepository _followBookmarkRepository;
 
-    public ProductRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor)
+    public ProductRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor, IFollowBookmarkRepository followBookmarkRepository)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
+        _followBookmarkRepository = followBookmarkRepository;
     }
 
     public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct)
@@ -40,7 +42,7 @@ public class ProductRepository : IProductRepository
         return new GenericResponse<ProductEntity>(i.Entity);
     }
 
-    public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto)
+    public async GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto)
     {
         IQueryable<ProductEntity> q = _dbContext.Set<ProductEntity>();
         q = q.Where(x => x.DeletedAt == null);
@@ -162,6 +164,11 @@ public class ProductRepository : IProductRepository
                              x.Value10.ToInt() <= dto.MaxValue ||
                              x.Value11.ToInt() <= dto.MaxValue ||
                              x.Value12.ToInt() <= dto.MaxValue);
+        if (dto.IsFollowing)
+        {
+            var following = _followBookmarkRepository.GetFollowing(dto.UserId ?? "");
+            //Hamed Todo
+        }
 
         //ToCheck With Sina
         // q.Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")));

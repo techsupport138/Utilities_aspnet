@@ -172,7 +172,7 @@ public class ProductEntity : BaseEntity
 }
 
 [Table("ProductsInsight")]
-public class ProductInsight : BaseEntity  
+public class ProductInsight : BaseEntity
 {
     public ChatReaction? Reaction { get; set; }
     public UserEntity? User { get; set; }
@@ -335,6 +335,7 @@ public class ProductFilterDto
     public AgeCategory? AgeCategory { get; set; }
     public bool ShowExpired { get; set; } = false;
     public bool? FilterByAge { get; set; }
+    public bool IsFollowing { get; set; } = false;
 }
 
 public class ProductInsightDto
