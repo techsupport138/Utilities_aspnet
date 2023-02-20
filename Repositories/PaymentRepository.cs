@@ -2,7 +2,8 @@
 
 namespace Utilities_aspnet.Repositories;
 
-public interface IPaymentRepository {
+public interface IPaymentRepository
+{
 	Task<GenericResponse<string?>> IncreaseWalletBalance(double amount, string zarinPalMerchantId);
 	Task<GenericResponse<string?>> BuyProduct(Guid productId, string zarinPalMerchantId);
 	Task<GenericResponse<string?>> StripeBuyProduct(Guid productId, string? extraparams);
@@ -21,26 +22,31 @@ public interface IPaymentRepository {
 		string zarinPalMerchantId);
 }
 
-public class PaymentRepository : IPaymentRepository {
+public class PaymentRepository : IPaymentRepository
+{
 	private readonly DbContext _dbContext;
 	private readonly IHttpContextAccessor _httpContextAccessor;
 
-	public PaymentRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor) {
+	public PaymentRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor)
+	{
 		_dbContext = dbContext;
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public async Task<GenericResponse<string?>> IncreaseWalletBalance(double amount, string zarinPalMerchantId) {
+	public async Task<GenericResponse<string?>> IncreaseWalletBalance(double amount, string zarinPalMerchantId)
+	{
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
-		try {
+		try
+		{
 			UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 			Payment payment = new(zarinPalMerchantId, amount.ToInt());
 			string callbackUrl = $"{Server.ServerAddress}/Payment/WalletCallBack/{user?.Id}/{amount}";
 			string desc = $"شارژ کیف پول به مبلغ {amount}";
 			PaymentRequestResponse? result = payment.PaymentRequest(desc, callbackUrl, "", user?.PhoneNumber).Result;
 
-			await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity {
+			await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity
+			{
 				Amount = amount,
 				Authority = result.Authority,
 				CreatedAt = DateTime.Now,
@@ -51,13 +57,15 @@ public class PaymentRepository : IPaymentRepository {
 			});
 			await _dbContext.SaveChangesAsync();
 
-			if (result.Status == 100 && result.Authority.Length == 36) {
+			if (result.Status == 100 && result.Authority.Length == 36)
+			{
 				string url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
 				return new GenericResponse<string?>(url);
 			}
 			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
 		}
-		catch (Exception ex) {
+		catch (Exception ex)
+		{
 			return new GenericResponse<string?>(ex.Message, UtilitiesStatusCodes.BadRequest);
 		}
 	}
@@ -67,25 +75,29 @@ public class PaymentRepository : IPaymentRepository {
 		string authority,
 		string status,
 		string userId,
-		string zarinPalMerchantId) {
-		if (userId.IsNullOrEmpty()) {
+		string zarinPalMerchantId)
+	{
+		if (userId.IsNullOrEmpty())
+		{
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 
 		UserEntity user = (await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId))!;
 		Payment payment = new(zarinPalMerchantId, amount);
-		if (!status.Equals("OK")) {
+		if (!status.Equals("OK"))
+		{
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 		PaymentVerificationResponse? verify = payment.Verification(authority).Result;
 		TransactionEntity? pay = _dbContext.Set<TransactionEntity>().FirstOrDefault(x => x.Authority == authority);
-		if (pay != null) {
-			pay.StatusId = (TransactionStatus?) Math.Abs(verify.Status);
+		if (pay != null)
+		{
+			pay.StatusId = (TransactionStatus?)Math.Abs(verify.Status);
 			pay.RefId = verify.RefId;
 			pay.UpdatedAt = DateTime.Now;
 			_dbContext.Set<TransactionEntity>().Update(pay);
 		}
-		
+
 		user.Wallet += amount;
 		_dbContext.Set<UserEntity>().Update(user);
 
@@ -93,17 +105,20 @@ public class PaymentRepository : IPaymentRepository {
 		return new GenericResponse();
 	}
 
-	public async Task<GenericResponse<string?>> BuyProduct(Guid productId, string zarinPalMerchantId) {
+	public async Task<GenericResponse<string?>> BuyProduct(Guid productId, string zarinPalMerchantId)
+	{
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
-		try {
+		try
+		{
 			ProductEntity product = (await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
 			UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 			Payment payment = new(zarinPalMerchantId, product.Price.ToInt());
 			string callbackUrl = $"{Server.ServerAddress}/Payment/CallBack/{productId}";
 			string desc = $"خرید محصول {product.Title}";
 			PaymentRequestResponse? result = payment.PaymentRequest(desc, callbackUrl, "", user?.PhoneNumber).Result;
-			await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity {
+			await _dbContext.Set<TransactionEntity>().AddAsync(new TransactionEntity
+			{
 				Amount = product.Price.ToInt(),
 				Authority = result.Authority,
 				CreatedAt = DateTime.Now,
@@ -115,13 +130,15 @@ public class PaymentRepository : IPaymentRepository {
 			});
 			await _dbContext.SaveChangesAsync();
 
-			if (result.Status == 100 && result.Authority.Length == 36) {
+			if (result.Status == 100 && result.Authority.Length == 36)
+			{
 				string url = $"https://www.zarinpal.com/pg/StartPay/{result.Authority}";
 				return new GenericResponse<string?>(url);
 			}
 			return new GenericResponse<string?>("", UtilitiesStatusCodes.BadRequest);
 		}
-		catch (Exception ex) {
+		catch (Exception ex)
+		{
 			return new GenericResponse<string?>(ex.Message, UtilitiesStatusCodes.BadRequest);
 		}
 	}
@@ -130,16 +147,19 @@ public class PaymentRepository : IPaymentRepository {
 		Guid productId,
 		string authority,
 		string status,
-		string zarinPalMerchantId) {
+		string zarinPalMerchantId)
+	{
 		ProductEntity product = (await _dbContext.Set<ProductEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
 		Payment payment = new(zarinPalMerchantId, product.Price.ToInt());
-		if (!status.Equals("OK")) {
+		if (!status.Equals("OK"))
+		{
 			return new GenericResponse(UtilitiesStatusCodes.BadRequest);
 		}
 		PaymentVerificationResponse? verify = payment.Verification(authority).Result;
 		TransactionEntity? pay = await _dbContext.Set<TransactionEntity>().FirstOrDefaultAsync(x => x.Authority == authority);
-		if (pay != null) {
-			pay.StatusId = (TransactionStatus?) Math.Abs(verify.Status);
+		if (pay != null)
+		{
+			pay.StatusId = (TransactionStatus?)Math.Abs(verify.Status);
 			pay.RefId = verify.RefId;
 			pay.UpdatedAt = DateTime.Now;
 			_dbContext.Set<TransactionEntity>().Update(pay);
@@ -150,7 +170,7 @@ public class PaymentRepository : IPaymentRepository {
 	}
 
 
-	public async Task<GenericResponse<string?>> StripeBuyProduct(Guid productId,string? extraparams)
+	public async Task<GenericResponse<string?>> StripeBuyProduct(Guid productId, string? extraparams)
 	{
 		string? userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;
 
@@ -159,23 +179,23 @@ public class PaymentRepository : IPaymentRepository {
 			OrderEntity order = (await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(x => x.Id == productId))!;
 			UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == userId);
 
-			if(order == null || order.TotalPrice==0)
+			if (order == null || order.TotalPrice == 0)
 				return new GenericResponse<string?>("zero price", UtilitiesStatusCodes.BadRequest);
 
 			if (!long.TryParse(order.TotalPrice.ToString(), out long tprice))
-			return new GenericResponse<string?>("zero l price", UtilitiesStatusCodes.BadRequest);
+				return new GenericResponse<string?>("zero l price", UtilitiesStatusCodes.BadRequest);
 
 			#region Stripe
 			// Set your secret key. Remember to switch to your live secret key in production.
 			// See your keys here: https://dashboard.stripe.com/apikeys
 			StripeConfiguration.ApiKey = "sk_test_51MYdbtDl26fbDZBl5mwqqA1uyCJQCHG8uNave9q0tHWsOni6W79IEb753a0rRpgnwqyr97E8nY8FFKetPvl3CFVu00vXwSicjS";
 
-				var options = new PaymentIntentCreateOptions
-				{
-					Amount = tprice,
-					Currency = "usd",
-					PaymentMethodTypes = new List<string>
-    {
+			var options = new PaymentIntentCreateOptions
+			{
+				Amount = tprice,
+				Currency = "usd",
+				PaymentMethodTypes = new List<string>
+	{
         //"bancontact",
         "card",
         //"eps",
@@ -185,9 +205,9 @@ public class PaymentRepository : IPaymentRepository {
         //"sepa_debit",
         //"sofort",
     },
-				};
+			};
 			PaymentIntentService service = new PaymentIntentService();
-			PaymentIntent paymentIntent= await service.CreateAsync(options);
+			PaymentIntent paymentIntent = await service.CreateAsync(options);
 			#endregion
 
 
@@ -205,7 +225,7 @@ public class PaymentRepository : IPaymentRepository {
 			//});
 			//await _dbContext.SaveChangesAsync();
 
-			
+
 			return new GenericResponse<string?>(paymentIntent.ClientSecret, UtilitiesStatusCodes.Success);
 		}
 		catch (Exception ex)

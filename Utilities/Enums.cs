@@ -26,7 +26,9 @@ public enum UtilitiesStatusCodes
 	UserAlreadyExist = 603,
 	UserSuspended = 604,
 	UserNotFound = 605,
-	MultipleSeller = 607
+    MultipleSeller = 607,
+    orderPayed = 608,
+    zeroPayed = 609
 }
 
 public enum OtpResult
@@ -54,7 +56,8 @@ public enum OrderStatuses
     Shipping = 107,//not used yet
     Refund = 108,//not used yet
     RefundComplete = 109,//not used yet
-    Complete = 110
+    Complete = 110,
+    PaidFail = 112,
 
 }
 
