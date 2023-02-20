@@ -102,6 +102,7 @@ public class UserEntity : IdentityUser
     public IEnumerable<TeamEntity>? Teams { get; set; }
     public IEnumerable<LikeCommentEntity>? LikeComments { get; set; }
     public IEnumerable<GroupChatEntity>? GroupChats { get; set; }
+    [NotMapped]
     public bool IsFollowing { get; set; } = false;
 
     [NotMapped]
