@@ -30,7 +30,6 @@ public class FollowBookmarkRepository : IFollowBookmarkRepository {
 			BookmarkEntity bookmark = new() {UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name!};
 
 			if (dto.ProductId.HasValue) bookmark.ProductId = dto.ProductId;
-			if (dto.MediaId.HasValue) bookmark.MediaId = dto.MediaId;
 			bookmark.FolderName = dto.FolderName;
 
 			await _dbContext.Set<BookmarkEntity>().AddAsync(bookmark);

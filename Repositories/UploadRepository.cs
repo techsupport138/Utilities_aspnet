@@ -44,6 +44,7 @@ public class UploadRepository : IUploadRepository {
 					CategoryId = model.CategoryId,
 					ChatId = model.ChatId,
 					CommentId = model.CommentId,
+					BookmarkId = model.BookmarkId,
 					CreatedAt = DateTime.Now,
 					UseCase = model.UseCase,
 					Title = model.Title,
