@@ -169,6 +169,9 @@ public class ProductEntity : BaseEntity
 
     [NotMapped]
     public double? Score { get; set; }
+
+    [NotMapped]
+    public bool IsSeen{ get; set; } = false;
 }
 
 [Table("ProductsInsight")]

@@ -202,11 +202,13 @@ public class ProductRepository : IProductRepository
             q = q.Where(x => following.Result.ToList().Any(y => y.Id == x.UserId));
         }
 
-        if (dto.VisitsCount.HasValue) // todo mohammad hossein
-        {
-            q = q.Where(w => w.VisitProducts != null)
-            .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")));
-        }
+        q = q.Where(w => w.VisitProducts != null)
+            .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id));
+
+        q.Where(w=>w.VisitProducts != null)
+            .Where(w=>w.VisitProducts.Any(a => a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))            
+            .ToList()
+            .ForEach(f => f.IsSeen = true);
 
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
@@ -240,7 +242,8 @@ public class ProductRepository : IProductRepository
         UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
         if (user is not null)
         {
-            if (!_dbContext.Set<VisitProducts>().Any(a => a.UserId == user.Id && a.ProductId == i.Id))
+            var vp = await _dbContext.Set<VisitProducts>().FirstOrDefaultAsync(a => a.UserId == user.Id && a.ProductId == i.Id);
+            if (vp is null)
             {
                 VisitProducts visitProduct = new()
                 {
@@ -264,6 +267,7 @@ public class ProductRepository : IProductRepository
 
         i.Comments = _dbContext.Set<CommentEntity>().Where(w => w.ProductId == i.Id && w.DeletedAt == null);
         i.CommentsCount = i.Comments.Count();
+        i.IsSeen = true;
 
         return new GenericResponse<ProductEntity?>(i);
     }
