@@ -169,6 +169,9 @@ public class ProductEntity : BaseEntity
 
     [NotMapped]
     public double? Score { get; set; }
+
+    [NotMapped]
+    public bool IsSeen{ get; set; } = false;
 }
 
 [Table("ProductsInsight")]
@@ -261,6 +264,7 @@ public class ProductCreateUpdateDto
     public AgeCategory? AgeCategory { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<string>? Teams { get; set; }
+    public UploadDto? Upload{ get; set; }
 }
 
 public class ProductFilterDto
@@ -303,6 +307,7 @@ public class ProductFilterDto
     public bool? ShowCategories { get; set; } = false;
     public bool? ShowCategoriesFormFields { get; set; } = false;
     public bool? ShowVoteFields { get; set; } = false;
+    public bool? ShowVisitProducts { get; set; } = false;
     public bool? ShowVotes { get; set; } = false;
     public bool? ShowReports { get; set; } = false;
     public bool? ShowComments { get; set; } = false;
