@@ -36,6 +36,8 @@ public class BookmarkEntity : BaseEntity
 
     [System.Text.Json.Serialization.JsonIgnore]
     public Guid? CategoryId { get; set; }
+    
+    public IEnumerable<MediaEntity>? Media { get; set; }
 }
 
 public class BookmarkCreateDto
