@@ -156,6 +156,7 @@ public class ProductRepository : IProductRepository
         if (dto.ShowVotes.IsTrue()) q = q.Include(i => i.Votes);
         if (dto.ShowVoteFields.IsTrue()) q = q.Include(i => i.VoteFields);
         if (dto.ShowCreator.IsTrue()) q = q.Include(i => i.User).ThenInclude(x => x!.Media);
+        if (dto.ShowVisitProducts.IsTrue()) q = q.Include(i => i.VisitProducts);
         if (dto.Categories != null && dto.Categories.Any()) q = q.Where(x => x.Categories.Any(y => dto.Categories.ToList().Contains(y.Id)));
         if (dto.CategoriesAnd != null && dto.CategoriesAnd.Any()) q = q.Where(x => x.Categories.All(y => dto.CategoriesAnd.ToList().Contains(y.Id)));
         if (dto.OrderByVotes.IsTrue()) q = q.OrderBy(x => x.VoteCount);
@@ -202,10 +203,11 @@ public class ProductRepository : IProductRepository
             q = q.Where(x => following.Result.ToList().Any(y => y.Id == x.UserId));
         }
 
-        q.Where(w => w.VisitProducts != null)
-                       .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))
-                       .ToList()
-                       .ForEach(f => f.IsSeen = true);
+        //Todo : IsSeen
+        //q.Where(w => w.VisitProducts != null)
+        //               .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))
+        //               .ToList()
+        //               .ForEach(f => f.IsSeen = true);
 
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);

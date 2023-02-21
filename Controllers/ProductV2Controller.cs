@@ -13,7 +13,7 @@ public class ProductV2Controller : BaseApiController {
 	public async Task<ActionResult<GenericResponse<ProductEntity>>> Create(ProductCreateUpdateDto dto, CancellationToken ct)
 		=> Result(await _repository.Create(dto, ct));
 
-    [HttpPost]
+    [HttpPost("CreateWithMedia")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ClaimRequirement]
     public async Task<ActionResult<GenericResponse<ProductEntity>>> CreateWithMedia([FromForm] ProductCreateUpdateDto dto, CancellationToken ct)
