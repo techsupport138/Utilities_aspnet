@@ -159,10 +159,12 @@ public class ReportRepository : IReportRepository
 					
 				}
 			}
+		
 				ReportResponseDto productsCompletation = new ReportResponseDto();
 				productsCompletation.Title = "productsCompletation";
 				productsCompletation.Count = totalProductVisitCount;
 				productsCompletation.Total = Math.Round(productscount.Average(),2);
+				productsCompletation.ProductId = plist.Where(p => p.UseCase == "product").MaxBy(p => p.VisitsCount)?.Id ?? null;
 
 			#endregion
 
@@ -227,6 +229,7 @@ public class ReportRepository : IReportRepository
 			capacitysCompletation.Title = "capacitysCompletation";
 			capacitysCompletation.Count = totalCapacityVisitCount;
 			capacitysCompletation.Total = Math.Round(capacityscount.Average(),2);
+			capacitysCompletation.ProductId = plist.Where(p => p.UseCase == "capacity").MaxBy(p => p.VisitsCount)?.Id ?? null;
 
 			#endregion
 
