@@ -261,6 +261,7 @@ public class ProductCreateUpdateDto
     public AgeCategory? AgeCategory { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<string>? Teams { get; set; }
+    public UploadDto? Upload{ get; set; }
 }
 
 public class ProductFilterDto
