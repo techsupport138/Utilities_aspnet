@@ -45,7 +45,6 @@ public class BookmarkCreateDto
     public string? FolderName { get; set; }
     public Guid? ProductId { get; set; }
     public Guid? CategoryId { get; set; }
-    public Guid? MediaId { get; set; }
 }
 
 public class FollowCreateDto

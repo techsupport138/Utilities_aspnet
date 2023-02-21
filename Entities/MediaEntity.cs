@@ -76,6 +76,9 @@ public class MediaEntity : BaseEntity {
 	
 	[System.Text.Json.Serialization.JsonIgnore]
 	public Guid? BookmarkId { get; set; }
+	
+	[System.Text.Json.Serialization.JsonIgnore]
+	public BookmarkEntity? Bookmark { get; set; }
 }
 
 public class UploadDto {
