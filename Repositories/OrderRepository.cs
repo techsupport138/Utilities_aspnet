@@ -6,12 +6,15 @@ public interface IOrderRepository
 {
 	GenericResponse<IQueryable<OrderEntity>> Filter(OrderFilterDto dto);
 	Task<GenericResponse<OrderEntity>> ReadById(Guid id);
+
 	Task<GenericResponse<OrderEntity?>> Create(OrderCreateUpdateDto dto);
 	Task<GenericResponse<OrderEntity?>> Update(OrderCreateUpdateDto dto);
 	Task<GenericResponse> Delete(Guid id);
 	Task<GenericResponse> CreateOrderDetailToOrder(OrderDetailCreateUpdateDto dto);
 	Task<GenericResponse> DeleteOrderDetail(Guid id);
 	GenericResponse<IQueryable<OrderSummaryResponseDto>> ReadOrderSummary(OrderSummaryRequestDto dto);
+	Task<OrderCreateUpdateDto?> GetOrderPaymentData(Guid id);
+	Task<GenericResponse> UpdateOrderPaymentData(Guid id, TransactionStatus transactionStatus, string stripeData, double? SendPrice);
 }
 
 public class OrderRepository : IOrderRepository
@@ -216,9 +219,13 @@ public class OrderRepository : IOrderRepository
 		return new GenericResponse<OrderEntity>(i);
 	}
 
+
+
 	public async Task<GenericResponse> Delete(Guid id)
 	{
 		OrderEntity? i = await _dbContext.Set<OrderEntity>().FirstOrDefaultAsync(i => i.Id == id);
+		if (i == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
+		if (i.PayDateTime != null) return new GenericResponse(UtilitiesStatusCodes.orderPayed);
 		if (i != null)
 		{
 			_dbContext.Remove(i);
@@ -232,7 +239,7 @@ public class OrderRepository : IOrderRepository
 	{
 		OrderEntity? e = await _dbContext.Set<OrderEntity>().Include(x => x.OrderDetails.Where(x => x.DeletedAt == null)).ThenInclude(y => y.Product).FirstOrDefaultAsync(x => x.Id == dto.OrderId);
 		if (e == null) return new GenericResponse(UtilitiesStatusCodes.NotFound);
-
+		if (e.PayDateTime != null) return new GenericResponse(UtilitiesStatusCodes.orderPayed);
 
 		IEnumerable<string?> q = e.OrderDetails?.GroupBy(x => x.Product?.UserId).Select(z => z.Key);
 		if (q.Count() > 1)
@@ -453,5 +460,40 @@ public class OrderRepository : IOrderRepository
 		return new GenericResponse<IQueryable<OrderSummaryResponseDto>>(c);
 
 
+	}
+
+	public async Task<OrderCreateUpdateDto?> GetOrderPaymentData(Guid id)
+	{
+		OrderEntity? order = await _dbContext.Set<OrderEntity>()
+			.AsNoTracking()
+			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null && i.Status == OrderStatuses.Accept);
+
+		if (order == null) return null;
+		if (order.PayDateTime != null) return null;
+		OrderCreateUpdateDto orderCreateUpdateDto = new OrderCreateUpdateDto();
+		orderCreateUpdateDto.TotalPrice = order.TotalPrice;
+		return orderCreateUpdateDto;
+	}
+	public async Task<GenericResponse> UpdateOrderPaymentData(Guid id, TransactionStatus transactionStatus, string stripeData, double? SendPrice)
+	{
+		OrderEntity? order = await _dbContext.Set<OrderEntity>()
+			.FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null);
+
+		if (order == null) return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
+		if (transactionStatus == TransactionStatus.Pending)
+		{
+			order.PayNumber = stripeData;
+			order.SendPrice = SendPrice;
+		}
+		else if (transactionStatus == TransactionStatus.Success)
+		{
+			order.PayDateTime = DateTime.Now;
+			order.Status = OrderStatuses.Paid;
+		}
+		else if (transactionStatus == TransactionStatus.Fail)
+			order.Status = OrderStatuses.PaidFail;
+
+		await _dbContext.SaveChangesAsync();
+		return new GenericResponse(UtilitiesStatusCodes.Success);
 	}
 }

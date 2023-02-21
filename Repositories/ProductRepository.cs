@@ -202,8 +202,11 @@ public class ProductRepository : IProductRepository
             q = q.Where(x => following.Result.ToList().Any(y => y.Id == x.UserId));
         }
 
-        q = q.Where(w => w.VisitProducts != null)
+        if (dto.VisitsCount.HasValue) // todo mohammad hossein
+        {
+            q = q.Where(w => w.VisitProducts != null)
             .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")));
+        }
 
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
