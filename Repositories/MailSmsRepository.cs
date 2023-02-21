@@ -11,7 +11,7 @@ public class MailSmsRepository : IMailSmsRepository {
 	public async Task<GenericResponse> SendMailSms(SendMailDto dto) {
 		try {
 			SendGridClientOptions sendGridClientOptions = new() {
-				ApiKey = "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",
+				ApiKey = "SG.y6cEFDU8TCmw4MUlyWEQzA.47sp-0TBDlEgZxmxRwd7fGCxfs1bGsaVKmmxG5c6oHA4",
 				HttpErrorAsException = true
 			};
 			SendGridClient client = new(sendGridClientOptions);
