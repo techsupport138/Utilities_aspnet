@@ -206,23 +206,24 @@ public class ProductRepository : IProductRepository
 
         string? userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
         UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
-        if (user is not null)
-        {
-            if (!_dbContext.Set<VisitProducts>().Any(a => a.UserId == user.Id && a.ProductId == i.Id))
-            {
-                VisitProducts visitProduct = new()
-                {
-                    CreatedAt = DateTime.Now,
-                    ProductId = i.Id,
-                    UserId = user.Id,
-                };
-                await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
-            }
-            if (i.VisitProducts != null && !i.VisitProducts.Any()) i.VisitsCount = 1;
-            else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
-            _dbContext.Update(i);
-            await _dbContext.SaveChangesAsync(ct);
-        }
+        //todo: mhra -- ProducEntitytId !!!!! test id : 1455686a-d3c6-4e69-6136-08db12675885
+        //if (user is not null)
+        //{
+        //    if (!_dbContext.Set<VisitProducts>().Any(a => a.UserId == user.Id && a.ProductId == i.Id))
+        //    {
+        //        VisitProducts visitProduct = new()
+        //        {
+        //            CreatedAt = DateTime.Now,
+        //            ProductId = i.Id,
+        //            UserId = user.Id,
+        //        };
+        //        await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
+        //    }
+        //    if (i.VisitProducts != null && !i.VisitProducts.Any()) i.VisitsCount = 1;
+        //    else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
+        //    _dbContext.Update(i);
+        //    await _dbContext.SaveChangesAsync(ct);
+        //}
 
         if (i.ProductInsights?.Any() != null)
         {
