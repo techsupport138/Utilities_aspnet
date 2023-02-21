@@ -202,16 +202,10 @@ public class ProductRepository : IProductRepository
             q = q.Where(x => following.Result.ToList().Any(y => y.Id == x.UserId));
         }
 
-        if (dto.VisitsCount.HasValue)
-        {
-            q = q.Where(w => w.VisitProducts != null)
-            .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id));
-
-            q.Where(w => w.VisitProducts != null)
-                .Where(w => w.VisitProducts.Any(a => a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))
-                .ToList()
-                .ForEach(f => f.IsSeen = true);
-        }
+        q.Where(w => w.VisitProducts != null)
+                       .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))
+                       .ToList()
+                       .ForEach(f => f.IsSeen = true);
 
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
