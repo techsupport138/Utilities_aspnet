@@ -5,6 +5,7 @@ namespace Utilities_aspnet.Repositories;
 public interface IProductRepository
 {
     Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct);
+    Task<GenericResponse<ProductEntity>> CreateWithFiles(ProductCreateUpdateDto dto, CancellationToken ct);
     GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto);
     Task<GenericResponse<ProductEntity?>> ReadById(Guid id, CancellationToken ct);
     Task<GenericResponse<ProductEntity>> Update(ProductCreateUpdateDto dto, CancellationToken ct);
@@ -16,12 +17,14 @@ public class ProductRepository : IProductRepository
     private readonly DbContext _dbContext;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IFollowBookmarkRepository _followBookmarkRepository;
+    private readonly IUploadRepository _uploadRepository;
 
-    public ProductRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor, IFollowBookmarkRepository followBookmarkRepository)
+    public ProductRepository(DbContext dbContext, IHttpContextAccessor httpContextAccessor, IFollowBookmarkRepository followBookmarkRepository, IUploadRepository uploadRepository)
     {
         _dbContext = dbContext;
         _httpContextAccessor = httpContextAccessor;
         _followBookmarkRepository = followBookmarkRepository;
+        _uploadRepository = uploadRepository;
     }
 
     public async Task<GenericResponse<ProductEntity>> Create(ProductCreateUpdateDto dto, CancellationToken ct)
@@ -41,6 +44,35 @@ public class ProductRepository : IProductRepository
 
         return new GenericResponse<ProductEntity>(i.Entity);
     }
+
+    public async Task<GenericResponse<ProductEntity>> CreateWithFiles(ProductCreateUpdateDto dto, CancellationToken ct)
+    {
+        ProductEntity entity = new();
+        List<MediaEntity> medias = new();
+        if (dto.Upload is not null)
+        {
+            var mediaList = await _uploadRepository.Upload(dto.Upload);
+            if (mediaList.Result is not null)
+            {
+                medias.AddRange(mediaList.Result);
+            }
+        }
+
+        if (dto.ProductInsight is not null)
+            dto.ProductInsight.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+
+        ProductEntity e = await entity.FillData(dto, _dbContext);
+        e.Media = medias;
+        e.VisitsCount = 1;
+        e.UserId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+        e.CreatedAt = DateTime.Now;
+
+        EntityEntry<ProductEntity> i = await _dbContext.Set<ProductEntity>().AddAsync(e, ct);
+        await _dbContext.SaveChangesAsync(ct);
+
+        return new GenericResponse<ProductEntity>(i.Entity);
+    }
+
 
     public GenericResponse<IQueryable<ProductEntity>> Filter(ProductFilterDto dto)
     {
@@ -170,11 +202,10 @@ public class ProductRepository : IProductRepository
             q = q.Where(x => following.Result.ToList().Any(y => y.Id == x.UserId));
         }
 
-        if (dto.VisitsCount.HasValue) // todo mohammad hossein
-        {
-            q = q.Where(w => w.VisitProducts != null)
-            .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")));
-        }
+        q.Where(w => w.VisitProducts != null)
+                       .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))
+                       .ToList()
+                       .ForEach(f => f.IsSeen = true);
 
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
@@ -208,7 +239,8 @@ public class ProductRepository : IProductRepository
         UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
         if (user is not null)
         {
-            if (!_dbContext.Set<VisitProducts>().Any(a => a.UserId == user.Id && a.ProductId == i.Id))
+            var vp = await _dbContext.Set<VisitProducts>().FirstOrDefaultAsync(a => a.UserId == user.Id && a.ProductId == i.Id);
+            if (vp is null)
             {
                 VisitProducts visitProduct = new()
                 {
@@ -232,6 +264,7 @@ public class ProductRepository : IProductRepository
 
         i.Comments = _dbContext.Set<CommentEntity>().Where(w => w.ProductId == i.Id && w.DeletedAt == null);
         i.CommentsCount = i.Comments.Count();
+        i.IsSeen = true;
 
         return new GenericResponse<ProductEntity?>(i);
     }
@@ -269,6 +302,7 @@ public class ProductRepository : IProductRepository
         }
         return new GenericResponse(UtilitiesStatusCodes.NotFound, "Notfound");
     }
+
 }
 
 public static class ProductEntityExtension
