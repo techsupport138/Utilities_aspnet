@@ -190,7 +190,7 @@ public class VisitProducts : BaseEntity
 {
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }
-    public ProductEntity? ProductEntity { get; set; }
+    public ProductEntity? Products { get; set; }
     public Guid? ProductId { get; set; }
 }
 

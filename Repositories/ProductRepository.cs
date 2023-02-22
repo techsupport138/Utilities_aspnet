@@ -203,11 +203,10 @@ public class ProductRepository : IProductRepository
             q = q.Where(x => following.Result.ToList().Any(y => y.Id == x.UserId));
         }
 
-        //Todo : IsSeen
-        //q.Where(w => w.VisitProducts != null)
-        //               .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))
-        //               .ToList()
-        //               .ForEach(f => f.IsSeen = true);
+        q.Where(w => w.VisitProducts != null)
+                       .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))
+                       .ToList()
+                       .ForEach(f => f.IsSeen = true);
 
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
@@ -239,24 +238,24 @@ public class ProductRepository : IProductRepository
 
         string? userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
         UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
-        //if (user is not null)
-        //{
-        //    var vp = await _dbContext.Set<VisitProducts>().FirstOrDefaultAsync(a => a.UserId == user.Id && a.ProductId == i.Id);
-        //    if (vp is null)
-        //    {
-        //        VisitProducts visitProduct = new()
-        //        {
-        //            CreatedAt = DateTime.Now,
-        //            ProductId = i.Id,
-        //            UserId = user.Id,
-        //        };
-        //        await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
-        //    }
-        //    if (i.VisitProducts != null && !i.VisitProducts.Any()) i.VisitsCount = 1;
-        //    else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
-        //    _dbContext.Update(i);
-        //    await _dbContext.SaveChangesAsync(ct);
-        //}
+        if (user is not null)
+        {
+            var vp = await _dbContext.Set<VisitProducts>().FirstOrDefaultAsync(a => a.UserId == user.Id && a.ProductId == i.Id);
+            if (vp is null)
+            {
+                VisitProducts visitProduct = new()
+                {
+                    CreatedAt = DateTime.Now,
+                    ProductId = i.Id,
+                    UserId = user.Id,
+                };
+                await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
+            }
+            if (i.VisitProducts != null && !i.VisitProducts.Any()) i.VisitsCount = 1;
+            else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
+            _dbContext.Update(i);
+            await _dbContext.SaveChangesAsync(ct);
+        }
 
         if (i.ProductInsights?.Any() != null)
         {
