@@ -1,4 +1,6 @@
-﻿namespace Utilities_aspnet.Utilities;
+﻿using Utilities_aspnet.Hubs;
+
+namespace Utilities_aspnet.Utilities;
 
 public static class StartupExtension {
 	public static void SetupUtilities<T>(
@@ -57,7 +59,9 @@ public static class StartupExtension {
 		});
 
 		builder.Services.AddHttpContextAccessor();
-		builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+        builder.Services.AddSignalR();
+
+        builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 		builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 		builder.Services.AddControllersWithViews(option => {
 			option.EnableEndpointRouting = false;
@@ -97,6 +101,8 @@ public static class StartupExtension {
 		builder.Services.AddTransient<IGlobalSearchRepository, GlobalSearchRepository>();
 		builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
 		builder.Services.AddTransient<IMailSmsRepository, MailSmsRepository>();
+		builder.Services.AddTransient<IChatroomRepository, ChatroomRepository>();
+		builder.Services.AddTransient<IMessageRepository, MessageRepository>();
 	}
 
 	private static void AddUtilitiesSwagger(this WebApplicationBuilder builder, IServiceProvider? serviceProvider) {
@@ -164,9 +170,11 @@ public static class StartupExtension {
 		app.UseAuthentication();
 		app.UseRouting();
 		app.UseAuthorization();
-	}
+        app.MapHub<ChatHub>("/hubs/ChatHub");
 
-	private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
+    }
+
+    private static void UseUtilitiesSwagger(this IApplicationBuilder app) {
 		app.UseSwagger();
 		app.UseSwaggerUI(c => {
 			c.DocExpansion(DocExpansion.None);
