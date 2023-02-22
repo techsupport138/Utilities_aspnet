@@ -234,29 +234,30 @@ public class ProductRepository : IProductRepository
             .Include(i => i.Forms)!.ThenInclude(x => x.FormField)
             .Include(i => i.Teams)!.ThenInclude(x => x.User).ThenInclude(x => x.Media)
             .Include(i => i.VoteFields)!.ThenInclude(x => x.Votes)
+            .Include(i => i.VisitProducts)!.ThenInclude(i => i.User)
             .FirstOrDefaultAsync(i => i.Id == id && i.DeletedAt == null, ct);
         if (i == null) return new GenericResponse<ProductEntity?>(null, UtilitiesStatusCodes.NotFound, "Not Found");
 
-        // string? userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
-        // UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
-        // if (user is not null)
-        // {
-        //     var vp = await _dbContext.Set<VisitProducts>().FirstOrDefaultAsync(a => a.UserId == user.Id && a.ProductId == i.Id);
-        //     if (vp is null)
-        //     {
-        //         VisitProducts visitProduct = new()
-        //         {
-        //             CreatedAt = DateTime.Now,
-        //             ProductId = i.Id,
-        //             UserId = user.Id,
-        //         };
-        //         await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
-        //     }
-        //     if (i.VisitProducts != null && !i.VisitProducts.Any()) i.VisitsCount = 1;
-        //     else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
-        //     _dbContext.Update(i);
-        //     await _dbContext.SaveChangesAsync(ct);
-        // }
+        string? userId = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+        UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
+        if (user is not null)
+        {
+            var vp = await _dbContext.Set<VisitProducts>().FirstOrDefaultAsync(a => a.UserId == user.Id && a.ProductId == i.Id);
+            if (vp is null)
+            {
+                VisitProducts visitProduct = new()
+                {
+                    CreatedAt = DateTime.Now,
+                    ProductId = i.Id,
+                    UserId = user.Id,
+                };
+                await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
+            }
+            if (i.VisitProducts != null && !i.VisitProducts.Any()) i.VisitsCount = 1;
+            else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
+            _dbContext.Update(i);
+            await _dbContext.SaveChangesAsync(ct);
+        }
 
         if (i.ProductInsights?.Any() != null)
         {
