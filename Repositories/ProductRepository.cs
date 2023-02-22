@@ -428,7 +428,7 @@ public static class ProductEntityExtension
             if (e != null)
             {
                 ProductInsight pI;
-                ProductInsight? oldProductInsight = await context.Set<ProductInsight>().FirstOrDefaultAsync(f => f.UserId == e.Id && f.ProductId == entity.Id.ToString());
+                ProductInsight? oldProductInsight = await context.Set<ProductInsight>().FirstOrDefaultAsync(f => f.UserId == e.Id && f.ProductId == entity.Id);
                 if (oldProductInsight is not null && oldProductInsight.Reaction != pInsight.Reaction)
                 {
                     pI = new ProductInsight

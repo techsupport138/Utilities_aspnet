@@ -181,7 +181,8 @@ public class ProductInsight : BaseEntity
     public UserEntity? User { get; set; }
     public string? UserId { get; set; }
     public ProductEntity? Product { get; set; }
-    public string? ProductId { get; set; }
+    public Guid? ProductId { get; set; }
+    [NotMapped]
     public int? Count { get; set; } = 0;
 }
 
