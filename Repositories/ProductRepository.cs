@@ -241,13 +241,13 @@ public class ProductRepository : IProductRepository
         UserEntity? user = await _dbContext.Set<UserEntity>().FirstOrDefaultAsync(f => f.Id == userId, ct);
         if (user is not null)
         {
-            var vp = await _dbContext.Set<VisitProducts>().FirstOrDefaultAsync(a => a.UserId == user.Id && a.ProductId == i.Id);
+            var vp = await _dbContext.Set<VisitProducts>().FirstOrDefaultAsync(a => a.UserId == user.Id && a.ProductEntityId == i.Id);
             if (vp is null)
             {
                 VisitProducts visitProduct = new()
                 {
                     CreatedAt = DateTime.Now,
-                    ProductId = i.Id,
+                    ProductEntityId = i.Id,
                     UserId = user.Id,
                 };
                 await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
