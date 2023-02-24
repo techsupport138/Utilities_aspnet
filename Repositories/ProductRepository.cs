@@ -253,7 +253,10 @@ public class ProductRepository : IProductRepository
             else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
             _dbContext.Update(i);
             await _dbContext.SaveChangesAsync(ct);
+            var listOfFollowingUser = _followBookmarkRepository.GetFollowing(user.Id).Result;
+            i.IsFollowing = listOfFollowingUser?.Any(a => a.Id == i.UserId) ?? false;
         }
+
 
         if (i.ProductInsights?.Any() != null)
         {
