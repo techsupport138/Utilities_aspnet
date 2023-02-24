@@ -59,6 +59,7 @@ public class NotificationRepository : INotificationRepository {
 		};
 		await _dbContext.Set<NotificationEntity>().AddAsync(notification);
 		await _dbContext.SaveChangesAsync();
+
 		if (model.Media != null) {
 			await _dbContext.Set<MediaEntity>().AddAsync(new MediaEntity {
 				NotificationId = notification.Id,
