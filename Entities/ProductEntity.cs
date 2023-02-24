@@ -141,6 +141,8 @@ public class ProductEntity : BaseEntity
 
     public DateTime? ExpireDate { get; set; }
     public AgeCategory? AgeCategory { get; set; }
+    [StringLength(100000)]
+    public string? SeenUsers { get; set; }
     public IEnumerable<MediaEntity>? Media { get; set; }
     public IEnumerable<FormEntity>? Forms { get; set; }
     public IEnumerable<CategoryEntity>? Categories { get; set; }
@@ -155,6 +157,8 @@ public class ProductEntity : BaseEntity
     public IEnumerable<ProductInsight>? ProductInsights { get; set; }
     public IEnumerable<VisitProducts>? VisitProducts { get; set; }
 
+    [NotMapped]
+    public bool IsFollowing { get; set; }
     [NotMapped]
     public bool IsBookmarked { get; set; }
 
@@ -171,7 +175,7 @@ public class ProductEntity : BaseEntity
     public double? Score { get; set; }
 
     [NotMapped]
-    public bool IsSeen{ get; set; } = false;
+    public bool IsSeen { get; set; } = false;
 }
 
 [Table("ProductsInsight")]
@@ -265,7 +269,7 @@ public class ProductCreateUpdateDto
     public AgeCategory? AgeCategory { get; set; }
     public IEnumerable<Guid>? Categories { get; set; }
     public IEnumerable<string>? Teams { get; set; }
-    public UploadDto? Upload{ get; set; }
+    public UploadDto? Upload { get; set; }
 }
 
 public class ProductFilterDto

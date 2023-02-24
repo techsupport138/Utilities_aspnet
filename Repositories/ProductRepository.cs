@@ -199,15 +199,9 @@ public class ProductRepository : IProductRepository
                              x.Value12.ToInt() <= dto.MaxValue);
         if (dto.IsFollowing)
         {
-            var following = _followBookmarkRepository.GetFollowing(dto.UserId ?? "");
-            q = q.Where(x => following.Result.ToList().Any(y => y.Id == x.UserId));
+            var following = _followBookmarkRepository.GetFollowing(guestUser).Result;
+            q = q.Where(x => following.Any(y => y.Id == x.UserId));
         }
-
-        //Todo: IsSeen MohamadHosein
-        //q.Where(w => w.VisitProducts != null)
-        //               .Where(w => w.VisitProducts.Any(a => a.ProductId == w.Id && a.UserId != (!string.IsNullOrEmpty(guestUser) ? guestUser : "")))
-        //               .ToList()
-        //               .ForEach(f => f.IsSeen = true);
 
         int totalCount = q.Count();
         q = q.Skip((dto.PageNumber - 1) * dto.PageSize).Take(dto.PageSize);
@@ -252,6 +246,8 @@ public class ProductRepository : IProductRepository
                     UserId = user.Id,
                 };
                 await _dbContext.Set<VisitProducts>().AddAsync(visitProduct, ct);
+                i.SeenUsers = i.SeenUsers + string.Join(",", user.Id);
+
             }
             if (i.VisitProducts != null && !i.VisitProducts.Any()) i.VisitsCount = 1;
             else if (i.VisitProducts != null) i.VisitsCount = i.VisitProducts.Count() + 1;
