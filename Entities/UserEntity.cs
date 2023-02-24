@@ -125,7 +125,6 @@ public class UserEntity : IdentityUser
 
     [NotMapped]
     public IEnumerable<UserEntity>? Followers { get; set; }
-    [NotMapped]
     public IEnumerable<NotificationEntity>? Notifications { get; set; }
 
 }
