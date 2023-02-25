@@ -27,7 +27,7 @@ public class GlobalSearchRepository : IGlobalSearchRepository {
 		                                                                         x.FirstName.Contains(filter.Query) || x.LastName.Contains(filter.Query)));
 
 		userList = filter.Minimal
-			? userList.OrderByDescending(x => x.CreatedAt)
+			? userList.OrderByDescending(x => x.CreatedAt).Include(u => u.Media).Include(u => u.Categories).Include(u => u.Products)
 			: userList.Include(u => u.Media).Include(u => u.Categories).Include(u => u.Products).OrderByDescending(x => x.CreatedAt);
 
 		IQueryable<ProductEntity> productList = _dbContext.Set<ProductEntity>()

@@ -51,5 +51,7 @@ public class CategoryEntity : BaseEntity {
 
 	[System.Text.Json.Serialization.JsonIgnore]
 	public IEnumerable<OrderDetailEntity>? OrderDetails { get; set; }
+	
+	[NotMapped]
 	public bool IsUnique { get; set; } = true;
 }
