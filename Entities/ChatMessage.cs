@@ -25,6 +25,9 @@ namespace Utilities_aspnet.Entities
         public ReferenceIdType? ReferenceIdType { get; set; }
         public string? FilePath { get; set; }
         public string? FileName { get; set; }
+        public ProductEntity? ProductEntity { get; set; }
+        public CategoryEntity? CategoryEntity { get; set; }
+        public UserEntity? UserEntity { get; set; }
 
     }
 

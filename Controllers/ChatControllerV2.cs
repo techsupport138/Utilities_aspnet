@@ -24,17 +24,15 @@ namespace Utilities_aspnet.Controllers
         #region One to One Messaging
         [HttpPost]
         [Route("/[controller]/send-private-message")]
-        public async Task<ActionResult> SendPrivateMessage(ChatMessageInputDto message)
+        public async Task<ActionResult<GenericResponse>> SendPrivateMessage(ChatMessageInputDto message)
         {
             var receiver = await _context.Set<UserEntity>().FirstOrDefaultAsync(x => x.Id == message.ToUserId);
             if (receiver == null)
                 return BadRequest();
-            else
-            {
-                await _messagerepository.AddPrivateMessage(message);
 
-            }
-            return Ok();
+            var result = await _messagerepository.AddPrivateMessage(message);
+
+            return Ok(result);
         }
 
         [HttpGet]
@@ -72,11 +70,11 @@ namespace Utilities_aspnet.Controllers
         #region Group Messaging
         [HttpPost]
         [Route("/[controller]/send-group-message/{roomId}")]
-        public async Task<ActionResult> SendGroupMessage(ChatMessageInputDto message, Guid roomId)
+        public async Task<ActionResult<GenericResponse>> SendGroupMessage(ChatMessageInputDto message, Guid roomId)
         {
-            await _chatroomRepository.AddMessageToChatroom(roomId, message);
+            var result = await _chatroomRepository.AddMessageToChatroom(roomId, message);
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpGet]
@@ -199,6 +197,17 @@ namespace Utilities_aspnet.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("/[controller]/get-chatroom/{chatroomId}")]
+        public async Task<ActionResult> GetChatroomsById(string chatroomId)
+        {
+            if (string.IsNullOrEmpty(chatroomId))
+                return BadRequest();
+
+            var result = await _chatroomRepository.GetChatroomsById(chatroomId);
+            return Ok(result);
+        }
+
         [HttpPut]
         [Route("/[controller]/add-user-to-chatroom/{chatroomId}")]
         public async Task<ActionResult> AddUserToChatroom(Guid chatroomId, string userId)
@@ -207,6 +216,16 @@ namespace Utilities_aspnet.Controllers
             return Ok();
         }
         #endregion
+
+        [HttpGet]
+        [Route("[controller]/get-latest-messages/{userId}")]
+        public async Task<ActionResult> GetLatestMessages(string userId)
+        {
+            var result = await _messagerepository.GetLatestMessage(userId);
+
+            return Ok(result);
+
+        }
 
     }
 }

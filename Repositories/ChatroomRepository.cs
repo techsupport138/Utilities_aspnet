@@ -12,8 +12,9 @@ namespace Utilities_aspnet.Repositories
         Task EditChatroom(string chatrooomName, string userId);
         Task DeleteChatroom(Guid chatroomId, string userId);
         Task<List<ChatRoom>> GetChatroomsByName(string chatroomName);
+        Task<ChatRoom> GetChatroomsById(string chatroomId);
         Task AddUserToChatroom(Guid chatroomId, string userId);
-        Task AddMessageToChatroom(Guid roomId, ChatMessageInputDto message);
+        Task<GenericResponse> AddMessageToChatroom(Guid roomId, ChatMessageInputDto message);
         Task<List<ChatMessage>> GetChatroomMessages(Guid chatroomId);
         Task EditGroupMessage(Guid roomId, ChatMessageEditDto message);
         Task DeleteGroupMessage(Guid roomId, ChatMessageDeleteDto message);
@@ -29,11 +30,11 @@ namespace Utilities_aspnet.Repositories
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task AddMessageToChatroom(Guid roomId, ChatMessageInputDto message)
+        public async Task<GenericResponse> AddMessageToChatroom(Guid roomId, ChatMessageInputDto message)
         {
             var room = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id == roomId);
             if (room == null)
-                return;
+                return null;
 
             var messageToAdd = new ChatMessage
             {
@@ -73,6 +74,8 @@ namespace Utilities_aspnet.Repositories
             {
                 //Todo: push notifications to mentioned users.
             }
+
+            return new GenericResponse<Guid>(messageToAdd.Id);
 
         }
 
@@ -172,6 +175,12 @@ namespace Utilities_aspnet.Repositories
             var room = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id == chatroomId);
             return room.Messages;
 
+        }
+
+        public async Task<ChatRoom> GetChatroomsById(string chatroomId)
+        {
+            var room = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id.ToString() == chatroomId);
+            return room;
         }
 
         public async Task<List<ChatRoom>> GetChatroomsByName(string chatroomName)

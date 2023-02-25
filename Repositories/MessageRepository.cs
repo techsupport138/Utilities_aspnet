@@ -9,11 +9,12 @@ namespace Utilities_aspnet.Repositories
     public interface IMessageRepository
     {
         Task AddEmojiToMessage(Reaction emoji, Guid messageId, Guid userId);
-        Task AddPrivateMessage(ChatMessageInputDto message);
+        Task<GenericResponse> AddPrivateMessage(ChatMessageInputDto message);
         Task<List<ChatMessage>> GetPrivateMessages(string firstUser, string secondUser);
         Task EditPrivateMessages(string messageText, Guid messageId);
         Task DeletePrivateMessage(Guid messageId);
         Task<bool> SeenMessage(Guid messageId, Guid userId);
+        Task<List<ChatMessage>> GetLatestMessage(string userId);
     }
 
     public class MessageRepository : IMessageRepository
@@ -37,7 +38,7 @@ namespace Utilities_aspnet.Repositories
 
         }
 
-        public async Task AddPrivateMessage(ChatMessageInputDto message)
+        public async Task<GenericResponse> AddPrivateMessage(ChatMessageInputDto message)
         {
             var messageToAdd = new ChatMessage
             {
@@ -76,6 +77,7 @@ namespace Utilities_aspnet.Repositories
             {
                 //Todo: push notifications for the mentioned users.
             }
+            return new GenericResponse<Guid>(messageToAdd.Id);
         }
 
         public async Task DeletePrivateMessage(Guid messageId)
@@ -94,6 +96,12 @@ namespace Utilities_aspnet.Repositories
                 message.MessageText = messageText;
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public Task<List<ChatMessage>> GetLatestMessage(string userId)
+        {
+            throw new NotImplementedException();
+
         }
 
         public async Task<List<ChatMessage>> GetPrivateMessages(string firstUser, string secondUser)
