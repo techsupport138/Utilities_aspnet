@@ -22,7 +22,7 @@ public class CategoryRepository : ICategoryRepository {
 				await _dbContext.SaveChangesAsync();
 				return new GenericResponse<CategoryEntity>(i.Entity);
 			}
-			return null;
+			return new GenericResponse<CategoryEntity>(exists);
 		}
 		else
         {
